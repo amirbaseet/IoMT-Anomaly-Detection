@@ -1,0 +1,20 @@
+# Data files (too large for GitHub)
+data/train/*.csv
+data/test/*.csv
+eda_output/train_cleaned.csv
+eda_output/test_cleaned.csv
+eda_output/cache/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
