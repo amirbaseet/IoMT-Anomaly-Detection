@@ -18,3 +18,9 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# Preprocessed data (too large for GitHub — regenerate with preprocessing_pipeline.py)
+preprocessed/**/*.npy
+preprocessed/**/*.csv
+preprocessed/zero_day/
+preprocessed/scaler_*.pkl
