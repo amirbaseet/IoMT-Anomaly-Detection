@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python create_notebook.py)",
+      "Bash(python -c ' *)"
+    ]
+  }
+}
