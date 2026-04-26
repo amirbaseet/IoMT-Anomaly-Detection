@@ -7,7 +7,7 @@
 > **Program:** M.Sc. Artificial Intelligence and Machine Learning in Cybersecurity — Sakarya University  
 > **Dataset:** CICIoMT2024 (Canadian Institute for Cybersecurity)  
 > **Reference Paper:** Yacoubi et al. (2025–2026) — *Enhancing IoMT Security with Explainable Machine Learning*  
-> **Status:** Phase 1-4 complete — Supervised models trained, unsupervised layer next (Phase 5)
+> **Status:** Phase 1-5 complete — Unsupervised models trained, fusion engine next (Phase 6)
 
 ---
 
@@ -31,18 +31,19 @@
 10. [Phase 2 EDA Key Findings](#10-phase-2-eda-key-findings)  
 11. [Phase 3 Preprocessing & Feature Engineering](#11-phase-3-preprocessing--feature-engineering)  
 12. [Phase 4 Supervised Model Training Results](#12-phase-4-supervised-model-training-results)  
-13. [Project Roadmap](#13-project-roadmap)  
-14. [Related Work — Summary Table](#14-related-work--summary-table)  
-15. [Deep Dive: Yacoubi et al. — Primary Reference Paper](#15-deep-dive-yacoubi-et-al--primary-reference-paper)  
-    - 15.1 [Paper 1: Explainable ML (COCIA 2025)](#151-paper-1-enhancing-iomt-security-with-explainable-ml-cocia-2025)
-    - 15.2 [Paper 2: XAI Feature Selection (AIAI 2025)](#152-paper-2-xai-driven-feature-selection-for-improved-ids-aiai-2025)
-    - 15.3 [Paper 3: Ensemble Strategies (Springer 2026)](#153-paper-3-ensemble-learning-strategies-for-anomaly-based-ids-springer-2026)
-    - 15.4 [Research Gaps & Our Contribution](#154-research-gaps-left-by-yacoubi-et-al)
-16. [Research Design](#16-research-design)
-17. [Proposed Framework Architecture](#17-proposed-framework-architecture)
-18. [Corrections to Published Literature](#18-corrections-to-published-literature)
-19. [Citations](#19-citations)  
-20. [Tech Stack](#20-tech-stack)
+13. [Phase 5 Unsupervised Model Training Results](#13-phase-5-unsupervised-model-training-results)  
+14. [Project Roadmap](#14-project-roadmap)  
+15. [Related Work — Summary Table](#15-related-work--summary-table)  
+16. [Deep Dive: Yacoubi et al. — Primary Reference Paper](#16-deep-dive-yacoubi-et-al--primary-reference-paper)  
+    - 16.1 [Paper 1: Explainable ML (COCIA 2025)](#161-paper-1-enhancing-iomt-security-with-explainable-ml-cocia-2025)
+    - 16.2 [Paper 2: XAI Feature Selection (AIAI 2025)](#162-paper-2-xai-driven-feature-selection-for-improved-ids-aiai-2025)
+    - 16.3 [Paper 3: Ensemble Strategies (Springer 2026)](#163-paper-3-ensemble-learning-strategies-for-anomaly-based-ids-springer-2026)
+    - 16.4 [Research Gaps & Our Contribution](#164-research-gaps-left-by-yacoubi-et-al)
+17. [Research Design](#17-research-design)
+18. [Proposed Framework Architecture](#18-proposed-framework-architecture)
+19. [Corrections to Published Literature](#19-corrections-to-published-literature)
+20. [Citations](#20-citations)  
+21. [Tech Stack](#21-tech-stack)
 
 ---
 
@@ -621,6 +622,8 @@ Three-group ColumnTransformer fitted on training data only:
 | **StandardScaler** | fin_flag_number, syn_flag_number, rst_flag_number, psh_flag_number, ack_flag_number, ece_flag_number, cwr_flag_number | TCP flag ratios roughly bounded in [0,1]. |
 | **MinMaxScaler** | HTTP, HTTPS, DNS, TCP, DHCP, ARP, ICMP, Protocol Type | Binary/categorical indicators already near 0-1 range. |
 
+> **Note:** This three-group scaling proved insufficient for the unsupervised layer — RobustScaler preserves heavy tails (desirable for tree-based supervised models but breaks AE training). See Section 13.6 for the StandardScaler patch applied in Phase 5.
+
 ### 11.4 Data Splits
 
 | Split | Rows | Purpose |
@@ -864,7 +867,99 @@ results/supervised/                     (~4-6 GB)
 
 ---
 
-## 13. Project Roadmap — 17-Week Plan (Option A: Hybrid Framework)
+## 13. Phase 5 Unsupervised Model Training Results
+
+> Pipeline run: April 26, 2026 — MacBook Air M4, 24GB RAM — Total runtime: 34 seconds
+> Two models trained on benign-only data (123K rows × 44 features)
+
+### 13.1 Overview
+
+Phase 5 builds Layer 2 of the hybrid framework: unsupervised anomaly detection trained exclusively on benign traffic. Two models learn what "normal" IoMT traffic looks like, then flag anything that deviates. A critical scaling fix (StandardScaler on benign-train, applied to all data) was required because Phase 3's ColumnTransformer left several features with magnitudes in the thousands, which dominated AE loss and made Recon detection impossible.
+
+### 13.2 Autoencoder Configuration
+
+| Property | Value |
+|----------|-------|
+| Architecture | 44 → 32 → 16 → **8** → 16 → 32 → 44 (bottleneck = 8) |
+| Optimizer | Adam, lr=0.001, batch size=512 |
+| Loss | MSE (reconstruction error) |
+| Epochs | 36 (early-stopped from max 100, patience=10) |
+| Best val loss | **0.1988** |
+| Training time | 8.2 seconds |
+| Training data | 123,348 benign rows (train split only — no leakage) |
+
+### 13.3 Threshold Selection
+
+Five percentile-based thresholds evaluated on validation set. Mean+kσ thresholds are impractical due to fat-tailed benign MSE distribution (mean=0.20, std=9.48).
+
+| Threshold | Value | Recall | FPR | F1 |
+|-----------|-------|--------|-----|-----|
+| **p90** | **0.2013** | **0.986** | **0.102** | **0.991** |
+| p95 | 0.3726 | 0.983 | 0.052 | 0.990 |
+| p99 | 1.2025 | 0.843 | 0.011 | 0.914 |
+
+Selected: p90 (highest F1). For Phase 6 fusion, p99 may be preferred (FPR ≈ 0.8%) to minimize false zero-day alerts.
+
+The benign reconstruction error distribution exhibits heavy right-tail behavior (mean=0.20, std=9.48, p95=0.37, p99=1.20), causing mean+kσ thresholds to fall outside the attack-error mass and collapse to ~25–32% recall. Percentile thresholds avoid this failure mode. The F1-optimal threshold (p90) achieves 98.6% attack recall but at 18.6% benign false-positive rate, which is impractical for IDS deployment; for the fusion layer in Phase 6 we adopt p99 (FPR ≈ 0.8%, recall 84%) as the binary anomaly flag, retaining all thresholds for ablation analysis.
+
+### 13.4 Binary Anomaly Detection — AE vs IF (Test Set)
+
+| Metric | Autoencoder | Isolation Forest |
+|--------|-------------|-----------------|
+| **AUC-ROC** | **0.9892** | 0.8612 |
+| FPR @ 95% TPR | 0.0203 | 0.2721 |
+| Anomaly F1 | **0.9853** | 0.7327 |
+| Per-class avg recall | **0.7999** | 0.1627 |
+
+Autoencoder decisively outperforms Isolation Forest. Both signals saved for Phase 6 fusion (complementary failure modes).
+
+### 13.5 Per-Class Detection Highlights (AE at p90)
+
+**Near-perfect (>95%):** All DDoS/DoS floods + MQTT Connect floods + Recon_Port_Scan
+
+**Medium (50-87%):** Recon_OS_Scan (86.5%), Recon_VulScan (63.0%), MQTT_Malformed (55.8%), ARP_Spoofing (55.3%), Recon_Ping_Sweep (54.4%)
+
+**Low (<30%):** MQTT_DDoS_Publish (26.6%), MQTT_DoS_Publish (6.7%)
+
+> **Key thesis finding:** AE blind spots (MQTT Publish floods, ARP Spoofing) are precisely where supervised XGBoost excels. Neither layer alone covers the full attack spectrum — this complementarity justifies the hybrid design.
+
+### 13.6 Scaling Fix Discovery
+
+Phase 3's ColumnTransformer left features like Covariance (std=5005) and IAT (std=1030) unscaled. XGBoost is scale-invariant so Phase 4 was unaffected, but the AE produced loss values in the millions and zero Recon detection. Adding StandardScaler (fitted on benign-train) fixed this:
+
+| Metric | Before fix | After fix |
+|--------|-----------|-----------|
+| AE val loss | 101,414 | **0.199** |
+| AE test AUC | 0.9728 | **0.9892** |
+| Recon_Ping_Sweep recall | 0.000 | **0.544** |
+| Per-class avg recall | 0.700 | **0.800** |
+
+### 13.7 Zero-Day Preview
+
+| Target | AE Recall (p90) | IF Recall |
+|--------|-----------------|-----------|
+| MQTT_DoS_Connect_Flood | 1.000 | 0.008 |
+| Recon_VulScan | 0.630 | 0.021 |
+| MQTT_Malformed_Data | 0.558 | 0.203 |
+| ARP_Spoofing | 0.553 | 0.439 |
+| Recon_Ping_Sweep | 0.544 | 0.077 |
+
+H2 preview: 1/5 targets ≥70% at p90. Proper evaluation deferred to Phase 6 fusion.
+
+### 13.8 Output Artifacts
+
+```
+results/unsupervised/                           (~50 MB)
+├── config.json, summary.md, thresholds.json
+├── models/{autoencoder.keras, encoder.keras, isolation_forest.pkl, scaler.pkl}
+├── scores/{ae,if}_{val,test}_{mse,scores,binary}.npy  (8 arrays for fusion)
+├── metrics/{ae,if}_classification_report.json, per_class_detection_rates.csv
+└── figures/{ae_loss_curves, ae_error_distribution, roc_curves, ...}.png (7 figures)
+```
+
+---
+
+## 14. Project Roadmap — 17-Week Plan (Option A: Hybrid Framework)
 
 | Week | Phase | Key Deliverables | Status |
 |------|-------|------------------|--------|
@@ -872,8 +967,8 @@ results/supervised/                     (~4-6 GB)
 | 3–4 | Data Acquisition & EDA | Dataset loaded, 37% duplicates found, 15+ figures, findings.md | ✅ Complete |
 | 5–6 | Preprocessing & Imbalance Handling | Feature engineering, SMOTETomek, AE data, zero-day datasets | ✅ Complete |
 | 7–8 | Supervised Model Training (Layer 1) | 8 experiments, XGBoost best (F1=0.9076), SMOTETomek rejected | ✅ Complete |
-| 9–10 | Unsupervised Model Training (Layer 2) | Autoencoder + Isolation Forest on benign data, anomaly thresholds | 🔄 Next |
-| 11–12 | Fusion Engine + Zero-Day Simulation (Layer 3) | 4-case fusion logic, leave-one-attack-out results | ⏳ Planned |
+| 9–10 | Unsupervised Model Training (Layer 2) | AE (AUC=0.9892) + IF (AUC=0.8612), scaling fix, per-class detection | ✅ Complete |
+| 11–12 | Fusion Engine + Zero-Day Simulation (Layer 3) | 4-case fusion logic, leave-one-attack-out results | 🔄 Next |
 | 13–14 | SHAP Analysis + Confusion Matrix (Layer 4) | Per-class SHAP plots, feature importance comparisons, confusion matrices | ⏳ Planned |
 | 15 | Profiling Integration (Stretch Goal) | Delta features from profiling data (if time permits) | ⏳ Optional |
 | 16–17 | Documentation & Defense | Complete thesis document, code repository, defense preparation | ⏳ Planned |
@@ -884,9 +979,9 @@ results/supervised/                     (~4-6 GB)
 - Random Forest (criterion='entropy', n_estimators=200, max_depth=30, class_weight='balanced') — best: E5, test acc=98.52%
 - XGBoost (n_estimators=200, max_depth=8, learning_rate=0.1, tree_method='hist') — **best: E7, test acc=99.27%, F1_macro=0.9076**
 
-**Unsupervised (Layer 2) — NEXT:**
-- Deep Autoencoder (architecture: ~44→32→16→8→16→32→44, MSE loss, trained on 123K benign rows from train split)
-- Isolation Forest (n_estimators=200, contamination=0.05)
+**Unsupervised (Layer 2) — TRAINED:**
+- Deep Autoencoder (44→32→16→8→16→32→44, MSE loss, AUC=0.9892, trained on 123K benign rows + StandardScaler)
+- Isolation Forest (n_estimators=200, contamination=0.05, AUC=0.8612)
 
 **Fusion (Layer 3):**
 - 4-case decision logic (custom Python implementation)
@@ -903,7 +998,7 @@ results/supervised/                     (~4-6 GB)
 
 ---
 
-## 14. Related Work — Summary Table
+## 15. Related Work — Summary Table
 
 | Paper | Approach | Key Result |
 |-------|----------|------------|
@@ -928,13 +1023,13 @@ results/supervised/                     (~4-6 GB)
 
 ---
 
-## 15. Deep Dive: Yacoubi et al. — Primary Reference Paper
+## 16. Deep Dive: Yacoubi et al. — Primary Reference Paper
 
 > Yacoubi, M., Moussaoui, O., Drocourt, C. — University of Picardie Jules Verne & MIS Lab, France
 
 Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, each building on the previous. Together they form the most comprehensive explainable ML study on this dataset.
 
-### 15.1 Paper 1: Enhancing IoMT Security with Explainable ML (COCIA 2025)
+### 16.1 Paper 1: Enhancing IoMT Security with Explainable ML (COCIA 2025)
 
 **Core question:** Can ensemble classifiers be made transparent without sacrificing accuracy?
 
@@ -982,7 +1077,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 
 **Paper 1 Conclusion:** Both RF and CatBoost achieve strong classification. SHAP provides trustworthy global explanations, while LIME gives actionable instance-level insights. The combination makes ensemble models viable for real-world IoMT security deployment.
 
-### 15.2 Paper 2: XAI-Driven Feature Selection for Improved IDS (AIAI 2025)
+### 16.2 Paper 2: XAI-Driven Feature Selection for Improved IDS (AIAI 2025)
 
 **Key Innovation:** Uses SHAP and LIME not just to *explain* models, but to *select features*. If SHAP says a feature has near-zero importance, drop it. This reduces the 45-feature space, cutting training time while maintaining or improving accuracy.
 
@@ -1008,7 +1103,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 
 **Paper 2 Conclusion:** CatBoost actually *improved* by 4% after removing noisy features via SHAP. Feature selection isn't just about computational efficiency — it actively helps boosting models by removing features that confuse the sequential learning process. XAI-driven feature selection improves IDS efficiency without compromising detection capability.
 
-### 15.3 Paper 3: Ensemble Learning Strategies for Anomaly-Based IDS (Springer 2026)
+### 16.3 Paper 3: Ensemble Learning Strategies for Anomaly-Based IDS (Springer 2026)
 
 **Extended comparison** to 5 models: RF, CatBoost, LightGBM, XGBoost, and a **Stacking ensemble** (two-layer meta-model where CatBoost + RF generate probability estimates in layer 1, and a meta-learner combines them in layer 2).
 
@@ -1027,7 +1122,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 - The precision/recall gap (99.36% accuracy but only 86.10% precision) suggests the model struggles with minority attack classes
 - For real-time IoMT detection, XGBoost or LightGBM may be better choices due to inference speed
 
-### 15.4 Research Gaps Left by Yacoubi et al.
+### 16.4 Research Gaps Left by Yacoubi et al.
 
 These gaps represent opportunities for our project to make a novel contribution:
 
@@ -1043,9 +1138,9 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
-## 16. Research Design
+## 17. Research Design
 
-### 16.1 Research Questions
+### 17.1 Research Questions
 
 **Primary Research Question:**
 
@@ -1059,7 +1154,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 - **Sub-RQ3 (Explainability):** How does per-attack-class SHAP analysis reveal differential feature importance patterns across attack categories (DDoS vs. Recon vs. MQTT vs. Spoofing), and do these patterns change when SMOTETomek resampling is applied?
 
-### 16.2 Hypotheses
+### 17.2 Hypotheses
 
 **H1 — Fusion Framework Performance:**
 - *H0:* The hybrid fusion framework does not produce statistically significant improvements in macro-averaged F1-score compared to the best standalone supervised classifier (p > 0.05, paired t-test across 5-fold stratified cross-validation).
@@ -1073,7 +1168,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 - *H0:* SMOTETomek resampling does not significantly improve per-class F1-score for minority attack classes.
 - *H1:* SMOTETomek significantly improves per-class F1-score for at least 3 of the 5 most underrepresented attack classes.
 
-### 16.3 Research Objectives
+### 17.3 Research Objectives
 
 | ID | Objective | Deliverable |
 |----|-----------|-------------|
@@ -1083,7 +1178,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 | **O4** | Conduct zero-day attack simulation using leave-one-attack-out protocol for all 17 classes. Measure unsupervised detection recall per withheld class. | Zero-day detection rate matrix (17 × 2) |
 | **O5** | Perform per-attack-class SHAP explainability analysis. Compare feature importance rankings before/after SMOTETomek. | SHAP visualizations + feature importance tables |
 
-### 16.4 Expected Contributions
+### 17.4 Expected Contributions
 
 1. **First hybrid supervised-unsupervised fusion framework on CICIoMT2024** — No existing study on this dataset combines these two paradigms in a structured decision fusion. Addresses the zero-day detection gap left by Yacoubi et al.
 
@@ -1095,7 +1190,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
-## 17. Proposed Framework Architecture
+## 18. Proposed Framework Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1122,11 +1217,11 @@ These gaps represent opportunities for our project to make a novel contribution:
 │   LAYER 1:           │  │   LAYER 2:                │
 │   SUPERVISED         │  │   UNSUPERVISED            │
 │                      │  │                           │
-│   • Random Forest    │  │   • Autoencoder          │
-│     (criterion=      │  │     (~44→32→16→8→16→32→44)│
-│      'entropy')      │  │     Trained on benign    │
-│   • XGBoost          │  │   • Isolation Forest     │
-│     (n_est=200)      │  │     (contamination=0.05) │
+│   • Random Forest    │  │   • Autoencoder           │
+│     (criterion=      │  │     44→32→16→8→16→32→44   │
+│      'entropy')      │  │     + StandardScaler      │
+│   • XGBoost          │  │   • Isolation Forest      │
+│     (n_est=200)      │  │     (contamination=0.05)  │
 │                      │  │                           │
 │   Output: class      │  │   Output: anomaly score  │
 │   probabilities      │  │   (MSE or isolation depth)│
@@ -1175,7 +1270,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 |-------|-----------|--------------|---------------------|
 | 1 | Random Forest | scikit-learn | n_estimators=200, criterion='entropy', max_depth=None, class_weight='balanced' |
 | 1 | XGBoost | xgboost | n_estimators=200, learning_rate=0.1, max_depth=6, objective='multi:softprob' |
-| 2 | Autoencoder | TensorFlow/Keras | Architecture: ~44→32→16→8→16→32→44, optimizer=Adam, loss=MSE, epochs=50 |
+| 2 | Autoencoder | TensorFlow/Keras | Architecture: 44→32→16→8→16→32→44, optimizer=Adam, loss=MSE, StandardScaler on benign-train, AUC=0.9892 |
 | 2 | Isolation Forest | scikit-learn | n_estimators=200, contamination=0.05, max_samples='auto' |
 | 3 | Fusion Engine | Custom Python | Threshold-based decision logic (95th/99th percentile for anomaly threshold) |
 | 4 | SHAP | shap | TreeSHAP for RF/XGBoost, KernelExplainer for Autoencoder |
@@ -1184,7 +1279,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
-## 18. Corrections to Published Literature
+## 19. Corrections to Published Literature
 
 The following corrections were discovered through our independent analysis of the CICIoMT2024 dataset during Phase 2 EDA:
 
@@ -1205,12 +1300,13 @@ The following corrections were discovered through our independent analysis of th
 | 99.87% RF accuracy on raw data | Likely **inflated by duplicate leakage** — 37% of rows are identical |
 | SMOTETomek assumed to improve minority detection | **SMOTETomek degraded macro-F1 in all 4 configurations** when combined with class_weight='balanced' |
 | Reduced features (dropping correlated) assumed optimal | **Full features (44) consistently outperformed reduced (28)** — correlation-based dropping too aggressive |
+| Phase 3 ColumnTransformer scaling sufficient for all models | **AE requires additional StandardScaler** — RobustScaler leaves features with std>1000, causing million-scale loss and zero Recon detection |
 
 > These corrections constitute a novel methodological contribution to the CICIoMT2024 literature and strengthen the motivation for our preprocessing pipeline.
 
 ---
 
-## 19. Citations
+## 20. Citations
 
 **Dataset:**
 ```
@@ -1254,9 +1350,9 @@ DOI: 10.1016/J.IOT.2024.101351
 
 ---
 
-## 20. Tech Stack
+## 21. Tech Stack
 
-- **Language:** Python 3.14+
+- **Language:** Python 3.13 (downgraded from 3.14 in Phase 5 — TensorFlow 2.21 wheels not yet built for 3.14)
 - **ML Libraries:** scikit-learn, XGBoost, TensorFlow/Keras
 - **Data Processing:** pandas 3.0+, numpy 2.4+
 - **Visualization:** matplotlib 3.10+, seaborn 0.13+
@@ -1267,4 +1363,4 @@ DOI: 10.1016/J.IOT.2024.101351
 
 ---
 
-> **Last updated:** April 26, 2026 — Phase 4 supervised training complete
+> **Last updated:** April 26, 2026 — Phase 5 unsupervised training complete

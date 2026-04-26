@@ -1,0 +1,100 @@
+{
+  "phase": "5 \u2014 unsupervised training",
+  "feature_space": "full (44 features)",
+  "feature_names": [
+    "IAT",
+    "Rate",
+    "Header_Length",
+    "Tot sum",
+    "Min",
+    "Max",
+    "Covariance",
+    "Variance",
+    "Duration",
+    "ack_count",
+    "syn_count",
+    "fin_count",
+    "rst_count",
+    "Srate",
+    "AVG",
+    "Std",
+    "Tot size",
+    "Number",
+    "Magnitue",
+    "Radius",
+    "Weight",
+    "fin_flag_number",
+    "syn_flag_number",
+    "rst_flag_number",
+    "psh_flag_number",
+    "ack_flag_number",
+    "ece_flag_number",
+    "cwr_flag_number",
+    "HTTP",
+    "HTTPS",
+    "DNS",
+    "TCP",
+    "DHCP",
+    "ARP",
+    "ICMP",
+    "Protocol Type",
+    "UDP",
+    "IPv",
+    "LLC",
+    "Telnet",
+    "SMTP",
+    "SSH",
+    "IRC",
+    "IGMP"
+  ],
+  "random_state": 42,
+  "autoencoder": {
+    "architecture": [
+      44,
+      32,
+      16,
+      8,
+      16,
+      32,
+      44
+    ],
+    "epochs_max": 100,
+    "epochs_actual": 98,
+    "batch_size": 512,
+    "learning_rate": 0.001,
+    "patience": 10,
+    "best_val_loss": 101414.609375,
+    "training_time_s": 20.44931387901306
+  },
+  "isolation_forest": {
+    "n_estimators": 200,
+    "contamination": 0.05,
+    "training_time_s": 0.5708882808685303
+  },
+  "data_shapes": {
+    "X_train": [
+      3612064,
+      44
+    ],
+    "X_val": [
+      903016,
+      44
+    ],
+    "X_test": [
+      892268,
+      44
+    ],
+    "X_benign_train": [
+      123348,
+      44
+    ],
+    "X_benign_val": [
+      30838,
+      44
+    ]
+  },
+  "selected_threshold": {
+    "name": "p95",
+    "value": 199849.84375
+  }
+}

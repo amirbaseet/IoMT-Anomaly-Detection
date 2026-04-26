@@ -1,0 +1,10 @@
+metric,Autoencoder,IsolationForest
+AUC-ROC (test),0.9892,0.8612
+AUC-ROC (val),0.9897,0.914
+FPR @ 95%TPR (test),0.0203,0.2721
+Anomaly precision (test),0.9917,0.9919
+Anomaly recall (test),0.9789,0.5808
+Anomaly F1 (test),0.9853,0.7327
+Per-class avg recall,0.7999,0.1627
+Training time (s),8.2,0.6
+Scoring time val+test (s),0.5,6.4

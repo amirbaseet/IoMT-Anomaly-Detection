@@ -1,0 +1,427 @@
+[init] No GPU detected — training will run on CPU (fine for this size).
+[init] TensorFlow version: 2.21.0
+[init] NumPy version:      2.4.4
+
+======================================================================
+SECTION 2 · DATA LOADING
+======================================================================
+[data] X_train: (3612064, 44)   X_val: (903016, 44)   X_test: (892268, 44)
+[data] label column: 'label'
+[data] Benign rows in train split: 154,186 (4.27% of training data)
+[data] AE-train (benign): (123348, 44)
+[data] AE-val   (benign): (30838, 44)
+[data] val binary breakdown:  38,546 normal / 864,470 anomaly
+[data] test binary breakdown: 37,607 normal / 854,661 anomaly
+[data] loading took 1.3s
+
+======================================================================
+SECTION 3 · AUTOENCODER ARCHITECTURE
+======================================================================
+  Model: "autoencoder"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ input (InputLayer)              │ (None, 44)             │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ enc_dense_32 (Dense)            │ (None, 32)             │         1,440 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ enc_bn_32 (BatchNormalization)  │ (None, 32)             │           128 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ enc_drop_32 (Dropout)           │ (None, 32)             │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ enc_dense_16 (Dense)            │ (None, 16)             │           528 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ enc_bn_16 (BatchNormalization)  │ (None, 16)             │            64 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ enc_drop_16 (Dropout)           │ (None, 16)             │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ bottleneck (Dense)              │ (None, 8)              │           136 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dec_dense_16 (Dense)            │ (None, 16)             │           144 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dec_bn_16 (BatchNormalization)  │ (None, 16)             │            64 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dec_dense_32 (Dense)            │ (None, 32)             │           544 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dec_bn_32 (BatchNormalization)  │ (None, 32)             │           128 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ reconstruction (Dense)          │ (None, 44)             │         1,452 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 4,628 (18.08 KB)
+ Trainable params: 4,436 (17.33 KB)
+ Non-trainable params: 192 (768.00 B)
+
+
+======================================================================
+SECTION 4 · AUTOENCODER TRAINING (benign-only)
+======================================================================
+Epoch 1/100
+241/241 - 1s - 6ms/step - loss: 4174096.0000 - val_loss: 4106271.0000 - learning_rate: 0.0010
+Epoch 2/100
+241/241 - 0s - 822us/step - loss: 4161747.2500 - val_loss: 4091118.0000 - learning_rate: 0.0010
+Epoch 3/100
+241/241 - 0s - 1ms/step - loss: 4142969.0000 - val_loss: 4068898.2500 - learning_rate: 0.0010
+Epoch 4/100
+241/241 - 0s - 856us/step - loss: 4118008.0000 - val_loss: 4044322.7500 - learning_rate: 0.0010
+Epoch 5/100
+241/241 - 0s - 780us/step - loss: 4087259.0000 - val_loss: 4013711.7500 - learning_rate: 0.0010
+Epoch 6/100
+241/241 - 0s - 779us/step - loss: 4051188.5000 - val_loss: 3975096.7500 - learning_rate: 0.0010
+Epoch 7/100
+241/241 - 0s - 777us/step - loss: 4010129.7500 - val_loss: 3935683.5000 - learning_rate: 0.0010
+Epoch 8/100
+241/241 - 0s - 792us/step - loss: 3964663.5000 - val_loss: 3890606.2500 - learning_rate: 0.0010
+Epoch 9/100
+241/241 - 0s - 797us/step - loss: 3915004.0000 - val_loss: 3842805.5000 - learning_rate: 0.0010
+Epoch 10/100
+241/241 - 0s - 909us/step - loss: 3861570.2500 - val_loss: 3788356.0000 - learning_rate: 0.0010
+Epoch 11/100
+241/241 - 0s - 909us/step - loss: 3804666.0000 - val_loss: 3730499.5000 - learning_rate: 0.0010
+Epoch 12/100
+241/241 - 0s - 869us/step - loss: 3744618.0000 - val_loss: 3669499.7500 - learning_rate: 0.0010
+Epoch 13/100
+241/241 - 0s - 805us/step - loss: 3681620.7500 - val_loss: 3607182.0000 - learning_rate: 0.0010
+Epoch 14/100
+241/241 - 0s - 797us/step - loss: 3616158.7500 - val_loss: 3542506.5000 - learning_rate: 0.0010
+Epoch 15/100
+241/241 - 0s - 791us/step - loss: 3548111.0000 - val_loss: 3474460.5000 - learning_rate: 0.0010
+Epoch 16/100
+241/241 - 0s - 791us/step - loss: 3478046.2500 - val_loss: 3419291.0000 - learning_rate: 0.0010
+Epoch 17/100
+241/241 - 0s - 802us/step - loss: 3405919.2500 - val_loss: 3345382.0000 - learning_rate: 0.0010
+Epoch 18/100
+241/241 - 0s - 803us/step - loss: 3331973.7500 - val_loss: 3266167.7500 - learning_rate: 0.0010
+Epoch 19/100
+241/241 - 0s - 799us/step - loss: 3256747.2500 - val_loss: 3204036.2500 - learning_rate: 0.0010
+Epoch 20/100
+241/241 - 0s - 802us/step - loss: 3179917.0000 - val_loss: 3131925.7500 - learning_rate: 0.0010
+Epoch 21/100
+241/241 - 0s - 805us/step - loss: 3101857.5000 - val_loss: 3039299.7500 - learning_rate: 0.0010
+Epoch 22/100
+241/241 - 0s - 800us/step - loss: 3022414.7500 - val_loss: 2962861.5000 - learning_rate: 0.0010
+Epoch 23/100
+241/241 - 0s - 798us/step - loss: 2942565.7500 - val_loss: 2898187.2500 - learning_rate: 0.0010
+Epoch 24/100
+241/241 - 0s - 797us/step - loss: 2861478.5000 - val_loss: 2812248.0000 - learning_rate: 0.0010
+Epoch 25/100
+241/241 - 0s - 799us/step - loss: 2779890.2500 - val_loss: 2724205.5000 - learning_rate: 0.0010
+Epoch 26/100
+241/241 - 0s - 796us/step - loss: 2698080.7500 - val_loss: 2640239.2500 - learning_rate: 0.0010
+Epoch 27/100
+241/241 - 0s - 796us/step - loss: 2616009.7500 - val_loss: 2574975.2500 - learning_rate: 0.0010
+Epoch 28/100
+241/241 - 0s - 794us/step - loss: 2533705.0000 - val_loss: 2492443.5000 - learning_rate: 0.0010
+Epoch 29/100
+241/241 - 0s - 797us/step - loss: 2451062.7500 - val_loss: 2400235.7500 - learning_rate: 0.0010
+Epoch 30/100
+241/241 - 0s - 797us/step - loss: 2368731.7500 - val_loss: 2305684.7500 - learning_rate: 0.0010
+Epoch 31/100
+241/241 - 0s - 795us/step - loss: 2286506.2500 - val_loss: 2287232.2500 - learning_rate: 0.0010
+Epoch 32/100
+241/241 - 0s - 809us/step - loss: 2204696.7500 - val_loss: 2173852.0000 - learning_rate: 0.0010
+Epoch 33/100
+241/241 - 0s - 800us/step - loss: 2122930.0000 - val_loss: 2081959.0000 - learning_rate: 0.0010
+Epoch 34/100
+241/241 - 0s - 796us/step - loss: 2042094.8750 - val_loss: 1998084.1250 - learning_rate: 0.0010
+Epoch 35/100
+241/241 - 0s - 796us/step - loss: 1961697.5000 - val_loss: 1919783.2500 - learning_rate: 0.0010
+Epoch 36/100
+241/241 - 0s - 794us/step - loss: 1882324.0000 - val_loss: 1850205.2500 - learning_rate: 0.0010
+Epoch 37/100
+241/241 - 0s - 792us/step - loss: 1803117.5000 - val_loss: 1738225.6250 - learning_rate: 0.0010
+Epoch 38/100
+241/241 - 0s - 796us/step - loss: 1725584.3750 - val_loss: 1732638.8750 - learning_rate: 0.0010
+Epoch 39/100
+241/241 - 0s - 797us/step - loss: 1648520.5000 - val_loss: 1660600.8750 - learning_rate: 0.0010
+Epoch 40/100
+241/241 - 0s - 816us/step - loss: 1573194.7500 - val_loss: 1555776.3750 - learning_rate: 0.0010
+Epoch 41/100
+241/241 - 0s - 796us/step - loss: 1498472.8750 - val_loss: 1501905.7500 - learning_rate: 0.0010
+Epoch 42/100
+241/241 - 0s - 795us/step - loss: 1425446.0000 - val_loss: 1406647.2500 - learning_rate: 0.0010
+Epoch 43/100
+241/241 - 0s - 804us/step - loss: 1354147.2500 - val_loss: 1330066.7500 - learning_rate: 0.0010
+Epoch 44/100
+241/241 - 0s - 792us/step - loss: 1284009.3750 - val_loss: 1337744.6250 - learning_rate: 0.0010
+Epoch 45/100
+241/241 - 0s - 797us/step - loss: 1215602.3750 - val_loss: 1198725.3750 - learning_rate: 0.0010
+Epoch 46/100
+241/241 - 0s - 795us/step - loss: 1149284.5000 - val_loss: 1134137.3750 - learning_rate: 0.0010
+Epoch 47/100
+241/241 - 0s - 797us/step - loss: 1084513.1250 - val_loss: 1100660.1250 - learning_rate: 0.0010
+Epoch 48/100
+241/241 - 0s - 795us/step - loss: 1021778.3125 - val_loss: 1056631.3750 - learning_rate: 0.0010
+Epoch 49/100
+241/241 - 0s - 796us/step - loss: 960476.0000 - val_loss: 958638.6875 - learning_rate: 0.0010
+Epoch 50/100
+241/241 - 0s - 789us/step - loss: 901626.5000 - val_loss: 929618.8125 - learning_rate: 0.0010
+Epoch 51/100
+241/241 - 0s - 795us/step - loss: 845209.7500 - val_loss: 889434.8125 - learning_rate: 0.0010
+Epoch 52/100
+241/241 - 0s - 795us/step - loss: 790416.8750 - val_loss: 842181.1250 - learning_rate: 0.0010
+Epoch 53/100
+241/241 - 0s - 793us/step - loss: 738010.1250 - val_loss: 807212.7500 - learning_rate: 0.0010
+Epoch 54/100
+241/241 - 0s - 798us/step - loss: 687660.2500 - val_loss: 736328.5000 - learning_rate: 0.0010
+Epoch 55/100
+241/241 - 0s - 795us/step - loss: 639989.0000 - val_loss: 674871.4375 - learning_rate: 0.0010
+Epoch 56/100
+241/241 - 0s - 794us/step - loss: 594225.0000 - val_loss: 666401.4375 - learning_rate: 0.0010
+Epoch 57/100
+241/241 - 0s - 796us/step - loss: 550395.5625 - val_loss: 617382.6250 - learning_rate: 0.0010
+Epoch 58/100
+241/241 - 0s - 798us/step - loss: 509511.7188 - val_loss: 586928.6250 - learning_rate: 0.0010
+Epoch 59/100
+241/241 - 0s - 795us/step - loss: 470053.0625 - val_loss: 562465.6250 - learning_rate: 0.0010
+Epoch 60/100
+241/241 - 0s - 797us/step - loss: 432120.6562 - val_loss: 493558.4062 - learning_rate: 0.0010
+Epoch 61/100
+241/241 - 0s - 813us/step - loss: 397272.6562 - val_loss: 479259.5938 - learning_rate: 0.0010
+Epoch 62/100
+241/241 - 0s - 839us/step - loss: 363661.5625 - val_loss: 434584.5000 - learning_rate: 0.0010
+Epoch 63/100
+241/241 - 0s - 793us/step - loss: 332783.8750 - val_loss: 411581.5625 - learning_rate: 0.0010
+Epoch 64/100
+241/241 - 0s - 798us/step - loss: 303693.4062 - val_loss: 371498.1562 - learning_rate: 0.0010
+Epoch 65/100
+241/241 - 0s - 795us/step - loss: 276023.8750 - val_loss: 388597.2812 - learning_rate: 0.0010
+Epoch 66/100
+241/241 - 0s - 811us/step - loss: 251592.7188 - val_loss: 349080.8750 - learning_rate: 0.0010
+Epoch 67/100
+241/241 - 0s - 894us/step - loss: 228201.0938 - val_loss: 335576.5938 - learning_rate: 0.0010
+Epoch 68/100
+241/241 - 0s - 797us/step - loss: 206831.2656 - val_loss: 282428.7500 - learning_rate: 0.0010
+Epoch 69/100
+241/241 - 0s - 801us/step - loss: 186748.0000 - val_loss: 280936.5938 - learning_rate: 0.0010
+Epoch 70/100
+241/241 - 0s - 791us/step - loss: 168805.9375 - val_loss: 251772.2656 - learning_rate: 0.0010
+Epoch 71/100
+241/241 - 0s - 899us/step - loss: 153153.8281 - val_loss: 252089.0781 - learning_rate: 0.0010
+Epoch 72/100
+241/241 - 0s - 787us/step - loss: 138193.9531 - val_loss: 213403.1094 - learning_rate: 0.0010
+Epoch 73/100
+241/241 - 0s - 789us/step - loss: 125176.8984 - val_loss: 204046.3750 - learning_rate: 0.0010
+Epoch 74/100
+241/241 - 0s - 795us/step - loss: 114548.9688 - val_loss: 195101.0938 - learning_rate: 0.0010
+Epoch 75/100
+241/241 - 0s - 793us/step - loss: 104465.0469 - val_loss: 156518.4375 - learning_rate: 0.0010
+Epoch 76/100
+241/241 - 0s - 802us/step - loss: 95869.6016 - val_loss: 162540.5938 - learning_rate: 0.0010
+Epoch 77/100
+241/241 - 0s - 798us/step - loss: 88823.5625 - val_loss: 136146.9531 - learning_rate: 0.0010
+Epoch 78/100
+241/241 - 0s - 789us/step - loss: 82315.1797 - val_loss: 147421.3438 - learning_rate: 0.0010
+Epoch 79/100
+241/241 - 0s - 794us/step - loss: 77729.8438 - val_loss: 149674.4062 - learning_rate: 0.0010
+Epoch 80/100
+241/241 - 0s - 791us/step - loss: 74037.6562 - val_loss: 142556.1406 - learning_rate: 0.0010
+Epoch 81/100
+241/241 - 0s - 795us/step - loss: 70196.6875 - val_loss: 125497.0859 - learning_rate: 0.0010
+Epoch 82/100
+241/241 - 0s - 794us/step - loss: 67368.8125 - val_loss: 120516.5312 - learning_rate: 0.0010
+Epoch 83/100
+241/241 - 0s - 796us/step - loss: 65417.5703 - val_loss: 115306.2344 - learning_rate: 0.0010
+Epoch 84/100
+241/241 - 0s - 792us/step - loss: 62463.8750 - val_loss: 112064.3906 - learning_rate: 0.0010
+Epoch 85/100
+241/241 - 0s - 790us/step - loss: 63009.5391 - val_loss: 113727.5547 - learning_rate: 0.0010
+Epoch 86/100
+241/241 - 0s - 791us/step - loss: 60651.9727 - val_loss: 128806.7891 - learning_rate: 0.0010
+Epoch 87/100
+241/241 - 0s - 796us/step - loss: 60404.7773 - val_loss: 130167.1094 - learning_rate: 0.0010
+Epoch 88/100
+241/241 - 0s - 793us/step - loss: 59424.2344 - val_loss: 101414.6094 - learning_rate: 0.0010
+Epoch 89/100
+241/241 - 0s - 791us/step - loss: 57880.3320 - val_loss: 126585.3672 - learning_rate: 0.0010
+Epoch 90/100
+241/241 - 0s - 791us/step - loss: 56368.1016 - val_loss: 145307.4688 - learning_rate: 0.0010
+Epoch 91/100
+241/241 - 0s - 791us/step - loss: 55710.5430 - val_loss: 147445.0469 - learning_rate: 0.0010
+Epoch 92/100
+241/241 - 0s - 790us/step - loss: 54880.7539 - val_loss: 115534.4141 - learning_rate: 0.0010
+Epoch 93/100
+
+Epoch 93: ReduceLROnPlateau reducing learning rate to 0.0005000000237487257.
+241/241 - 0s - 795us/step - loss: 52779.0859 - val_loss: 126232.2500 - learning_rate: 0.0010
+Epoch 94/100
+241/241 - 0s - 851us/step - loss: 50798.4141 - val_loss: 130838.6953 - learning_rate: 5.0000e-04
+Epoch 95/100
+241/241 - 0s - 850us/step - loss: 50740.4609 - val_loss: 140979.4375 - learning_rate: 5.0000e-04
+Epoch 96/100
+241/241 - 0s - 1ms/step - loss: 50125.0391 - val_loss: 144315.6719 - learning_rate: 5.0000e-04
+Epoch 97/100
+241/241 - 0s - 802us/step - loss: 49876.3086 - val_loss: 123197.8984 - learning_rate: 5.0000e-04
+Epoch 98/100
+
+Epoch 98: ReduceLROnPlateau reducing learning rate to 0.0002500000118743628.
+241/241 - 0s - 801us/step - loss: 50368.1211 - val_loss: 132709.7812 - learning_rate: 5.0000e-04
+Epoch 98: early stopping
+Restoring model weights from the end of the best epoch: 88.
+[train] AE training time: 20.4s (0.34 min) over 98 epochs
+[train] best val_loss: 101414.609375
+
+======================================================================
+SECTION 5 · RECONSTRUCTION ERROR (per-sample MSE)
+======================================================================
+[score] AE scoring time: 0.5s
+[score] benign MSE — mean=101414.601562  std=550509.375000  p95=199849.843750  p99=2575986.750000
+
+======================================================================
+SECTION 6 · THRESHOLD SELECTION (on validation set)
+======================================================================
+
+Threshold evaluation on VALIDATION:
+threshold_name  threshold_value  precision   recall       f1      fpr      tpr     tp   fp    tn     fn
+           p90     1.001215e+05   0.995330 0.975750 0.985443 0.102683 0.975750 843507 3958 34588  20963
+           p95     1.998498e+05   0.997584 0.974100 0.985702 0.052898 0.974100 842080 2039 36507  22390
+           p99     2.575987e+06   0.651344 0.000869 0.001735 0.010429 0.000869    751  402 38144 863719
+     mean_2std     1.202433e+06   0.728184 0.002857 0.005692 0.023919 0.002857   2470  922 37624 862000
+     mean_3std     1.752943e+06   0.699458 0.001793 0.003577 0.017278 0.001793   1550  666 37880 862920
+
+[threshold] selected 'p95' = 199849.843750  (F1=0.9857)
+
+======================================================================
+SECTION 7 · ISOLATION FOREST TRAINING (benign-only)
+======================================================================
+[train] IF training time: 0.6s
+[score] IF scoring time: 6.4s
+
+======================================================================
+SECTION 8 · BINARY ANOMALY DETECTION METRICS
+======================================================================
+[AUC] AE:  val=0.9596   test=0.9728
+[AUC] IF:  val=0.9136   test=0.8616
+[FPR@95%TPR] AE test: 0.0172    IF test: 0.2715
+
+Autoencoder classification report (test):
+              precision    recall  f1-score   support
+
+      normal       0.57      0.97      0.72     37607
+     anomaly       1.00      0.97      0.98    854661
+
+    accuracy                           0.97    892268
+   macro avg       0.79      0.97      0.85    892268
+weighted avg       0.98      0.97      0.97    892268
+
+Isolation Forest classification report (test):
+              precision    recall  f1-score   support
+
+      normal       0.09      0.89      0.16     37607
+     anomaly       0.99      0.58      0.73    854661
+
+    accuracy                           0.59    892268
+   macro avg       0.54      0.74      0.44    892268
+weighted avg       0.95      0.59      0.71    892268
+
+
+======================================================================
+SECTION 9 · PER-CLASS DETECTION RATES
+======================================================================
+[classes] 19 classes: ['ARP_Spoofing', 'Benign', 'DDoS_ICMP', 'DDoS_SYN', 'DDoS_TCP', 'DDoS_UDP', 'DoS_ICMP', 'DoS_SYN', 'DoS_TCP', 'DoS_UDP', 'MQTT_DDoS_Connect_Flood', 'MQTT_DDoS_Publish_Flood', 'MQTT_DoS_Connect_Flood', 'MQTT_DoS_Publish_Flood', 'MQTT_Malformed_Data', 'Recon_OS_Scan', 'Recon_Ping_Sweep', 'Recon_Port_Scan', 'Recon_VulScan']
+
+Per-class detection rate (test, AE first then IF):
+                  class  n_samples           model   p90   p95   p99  mean_2std  mean_3std
+           ARP_Spoofing       1744     Autoencoder 0.405 0.392 0.275      0.337      0.304
+                 Benign      37607     Autoencoder 0.076 0.031 0.005      0.013      0.009
+              DDoS_ICMP      19673     Autoencoder 0.996 0.990 0.000      0.000      0.000
+               DDoS_SYN      88921     Autoencoder 1.000 0.998 0.000      0.000      0.000
+               DDoS_TCP       8735     Autoencoder 0.997 0.988 0.000      0.000      0.000
+               DDoS_UDP     362070     Autoencoder 1.000 0.999 0.000      0.000      0.000
+               DoS_ICMP       8451     Autoencoder 0.995 0.983 0.000      0.003      0.001
+                DoS_SYN      97542     Autoencoder 1.000 1.000 0.000      0.000      0.000
+                DoS_TCP      42583     Autoencoder 0.999 0.997 0.000      0.000      0.000
+                DoS_UDP     137553     Autoencoder 1.000 1.000 0.000      0.000      0.000
+MQTT_DDoS_Connect_Flood      41916     Autoencoder 1.000 1.000 0.000      0.000      0.000
+MQTT_DDoS_Publish_Flood       8416     Autoencoder 0.999 0.993 0.010      0.084      0.041
+ MQTT_DoS_Connect_Flood       3131     Autoencoder 1.000 0.999 0.000      0.000      0.000
+ MQTT_DoS_Publish_Flood       8505     Autoencoder 1.000 0.998 0.000      0.004      0.000
+    MQTT_Malformed_Data       1747     Autoencoder 0.242 0.212 0.124      0.167      0.151
+          Recon_OS_Scan       2941     Autoencoder 0.017 0.014 0.004      0.011      0.008
+       Recon_Ping_Sweep        169     Autoencoder 0.000 0.000 0.000      0.000      0.000
+        Recon_Port_Scan      19591     Autoencoder 0.010 0.009 0.003      0.006      0.004
+          Recon_VulScan        973     Autoencoder 0.030 0.023 0.010      0.017      0.017
+           ARP_Spoofing       1744 IsolationForest 0.429 0.429 0.429      0.429      0.429
+                 Benign      37607 IsolationForest 0.108 0.108 0.108      0.108      0.108
+              DDoS_ICMP      19673 IsolationForest 0.013 0.013 0.013      0.013      0.013
+               DDoS_SYN      88921 IsolationForest 0.004 0.004 0.004      0.004      0.004
+               DDoS_TCP       8735 IsolationForest 0.000 0.000 0.000      0.000      0.000
+               DDoS_UDP     362070 IsolationForest 0.973 0.973 0.973      0.973      0.973
+               DoS_ICMP       8451 IsolationForest 0.011 0.011 0.011      0.011      0.011
+                DoS_SYN      97542 IsolationForest 0.001 0.001 0.001      0.001      0.001
+                DoS_TCP      42583 IsolationForest 0.000 0.000 0.000      0.000      0.000
+                DoS_UDP     137553 IsolationForest 0.974 0.974 0.974      0.974      0.974
+MQTT_DDoS_Connect_Flood      41916 IsolationForest 0.136 0.136 0.136      0.136      0.136
+MQTT_DDoS_Publish_Flood       8416 IsolationForest 0.060 0.060 0.060      0.060      0.060
+ MQTT_DoS_Connect_Flood       3131 IsolationForest 0.008 0.008 0.008      0.008      0.008
+ MQTT_DoS_Publish_Flood       8505 IsolationForest 0.000 0.000 0.000      0.000      0.000
+    MQTT_Malformed_Data       1747 IsolationForest 0.235 0.235 0.235      0.235      0.235
+          Recon_OS_Scan       2941 IsolationForest 0.013 0.013 0.013      0.013      0.013
+       Recon_Ping_Sweep        169 IsolationForest 0.077 0.077 0.077      0.077      0.077
+        Recon_Port_Scan      19591 IsolationForest 0.010 0.010 0.010      0.010      0.010
+          Recon_VulScan        973 IsolationForest 0.020 0.020 0.020      0.020      0.020
+
+======================================================================
+SECTION 10 · ZERO-DAY SIMULATION (5 targets)
+======================================================================
+                target  n_samples  ae_p90  ae_p95  ae_p99  ae_mean_2std  ae_mean_3std  ae_best_thr  if_recall
+      Recon_Ping_Sweep        169   0.000   0.000   0.000         0.000         0.000        0.000      0.077
+         Recon_VulScan        973   0.030   0.023   0.010         0.017         0.017        0.023      0.020
+   MQTT_Malformed_Data       1747   0.242   0.212   0.124         0.167         0.151        0.212      0.235
+MQTT_DoS_Connect_Flood       3131   1.000   0.999   0.000         0.000         0.000        0.999      0.008
+          ARP_Spoofing       1744   0.405   0.392   0.275         0.337         0.304        0.392      0.429
+[preview] AE @ best threshold ≥70% on 1/5 targets (preview only — true zero-day H2 evaluation deferred to Phase 6)
+
+======================================================================
+SECTION 11 · MODEL COMPARISON
+======================================================================
+                   metric  Autoencoder  IsolationForest
+           AUC-ROC (test)       0.9728           0.8616
+            AUC-ROC (val)       0.9596           0.9136
+      FPR @ 95%TPR (test)       0.0172           0.2715
+ Anomaly precision (test)       0.9986           0.9919
+    Anomaly recall (test)       0.9684           0.5789
+        Anomaly F1 (test)       0.9833           0.7311
+     Per-class avg recall       0.6996           0.1647
+        Training time (s)      20.4000           0.6000
+Scoring time val+test (s)       0.5000           6.4000
+
+======================================================================
+SECTION 12 · GENERATING FIGURES
+======================================================================
+  ✓ ae_loss_curves.png
+  ✓ ae_error_distribution.png
+  ✓ ae_per_class_boxplot.png
+  ✓ roc_curves.png
+  ✓ detection_rate_heatmap.png
+  ✓ if_score_distribution.png
+  ✓ zero_day_detection.png
+
+======================================================================
+SECTION 13 · SAVING ARTIFACTS
+======================================================================
+  ✓ models/{autoencoder.keras, encoder.keras, isolation_forest.pkl}
+  ✓ scores/*.npy (8 arrays)
+  ✓ thresholds.json
+  ✓ benign_error_stats.json
+  ✓ ae_training_history.json
+  ✓ metrics/{ae,if}_classification_report.json
+  ✓ metrics/per_class_detection_rates.csv
+  ✓ metrics/model_comparison.csv
+  ✓ metrics/zero_day_preview.csv
+  ✓ config.json
+
+======================================================================
+SECTION 14 · SUMMARY
+======================================================================
+  ✓ summary.md (5,287 chars)
+
+======================================================================
+PHASE 5 COMPLETE
+======================================================================
+AE  test AUC: 0.9728  · F1: 0.9833
+IF  test AUC: 0.8616  · F1: 0.7311
+Selected threshold: p95 = 199849.843750
+Per-class detection ≥70% (preview): 1/5 targets — true H2 evaluation deferred to Phase 6
+
+All outputs written to: /Users/amoorabaseet/IoMT-Project/results/unsupervised
+Total runtime: 0.56 min
