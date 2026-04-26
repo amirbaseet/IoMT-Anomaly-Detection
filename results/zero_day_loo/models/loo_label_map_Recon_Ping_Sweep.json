@@ -1,0 +1,20 @@
+{
+  "ARP_Spoofing": 0,
+  "Benign": 1,
+  "DDoS_ICMP": 2,
+  "DDoS_SYN": 3,
+  "DDoS_TCP": 4,
+  "DDoS_UDP": 5,
+  "DoS_ICMP": 6,
+  "DoS_SYN": 7,
+  "DoS_TCP": 8,
+  "DoS_UDP": 9,
+  "MQTT_DDoS_Connect_Flood": 10,
+  "MQTT_DDoS_Publish_Flood": 11,
+  "MQTT_DoS_Connect_Flood": 12,
+  "MQTT_DoS_Publish_Flood": 13,
+  "MQTT_Malformed_Data": 14,
+  "Recon_OS_Scan": 15,
+  "Recon_Port_Scan": 16,
+  "Recon_VulScan": 17
+}

@@ -1,0 +1,223 @@
+{
+  "threshold": 0.7,
+  "majority_rule": "\u22653 of 5 targets",
+  "evaluations": {
+    "h2_strict_ae_on_loo_missed_p95": {
+      "criterion": "Strict: AE recall on LOO-missed @ p95",
+      "metric_key": "ae_recall_on_loo_missed_p95",
+      "n_pass": 0,
+      "n_total": 5,
+      "verdict": "FAIL",
+      "details": [
+        {
+          "target": "Recon_Ping_Sweep",
+          "value": 0.06451612903225806,
+          "passes": false
+        },
+        {
+          "target": "Recon_VulScan",
+          "value": 0.3448275862068966,
+          "passes": false
+        },
+        {
+          "target": "MQTT_Malformed_Data",
+          "value": 0.2584745762711864,
+          "passes": false
+        },
+        {
+          "target": "MQTT_DoS_Connect_Flood",
+          "value": null,
+          "passes": false
+        },
+        {
+          "target": "ARP_Spoofing",
+          "value": 0.20569620253164558,
+          "passes": false
+        }
+      ]
+    },
+    "h2_strict_ae_on_loo_missed_p90": {
+      "criterion": "Strict: AE recall on LOO-missed @ p90",
+      "metric_key": "ae_recall_on_loo_missed_p90",
+      "n_pass": 0,
+      "n_total": 5,
+      "verdict": "FAIL",
+      "details": [
+        {
+          "target": "Recon_Ping_Sweep",
+          "value": 0.16129032258064516,
+          "passes": false
+        },
+        {
+          "target": "Recon_VulScan",
+          "value": 0.44061302681992337,
+          "passes": false
+        },
+        {
+          "target": "MQTT_Malformed_Data",
+          "value": 0.3347457627118644,
+          "passes": false
+        },
+        {
+          "target": "MQTT_DoS_Connect_Flood",
+          "value": null,
+          "passes": false
+        },
+        {
+          "target": "ARP_Spoofing",
+          "value": 0.31962025316455694,
+          "passes": false
+        }
+      ]
+    },
+    "h2_relaxed_ae_all_p95": {
+      "criterion": "Relaxed: AE recall on all target samples @ p95",
+      "metric_key": "ae_recall_all_p95",
+      "n_pass": 1,
+      "n_total": 5,
+      "verdict": "FAIL",
+      "details": [
+        {
+          "target": "Recon_Ping_Sweep",
+          "value": 0.5088757396449705,
+          "passes": false
+        },
+        {
+          "target": "Recon_VulScan",
+          "value": 0.5734840698869476,
+          "passes": false
+        },
+        {
+          "target": "MQTT_Malformed_Data",
+          "value": 0.4699484831139096,
+          "passes": false
+        },
+        {
+          "target": "MQTT_DoS_Connect_Flood",
+          "value": 0.9996806132226126,
+          "passes": true
+        },
+        {
+          "target": "ARP_Spoofing",
+          "value": 0.2861238532110092,
+          "passes": false
+        }
+      ]
+    },
+    "h2_relaxed_ae_all_p90": {
+      "criterion": "Relaxed: AE recall on all target samples @ p90",
+      "metric_key": "ae_recall_all_p90",
+      "n_pass": 1,
+      "n_total": 5,
+      "verdict": "FAIL",
+      "details": [
+        {
+          "target": "Recon_Ping_Sweep",
+          "value": 0.5443786982248521,
+          "passes": false
+        },
+        {
+          "target": "Recon_VulScan",
+          "value": 0.6300102774922919,
+          "passes": false
+        },
+        {
+          "target": "MQTT_Malformed_Data",
+          "value": 0.5575271894676589,
+          "passes": false
+        },
+        {
+          "target": "MQTT_DoS_Connect_Flood",
+          "value": 0.9996806132226126,
+          "passes": true
+        },
+        {
+          "target": "ARP_Spoofing",
+          "value": 0.5527522935779816,
+          "passes": false
+        }
+      ]
+    },
+    "h2_binary_p95": {
+      "criterion": "Binary: any-alert recall (Cases 1+2+3) @ p95",
+      "metric_key": "binary_recall_p95",
+      "n_pass": 4,
+      "n_total": 5,
+      "verdict": "PASS",
+      "details": [
+        {
+          "target": "Recon_Ping_Sweep",
+          "value": 0.8284023668639053,
+          "passes": true
+        },
+        {
+          "target": "Recon_VulScan",
+          "value": 0.6485097636176773,
+          "passes": false
+        },
+        {
+          "target": "MQTT_Malformed_Data",
+          "value": 0.7996565540927304,
+          "passes": true
+        },
+        {
+          "target": "MQTT_DoS_Connect_Flood",
+          "value": 1.0,
+          "passes": true
+        },
+        {
+          "target": "ARP_Spoofing",
+          "value": 0.8560779816513762,
+          "passes": true
+        }
+      ]
+    }
+  },
+  "h2_records": [
+    {
+      "target": "Recon_Ping_Sweep",
+      "ae_recall_on_loo_missed_p90": 0.16129032258064516,
+      "ae_recall_on_loo_missed_p95": 0.06451612903225806,
+      "ae_recall_on_loo_missed_p99": 0.0,
+      "ae_recall_all_p95": 0.5088757396449705,
+      "ae_recall_all_p90": 0.5443786982248521,
+      "binary_recall_p95": 0.8284023668639053
+    },
+    {
+      "target": "Recon_VulScan",
+      "ae_recall_on_loo_missed_p90": 0.44061302681992337,
+      "ae_recall_on_loo_missed_p95": 0.3448275862068966,
+      "ae_recall_on_loo_missed_p99": 0.10919540229885058,
+      "ae_recall_all_p95": 0.5734840698869476,
+      "ae_recall_all_p90": 0.6300102774922919,
+      "binary_recall_p95": 0.6485097636176773
+    },
+    {
+      "target": "MQTT_Malformed_Data",
+      "ae_recall_on_loo_missed_p90": 0.3347457627118644,
+      "ae_recall_on_loo_missed_p95": 0.2584745762711864,
+      "ae_recall_on_loo_missed_p99": 0.019067796610169493,
+      "ae_recall_all_p95": 0.4699484831139096,
+      "ae_recall_all_p90": 0.5575271894676589,
+      "binary_recall_p95": 0.7996565540927304
+    },
+    {
+      "target": "MQTT_DoS_Connect_Flood",
+      "ae_recall_on_loo_missed_p90": null,
+      "ae_recall_on_loo_missed_p95": null,
+      "ae_recall_on_loo_missed_p99": null,
+      "ae_recall_all_p95": 0.9996806132226126,
+      "ae_recall_all_p90": 0.9996806132226126,
+      "binary_recall_p95": 1.0
+    },
+    {
+      "target": "ARP_Spoofing",
+      "ae_recall_on_loo_missed_p90": 0.31962025316455694,
+      "ae_recall_on_loo_missed_p95": 0.20569620253164558,
+      "ae_recall_on_loo_missed_p99": 0.04113924050632911,
+      "ae_recall_all_p95": 0.2861238532110092,
+      "ae_recall_all_p90": 0.5527522935779816,
+      "binary_recall_p95": 0.8560779816513762
+    }
+  ]
+}
