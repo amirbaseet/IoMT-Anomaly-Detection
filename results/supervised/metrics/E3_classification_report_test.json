@@ -1,0 +1,129 @@
+{
+  "ARP_Spoofing": {
+    "precision": 0.6100347739692003,
+    "recall": 0.7041284403669725,
+    "f1-score": 0.6537130689379824,
+    "support": 1744.0
+  },
+  "Benign": {
+    "precision": 0.9664697888354589,
+    "recall": 0.9833541627888425,
+    "f1-score": 0.9748388712419765,
+    "support": 37607.0
+  },
+  "DDoS_ICMP": {
+    "precision": 0.997207271250127,
+    "recall": 0.9982717429980176,
+    "f1-score": 0.9977392232072548,
+    "support": 19673.0
+  },
+  "DDoS_SYN": {
+    "precision": 0.998281246489474,
+    "recall": 0.9993702275053137,
+    "f1-score": 0.9988254401789377,
+    "support": 88921.0
+  },
+  "DDoS_TCP": {
+    "precision": 0.9706212155191747,
+    "recall": 0.9909559244419004,
+    "f1-score": 0.9806831699994335,
+    "support": 8735.0
+  },
+  "DDoS_UDP": {
+    "precision": 0.9997763048881524,
+    "recall": 0.9998591432595907,
+    "f1-score": 0.9998177223580098,
+    "support": 362070.0
+  },
+  "DoS_ICMP": {
+    "precision": 0.9942703888821163,
+    "recall": 0.9650928884155722,
+    "f1-score": 0.9794643929386334,
+    "support": 8451.0
+  },
+  "DoS_SYN": {
+    "precision": 0.9998974085397132,
+    "recall": 0.9992003444669988,
+    "f1-score": 0.9995487549739509,
+    "support": 97542.0
+  },
+  "DoS_TCP": {
+    "precision": 0.9999530119349685,
+    "recall": 0.999506845454759,
+    "f1-score": 0.9997298789152876,
+    "support": 42583.0
+  },
+  "DoS_UDP": {
+    "precision": 0.9996509040131493,
+    "recall": 0.9992511977201515,
+    "f1-score": 0.9994510109034325,
+    "support": 137553.0
+  },
+  "MQTT_DDoS_Connect_Flood": {
+    "precision": 0.9999045778763807,
+    "recall": 0.9999761427617139,
+    "f1-score": 0.9999403590385877,
+    "support": 41916.0
+  },
+  "MQTT_DDoS_Publish_Flood": {
+    "precision": 1.0,
+    "recall": 0.7419201520912547,
+    "f1-score": 0.8518417462482947,
+    "support": 8416.0
+  },
+  "MQTT_DoS_Connect_Flood": {
+    "precision": 0.9996804090763822,
+    "recall": 0.9990418396678378,
+    "f1-score": 0.9993610223642172,
+    "support": 3131.0
+  },
+  "MQTT_DoS_Publish_Flood": {
+    "precision": 0.7968515742128935,
+    "recall": 0.9998824221046443,
+    "f1-score": 0.886895760546488,
+    "support": 8505.0
+  },
+  "MQTT_Malformed_Data": {
+    "precision": 0.9850238257317904,
+    "recall": 0.8282770463651975,
+    "f1-score": 0.8998756218905473,
+    "support": 1747.0
+  },
+  "Recon_OS_Scan": {
+    "precision": 0.870116156282999,
+    "recall": 0.5603536212172731,
+    "f1-score": 0.6816959669079627,
+    "support": 2941.0
+  },
+  "Recon_Ping_Sweep": {
+    "precision": 0.8321678321678322,
+    "recall": 0.7041420118343196,
+    "f1-score": 0.7628205128205128,
+    "support": 169.0
+  },
+  "Recon_Port_Scan": {
+    "precision": 0.9358582180140811,
+    "recall": 0.9838191006074217,
+    "f1-score": 0.9592395361568705,
+    "support": 19591.0
+  },
+  "Recon_VulScan": {
+    "precision": 0.7024070021881839,
+    "recall": 0.32990750256937307,
+    "f1-score": 0.4489510489510489,
+    "support": 973.0
+  },
+  "accuracy": 0.9925493237457804,
+  "macro avg": {
+    "precision": 0.9293774689406357,
+    "recall": 0.8834900398230082,
+    "f1-score": 0.8986543741357595,
+    "support": 892268.0
+  },
+  "weighted avg": {
+    "precision": 0.9929277275743859,
+    "recall": 0.9925493237457804,
+    "f1-score": 0.9922247787672616,
+    "support": 892268.0
+  }
+}

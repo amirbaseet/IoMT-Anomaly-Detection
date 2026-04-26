@@ -7,7 +7,7 @@
 > **Program:** M.Sc. Artificial Intelligence and Machine Learning in Cybersecurity — Sakarya University  
 > **Dataset:** CICIoMT2024 (Canadian Institute for Cybersecurity)  
 > **Reference Paper:** Yacoubi et al. (2025–2026) — *Enhancing IoMT Security with Explainable Machine Learning*  
-> **Status:** Phase 1-3 complete — Preprocessing done, supervised model training next (Phase 4)
+> **Status:** Phase 1-4 complete — Supervised models trained, unsupervised layer next (Phase 5)
 
 ---
 
@@ -30,18 +30,19 @@
 9. [Profiling Data](#9-profiling-data)  
 10. [Phase 2 EDA Key Findings](#10-phase-2-eda-key-findings)  
 11. [Phase 3 Preprocessing & Feature Engineering](#11-phase-3-preprocessing--feature-engineering)  
-12. [Project Roadmap](#12-project-roadmap)  
-13. [Related Work — Summary Table](#13-related-work--summary-table)  
-14. [Deep Dive: Yacoubi et al. — Primary Reference Paper](#14-deep-dive-yacoubi-et-al--primary-reference-paper)  
-    - 14.1 [Paper 1: Explainable ML (COCIA 2025)](#141-paper-1-enhancing-iomt-security-with-explainable-ml-cocia-2025)
-    - 14.2 [Paper 2: XAI Feature Selection (AIAI 2025)](#142-paper-2-xai-driven-feature-selection-for-improved-ids-aiai-2025)
-    - 14.3 [Paper 3: Ensemble Strategies (Springer 2026)](#143-paper-3-ensemble-learning-strategies-for-anomaly-based-ids-springer-2026)
-    - 14.4 [Research Gaps & Our Contribution](#144-research-gaps-left-by-yacoubi-et-al)
-15. [Research Design](#15-research-design)
-16. [Proposed Framework Architecture](#16-proposed-framework-architecture)
-17. [Corrections to Published Literature](#17-corrections-to-published-literature)
-18. [Citations](#18-citations)  
-19. [Tech Stack](#19-tech-stack)
+12. [Phase 4 Supervised Model Training Results](#12-phase-4-supervised-model-training-results)  
+13. [Project Roadmap](#13-project-roadmap)  
+14. [Related Work — Summary Table](#14-related-work--summary-table)  
+15. [Deep Dive: Yacoubi et al. — Primary Reference Paper](#15-deep-dive-yacoubi-et-al--primary-reference-paper)  
+    - 15.1 [Paper 1: Explainable ML (COCIA 2025)](#151-paper-1-enhancing-iomt-security-with-explainable-ml-cocia-2025)
+    - 15.2 [Paper 2: XAI Feature Selection (AIAI 2025)](#152-paper-2-xai-driven-feature-selection-for-improved-ids-aiai-2025)
+    - 15.3 [Paper 3: Ensemble Strategies (Springer 2026)](#153-paper-3-ensemble-learning-strategies-for-anomaly-based-ids-springer-2026)
+    - 15.4 [Research Gaps & Our Contribution](#154-research-gaps-left-by-yacoubi-et-al)
+16. [Research Design](#16-research-design)
+17. [Proposed Framework Architecture](#17-proposed-framework-architecture)
+18. [Corrections to Published Literature](#18-corrections-to-published-literature)
+19. [Citations](#19-citations)  
+20. [Tech Stack](#20-tech-stack)
 
 ---
 
@@ -729,15 +730,149 @@ All integrity checks passed:
 
 ---
 
-## 12. Project Roadmap — 17-Week Plan (Option A: Hybrid Framework)
+## 12. Phase 4 Supervised Model Training Results
+
+> Pipeline run: April 26, 2026 — MacBook Air M4, 24GB RAM — Total runtime: 60 minutes
+> 8 experiments × 3 classification tasks = 24 training runs
+
+### 12.1 Experimental Design
+
+| ID | Model | Data | Features | Purpose |
+|----|-------|------|----------|---------|
+| E1 | Random Forest | Original | Reduced (28) | Baseline RF |
+| E2 | Random Forest | SMOTETomek | Reduced (28) | RF + class balancing |
+| E3 | XGBoost | Original | Reduced (28) | Baseline XGBoost |
+| E4 | XGBoost | SMOTETomek | Reduced (28) | XGBoost + class balancing |
+| E5 | Random Forest | Original | Full (44) | Feature count comparison |
+| E6 | Random Forest | SMOTETomek | Full (44) | Feature count + balancing |
+| E7 | XGBoost | Original | Full (44) | Feature count comparison |
+| E8 | XGBoost | SMOTETomek | Full (44) | Feature count + balancing |
+
+**Hyperparameters (regularized based on review feedback):**
+- RF: n_estimators=200, criterion='entropy', max_depth=30, min_samples_split=20, min_samples_leaf=10, class_weight='balanced'
+- XGBoost: n_estimators=200, max_depth=8, learning_rate=0.1, subsample=0.8, colsample_bytree=0.8, tree_method='hist'
+
+### 12.2 Best Results — 19-Class Task (Test Set)
+
+| Experiment | Model | Features | Data | Accuracy | F1_macro | MCC |
+|-----------|-------|----------|------|----------|----------|-----|
+| **E7** | **XGBoost** | **Full (44)** | **Original** | **99.27%** | **0.9076** | **0.9906** |
+| E3 | XGBoost | Reduced (28) | Original | 99.25% | 0.8987 | 0.9905 |
+| E8 | XGBoost | Full (44) | SMOTE | 98.79% | 0.8708 | 0.9846 |
+| E5 | RF | Full (44) | Original | 98.52% | 0.8551 | 0.9811 |
+| E4 | XGBoost | Reduced (28) | SMOTE | 98.59% | 0.8538 | 0.9821 |
+| E1 | RF | Reduced (28) | Original | 98.43% | 0.8469 | 0.9801 |
+| E6 | RF | Full (44) | SMOTE | 98.41% | 0.8380 | 0.9798 |
+| E2 | RF | Reduced (28) | SMOTE | 98.37% | 0.8356 | 0.9793 |
+
+**Winner: E7 (XGBoost / full features / original data)** — selected as the supervised input for the Phase 6 fusion engine.
+
+### 12.3 Best Results — Per Classification Task
+
+| Task | Best Experiment | F1_macro | MCC | Accuracy |
+|------|----------------|----------|-----|----------|
+| Binary (2-class) | E5 (RF/full/original) | 0.9880 | 0.9763 | 99.80% |
+| Category (6-class) | E7 (XGB/full/original) | 0.9363 | 0.9925 | 99.55% |
+| Multiclass (19-class) | E7 (XGB/full/original) | 0.9076 | 0.9906 | 99.27% |
+
+### 12.4 SMOTETomek Impact (Key Finding)
+
+**SMOTETomek degraded performance in ALL 4 configurations:**
+
+| Model | Features | F1_macro (Original) | F1_macro (SMOTE) | Change |
+|-------|----------|--------------------|--------------------|--------|
+| RF | Reduced (28) | 0.8469 | 0.8356 | **−0.0114** |
+| RF | Full (44) | 0.8551 | 0.8380 | **−0.0171** |
+| XGBoost | Reduced (28) | 0.8987 | 0.8538 | **−0.0449** |
+| XGBoost | Full (44) | 0.9076 | 0.8708 | **−0.0368** |
+
+> **Thesis finding:** SMOTETomek combined with class_weight='balanced' produces a compounding imbalance correction that degrades macro-F1. The synthetic oversampling adds noise to decision boundaries while the cost-sensitive weighting already compensates for class imbalance. This contradicts the common assumption in IoMT IDS literature that oversampling always improves minority-class detection. **H3 (SMOTETomek improves minority F1) is rejected on this dataset.**
+
+### 12.5 Feature Importance — RF Top 10
+
+From E5 (RF / full features / original — best RF model):
+
+| Rank | Feature | Importance |
+|------|---------|-----------|
+| 1 | IAT | 0.1401 |
+| 2 | Magnitue | 0.0706 |
+| 3 | Tot size | 0.0525 |
+| 4 | AVG | 0.0499 |
+| 5 | Min | 0.0476 |
+| 6 | TCP | 0.0466 |
+| 7 | syn_count | 0.0452 |
+| 8 | syn_flag_number | 0.0449 |
+| 9 | rst_count | 0.0425 |
+| 10 | fin_count | 0.0425 |
+
+**Feature importance comparison across methods:**
+
+| Method | Top-4 Features |
+|--------|---------------|
+| Yacoubi SHAP (raw data) | IAT, Rate, Header_Length, Srate |
+| Our Cohen's d (deduped) | rst_count, psh_flag_number, Variance, ack_flag_number |
+| Our RF importance (deduped) | IAT, Magnitue, Tot size, AVG |
+
+Only IAT appears consistently across all three methods — confirming it as the single most reliable discriminative feature. The variation in other rankings demonstrates that feature importance is method-dependent and should always be reported with multiple techniques.
+
+### 12.6 Full vs Reduced Features
+
+Full features (44) consistently outperformed reduced (28) by +0.005–0.009 macro-F1. Features dropped in the reduced variant (Magnitue, Tot size, AVG) ranked #2, #3, #4 in RF importance — the correlation-based dropping was too aggressive. **Recommendation for remaining phases: use the full (44) feature set.**
+
+### 12.7 Comparison with Yacoubi et al.
+
+| Model | Yacoubi Accuracy (raw data) | Our Accuracy (deduped) | Gap |
+|-------|----------------------------|----------------------|-----|
+| RF (entropy) | 99.87% | 98.52% (E5) | −1.35% |
+| XGBoost | 99.80% | 99.27% (E7) | −0.53% |
+
+The gap is attributed to our duplicate removal (37% of train data were exact duplicates that inflated Yacoubi's metrics). This is a methodological correction, not a regression. Our XGBoost result (99.27% accuracy, 0.9076 macro-F1) on clean data represents a more honest evaluation.
+
+### 12.8 Phase 6 Fusion Input
+
+**E7 (XGBoost / full / original)** is selected as the supervised layer for the 4-case fusion engine:
+- Model: `results/supervised/models/E7_xgb_full_original.pkl`
+- Val probabilities: `results/supervised/predictions/E7_val_proba.npy` (903,016 × 19)
+- Test probabilities: `results/supervised/predictions/E7_test_proba.npy` (892,268 × 19)
+
+### 12.9 Output Artifacts
+
+```
+results/supervised/                     (~4-6 GB)
+├── config.json                        # All experiment parameters
+├── summary.md                         # Key findings narrative
+├── models/                            # 8 trained model .pkl files
+│   ├── E1_rf_reduced_original.pkl
+│   ├── ...
+│   └── E8_xgb_full_smote.pkl
+├── predictions/                       # Probability vectors for fusion
+│   ├── E1_val_proba.npy ... E8_test_proba.npy
+│   └── E1_val_pred.npy ... E8_test_pred.npy
+├── metrics/
+│   ├── overall_comparison.csv         # 24-row comparison table
+│   ├── best_classification_report.csv # Per-class F1 for E7
+│   ├── smote_comparison.csv           # Original vs SMOTE delta
+│   ├── minority_focus.csv             # 5 rarest class analysis
+│   └── E*_feature_importance.csv      # RF importance rankings
+└── figures/
+    ├── cm_E*_19class.png              # 19×19 confusion matrices (8 experiments)
+    ├── cm_E*_6class.png               # 6×6 confusion matrices
+    ├── overall_comparison_bar.png     # F1_macro across all experiments
+    ├── feature_importance_rf.png      # Top-20 RF features
+    └── smote_effect.png               # Before/after per minority class
+```
+
+---
+
+## 13. Project Roadmap — 17-Week Plan (Option A: Hybrid Framework)
 
 | Week | Phase | Key Deliverables | Status |
 |------|-------|------------------|--------|
 | 1–2 | Literature Review & Problem Definition | Literature review, finalized RQs + hypotheses, thesis proposal | ✅ Complete |
 | 3–4 | Data Acquisition & EDA | Dataset loaded, 37% duplicates found, 15+ figures, findings.md | ✅ Complete |
 | 5–6 | Preprocessing & Imbalance Handling | Feature engineering, SMOTETomek, AE data, zero-day datasets | ✅ Complete |
-| 7–8 | Supervised Model Training (Layer 1) | RF + XGBoost (original + resampled), baseline performance tables | 🔄 Next |
-| 9–10 | Unsupervised Model Training (Layer 2) | Autoencoder + Isolation Forest on benign data, anomaly thresholds | ⏳ Planned |
+| 7–8 | Supervised Model Training (Layer 1) | 8 experiments, XGBoost best (F1=0.9076), SMOTETomek rejected | ✅ Complete |
+| 9–10 | Unsupervised Model Training (Layer 2) | Autoencoder + Isolation Forest on benign data, anomaly thresholds | 🔄 Next |
 | 11–12 | Fusion Engine + Zero-Day Simulation (Layer 3) | 4-case fusion logic, leave-one-attack-out results | ⏳ Planned |
 | 13–14 | SHAP Analysis + Confusion Matrix (Layer 4) | Per-class SHAP plots, feature importance comparisons, confusion matrices | ⏳ Planned |
 | 15 | Profiling Integration (Stretch Goal) | Delta features from profiling data (if time permits) | ⏳ Optional |
@@ -745,12 +880,12 @@ All integrity checks passed:
 
 ### Models to Implement
 
-**Supervised (Layer 1):**
-- Random Forest (criterion='entropy', n_estimators=200, class_weight='balanced')
-- XGBoost (n_estimators=200, learning_rate=0.1, max_depth=6)
+**Supervised (Layer 1) — TRAINED:**
+- Random Forest (criterion='entropy', n_estimators=200, max_depth=30, class_weight='balanced') — best: E5, test acc=98.52%
+- XGBoost (n_estimators=200, max_depth=8, learning_rate=0.1, tree_method='hist') — **best: E7, test acc=99.27%, F1_macro=0.9076**
 
-**Unsupervised (Layer 2):**
-- Deep Autoencoder (architecture: ~28→20→12→6→12→20→~28, MSE loss, trained on 123K benign rows from train split)
+**Unsupervised (Layer 2) — NEXT:**
+- Deep Autoencoder (architecture: ~44→32→16→8→16→32→44, MSE loss, trained on 123K benign rows from train split)
 - Isolation Forest (n_estimators=200, contamination=0.05)
 
 **Fusion (Layer 3):**
@@ -768,7 +903,7 @@ All integrity checks passed:
 
 ---
 
-## 13. Related Work — Summary Table
+## 14. Related Work — Summary Table
 
 | Paper | Approach | Key Result |
 |-------|----------|------------|
@@ -793,13 +928,13 @@ All integrity checks passed:
 
 ---
 
-## 14. Deep Dive: Yacoubi et al. — Primary Reference Paper
+## 15. Deep Dive: Yacoubi et al. — Primary Reference Paper
 
 > Yacoubi, M., Moussaoui, O., Drocourt, C. — University of Picardie Jules Verne & MIS Lab, France
 
 Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, each building on the previous. Together they form the most comprehensive explainable ML study on this dataset.
 
-### 14.1 Paper 1: Enhancing IoMT Security with Explainable ML (COCIA 2025)
+### 15.1 Paper 1: Enhancing IoMT Security with Explainable ML (COCIA 2025)
 
 **Core question:** Can ensemble classifiers be made transparent without sacrificing accuracy?
 
@@ -847,7 +982,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 
 **Paper 1 Conclusion:** Both RF and CatBoost achieve strong classification. SHAP provides trustworthy global explanations, while LIME gives actionable instance-level insights. The combination makes ensemble models viable for real-world IoMT security deployment.
 
-### 14.2 Paper 2: XAI-Driven Feature Selection for Improved IDS (AIAI 2025)
+### 15.2 Paper 2: XAI-Driven Feature Selection for Improved IDS (AIAI 2025)
 
 **Key Innovation:** Uses SHAP and LIME not just to *explain* models, but to *select features*. If SHAP says a feature has near-zero importance, drop it. This reduces the 45-feature space, cutting training time while maintaining or improving accuracy.
 
@@ -873,7 +1008,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 
 **Paper 2 Conclusion:** CatBoost actually *improved* by 4% after removing noisy features via SHAP. Feature selection isn't just about computational efficiency — it actively helps boosting models by removing features that confuse the sequential learning process. XAI-driven feature selection improves IDS efficiency without compromising detection capability.
 
-### 14.3 Paper 3: Ensemble Learning Strategies for Anomaly-Based IDS (Springer 2026)
+### 15.3 Paper 3: Ensemble Learning Strategies for Anomaly-Based IDS (Springer 2026)
 
 **Extended comparison** to 5 models: RF, CatBoost, LightGBM, XGBoost, and a **Stacking ensemble** (two-layer meta-model where CatBoost + RF generate probability estimates in layer 1, and a meta-learner combines them in layer 2).
 
@@ -892,7 +1027,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 - The precision/recall gap (99.36% accuracy but only 86.10% precision) suggests the model struggles with minority attack classes
 - For real-time IoMT detection, XGBoost or LightGBM may be better choices due to inference speed
 
-### 14.4 Research Gaps Left by Yacoubi et al.
+### 15.4 Research Gaps Left by Yacoubi et al.
 
 These gaps represent opportunities for our project to make a novel contribution:
 
@@ -908,9 +1043,9 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
-## 15. Research Design
+## 16. Research Design
 
-### 15.1 Research Questions
+### 16.1 Research Questions
 
 **Primary Research Question:**
 
@@ -924,7 +1059,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 - **Sub-RQ3 (Explainability):** How does per-attack-class SHAP analysis reveal differential feature importance patterns across attack categories (DDoS vs. Recon vs. MQTT vs. Spoofing), and do these patterns change when SMOTETomek resampling is applied?
 
-### 15.2 Hypotheses
+### 16.2 Hypotheses
 
 **H1 — Fusion Framework Performance:**
 - *H0:* The hybrid fusion framework does not produce statistically significant improvements in macro-averaged F1-score compared to the best standalone supervised classifier (p > 0.05, paired t-test across 5-fold stratified cross-validation).
@@ -938,7 +1073,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 - *H0:* SMOTETomek resampling does not significantly improve per-class F1-score for minority attack classes.
 - *H1:* SMOTETomek significantly improves per-class F1-score for at least 3 of the 5 most underrepresented attack classes.
 
-### 15.3 Research Objectives
+### 16.3 Research Objectives
 
 | ID | Objective | Deliverable |
 |----|-----------|-------------|
@@ -948,7 +1083,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 | **O4** | Conduct zero-day attack simulation using leave-one-attack-out protocol for all 17 classes. Measure unsupervised detection recall per withheld class. | Zero-day detection rate matrix (17 × 2) |
 | **O5** | Perform per-attack-class SHAP explainability analysis. Compare feature importance rankings before/after SMOTETomek. | SHAP visualizations + feature importance tables |
 
-### 15.4 Expected Contributions
+### 16.4 Expected Contributions
 
 1. **First hybrid supervised-unsupervised fusion framework on CICIoMT2024** — No existing study on this dataset combines these two paradigms in a structured decision fusion. Addresses the zero-day detection gap left by Yacoubi et al.
 
@@ -960,7 +1095,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
-## 16. Proposed Framework Architecture
+## 17. Proposed Framework Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -988,7 +1123,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 │   SUPERVISED         │  │   UNSUPERVISED            │
 │                      │  │                           │
 │   • Random Forest    │  │   • Autoencoder          │
-│     (criterion=      │  │     (~28→20→12→6→12→20→28)│
+│     (criterion=      │  │     (~44→32→16→8→16→32→44)│
 │      'entropy')      │  │     Trained on benign    │
 │   • XGBoost          │  │   • Isolation Forest     │
 │     (n_est=200)      │  │     (contamination=0.05) │
@@ -1040,7 +1175,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 |-------|-----------|--------------|---------------------|
 | 1 | Random Forest | scikit-learn | n_estimators=200, criterion='entropy', max_depth=None, class_weight='balanced' |
 | 1 | XGBoost | xgboost | n_estimators=200, learning_rate=0.1, max_depth=6, objective='multi:softprob' |
-| 2 | Autoencoder | TensorFlow/Keras | Architecture: ~28→20→12→6→12→20→~28, optimizer=Adam, loss=MSE, epochs=50 |
+| 2 | Autoencoder | TensorFlow/Keras | Architecture: ~44→32→16→8→16→32→44, optimizer=Adam, loss=MSE, epochs=50 |
 | 2 | Isolation Forest | scikit-learn | n_estimators=200, contamination=0.05, max_samples='auto' |
 | 3 | Fusion Engine | Custom Python | Threshold-based decision logic (95th/99th percentile for anomaly threshold) |
 | 4 | SHAP | shap | TreeSHAP for RF/XGBoost, KernelExplainer for Autoencoder |
@@ -1049,7 +1184,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
-## 17. Corrections to Published Literature
+## 18. Corrections to Published Literature
 
 The following corrections were discovered through our independent analysis of the CICIoMT2024 dataset during Phase 2 EDA:
 
@@ -1068,12 +1203,14 @@ The following corrections were discovered through our independent analysis of th
 | No MQTT protocol column mentioned | Confirmed: **no MQTT indicator column** exists |
 | SHAP top features: IAT, Rate, Header_Length, Srate | Cohen's d top features: **rst_count, psh_flag_number, Variance, ack_flag_number** (zero overlap) |
 | 99.87% RF accuracy on raw data | Likely **inflated by duplicate leakage** — 37% of rows are identical |
+| SMOTETomek assumed to improve minority detection | **SMOTETomek degraded macro-F1 in all 4 configurations** when combined with class_weight='balanced' |
+| Reduced features (dropping correlated) assumed optimal | **Full features (44) consistently outperformed reduced (28)** — correlation-based dropping too aggressive |
 
 > These corrections constitute a novel methodological contribution to the CICIoMT2024 literature and strengthen the motivation for our preprocessing pipeline.
 
 ---
 
-## 18. Citations
+## 19. Citations
 
 **Dataset:**
 ```
@@ -1117,7 +1254,7 @@ DOI: 10.1016/J.IOT.2024.101351
 
 ---
 
-## 19. Tech Stack
+## 20. Tech Stack
 
 - **Language:** Python 3.14+
 - **ML Libraries:** scikit-learn, XGBoost, TensorFlow/Keras
@@ -1129,3 +1266,5 @@ DOI: 10.1016/J.IOT.2024.101351
 - **Version Control:** GitHub
 
 ---
+
+> **Last updated:** April 26, 2026 — Phase 4 supervised training complete

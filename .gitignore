@@ -24,3 +24,9 @@ preprocessed/**/*.npy
 preprocessed/**/*.csv
 preprocessed/zero_day/
 preprocessed/scaler_*.pkl
+
+# Phase 4 supervised training artefacts (regenerable via supervised_training.py)
+results/supervised/models/
+results/supervised/predictions/
+results/**/*.pkl
+results/**/*.npy
