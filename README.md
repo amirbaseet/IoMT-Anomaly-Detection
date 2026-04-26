@@ -7,7 +7,7 @@
 > **Program:** M.Sc. Artificial Intelligence and Machine Learning in Cybersecurity — Sakarya University  
 > **Dataset:** CICIoMT2024 (Canadian Institute for Cybersecurity)  
 > **Reference Paper:** Yacoubi et al. (2025–2026) — *Enhancing IoMT Security with Explainable Machine Learning*  
-> **Status:** Phase 1-5 complete — Unsupervised models trained, fusion engine next (Phase 6)
+> **Status:** Phase 1-6 complete — Fusion engine done, SHAP explainability next (Phase 7, final)
 
 ---
 
@@ -32,18 +32,19 @@
 11. [Phase 3 Preprocessing & Feature Engineering](#11-phase-3-preprocessing--feature-engineering)  
 12. [Phase 4 Supervised Model Training Results](#12-phase-4-supervised-model-training-results)  
 13. [Phase 5 Unsupervised Model Training Results](#13-phase-5-unsupervised-model-training-results)  
-14. [Project Roadmap](#14-project-roadmap)  
-15. [Related Work — Summary Table](#15-related-work--summary-table)  
-16. [Deep Dive: Yacoubi et al. — Primary Reference Paper](#16-deep-dive-yacoubi-et-al--primary-reference-paper)  
-    - 16.1 [Paper 1: Explainable ML (COCIA 2025)](#161-paper-1-enhancing-iomt-security-with-explainable-ml-cocia-2025)
-    - 16.2 [Paper 2: XAI Feature Selection (AIAI 2025)](#162-paper-2-xai-driven-feature-selection-for-improved-ids-aiai-2025)
-    - 16.3 [Paper 3: Ensemble Strategies (Springer 2026)](#163-paper-3-ensemble-learning-strategies-for-anomaly-based-ids-springer-2026)
-    - 16.4 [Research Gaps & Our Contribution](#164-research-gaps-left-by-yacoubi-et-al)
-17. [Research Design](#17-research-design)
-18. [Proposed Framework Architecture](#18-proposed-framework-architecture)
-19. [Corrections to Published Literature](#19-corrections-to-published-literature)
-20. [Citations](#20-citations)  
-21. [Tech Stack](#21-tech-stack)
+14. [Phase 6 Fusion Engine & Zero-Day Simulation Results](#14-phase-6-fusion-engine--zero-day-simulation-results)  
+15. [Project Roadmap](#15-project-roadmap)  
+16. [Related Work — Summary Table](#16-related-work--summary-table)  
+17. [Deep Dive: Yacoubi et al. — Primary Reference Paper](#17-deep-dive-yacoubi-et-al--primary-reference-paper)  
+    - 17.1 [Paper 1: Explainable ML (COCIA 2025)](#171-paper-1-enhancing-iomt-security-with-explainable-ml-cocia-2025)
+    - 17.2 [Paper 2: XAI Feature Selection (AIAI 2025)](#172-paper-2-xai-driven-feature-selection-for-improved-ids-aiai-2025)
+    - 17.3 [Paper 3: Ensemble Strategies (Springer 2026)](#173-paper-3-ensemble-learning-strategies-for-anomaly-based-ids-springer-2026)
+    - 17.4 [Research Gaps & Our Contribution](#174-research-gaps-left-by-yacoubi-et-al)
+18. [Research Design](#18-research-design)
+19. [Proposed Framework Architecture](#19-proposed-framework-architecture)
+20. [Corrections to Published Literature](#20-corrections-to-published-literature)
+21. [Citations](#21-citations)  
+22. [Tech Stack](#22-tech-stack)
 
 ---
 
@@ -959,7 +960,147 @@ results/unsupervised/                           (~50 MB)
 
 ---
 
-## 14. Project Roadmap — 17-Week Plan (Option A: Hybrid Framework)
+## 14. Phase 6 Fusion Engine & Zero-Day Simulation Results
+
+> Pipeline run: April 26, 2026 — MacBook Air M4, 24GB RAM — Total runtime: ~1 minute
+> 4-case fusion logic + bootstrap hypothesis testing + threshold sensitivity sweep
+
+### 14.1 Overview
+
+Phase 6 implements the core thesis contribution: the 4-case fusion decision engine that combines supervised XGBoost (E7) predictions with Autoencoder anomaly scores. It also evaluates both thesis hypotheses (H1: fusion improves macro-F1; H2: AE catches zero-day attacks E7 misses) using paired bootstrap confidence intervals.
+
+### 14.2 4-Case Fusion Logic
+
+| Case | Supervised (E7) | Unsupervised (AE) | Decision | Confidence |
+|------|----------------|-------------------|----------|------------|
+| **1** | Attack | Anomaly | **Confirmed Alert** | HIGH |
+| **2** | Benign | Anomaly | **Zero-Day Warning** | MEDIUM-HIGH |
+| **3** | Attack | Normal | **Low-Confidence Alert** | MEDIUM-LOW |
+| **4** | Benign | Normal | **Clear** | HIGH |
+
+### 14.3 Case Distribution (Test Set — p90 Threshold)
+
+| Case | Count | Percentage | Meaning |
+|------|-------|-----------|---------|
+| Case 1 (Confirmed Alert) | 837,209 | **93.83%** | Both layers agree: attack |
+| Case 2 (Zero-Day Warning) | 6,140 | 0.69% | E7 says benign, AE says anomaly |
+| Case 3 (Low-Confidence) | 17,317 | 1.94% | E7 says attack, AE says normal |
+| Case 4 (Clear) | 31,602 | 3.54% | Both layers agree: benign |
+
+The overwhelming majority of attacks (93.8%) receive Case 1 — high-confidence alerts confirmed by both layers. Case 3 captures attacks the AE missed (mainly MQTT Publish floods). Case 2 fires on 0.69% of traffic — these are the potential zero-day signals.
+
+### 14.4 Hypothesis H1 — Fusion vs Standalone E7
+
+**H1: The hybrid fusion framework produces statistically significant improvements in macro-F1 compared to E7.**
+
+Evaluated in 20-label space (19 original classes + `zero_day_unknown` for Case 2 samples), with paired bootstrap (200 iterations, seed=42):
+
+| Variant | Macro-F1 | 95% CI | Δ vs E7 | Δ CI | Significant? |
+|---------|----------|--------|---------|------|-------------|
+| E7 baseline | **0.8622** | [0.8586, 0.8655] | — | — | — |
+| Fusion (p90) | 0.8582 | [0.8546, 0.8615] | −0.0041 | [−0.0042, −0.0040] | No |
+| Fusion (p95) | 0.8610 | [0.8574, 0.8643] | −0.0012 | [−0.0013, −0.0012] | No |
+| Fusion (p99) | 0.8621 | [0.8584, 0.8654] | −0.0001 | [−0.0002, −0.0001] | No |
+
+> **Verdict: H1 FAIL.** Fusion does not improve macro-F1. At p99, the difference is operationally negligible (−0.0001), but the CI excludes zero. The zero_day_unknown pseudo-class penalizes macro-F1 because every false Case 2 alarm on benign traffic counts as a misclassification.
+
+> **Thesis framing:** The fusion framework's value is NOT in improving aggregate classification metrics, but in providing **confidence-stratified operational alerts** (Case 1-4) and a zero-day warning capability that standalone supervised models fundamentally cannot offer. Binary detection F1 remains 0.9985.
+
+### 14.5 Hypothesis H2 — Zero-Day Detection
+
+**H2: The AE achieves recall ≥ 0.70 on ≥ 50% of held-out attack classes when E7 misclassifies them as benign.**
+
+| Target | n_test | E7 Recall | E7→Benign | AE Recall on E7-Missed (p90) | Status |
+|--------|--------|-----------|-----------|--------------------------|--------|
+| Recon_Ping_Sweep | 169 | 0.710 | 25 | 0.200 | ⚠ Insufficient samples |
+| Recon_VulScan | 973 | 0.332 | 535 | **0.357** | ✗ Below 0.70 |
+| MQTT_Malformed_Data | 1,747 | 0.828 | 159 | 0.182 | ✗ Below 0.70 |
+| MQTT_DoS_Connect_Flood | 3,131 | 0.999 | 0 | n/a | ⚠ E7 catches all |
+| ARP_Spoofing | 1,744 | 0.710 | 252 | 0.222 | ✗ Below 0.70 |
+
+> **Verdict: H2 FAIL (0/5 targets ≥ 70%).** The AE catches only 18-36% of samples that E7 misclassifies as benign. The samples E7 misclassifies are precisely the ones that ALSO look benign to the AE — they sit near the decision boundary in both feature spaces.
+
+> **Thesis framing:** This is a genuine finding about the limitations of reconstruction-error anomaly detection on flow-level features. The AE and supervised model share the same feature space (44 flow statistics), so their blind spots overlap. Future work should explore: (1) true leave-one-attack-out with E7 retrained, (2) alternative AE architectures (VAE, Transformer), (3) profiling-lifecycle features as an independent feature basis for the unsupervised layer.
+
+### 14.6 Per-Class Case Analysis (p90 Threshold)
+
+**Case 1 dominant (>95% — both layers confirm):**
+DDoS_SYN (99.7%), DDoS_UDP (99.98%), DoS_SYN (100%), DoS_TCP (99.99%), DoS_UDP (99.99%), MQTT_DDoS_Connect (100%), MQTT_DoS_Connect (99.97%), DDoS_ICMP (99.6%), DDoS_TCP (98.8%), Recon_Port_Scan (95.8%)
+
+**Case 3 dominant (>30% — E7 catches, AE misses):**
+MQTT_DoS_Publish (93.8%), MQTT_DDoS_Publish (73.9%), ARP_Spoofing (33.9%), MQTT_Malformed (37.0%), Recon_Ping_Sweep (33.7%)
+
+**Notable Case 2 (zero-day warnings):**
+Recon_VulScan (19.6%), Benign false alarms (15.4%), ARP_Spoofing (3.2%), Recon_Ping_Sweep (3.0%), Recon_OS_Scan (1.7%)
+
+> **Key insight:** Case 2 precision is low (~6% at p90) — 15.4% of benign traffic triggers false zero-day warnings. This improves at stricter thresholds (p99: only 0.04% Case 2) but at the cost of missing real anomalies. The precision-recall tradeoff is inherent to the operating point selection.
+
+### 14.7 Binary Detection Performance
+
+| Variant | Accuracy | Precision | Recall | F1 | MCC |
+|---------|----------|-----------|--------|-----|-----|
+| E7 only | 99.73% | 0.9987 | 0.9985 | **0.9986** | 0.9665 |
+| Fusion (p90) | 99.12% | 0.9919 | 0.9989 | 0.9954 | 0.8855 |
+| Fusion (p95) | 99.54% | 0.9964 | 0.9988 | 0.9976 | 0.9413 |
+| Fusion (p99) | 99.71% | 0.9984 | 0.9986 | 0.9985 | 0.9636 |
+
+Fusion at p99 achieves binary F1 = 0.9985, essentially matching E7-only (0.9986). The system detects attacks effectively at the binary level; the macro-F1 penalty comes from the multiclass zero_day_unknown label.
+
+### 14.8 Threshold Sensitivity & Recommended Operating Point
+
+| Percentile | Threshold | Attack Recall (test) | Benign FPR (test) | Binary F1 (test) |
+|-----------|-----------|---------------------|-------------------|-----------------|
+| 90 | 0.2058 | 99.89% | 18.44% | 0.9954 |
+| 95 | 0.3845 | 99.88% | 8.30% | 0.9976 |
+| **97** | **0.5615** | **99.87%** | **5.29%** | **0.9982** |
+| 99 | 1.3152 | 99.86% | 3.73% | 0.9985 |
+
+**Recommended operating point: p97** (selected on validation with FPR < 5%). Achieves 99.87% attack recall with 5.3% benign FPR — a practical IDS operating point for IoMT deployment.
+
+### 14.9 Thesis Contributions from Phase 6
+
+Despite H1 and H2 failing, Phase 6 produces four genuine contributions:
+
+1. **First fusion framework implementation on CICIoMT2024** — no prior work combines supervised + unsupervised with structured decision logic on this dataset
+2. **Confidence-stratified alerts** — Case 1-4 provide differentiated response actions (block/quarantine/monitor/allow) vs binary detect/miss
+3. **Empirical evidence that reconstruction-error AE is insufficient for zero-day detection on flow features** — a genuine negative finding that redirects future IoMT IDS research toward alternative unsupervised architectures
+4. **Comprehensive threshold sensitivity analysis** — 10-point sweep with val-selected operating point, directly deployable
+
+### 14.10 Output Artifacts
+
+```
+results/fusion/                                 (~20 MB)
+├── config.json                                # All parameters, thresholds
+├── summary.md                                 # Full findings narrative
+├── fusion_results/
+│   ├── fusion_{val,test}_cases.npy            # Case assignments (1-4)
+│   └── fusion_{val,test}_labels.csv
+├── metrics/
+│   ├── case_distribution.csv                  # Case 1-4 counts per variant
+│   ├── fusion_vs_supervised.csv               # Macro-F1 + bootstrap CIs
+│   ├── fusion_vs_supervised_binary.csv        # Binary detection comparison
+│   ├── per_class_case_analysis.csv            # 19 classes × 4 cases
+│   ├── zero_day_results.csv                   # 5 targets × H2 metrics
+│   ├── threshold_sensitivity.csv              # 10-point sweep
+│   └── h1_h2_verdicts.json                    # Hypothesis outcomes
+└── figures/
+    ├── case_distribution.png
+    ├── per_class_heatmap.png
+    ├── fusion_vs_supervised.png
+    ├── zero_day_detection.png
+    └── threshold_sensitivity.png
+```
+
+### 14.11 Future Work (from Phase 6 findings)
+
+1. **True leave-one-attack-out:** Retrain E7 without each target class to simulate genuine zero-day scenario (deferred due to compute cost — 5 × 60 min XGBoost retraining)
+2. **Alternative AE architectures:** Variational Autoencoder (VAE), Transformer-based AE — may learn richer benign manifold representations
+3. **Independent feature basis for unsupervised layer:** Use profiling-lifecycle features (power/idle/active/interaction) instead of flow features — decouples the two layers' blind spots
+4. **Temporal models:** LSTM/CNN-LSTM on packet sequences rather than aggregated flow statistics — may capture rate-over-time patterns that flow features miss
+
+---
+
+## 15. Project Roadmap — 17-Week Plan (Option A: Hybrid Framework)
 
 | Week | Phase | Key Deliverables | Status |
 |------|-------|------------------|--------|
@@ -968,8 +1109,8 @@ results/unsupervised/                           (~50 MB)
 | 5–6 | Preprocessing & Imbalance Handling | Feature engineering, SMOTETomek, AE data, zero-day datasets | ✅ Complete |
 | 7–8 | Supervised Model Training (Layer 1) | 8 experiments, XGBoost best (F1=0.9076), SMOTETomek rejected | ✅ Complete |
 | 9–10 | Unsupervised Model Training (Layer 2) | AE (AUC=0.9892) + IF (AUC=0.8612), scaling fix, per-class detection | ✅ Complete |
-| 11–12 | Fusion Engine + Zero-Day Simulation (Layer 3) | 4-case fusion logic, leave-one-attack-out results | 🔄 Next |
-| 13–14 | SHAP Analysis + Confusion Matrix (Layer 4) | Per-class SHAP plots, feature importance comparisons, confusion matrices | ⏳ Planned |
+| 11–12 | Fusion Engine + Zero-Day Simulation (Layer 3) | 4-case fusion, H1 FAIL (Δ=−0.0001), H2 FAIL (0/5), binary F1=0.9985 | ✅ Complete |
+| 13–14 | SHAP Analysis (Layer 4) | Per-class SHAP plots, feature importance comparisons | 🔄 Next |
 | 15 | Profiling Integration (Stretch Goal) | Delta features from profiling data (if time permits) | ⏳ Optional |
 | 16–17 | Documentation & Defense | Complete thesis document, code repository, defense preparation | ⏳ Planned |
 
@@ -983,8 +1124,9 @@ results/unsupervised/                           (~50 MB)
 - Deep Autoencoder (44→32→16→8→16→32→44, MSE loss, AUC=0.9892, trained on 123K benign rows + StandardScaler)
 - Isolation Forest (n_estimators=200, contamination=0.05, AUC=0.8612)
 
-**Fusion (Layer 3):**
-- 4-case decision logic (custom Python implementation)
+**Fusion (Layer 3) — COMPLETE:**
+- 4-case decision logic — H1 FAIL (Δ=−0.0001 at p99), H2 FAIL (0/5 targets), binary F1=0.9985
+- Recommended operating point: p97 (99.87% attack recall, 5.3% benign FPR)
 
 **Explainability (Layer 4):**
 - SHAP (TreeSHAP for ensembles, KernelExplainer for Autoencoder)
@@ -998,7 +1140,7 @@ results/unsupervised/                           (~50 MB)
 
 ---
 
-## 15. Related Work — Summary Table
+## 16. Related Work — Summary Table
 
 | Paper | Approach | Key Result |
 |-------|----------|------------|
@@ -1023,13 +1165,13 @@ results/unsupervised/                           (~50 MB)
 
 ---
 
-## 16. Deep Dive: Yacoubi et al. — Primary Reference Paper
+## 17. Deep Dive: Yacoubi et al. — Primary Reference Paper
 
 > Yacoubi, M., Moussaoui, O., Drocourt, C. — University of Picardie Jules Verne & MIS Lab, France
 
 Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, each building on the previous. Together they form the most comprehensive explainable ML study on this dataset.
 
-### 16.1 Paper 1: Enhancing IoMT Security with Explainable ML (COCIA 2025)
+### 17.1 Paper 1: Enhancing IoMT Security with Explainable ML (COCIA 2025)
 
 **Core question:** Can ensemble classifiers be made transparent without sacrificing accuracy?
 
@@ -1077,7 +1219,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 
 **Paper 1 Conclusion:** Both RF and CatBoost achieve strong classification. SHAP provides trustworthy global explanations, while LIME gives actionable instance-level insights. The combination makes ensemble models viable for real-world IoMT security deployment.
 
-### 16.2 Paper 2: XAI-Driven Feature Selection for Improved IDS (AIAI 2025)
+### 17.2 Paper 2: XAI-Driven Feature Selection for Improved IDS (AIAI 2025)
 
 **Key Innovation:** Uses SHAP and LIME not just to *explain* models, but to *select features*. If SHAP says a feature has near-zero importance, drop it. This reduces the 45-feature space, cutting training time while maintaining or improving accuracy.
 
@@ -1103,7 +1245,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 
 **Paper 2 Conclusion:** CatBoost actually *improved* by 4% after removing noisy features via SHAP. Feature selection isn't just about computational efficiency — it actively helps boosting models by removing features that confuse the sequential learning process. XAI-driven feature selection improves IDS efficiency without compromising detection capability.
 
-### 16.3 Paper 3: Ensemble Learning Strategies for Anomaly-Based IDS (Springer 2026)
+### 17.3 Paper 3: Ensemble Learning Strategies for Anomaly-Based IDS (Springer 2026)
 
 **Extended comparison** to 5 models: RF, CatBoost, LightGBM, XGBoost, and a **Stacking ensemble** (two-layer meta-model where CatBoost + RF generate probability estimates in layer 1, and a meta-learner combines them in layer 2).
 
@@ -1122,7 +1264,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 - The precision/recall gap (99.36% accuracy but only 86.10% precision) suggests the model struggles with minority attack classes
 - For real-time IoMT detection, XGBoost or LightGBM may be better choices due to inference speed
 
-### 16.4 Research Gaps Left by Yacoubi et al.
+### 17.4 Research Gaps Left by Yacoubi et al.
 
 These gaps represent opportunities for our project to make a novel contribution:
 
@@ -1138,9 +1280,9 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
-## 17. Research Design
+## 18. Research Design
 
-### 17.1 Research Questions
+### 18.1 Research Questions
 
 **Primary Research Question:**
 
@@ -1154,21 +1296,24 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 - **Sub-RQ3 (Explainability):** How does per-attack-class SHAP analysis reveal differential feature importance patterns across attack categories (DDoS vs. Recon vs. MQTT vs. Spoofing), and do these patterns change when SMOTETomek resampling is applied?
 
-### 17.2 Hypotheses
+### 18.2 Hypotheses
 
 **H1 — Fusion Framework Performance:**
 - *H0:* The hybrid fusion framework does not produce statistically significant improvements in macro-averaged F1-score compared to the best standalone supervised classifier (p > 0.05, paired t-test across 5-fold stratified cross-validation).
 - *H1:* The hybrid fusion framework produces statistically significant improvements in macro-averaged F1-score compared to the best standalone supervised classifier (p ≤ 0.05).
+- **Result: H0 not rejected (H1 FAIL).** Fusion Δ = −0.0001 at best threshold (p99). CI excludes zero. The fusion's value lies in operational case stratification, not aggregate metric improvement. See Section 14.4.
 
 **H2 — Zero-Day Detection:**
 - *H0:* The unsupervised layer does not achieve a recall rate greater than 0.70 on withheld attack classes in the leave-one-attack-out simulation.
 - *H1:* The unsupervised layer achieves a recall rate greater than 0.70 on at least 50% of withheld attack classes.
+- **Result: H0 not rejected (H2 FAIL).** AE recall on E7-missed samples: 0/5 targets ≥ 70%. Shared flow-feature basis causes overlapping blind spots. See Section 14.5.
 
 **H3 — Class Imbalance Effect:**
 - *H0:* SMOTETomek resampling does not significantly improve per-class F1-score for minority attack classes.
 - *H1:* SMOTETomek significantly improves per-class F1-score for at least 3 of the 5 most underrepresented attack classes.
+- **Result: H0 not rejected (H3 FAIL).** SMOTETomek degraded macro-F1 in all 4 configurations when combined with class_weight='balanced'. See Section 12.4.
 
-### 17.3 Research Objectives
+### 18.3 Research Objectives
 
 | ID | Objective | Deliverable |
 |----|-----------|-------------|
@@ -1178,7 +1323,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 | **O4** | Conduct zero-day attack simulation using leave-one-attack-out protocol for all 17 classes. Measure unsupervised detection recall per withheld class. | Zero-day detection rate matrix (17 × 2) |
 | **O5** | Perform per-attack-class SHAP explainability analysis. Compare feature importance rankings before/after SMOTETomek. | SHAP visualizations + feature importance tables |
 
-### 17.4 Expected Contributions
+### 18.4 Expected Contributions
 
 1. **First hybrid supervised-unsupervised fusion framework on CICIoMT2024** — No existing study on this dataset combines these two paradigms in a structured decision fusion. Addresses the zero-day detection gap left by Yacoubi et al.
 
@@ -1190,7 +1335,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
-## 18. Proposed Framework Architecture
+## 19. Proposed Framework Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1279,7 +1424,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
-## 19. Corrections to Published Literature
+## 20. Corrections to Published Literature
 
 The following corrections were discovered through our independent analysis of the CICIoMT2024 dataset during Phase 2 EDA:
 
@@ -1301,12 +1446,14 @@ The following corrections were discovered through our independent analysis of th
 | SMOTETomek assumed to improve minority detection | **SMOTETomek degraded macro-F1 in all 4 configurations** when combined with class_weight='balanced' |
 | Reduced features (dropping correlated) assumed optimal | **Full features (44) consistently outperformed reduced (28)** — correlation-based dropping too aggressive |
 | Phase 3 ColumnTransformer scaling sufficient for all models | **AE requires additional StandardScaler** — RobustScaler leaves features with std>1000, causing million-scale loss and zero Recon detection |
+| Hybrid fusion assumed to improve macro-F1 | **Fusion Δ = −0.0001 at best (p99)** — zero_day_unknown pseudo-class penalizes macro-F1; value is in operational case stratification, not aggregate metric improvement |
+| Reconstruction-error AE assumed sufficient for zero-day detection | **AE catches only 18-36% of samples E7 misclassifies as benign** — shared flow-feature basis causes overlapping blind spots |
 
 > These corrections constitute a novel methodological contribution to the CICIoMT2024 literature and strengthen the motivation for our preprocessing pipeline.
 
 ---
 
-## 20. Citations
+## 21. Citations
 
 **Dataset:**
 ```
@@ -1350,7 +1497,7 @@ DOI: 10.1016/J.IOT.2024.101351
 
 ---
 
-## 21. Tech Stack
+## 22. Tech Stack
 
 - **Language:** Python 3.13 (downgraded from 3.14 in Phase 5 — TensorFlow 2.21 wheels not yet built for 3.14)
 - **ML Libraries:** scikit-learn, XGBoost, TensorFlow/Keras
@@ -1363,4 +1510,4 @@ DOI: 10.1016/J.IOT.2024.101351
 
 ---
 
-> **Last updated:** April 26, 2026 — Phase 5 unsupervised training complete
+> **Last updated:** April 26, 2026 — Phase 6 fusion engine complete, H1/H2 evaluated
