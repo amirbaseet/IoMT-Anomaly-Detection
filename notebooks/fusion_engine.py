@@ -7,14 +7,15 @@ Project : A Hybrid Supervised-Unsupervised Framework for Anomaly Detection
 Dataset : CICIoMT2024
 Author  : Amro
 Phase   : 6 (Fusion + Zero-Day Sim)
-Version : 2 (post senior review)
+Version : 3 (H1 label-space bug fixed; verdict trichotomy applied throughout)
 
 Combines:
   - Layer 1 (E7 / XGBoost) supervised predictions
   - Layer 2 (Autoencoder + Isolation Forest) unsupervised anomaly scores
 into Layer 3 — a 4-case fusion decision engine — and evaluates
-hypotheses H1 (fusion improves macro-F1; bootstrap-tested) and H2 (AE
-catches what E7 misclassifies as benign on >= 50 % of zero-day targets).
+hypotheses H1 (fusion improves macro-F1; bootstrap-tested in 20-label
+space) and H2 (AE catches what E7 misclassifies as benign on >= 50 % of
+zero-day targets).
 
 No retraining is performed. Pure post-hoc combination of saved arrays.
 
@@ -197,6 +198,15 @@ def ci_95(arr: np.ndarray) -> tuple:
     return float(np.percentile(arr, 2.5)), float(np.percentile(arr, 97.5))
 
 
+def h1_verdict_msg(passes: bool, delta_ci_hi: float) -> str:
+    """Trichotomy verdict message for an H1 row."""
+    if passes:
+        return "PASS — Δ CI excludes 0 (positive)"
+    if delta_ci_hi < 0:
+        return "FAIL — Δ CI excludes 0 (negative; fusion hurts macro-F1)"
+    return "FAIL — Δ CI spans 0"
+
+
 # %% [Section 3] Main pipeline ==============================================
 def main() -> None:
     for sub in ("fusion_results", "metrics", "figures"):
@@ -208,7 +218,7 @@ def main() -> None:
     })
     sns.set_style("whitegrid")
 
-    banner("PHASE 6 — FUSION ENGINE & ZERO-DAY SIMULATION (v2)")
+    banner("PHASE 6 — FUSION ENGINE & ZERO-DAY SIMULATION (v3)")
     print(f"Started : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Output  : {OUTPUT_DIR}")
 
@@ -233,8 +243,8 @@ def main() -> None:
         npload(UNSUPERVISED_DIR / "scores" / "if_test_binary.npy"))
 
     # Labels & encoders
-    y_val  = pd.read_csv(PREPROCESSED_DIR / "y_val.csv")
-    y_test = pd.read_csv(PREPROCESSED_DIR / "y_test.csv")
+    y_val  = pd.read_csv(PREPROCESSED_DIR / "full_features" / "y_val.csv")
+    y_test = pd.read_csv(PREPROCESSED_DIR / "full_features" / "y_test.csv")
     with open(PREPROCESSED_DIR / "label_encoders.json") as f:
         label_encoders = json.load(f)
     with open(UNSUPERVISED_DIR / "thresholds.json") as f:
@@ -360,14 +370,17 @@ def main() -> None:
     # ---- [3.6] H1 — multiclass macro-F1 with bootstrap CI ----------------
     banner("[3.6] H1 — multiclass macro-F1 with paired bootstrap CI")
 
+    # E7 metrics computed in the 20-label space for apples-to-apples
+    # comparison with fusion variants (zero_day_unknown class included)
+    labels_with_zd = list(range(n_classes)) + [ZERO_DAY_ID]
+
     e7_macro_f1 = f1_score(y_test_mc, e7_test_pred,
+                           labels=labels_with_zd,
                            average="macro", zero_division=0)
     e7_mcc      = matthews_corrcoef(y_test_mc, e7_test_pred)
     e7_acc      = accuracy_score(y_test_mc, e7_test_pred)
     print(f"  E7 only        : macro-F1 = {e7_macro_f1:.4f}  "
           f"MCC = {e7_mcc:.4f}  acc = {e7_acc:.4f}")
-
-    labels_with_zd = list(range(n_classes)) + [ZERO_DAY_ID]
 
     # Build dict of predictions for paired bootstrap (same y_true, same indices)
     preds_for_boot = {"E7_only": e7_test_pred.astype(np.int32)}
@@ -426,10 +439,13 @@ def main() -> None:
     H1_PASS_PRIMARY = bool(primary_row["h1_significant"])
     best_row = mc_macro_df.iloc[mc_macro_df["macro_f1"].idxmax()]
     H1_PASS_BEST    = bool(best_row["h1_significant"])
-    print(f"  H1 (primary={PRIMARY}): "
-          f"{'PASS — Δ CI excludes 0' if H1_PASS_PRIMARY else 'FAIL — Δ CI includes 0'}")
-    print(f"  H1 (best={best_row['variant']}): "
-          f"{'PASS — Δ CI excludes 0' if H1_PASS_BEST else 'FAIL — Δ CI includes 0'}")
+
+    msg_primary = h1_verdict_msg(H1_PASS_PRIMARY,
+                                 float(primary_row["delta_ci_hi"]))
+    msg_best    = h1_verdict_msg(H1_PASS_BEST,
+                                 float(best_row["delta_ci_hi"]))
+    print(f"  H1 (primary={PRIMARY}): {msg_primary}")
+    print(f"  H1 (best={best_row['variant']}): {msg_best}")
 
     # ---- [3.7] Per-class case distribution at all 3 thresholds -----------
     banner("[3.7] Per-class case distribution — three thresholds")
@@ -680,8 +696,8 @@ def main() -> None:
     values      = [e7_macro_f1] + list(mc_macro_df["macro_f1"])
     ci_lo       = [e7_f1_lo]    + list(mc_macro_df["macro_f1_ci_lo"])
     ci_hi       = [e7_f1_hi]    + list(mc_macro_df["macro_f1_ci_hi"])
-    err_lo = np.array(values) - np.array(ci_lo)
-    err_hi = np.array(ci_hi)  - np.array(values)
+    err_lo = np.clip(np.array(values) - np.array(ci_lo), 0, None)
+    err_hi = np.clip(np.array(ci_hi)  - np.array(values), 0, None)
     colors = ["#7f7f7f"] + ["#1f77b4"] * len(mc_macro_df)
     ax.bar(labels_plot, values, color=colors,
            yerr=[err_lo, err_hi], capsize=5,
@@ -785,7 +801,7 @@ def main() -> None:
         OUTPUT_DIR / "fusion_results" / "fusion_test_labels.csv", index=False)
 
     config = {
-        "phase": 6, "version": 2,
+        "phase": 6, "version": 3,
         "primary_variant": PRIMARY,
         "ae_thresholds": THRESHOLDS,
         "benign_id": int(BENIGN_ID),
@@ -808,8 +824,9 @@ def main() -> None:
         "H1": {
             "description": ("Fusion improves multiclass macro-F1 over E7 with "
                             "paired-bootstrap 95% CI excluding zero "
-                            "(20-class label space incl. zero_day_unknown)"),
-            "e7_macro_f1": float(e7_macro_f1),
+                            "(20-class label space incl. zero_day_unknown; "
+                            "E7 evaluated in same 20-label space)"),
+            "e7_macro_f1_20class": float(e7_macro_f1),
             "e7_macro_f1_ci": [e7_f1_lo, e7_f1_hi],
             "fusion_macro_f1_primary": float(primary_row["macro_f1"]),
             "fusion_macro_f1_primary_ci": [
@@ -827,7 +844,9 @@ def main() -> None:
                 float(best_row["delta_ci_hi"]),
             ],
             "verdict_primary": "PASS" if H1_PASS_PRIMARY else "FAIL",
+            "verdict_primary_msg": msg_primary,
             "verdict_best":    "PASS" if H1_PASS_BEST    else "FAIL",
+            "verdict_best_msg": msg_best,
             "note": ("20-class macro-F1 penalises every false zero_day_unknown "
                      "alarm. See binary metrics for operational view."),
         },
@@ -857,7 +876,7 @@ def main() -> None:
     with open(OUTPUT_DIR / "summary.md", "w") as f:
         f.write("# Phase 6 — Fusion Engine & Zero-Day Simulation Summary\n\n")
         f.write(f"_Generated {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} "
-                "(v2 — post senior review)_\n\n")
+                "(v3 — H1 label-space bug fixed)_\n\n")
 
         f.write("## 1. Configuration\n\n")
         f.write(f"- Primary variant: **{PRIMARY}**\n")
@@ -868,6 +887,9 @@ def main() -> None:
         f.write(f"- Test samples: `{n_test:,}` | Val samples: `{n_val:,}`\n")
         f.write(f"- Bootstrap iterations: {H1_BOOTSTRAP_ITERS} "
                 f"(seed={H1_BOOTSTRAP_SEED})\n")
+        f.write(f"- H1 evaluated in 20-label space "
+                f"(includes `zero_day_unknown`; E7 scored in same space "
+                f"for apples-to-apples comparison)\n")
         f.write(f"- H2 primary metric: AE recall on samples E7 misclassified "
                 f"as benign\n")
         f.write(f"- H2 sample-size guard: n_called_benign >= "
@@ -878,7 +900,7 @@ def main() -> None:
         f.write("\n\n")
 
         f.write("## 3. Fusion vs E7 — 20-class macro-F1 with bootstrap CI\n\n")
-        f.write(f"E7 baseline macro-F1 (19-class): **{e7_macro_f1:.4f}** "
+        f.write(f"E7 baseline macro-F1 (20-class): **{e7_macro_f1:.4f}** "
                 f"[{e7_f1_lo:.4f}, {e7_f1_hi:.4f}] "
                 f"| MCC: {e7_mcc:.4f} | acc: {e7_acc:.4f}\n\n")
         f.write(md_table(mc_macro_df, floatfmt=".4f"))
@@ -908,7 +930,7 @@ def main() -> None:
 
         f.write("## 6. Hypothesis Verdicts\n\n")
         f.write("### H1 — Fusion improves macro-F1 (paired bootstrap)\n\n")
-        f.write(f"- E7 baseline: {e7_macro_f1:.4f} "
+        f.write(f"- E7 baseline (20-class): {e7_macro_f1:.4f} "
                 f"[{e7_f1_lo:.4f}, {e7_f1_hi:.4f}]\n")
         f.write(f"- Fusion ({PRIMARY}): {float(primary_row['macro_f1']):.4f} "
                 f"[{float(primary_row['macro_f1_ci_lo']):.4f}, "
@@ -919,10 +941,8 @@ def main() -> None:
         f.write(f"- Best variant ({best_row['variant']}): "
                 f"Δ CI [{float(best_row['delta_ci_lo']):+.4f}, "
                 f"{float(best_row['delta_ci_hi']):+.4f}]\n")
-        f.write(f"- **Verdict (primary): "
-                f"{'PASS — Δ CI excludes 0 ✓' if H1_PASS_PRIMARY else 'FAIL — Δ CI spans 0 ✗'}**\n")
-        f.write(f"- **Verdict (best variant): "
-                f"{'PASS ✓' if H1_PASS_BEST else 'FAIL ✗'}**\n\n")
+        f.write(f"- **Verdict (primary): {msg_primary}**\n")
+        f.write(f"- **Verdict (best variant): {msg_best}**\n\n")
         f.write("> 20-class macro-F1 penalises every false `zero_day_unknown` "
                 "alarm equally. Binary detection (§4) is more representative "
                 "of operational value.\n\n")

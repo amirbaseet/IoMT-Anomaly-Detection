@@ -1,0 +1,29 @@
+{
+  "phase": 6,
+  "version": 3,
+  "primary_variant": "AE_p90",
+  "ae_thresholds": {
+    "90": 0.20579759776592255,
+    "95": 0.38449913263320923,
+    "99": 1.315197467803955
+  },
+  "benign_id": 1,
+  "zero_day_id": 19,
+  "n_val": 903016,
+  "n_test": 892268,
+  "n_classes": 19,
+  "h1_bootstrap_iters": 200,
+  "h1_bootstrap_seed": 42,
+  "h2_recall_target": 0.7,
+  "h2_fraction_target": 0.5,
+  "h2_min_samples": 30,
+  "zero_day_targets": [
+    "Recon_Ping_Sweep",
+    "Recon_VulScan",
+    "MQTT_Malformed_Data",
+    "MQTT_DoS_Connect_Flood",
+    "ARP_Spoofing"
+  ],
+  "recommended_fpr_budget": 0.05,
+  "timestamp": "2026-04-26T21:44:34.389670"
+}

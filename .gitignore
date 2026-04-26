@@ -38,3 +38,10 @@ results/**/*.npy
 # Phase 6 large derived outputs (regenerable from fusion_engine.py)
 results/fusion/fusion_results/
 results/fusion/run.log
+
+# Phase 6 large derived outputs (regenerable from fusion_engine.py)
+results/fusion/fusion_results/
+results/fusion/run.log
+
+# Backup files
+*.bak
