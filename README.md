@@ -793,7 +793,13 @@ All integrity checks passed:
 | XGBoost | Reduced (28) | 0.8987 | 0.8538 | **−0.0449** |
 | XGBoost | Full (44) | 0.9076 | 0.8708 | **−0.0368** |
 
-> **Thesis finding:** SMOTETomek combined with class_weight='balanced' produces a compounding imbalance correction that degrades macro-F1. The synthetic oversampling adds noise to decision boundaries while the cost-sensitive weighting already compensates for class imbalance. This contradicts the common assumption in IoMT IDS literature that oversampling always improves minority-class detection. **H3 (SMOTETomek improves minority F1) is rejected on this dataset.**
+> **Thesis finding.** SMOTETomek consistently degrades macro-F1 by 0.011–0.045 across both classifiers and both feature sets. The mechanism is **synthetic-sample blur on already-overlapping class boundaries** — specifically the `DDoS_*` ↔ `DoS_*` and `Recon_OS_Scan` ↔ `Recon_VulScan` decision regions documented in `results/supervised/summary.md` and visible in the Phase 4 confusion matrices. SMOTE generates synthetic minority points by interpolating between existing samples in feature space; when the minority class is *already adjacent* to a structurally similar class in the 44-feature flow representation, the interpolated points fall on or across the decision boundary rather than reinforcing the minority cluster. This degrades the majority-side classifier without commensurate minority-side gains.
+>
+> **The `class_weight='balanced'` interaction is not the mechanism.** RF arms (E1, E2, E5, E6) use `class_weight='balanced'` and degrade by 0.011–0.017. XGBoost arms (E3, E4, E7, E8) use **no** `class_weight` and **no** `scale_pos_weight` (`supervised_training.py:91-103, 207-217`) and degrade by **0.037–0.045** — a *larger* drop. If the mechanism were "compounding correction" between SMOTE and class weighting, the XGBoost arms (which have no class weighting to compound with) should be relatively unharmed. The opposite is observed.
+>
+> The boundary-blur mechanism naturally explains both signs: XGBoost's tighter decision boundaries (deeper trees, gradient-based splits) are more sensitive to synthetic boundary-region samples than RF's averaged ensemble of shallower trees. We retain `class_weight='balanced'` for RF as a separate hyperparameter choice supported by Phase 4 results on the *original* (non-SMOTE) data; the SMOTE finding stands independently.
+>
+> **H3 (SMOTETomek improves minority F1) is rejected on this dataset.** This contradicts the common assumption in IoMT IDS literature that oversampling always helps minority-class detection — but the rejection is grounded in feature-space geometry, not in the oversampling-vs-class-weighting interaction.
 
 ### 12.5 Feature Importance — RF Top 10
 
@@ -1696,9 +1702,9 @@ These gaps represent opportunities for our project to make a novel contribution:
 - **Result (binary — any alert): H2 PASS.** The fused system (Cases 1+2+3) achieves recall ≥ 70% on 5/5 targets at p90 (Phase 6B); 5/5 with the Phase 6C entropy-gated variant (binary avg 0.949). Detection is dominated by E7 misclassifying novel attacks into neighboring known classes (Phase 6B "redundancy through misclassification"), with the entropy gate adding the rescue path for samples that fall through to Benign. See Sections 15.4 and 15C.
 
 **H3 — Class Imbalance Effect:**
-- *H0:* SMOTETomek resampling does not significantly improve per-class F1-score for minority attack classes.
-- *H1:* SMOTETomek significantly improves per-class F1-score for at least 3 of the 5 most underrepresented attack classes.
-- **Result: H0 not rejected (H3 FAIL).** SMOTETomek degraded macro-F1 in all 4 configurations when combined with class_weight='balanced'. See Section 12.4.
+- *H0:* SMOTETomek resampling does not significantly improve macro-F1 nor per-class F1 for minority attack classes.
+- *H1:* SMOTETomek improves macro-F1, **and** improves per-class F1 for at least 3 of the 5 most underrepresented attack classes.
+- **Result: H0 not rejected (H3 FAIL).** SMOTETomek degrades macro-F1 across all 4 configurations (RF/reduced −0.011, RF/full −0.017, XGB/reduced −0.045, XGB/full −0.037). On the per-class minority criterion: RF/reduced shows 2/5 rare classes improving (`ARP_Spoofing` +0.093, `Recon_OS_Scan` +0.002), below the 3/5 threshold. The mechanism is synthetic-sample blur on already-overlapping `DDoS_*`↔`DoS_*` and `Recon_OS_Scan`↔`Recon_VulScan` boundaries, not class-weight interaction (XGBoost arms have no `class_weight` and degrade *more* than RF arms). See Section 12.4.
 
 ### 20.3 Research Objectives
 
