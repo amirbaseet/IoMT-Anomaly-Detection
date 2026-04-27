@@ -1,0 +1,75 @@
+{
+  "phase": "6C",
+  "random_state": 42,
+  "zero_day_targets": [
+    "Recon_Ping_Sweep",
+    "Recon_VulScan",
+    "MQTT_Malformed_Data",
+    "MQTT_DoS_Connect_Flood",
+    "ARP_Spoofing"
+  ],
+  "h2_strict_eligible": [
+    "Recon_Ping_Sweep",
+    "Recon_VulScan",
+    "MQTT_Malformed_Data",
+    "ARP_Spoofing"
+  ],
+  "h2_strict_min_benign_n": 30,
+  "h2_pass_threshold": 0.7,
+  "confidence_thresholds": [
+    0.5,
+    0.6,
+    0.7,
+    0.8
+  ],
+  "entropy_percentiles": [
+    90,
+    95,
+    97,
+    99
+  ],
+  "ensemble_percentiles": [
+    90,
+    95,
+    99
+  ],
+  "ae_threshold_p90": 0.20127058029174805,
+  "ae_threshold_p95": 0.37264156341552734,
+  "entropy_thresholds": {
+    "ent_p90": 0.13031890988349915,
+    "ent_p95": 0.3946473002433777,
+    "ent_p97": 0.6468809843063354,
+    "ent_p99": 0.9507029056549072
+  },
+  "ensemble_thresholds": {
+    "ens_p90": 0.6076335906982422,
+    "ens_p95": 0.7318314909934998,
+    "ens_p99": 0.8497806787490845
+  },
+  "global_class_map": {
+    "ARP_Spoofing": 0,
+    "Benign": 1,
+    "DDoS_ICMP": 2,
+    "DDoS_SYN": 3,
+    "DDoS_TCP": 4,
+    "DDoS_UDP": 5,
+    "DoS_ICMP": 6,
+    "DoS_SYN": 7,
+    "DoS_TCP": 8,
+    "DoS_UDP": 9,
+    "MQTT_DDoS_Connect_Flood": 10,
+    "MQTT_DDoS_Publish_Flood": 11,
+    "MQTT_DoS_Connect_Flood": 12,
+    "MQTT_DoS_Publish_Flood": 13,
+    "MQTT_Malformed_Data": 14,
+    "Recon_OS_Scan": 15,
+    "Recon_Ping_Sweep": 16,
+    "Recon_Port_Scan": 17,
+    "Recon_VulScan": 18
+  },
+  "n_classes_global": 19,
+  "global_benign_id": 1,
+  "n_test": 892268,
+  "n_val": 903016,
+  "n_variants": 11
+}

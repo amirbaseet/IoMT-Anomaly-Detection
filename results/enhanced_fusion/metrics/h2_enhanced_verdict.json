@@ -1,0 +1,30 @@
+{
+  "phase_6_baseline_h2_strict": "0/5 (simulated LOO, Phase 6)",
+  "phase_6b_true_loo_h2_strict": "0/5 (true LOO, AE-only rescue)",
+  "phase_6b_true_loo_h2_binary": "5/5 at p90 (redundancy through misclassification)",
+  "phase_6c_h2_strict_denominator": "/4 (MQTT_DoS_Connect_Flood structurally excluded \u2014 0 LOO\u2192Benign samples)",
+  "phase_6c_h2_strict_best": {
+    "variant": "entropy_benign_p95",
+    "variant_name": "Entropy (benign-val p95)",
+    "pass": "4/4",
+    "avg_recall": 0.8035264623662012
+  },
+  "phase_6c_h2_binary_best": {
+    "variant": "entropy_benign_p95",
+    "variant_name": "Entropy (benign-val p95)",
+    "pass": "5/5",
+    "avg_recall": 0.9493664825372174
+  },
+  "baseline_ae_p90_for_reference": {
+    "h2_strict_pass": "0/4",
+    "h2_strict_avg": 0.31406734131924746,
+    "h2_binary_pass": "4/5",
+    "h2_binary_avg": 0.8486069126492145
+  },
+  "limitations": [
+    "MQTT_DoS_Connect_Flood excluded from H2-strict (no LOO\u2192Benign samples).",
+    "Single random seed; per-fold variance not estimated.",
+    "Entropy thresholds calibrated on val-correct E7 \u2014 may underestimate entropy on val-incorrect known classes; reported across multiple operating points.",
+    "Multiple operating points reported throughout; no per-target cherry-picking."
+  ]
+}

@@ -1,0 +1,124 @@
+[17:59:32] ============================================================================
+[17:59:32] Phase 6C — Enhanced Fusion (entropy + confidence + ensemble)
+[17:59:32] ============================================================================
+[17:59:32] Loading label encoders ...
+[17:59:32] Global label space: 19 classes; Benign id = 1
+[17:59:32] Loading E7 predictions and probabilities ...
+[17:59:32]   E7 test: pred (892268,), proba (892268, 19) | val: pred (903016,), proba (903016, 19)
+[17:59:32] Loading unsupervised scores ...
+[17:59:32]   AE thresholds  p90=0.2013  p95=0.3726
+[17:59:32] Loading LOO config ...
+[17:59:32]   Verified per-fold class lists for 5 targets
+[17:59:32] Loading y_test / y_val ...
+[17:59:32]   y_test = 892,268, y_val = 903,016
+[17:59:32] Total load time: 0.5s
+[17:59:32] LOO proba column counts validated against per-fold class lists
+[17:59:32] Computing E7 entropy (test, val) ...
+[17:59:32]   e7_test_entropy: mean=0.0150, std=0.0983
+[17:59:32]   e7_test_conf:    mean=0.9942, <0.7 frac=0.0080
+[17:59:32] Computing per-target LOO entropy + confidence + global-mapped predictions ...
+[17:59:32]   Recon_Ping_Sweep               mean_ent=0.0143 mean_conf=0.9946
+[17:59:32]   Recon_VulScan                  mean_ent=0.0143 mean_conf=0.9947
+[17:59:32]   MQTT_Malformed_Data            mean_ent=0.0145 mean_conf=0.9942
+[17:59:32]   MQTT_DoS_Connect_Flood         mean_ent=0.0157 mean_conf=0.9939
+[17:59:33]   ARP_Spoofing                   mean_ent=0.0149 mean_conf=0.9945
+[17:59:33] Building AE+IF ensemble score (val-fitted MinMax, applied to test) ...
+[17:59:33]   ae_norm_test: median=0.0000 if_norm_test: median=0.7422 ensemble_test: median=0.7422
+[17:59:33] Calibrating entropy thresholds on BENIGN validation samples ...
+[17:59:33]   entropy_benign: n=38,546, mean=0.0543, median=0.0005
+[17:59:33]   ent_p90 = 0.1303  (flag rate on benign val ≈ 10%)
+[17:59:33]   ent_p95 = 0.3946  (flag rate on benign val ≈ 5%)
+[17:59:33]   ent_p97 = 0.6469  (flag rate on benign val ≈ 3%)
+[17:59:33]   ent_p99 = 0.9507  (flag rate on benign val ≈ 1%)
+[17:59:33]   [diagnostic only] val-correct entropy: ent_correct_p90=0.0002  ent_correct_p95=0.0005  ent_correct_p99=0.1209  ← DEGENERATE: do not threshold here.
+[17:59:33] Calibrating ensemble thresholds on BENIGN validation samples ...
+[17:59:33]   benign_val_mask: 38,546 samples
+[17:59:33]   ens_p90 = 0.6076
+[17:59:33]   ens_p95 = 0.7318
+[17:59:33]   ens_p99 = 0.8498
+[17:59:33] Signals saved to results/enhanced_fusion/signals/
+[17:59:33] Evaluating variants × targets ...
+[17:59:33] [+   1.1s]   Recon_Ping_Sweep               baseline_ae_p90    binary=0.846  strict=0.161  flag=0.965
+[17:59:33] [+   1.1s]   Recon_Ping_Sweep               baseline_ae_p95    binary=0.828  strict=0.065  flag=0.960
+[17:59:33] [+   1.2s]   Recon_Ping_Sweep               confidence_0.6     binary=0.870  strict=0.290  flag=0.965
+[17:59:33] [+   1.2s]   Recon_Ping_Sweep               confidence_0.7     binary=0.935  strict=0.645  flag=0.966
+[17:59:33] [+   1.2s]   Recon_Ping_Sweep               entropy_benign_p90 binary=1.000  strict=1.000  flag=0.970
+[17:59:33] [+   1.2s]   Recon_Ping_Sweep               entropy_benign_p95 binary=0.994  strict=0.968  flag=0.967
+[17:59:33] [+   1.2s]   Recon_Ping_Sweep               entropy_benign_p99 binary=0.899  strict=0.452  flag=0.965
+[17:59:33] [+   1.3s]   Recon_Ping_Sweep               ensemble_p90       binary=0.834  strict=0.097  flag=0.963
+[17:59:33] [+   1.3s]   Recon_Ping_Sweep               ensemble_p95       binary=0.817  strict=0.000  flag=0.962
+[17:59:33] [+   1.3s]   Recon_Ping_Sweep               conf07_ent_p95     binary=0.994  strict=0.968  flag=0.967
+[17:59:33] [+   1.3s]   Recon_Ping_Sweep               full_enhanced      binary=0.994  strict=0.968  flag=0.967
+[17:59:33] [+   1.4s]   Recon_VulScan                  baseline_ae_p90    binary=0.700  strict=0.441  flag=0.965
+[17:59:33] [+   1.4s]   Recon_VulScan                  baseline_ae_p95    binary=0.649  strict=0.345  flag=0.960
+[17:59:33] [+   1.4s]   Recon_VulScan                  confidence_0.6     binary=0.717  strict=0.473  flag=0.965
+[17:59:33] [+   1.4s]   Recon_VulScan                  confidence_0.7     binary=0.754  strict=0.542  flag=0.966
+[17:59:33] [+   1.5s]   Recon_VulScan                  entropy_benign_p90 binary=0.914  strict=0.839  flag=0.970
+[17:59:33] [+   1.5s]   Recon_VulScan                  entropy_benign_p95 binary=0.863  strict=0.745  flag=0.968
+[17:59:33] [+   1.5s]   Recon_VulScan                  entropy_benign_p99 binary=0.739  strict=0.513  flag=0.965
+[17:59:33] [+   1.5s]   Recon_VulScan                  ensemble_p90       binary=0.512  strict=0.090  flag=0.963
+[17:59:33] [+   1.6s]   Recon_VulScan                  ensemble_p95       binary=0.482  strict=0.034  flag=0.961
+[17:59:33] [+   1.6s]   Recon_VulScan                  conf07_ent_p95     binary=0.863  strict=0.745  flag=0.968
+[17:59:33] [+   1.6s]   Recon_VulScan                  full_enhanced      binary=0.753  strict=0.540  flag=0.967
+[17:59:33] [+   1.6s]   MQTT_Malformed_Data            baseline_ae_p90    binary=0.820  strict=0.335  flag=0.965
+[17:59:33] [+   1.7s]   MQTT_Malformed_Data            baseline_ae_p95    binary=0.800  strict=0.258  flag=0.959
+[17:59:33] [+   1.7s]   MQTT_Malformed_Data            confidence_0.6     binary=0.839  strict=0.405  flag=0.965
+[17:59:33] [+   1.7s]   MQTT_Malformed_Data            confidence_0.7     binary=0.865  strict=0.500  flag=0.965
+[17:59:33] [+   1.7s]   MQTT_Malformed_Data            entropy_benign_p90 binary=0.963  strict=0.864  flag=0.969
+[17:59:33] [+   1.8s]   MQTT_Malformed_Data            entropy_benign_p95 binary=0.939  strict=0.773  flag=0.967
+[17:59:33] [+   1.8s]   MQTT_Malformed_Data            entropy_benign_p99 binary=0.841  strict=0.413  flag=0.965
+[17:59:33] [+   1.8s]   MQTT_Malformed_Data            ensemble_p90       binary=0.827  strict=0.360  flag=0.962
+[17:59:33] [+   1.8s]   MQTT_Malformed_Data            ensemble_p95       binary=0.766  strict=0.136  flag=0.961
+[17:59:33] [+   1.8s]   MQTT_Malformed_Data            conf07_ent_p95     binary=0.939  strict=0.773  flag=0.967
+[17:59:33] [+   1.9s]   MQTT_Malformed_Data            full_enhanced      binary=0.966  strict=0.873  flag=0.967
+[17:59:33] [+   1.9s]   MQTT_DoS_Connect_Flood         baseline_ae_p90    binary=1.000  strict=  n/a  flag=0.965
+[17:59:33] [+   1.9s]   MQTT_DoS_Connect_Flood         baseline_ae_p95    binary=1.000  strict=  n/a  flag=0.960
+[17:59:33] [+   1.9s]   MQTT_DoS_Connect_Flood         confidence_0.6     binary=1.000  strict=  n/a  flag=0.965
+[17:59:33] [+   2.0s]   MQTT_DoS_Connect_Flood         confidence_0.7     binary=1.000  strict=  n/a  flag=0.966
+[17:59:34] [+   2.0s]   MQTT_DoS_Connect_Flood         entropy_benign_p90 binary=1.000  strict=  n/a  flag=0.970
+[17:59:34] [+   2.0s]   MQTT_DoS_Connect_Flood         entropy_benign_p95 binary=1.000  strict=  n/a  flag=0.968
+[17:59:34] [+   2.0s]   MQTT_DoS_Connect_Flood         entropy_benign_p99 binary=1.000  strict=  n/a  flag=0.965
+[17:59:34] [+   2.1s]   MQTT_DoS_Connect_Flood         ensemble_p90       binary=1.000  strict=  n/a  flag=0.963
+[17:59:34] [+   2.1s]   MQTT_DoS_Connect_Flood         ensemble_p95       binary=1.000  strict=  n/a  flag=0.962
+[17:59:34] [+   2.1s]   MQTT_DoS_Connect_Flood         conf07_ent_p95     binary=1.000  strict=  n/a  flag=0.968
+[17:59:34] [+   2.1s]   MQTT_DoS_Connect_Flood         full_enhanced      binary=1.000  strict=  n/a  flag=0.967
+[17:59:34] [+   2.2s]   ARP_Spoofing                   baseline_ae_p90    binary=0.877  strict=0.320  flag=0.965
+[17:59:34] [+   2.2s]   ARP_Spoofing                   baseline_ae_p95    binary=0.856  strict=0.206  flag=0.960
+[17:59:34] [+   2.2s]   ARP_Spoofing                   confidence_0.6     binary=0.894  strict=0.415  flag=0.965
+[17:59:34] [+   2.2s]   ARP_Spoofing                   confidence_0.7     binary=0.903  strict=0.465  flag=0.965
+[17:59:34] [+   2.3s]   ARP_Spoofing                   entropy_benign_p90 binary=0.987  strict=0.930  flag=0.969
+[17:59:34] [+   2.3s]   ARP_Spoofing                   entropy_benign_p95 binary=0.951  strict=0.728  flag=0.966
+[17:59:34] [+   2.3s]   ARP_Spoofing                   entropy_benign_p99 binary=0.888  strict=0.383  flag=0.965
+[17:59:34] [+   2.3s]   ARP_Spoofing                   ensemble_p90       binary=0.877  strict=0.320  flag=0.963
+[17:59:34] [+   2.3s]   ARP_Spoofing                   ensemble_p95       binary=0.847  strict=0.158  flag=0.962
+[17:59:34] [+   2.4s]   ARP_Spoofing                   conf07_ent_p95     binary=0.951  strict=0.728  flag=0.966
+[17:59:34] [+   2.4s]   ARP_Spoofing                   full_enhanced      binary=0.941  strict=0.674  flag=0.965
+[17:59:34] per_target_results.csv saved (55 rows)
+[17:59:34] Building ablation table ...
+[17:59:34] ablation_table.csv saved
+[17:59:34] 
+           variant h2_strict_pass  h2_strict_avg h2_binary_pass  h2_binary_avg  avg_flag_rate
+   baseline_ae_p90            0/4       0.314067            4/5       0.848607       0.964748
+   baseline_ae_p95            0/4       0.218379            4/5       0.826529       0.959799
+    confidence_0.6            0/4       0.395680            5/5       0.864053       0.965063
+    confidence_0.7            0/4       0.538124            5/5       0.891457       0.965412
+entropy_benign_p90            4/4       0.908467            5/5       0.972884       0.969393
+entropy_benign_p95            4/4       0.803526            5/5       0.949366       0.967182
+entropy_benign_p99            0/4       0.440267            5/5       0.873598       0.965167
+      ensemble_p90            0/4       0.216651            4/5       0.809998       0.962802
+      ensemble_p95            0/4       0.082076            4/5       0.782503       0.961519
+    conf07_ent_p95            4/4       0.803526            5/5       0.949366       0.967182
+     full_enhanced            2/4       0.763726            5/5       0.930804       0.966522
+[17:59:34] Variants within operational FPR budget (0.25): 10/11
+[17:59:34] Best HONEST variant (FPR-budgeted): entropy_benign_p95  (Entropy (benign-val p95))
+[17:59:34] Computing entropy statistics by (target, sample_kind) ...
+[17:59:34] entropy_stats.csv saved
+[17:59:34] Computing signal correlations on test set ...
+[17:59:34] signal_correlation.csv saved
+[17:59:34] Generating figures ...
+[17:59:36] All 6 figures saved to results/enhanced_fusion/figures/
+[17:59:36] summary.md written (8,839 chars)
+[17:59:36] ============================================================================
+[17:59:36] Phase 6C COMPLETE. Total runtime: 4.6s
+[17:59:36] Outputs in: /Users/amoorabaseet/IoMT-Project/results/enhanced_fusion
+[17:59:36] ============================================================================
