@@ -1,0 +1,136 @@
+{
+  "phase": "7 \u2014 SHAP explainability",
+  "model": "E7 \u2014 XGBoost / full 44 features / original data",
+  "model_path": "/Users/amoorabaseet/IoMT-Project/results/supervised/models/E7_xgb_full_original.pkl",
+  "random_state": 42,
+  "shap_subsample_n": 5000,
+  "shap_background_n": 500,
+  "min_samples_per_class": 20,
+  "shap_model_output": "raw",
+  "shap_feature_perturbation": "interventional",
+  "n_classes": 19,
+  "n_features": 44,
+  "x_test_full_shape": [
+    892268,
+    44
+  ],
+  "x_shap_subset_shape": [
+    5000,
+    44
+  ],
+  "x_background_shape": [
+    500,
+    44
+  ],
+  "shap_array_shape": [
+    19,
+    5000,
+    44
+  ],
+  "api_used": "modern (explainer(X) \u2192 Explanation)",
+  "compute_time_seconds": 4214.27,
+  "selected_beeswarm_classes": [
+    "DDoS_SYN",
+    "DoS_SYN",
+    "ARP_Spoofing",
+    "Recon_VulScan",
+    "Benign"
+  ],
+  "feature_names": [
+    "IAT",
+    "Rate",
+    "Header_Length",
+    "Tot sum",
+    "Min",
+    "Max",
+    "Covariance",
+    "Variance",
+    "Duration",
+    "ack_count",
+    "syn_count",
+    "fin_count",
+    "rst_count",
+    "Srate",
+    "AVG",
+    "Std",
+    "Tot size",
+    "Number",
+    "Magnitue",
+    "Radius",
+    "Weight",
+    "fin_flag_number",
+    "syn_flag_number",
+    "rst_flag_number",
+    "psh_flag_number",
+    "ack_flag_number",
+    "ece_flag_number",
+    "cwr_flag_number",
+    "HTTP",
+    "HTTPS",
+    "DNS",
+    "TCP",
+    "DHCP",
+    "ARP",
+    "ICMP",
+    "Protocol Type",
+    "UDP",
+    "IPv",
+    "LLC",
+    "Telnet",
+    "SMTP",
+    "SSH",
+    "IRC",
+    "IGMP"
+  ],
+  "class_names": [
+    "ARP_Spoofing",
+    "Benign",
+    "DDoS_ICMP",
+    "DDoS_SYN",
+    "DDoS_TCP",
+    "DDoS_UDP",
+    "DoS_ICMP",
+    "DoS_SYN",
+    "DoS_TCP",
+    "DoS_UDP",
+    "MQTT_DDoS_Connect_Flood",
+    "MQTT_DDoS_Publish_Flood",
+    "MQTT_DoS_Connect_Flood",
+    "MQTT_DoS_Publish_Flood",
+    "MQTT_Malformed_Data",
+    "Recon_OS_Scan",
+    "Recon_Ping_Sweep",
+    "Recon_Port_Scan",
+    "Recon_VulScan"
+  ],
+  "categories": {
+    "DDoS": [
+      "DDoS_ICMP",
+      "DDoS_SYN",
+      "DDoS_TCP",
+      "DDoS_UDP"
+    ],
+    "DoS": [
+      "DoS_ICMP",
+      "DoS_SYN",
+      "DoS_TCP",
+      "DoS_UDP"
+    ],
+    "MQTT": [
+      "MQTT_DDoS_Connect_Flood",
+      "MQTT_DDoS_Publish_Flood",
+      "MQTT_DoS_Connect_Flood",
+      "MQTT_DoS_Publish_Flood",
+      "MQTT_Malformed_Data"
+    ],
+    "Recon": [
+      "Recon_OS_Scan",
+      "Recon_Ping_Sweep",
+      "Recon_Port_Scan",
+      "Recon_VulScan"
+    ],
+    "Spoofing": [
+      "ARP_Spoofing"
+    ]
+  }
+}

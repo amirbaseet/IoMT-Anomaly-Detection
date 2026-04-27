@@ -1,0 +1,96 @@
+class_name,rank,feature,mean_abs_shap
+ARP_Spoofing,1,Tot size,0.34205472
+ARP_Spoofing,2,Header_Length,0.28722852
+ARP_Spoofing,3,UDP,0.19373028
+ARP_Spoofing,4,Variance,0.18443531
+ARP_Spoofing,5,Rate,0.17934953
+Benign,1,IAT,0.36126378
+Benign,2,rst_count,0.22627771
+Benign,3,fin_count,0.2140262
+Benign,4,Rate,0.20952497
+Benign,5,Number,0.16590178
+DDoS_ICMP,1,IAT,0.25287393
+DDoS_ICMP,2,Number,0.14488757
+DDoS_ICMP,3,ICMP,0.11197789
+DDoS_ICMP,4,TCP,0.09988863
+DDoS_ICMP,5,Protocol Type,0.07533282
+DDoS_SYN,1,IAT,0.98821884
+DDoS_SYN,2,syn_flag_number,0.9568989
+DDoS_SYN,3,syn_count,0.5421822
+DDoS_SYN,4,TCP,0.29669863
+DDoS_SYN,5,rst_flag_number,0.1387985
+DDoS_TCP,1,TCP,0.9052115
+DDoS_TCP,2,syn_count,0.36652943
+DDoS_TCP,3,IAT,0.25560275
+DDoS_TCP,4,syn_flag_number,0.21812312
+DDoS_TCP,5,Tot sum,0.21083125
+DDoS_UDP,1,IAT,5.447798
+DDoS_UDP,2,Rate,1.1343851
+DDoS_UDP,3,UDP,0.37440023
+DDoS_UDP,4,Protocol Type,0.23025781
+DDoS_UDP,5,Header_Length,0.21720268
+DoS_ICMP,1,IAT,0.8438054
+DoS_ICMP,2,ICMP,0.124124855
+DoS_ICMP,3,Min,0.1219146
+DoS_ICMP,4,Protocol Type,0.10983364
+DoS_ICMP,5,Tot sum,0.09232889
+DoS_SYN,1,IAT,2.275009
+DoS_SYN,2,syn_count,0.711151
+DoS_SYN,3,syn_flag_number,0.53563815
+DoS_SYN,4,Tot sum,0.41754702
+DoS_SYN,5,Number,0.11655835
+DoS_TCP,1,IAT,1.2761465
+DoS_TCP,2,TCP,0.82892346
+DoS_TCP,3,syn_count,0.30263734
+DoS_TCP,4,Tot sum,0.2572149
+DoS_TCP,5,syn_flag_number,0.21986614
+DoS_UDP,1,IAT,2.7929904
+DoS_UDP,2,UDP,0.83285725
+DoS_UDP,3,Rate,0.6599853
+DoS_UDP,4,Header_Length,0.36074948
+DoS_UDP,5,Protocol Type,0.25464442
+MQTT_DDoS_Connect_Flood,1,IAT,0.5506338
+MQTT_DDoS_Connect_Flood,2,ack_count,0.5140741
+MQTT_DDoS_Connect_Flood,3,Header_Length,0.26884514
+MQTT_DDoS_Connect_Flood,4,syn_count,0.2573481
+MQTT_DDoS_Connect_Flood,5,rst_flag_number,0.22808677
+MQTT_DDoS_Publish_Flood,1,IAT,0.222997
+MQTT_DDoS_Publish_Flood,2,Variance,0.20190911
+MQTT_DDoS_Publish_Flood,3,rst_count,0.13615495
+MQTT_DDoS_Publish_Flood,4,TCP,0.12747985
+MQTT_DDoS_Publish_Flood,5,psh_flag_number,0.12078739
+MQTT_DoS_Connect_Flood,1,Header_Length,0.4035775
+MQTT_DoS_Connect_Flood,2,IAT,0.31005576
+MQTT_DoS_Connect_Flood,3,Rate,0.29911146
+MQTT_DoS_Connect_Flood,4,psh_flag_number,0.19267231
+MQTT_DoS_Connect_Flood,5,rst_flag_number,0.17327693
+MQTT_DoS_Publish_Flood,1,ack_flag_number,0.27198246
+MQTT_DoS_Publish_Flood,2,Min,0.20732781
+MQTT_DoS_Publish_Flood,3,Rate,0.19412336
+MQTT_DoS_Publish_Flood,4,IAT,0.19018322
+MQTT_DoS_Publish_Flood,5,Variance,0.11541865
+MQTT_Malformed_Data,1,ack_flag_number,0.31467998
+MQTT_Malformed_Data,2,IAT,0.29892895
+MQTT_Malformed_Data,3,Number,0.22469378
+MQTT_Malformed_Data,4,Protocol Type,0.20347992
+MQTT_Malformed_Data,5,Variance,0.19808885
+Recon_OS_Scan,1,TCP,0.49016005
+Recon_OS_Scan,2,Rate,0.2738732
+Recon_OS_Scan,3,syn_count,0.26380846
+Recon_OS_Scan,4,Protocol Type,0.20997061
+Recon_OS_Scan,5,IAT,0.15792616
+Recon_Ping_Sweep,1,Header_Length,0.40952167
+Recon_Ping_Sweep,2,Rate,0.18245988
+Recon_Ping_Sweep,3,Min,0.1705071
+Recon_Ping_Sweep,4,Max,0.12799042
+Recon_Ping_Sweep,5,UDP,0.12042879
+Recon_Port_Scan,1,Tot size,0.3647165
+Recon_Port_Scan,2,syn_count,0.28885913
+Recon_Port_Scan,3,Number,0.22066346
+Recon_Port_Scan,4,Min,0.20143825
+Recon_Port_Scan,5,IAT,0.14744657
+Recon_VulScan,1,Min,0.36865622
+Recon_VulScan,2,Rate,0.2323382
+Recon_VulScan,3,Header_Length,0.22166462
+Recon_VulScan,4,rst_count,0.16060805
+Recon_VulScan,5,syn_count,0.15993975

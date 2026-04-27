@@ -1,0 +1,11 @@
+Rank,Yacoubi SHAP (raw data)*,Our SHAP (deduplicated),Our Cohen's d (Phase 2),Our RF Importance (Phase 4)
+1,IAT,IAT,rst_count,IAT
+2,Rate,Rate,psh_flag_number,Magnitue
+3,Header_Length,TCP,Variance,Tot size
+4,Srate,syn_count,ack_flag_number,AVG
+5,syn_flag_number,Header_Length,Max,Min
+6,TCP,syn_flag_number,Magnitue,TCP
+7,Tot sum,UDP,HTTPS,syn_count
+8,AVG,Min,Tot size,syn_flag_number
+9,psh_flag_number,Number,AVG,rst_count
+10,rst_count,Tot sum,Std,fin_count
