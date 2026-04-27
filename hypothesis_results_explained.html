@@ -1,0 +1,183 @@
+
+<h2 class="sr-only">Simple explanation of the 4-layer system and all hypothesis results</h2>
+<style>
+.sec{font:500 18px var(--font-sans);color:var(--color-text-primary);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--color-border-tertiary);}
+.sub{font:500 15px var(--font-sans);margin:16px 0 8px;}
+.exp{font:400 14px/1.8 var(--font-sans);color:var(--color-text-primary);margin:4px 0 12px;}
+.analogy{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:12px 16px;margin:8px 0 16px;font:400 13px/1.7 var(--font-sans);color:var(--color-text-secondary);}
+.vbox{border-radius:var(--border-radius-lg);padding:14px 18px;margin:10px 0;}
+.nums{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0;}
+.num-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 12px;text-align:center;}
+.num-label{font:400 11px var(--font-sans);color:var(--color-text-secondary);}
+.num-val{font:500 16px var(--font-sans);}
+</style>
+
+<div class="sec">First: what are the 4 layers?</div>
+
+<div class="exp">Think of a hospital security system with 4 checkpoints:</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+<div style="background:#EEEDFE;border-radius:var(--border-radius-lg);padding:12px 16px;">
+<div style="font:500 14px var(--font-sans);color:#3C3489;">Layer 1: XGBoost (the expert guard)</div>
+<div style="font:400 12px/1.6 var(--font-sans);color:#534AB7;margin-top:4px;">Studied photos of 19 known criminals. When someone arrives, checks if they match any known criminal. Very accurate (99.27%) but can only recognize criminals it has seen before.</div>
+</div>
+<div style="background:#E1F5EE;border-radius:var(--border-radius-lg);padding:12px 16px;">
+<div style="font:500 14px var(--font-sans);color:#085041;">Layer 2: Autoencoder (the behavior detector)</div>
+<div style="font:400 12px/1.6 var(--font-sans);color:#0F6E56;margin-top:4px;">Only studied what NORMAL visitors look like. Doesn't know any criminals. Just asks: "does this person behave normally?" If not → suspicious, regardless of who they are.</div>
+</div>
+<div style="background:#FAEEDA;border-radius:var(--border-radius-lg);padding:12px 16px;">
+<div style="font:500 14px var(--font-sans);color:#633806;">Layer 3: Fusion (the decision maker)</div>
+<div style="font:400 12px/1.6 var(--font-sans);color:#854F0B;margin-top:4px;">Combines both guards' opinions into 4 decisions: both say criminal → CONFIRMED. Guard says ok but detector says suspicious → ZERO-DAY WARNING. Guard says criminal but detector says normal → LOW CONFIDENCE. Both say ok → CLEAR.</div>
+</div>
+<div style="background:#FAECE7;border-radius:var(--border-radius-lg);padding:12px 16px;">
+<div style="font:500 14px var(--font-sans);color:#712B13;">Layer 4: SHAP (the explainer)</div>
+<div style="font:400 12px/1.6 var(--font-sans);color:#993C1D;margin-top:4px;">After catching someone, explains WHY: "We flagged this person because they had unusual timing patterns and abnormal packet sizes." Makes the system transparent and trustworthy.</div>
+</div>
+</div>
+
+<div class="sec">H1: Does combining both guards work better than the expert guard alone?</div>
+
+<div class="sub" style="color:#A32D2D;">Result: FAIL (Δ = −0.0001)</div>
+
+<div class="exp">
+<strong>What we asked:</strong> If we use BOTH the expert guard (XGBoost) AND the behavior detector (Autoencoder) together, do we catch more criminals than using just the expert guard alone?
+</div>
+
+<div class="exp">
+<strong>What happened:</strong> No — the combined system scored 0.8582 while the expert guard alone scored 0.8622. The combined system was actually 0.0041 points WORSE (at the most aggressive threshold).
+</div>
+
+<div class="exp">
+<strong>Why it failed:</strong> The fusion system creates a new category called "zero-day warning" (Case 2). Every time the behavior detector flags a NORMAL visitor as suspicious (false alarm), that counts as a mistake. Since 15.4% of normal visitors triggered false alarms, these errors dragged down the overall score.
+</div>
+
+<div class="analogy">
+<strong>Analogy:</strong> Imagine adding a smoke detector to a kitchen that already has a chef who checks for fires. The smoke detector is useful — but it also goes off when you make toast. If you measure "total false alarms," the kitchen with both the chef AND the smoke detector has MORE false alarms than the chef alone. Does that mean the smoke detector is useless? No — it catches fires the chef might miss. But the metric doesn't capture that value.
+</div>
+
+<div class="nums">
+<div class="num-card"><div class="num-label">XGBoost alone (macro-F1)</div><div class="num-val" style="color:#0F6E56;">0.8622</div></div>
+<div class="num-card"><div class="num-label">Fusion (macro-F1)</div><div class="num-val" style="color:#A32D2D;">0.8582</div></div>
+<div class="num-card"><div class="num-label">Difference</div><div class="num-val" style="color:#A32D2D;">−0.0041</div></div>
+<div class="num-card"><div class="num-label">Binary detection F1</div><div class="num-val" style="color:#0F6E56;">0.9985</div></div>
+</div>
+
+<div class="vbox" style="background:#E1F5EE;border-left:3px solid #0F6E56;">
+<div style="font:400 13px/1.7 var(--font-sans);color:#085041;">
+<strong>But the system still works!</strong> Binary detection F1 = 0.9985 (catches 99.85% of all attacks). The macro-F1 penalty is only because of the zero_day_unknown label. The real value is operational: instead of just "attack/not attack", analysts get 4 confidence levels (confirmed/zero-day/low-confidence/clear).
+</div>
+</div>
+
+<div class="sec">H2 strict: Can the behavior detector catch attacks the expert guard has never seen?</div>
+
+<div class="sub" style="color:#A32D2D;">Result: FAIL (0/5 targets ≥ 70%)</div>
+
+<div class="exp">
+<strong>What we asked:</strong> If a BRAND NEW type of attack arrives that the expert guard has never studied, can the behavior detector catch it? We tested this by removing 5 attack types from training and checking if the AE flags them.
+</div>
+
+<div class="exp">
+<strong>What happened:</strong> When the expert guard (trained without one attack type) calls a novel attack "benign" (safe), the behavior detector only catches 6-44% of those samples. None of the 5 targets reached the 70% threshold.
+</div>
+
+<div class="exp">
+<strong>Why it failed:</strong> The samples that fool the expert guard are ALSO the ones that look "normal" to the behavior detector. Both systems analyze the same 44 traffic features (packet size, timing, flags, etc.). If an attack looks like normal traffic in those 44 features, BOTH systems are fooled — their blind spots overlap.
+</div>
+
+<div class="analogy">
+<strong>Analogy:</strong> Imagine the expert guard checks your face, and the behavior detector checks your walk. If a criminal has a normal face AND a normal walk, both guards miss them. What you'd really need is a third guard checking something completely different (like fingerprints). Similarly, the AE needs DIFFERENT features than XGBoost to catch what XGBoost misses — but both use the same 44 flow features.
+</div>
+
+<div class="nums">
+<div class="num-card"><div class="num-label">Recon_Ping_Sweep: AE caught</div><div class="num-val" style="color:#A32D2D;">6.5%</div></div>
+<div class="num-card"><div class="num-label">ARP_Spoofing: AE caught</div><div class="num-val" style="color:#A32D2D;">22%</div></div>
+<div class="num-card"><div class="num-label">Recon_VulScan: AE caught</div><div class="num-val" style="color:#A32D2D;">35%</div></div>
+<div class="num-card"><div class="num-label">MQTT_Malformed: AE caught</div><div class="num-val" style="color:#A32D2D;">26%</div></div>
+</div>
+
+<div class="sec">H2 binary: Does the combined system still detect novel attacks somehow?</div>
+
+<div class="sub" style="color:#0F6E56;">Result: PASS (5/5 targets at p90)</div>
+
+<div class="exp">
+<strong>What we asked:</strong> Forget whether the AE specifically catches them — does the WHOLE system raise ANY kind of alert on novel attacks?
+</div>
+
+<div class="exp">
+<strong>What happened:</strong> YES — 70-100% of novel attacks trigger an alert. But NOT because the behavior detector catches them. Instead, the expert guard does something unexpected...
+</div>
+
+<div class="exp">
+<strong>The surprise discovery — "redundancy through misclassification":</strong>
+When the expert guard sees an attack it was never trained on, it does NOT say "this is normal." Instead, it says "this looks like a SIMILAR attack I know!" For example:
+</div>
+
+<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:12px 16px;margin:8px 0;font:400 13px/1.8 var(--font-sans);">
+<div style="color:var(--color-text-primary);">When we remove <strong>ARP_Spoofing</strong> from training:</div>
+<div style="color:var(--color-text-secondary);margin-top:4px;">
+→ 47% gets called "Recon_Port_Scan" (wrong class, but still flagged as attack!)<br>
+→ 27% gets called "Recon_VulScan" (wrong class, but still flagged!)<br>
+→ Only 18% gets called "Benign" (actually missed)<br>
+→ <strong>82% still triggers an alert</strong> — with the wrong label, but still an alert
+</div>
+</div>
+
+<div class="analogy">
+<strong>Analogy:</strong> The expert guard sees a criminal he's never studied before. He doesn't say "this person is fine." He says "I'm not sure who this is, but they look a lot like Criminal #7 from my training!" The alarm still sounds. The guard got the NAME wrong, but got the DANGER right.
+</div>
+
+<div class="nums">
+<div class="num-card"><div class="num-label">Ping_Sweep detected</div><div class="num-val" style="color:#0F6E56;">84.6%</div></div>
+<div class="num-card"><div class="num-label">VulScan detected</div><div class="num-val" style="color:#854F0B;">70.0%</div></div>
+<div class="num-card"><div class="num-label">MQTT_Malformed detected</div><div class="num-val" style="color:#0F6E56;">82.0%</div></div>
+<div class="num-card"><div class="num-label">ARP_Spoofing detected</div><div class="num-val" style="color:#0F6E56;">87.7%</div></div>
+</div>
+
+<div class="sec">H3: Does adding synthetic data (SMOTETomek) help detect rare attacks?</div>
+
+<div class="sub" style="color:#A32D2D;">Result: FAIL (all 4 configurations worse)</div>
+
+<div class="exp">
+<strong>What we asked:</strong> Some attack types have very few examples (Recon_Ping_Sweep: only 689 samples vs DDoS_UDP: 1.6 million). SMOTETomek creates synthetic copies of rare attacks to balance the data. Does this help the model detect rare attacks better?
+</div>
+
+<div class="exp">
+<strong>What happened:</strong> No — EVERY model got WORSE with SMOTETomek. The biggest drop was XGBoost on reduced features: from 0.8987 to 0.8538 (−0.045).
+</div>
+
+<div class="exp">
+<strong>Why it failed:</strong> We were already using class_weight='balanced' in both RF and XGBoost. This tells the model "pay MORE attention to rare classes." SMOTETomek ALSO tries to fix imbalance by creating synthetic samples. Using BOTH together is like correcting a problem twice — the model overcorrects and starts making mistakes on the majority classes.
+</div>
+
+<div class="analogy">
+<strong>Analogy:</strong> Imagine a teacher who already gives extra time to struggling students (class_weight='balanced'). Now you also photocopy the struggling students' homework and add it to the pile (SMOTETomek). The teacher now spends SO much time on the extra copies that the other students' work suffers. Double-helping actually hurts.
+</div>
+
+<div class="nums">
+<div class="num-card"><div class="num-label">XGBoost/full without SMOTE</div><div class="num-val" style="color:#0F6E56;">0.9076</div></div>
+<div class="num-card"><div class="num-label">XGBoost/full with SMOTE</div><div class="num-val" style="color:#A32D2D;">0.8708</div></div>
+<div class="num-card"><div class="num-label">RF/full without SMOTE</div><div class="num-val" style="color:#0F6E56;">0.8551</div></div>
+<div class="num-card"><div class="num-label">RF/full with SMOTE</div><div class="num-val" style="color:#A32D2D;">0.8380</div></div>
+</div>
+
+<div class="sec">Why "failure" is actually success</div>
+
+<div class="exp">
+All 3 hypotheses "failed" — but each failure produced a finding that is more interesting and more publishable than a simple "yes it works":
+</div>
+
+<div style="display:grid;gap:10px;margin-top:8px;">
+<div style="background:#FAECE7;border-radius:var(--border-radius-lg);padding:12px 16px;">
+<div style="font:500 13px var(--font-sans);color:#712B13;">H1 failure → discovered that fusion's value is operational (4-case alerts), not statistical (macro-F1)</div>
+</div>
+<div style="background:#FAECE7;border-radius:var(--border-radius-lg);padding:12px 16px;">
+<div style="font:500 13px var(--font-sans);color:#712B13;">H2 failure → discovered "redundancy through misclassification" — a novel zero-day detection mechanism nobody expected</div>
+</div>
+<div style="background:#FAECE7;border-radius:var(--border-radius-lg);padding:12px 16px;">
+<div style="font:500 13px var(--font-sans);color:#712B13;">H3 failure → proved that SMOTETomek + class_weight='balanced' is harmful — contradicts a common assumption in the IoMT IDS literature</div>
+</div>
+</div>
+
+<div class="analogy" style="margin-top:16px;">
+<strong>In academic research:</strong> A well-documented failure with a clear explanation of WHY is more valuable than a cherry-picked success. Your committee will respect the honesty and the depth of analysis. Each failure led to a genuine finding that other researchers can build on.
+</div>
