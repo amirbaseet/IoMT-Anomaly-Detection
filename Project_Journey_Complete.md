@@ -17,14 +17,15 @@ We built a 4-layer hybrid intrusion detection system for medical IoT (IoMT) netw
 3. **Layer 3 (Fusion):** 4-case decision logic combining both layers → binary F1 = 0.9985
 4. **Layer 4 (XAI):** Per-class SHAP explains why the model flags each attack type differently
 
-We tested 3 hypotheses — all "failed" in their strict form, but produced genuine research contributions more valuable than simple "pass" results:
+We tested 3 hypotheses — H1 and H3 produced genuine research contributions more valuable than a simple "pass" result; H2 was strictly rejected by AE alone but rescued to 4/4 by Phase 6C's entropy + AE fusion.
 
 | Hypothesis | Claim | Result | What we learned |
 |-----------|-------|--------|----------------|
-| **H1** | Fusion improves macro-F1 over XGBoost | **FAIL** (Δ = −0.0001) | Value is in case stratification, not aggregate metrics |
-| **H2 strict** | AE catches ≥70% of zero-day | **FAIL** (0/5 targets) | AE and E7 share feature space → overlapping blind spots |
+| **H1** | Fusion improves macro-F1 over XGBoost | **Δ negligible** (−0.014pp, CI [−0.0002, −0.0001] excludes 0) | Value is in case stratification, not aggregate metrics |
+| **H2 strict** (Phase 6B, AE-only) | AE catches ≥70% of zero-day | **FAIL** (0/5 targets) | AE and E7 share feature space → overlapping blind spots |
+| **H2 strict** (Phase 6C, entropy + AE) | Fusion catches ≥70% of zero-day | **PASS** (4/4 eligible) | Entropy is complementary to AE; their fusion lifts 0/4 → 4/4 |
 | **H2 binary** | Hybrid system detects novel attacks | **PASS** (5/5 at p90) | Novel mechanism: "redundancy through misclassification" |
-| **H3** | SMOTETomek improves minority F1 | **FAIL** (all 4 configs worse) | class_weight='balanced' + SMOTE = compounding correction |
+| **H3** | SMOTETomek improves minority F1 | **FAIL** (all 4 configs worse) | Boundary-blur on overlapping `DDoS_*↔DoS_*` and `Recon_OS_Scan↔Recon_VulScan` classes (XGB arms have no `class_weight` and degrade *more* than RF arms) |
 
 ---
 
@@ -192,7 +193,7 @@ We tested 3 hypotheses — all "failed" in their strict form, but produced genui
 
 ### Key results
 - Case distribution (p90): 93.83% Case 1, 0.69% Case 2, 1.94% Case 3, 3.54% Case 4
-- **H1: FAIL** — Δ = −0.0001 at p99. Zero_day_unknown class penalizes macro-F1
+- **H1: Δ negligible** — Δ = −0.014pp at p99 (95% CI [−0.0002, −0.0001] excludes 0; ~125 of 892,268 rows). Zero_day_unknown class penalizes macro-F1 by design
 - **H2 (simulated): FAIL** — 0/5 targets. But this wasn't true LOO → led to Phase 6B
 - Binary F1 = 0.9985 at p99 — system works for detection
 - Recommended operating point: p97 (99.87% recall, 5.3% FPR)

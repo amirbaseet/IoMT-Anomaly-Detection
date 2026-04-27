@@ -727,6 +727,15 @@ log("\n" + ablation_df[[
 # first — those whose mean false-alert rate on benign test rows stays below
 # OPERATIONAL_FPR_BUDGET — and rank within that set by strict-rescue avg, then
 # binary avg, then (negatively) by false-alert rate as a tiebreaker.
+#
+# NOTE on the 0.25 value: this is a *tooling default* for tabular variant
+# selection, not a derived methodological gate. The thesis defense for the
+# recommended variant (entropy_benign_p95) rests on the Pareto frontier
+# analysis in README §15C.6 and notebooks/pareto_frontier.py, not on this
+# single cutoff. A tighter cap (e.g., 0.20) shifts the recommended frontier
+# point to entropy_benign_p99 (0/4 strict); a looser cap (0.30) shifts it
+# to entropy_benign_p90 (4/4 strict, recall 0.908). The framework is the
+# same at every operating point on the frontier.
 OPERATIONAL_FPR_BUDGET = 0.25
 
 usable_mask = ablation_df["avg_false_alert_rate"] <= OPERATIONAL_FPR_BUDGET
