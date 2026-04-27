@@ -4,7 +4,7 @@
 > **Thesis:** "A Hybrid Supervised-Unsupervised Framework for Anomaly Detection and Zero-Day Attack Identification in IoMT Networks Using the CICIoMT2024 Dataset"
 > **Duration:** April 2026 | **Machine:** MacBook Air M4, 24GB RAM, Python 3.13
 > **GitHub:** github.com/amirbaseet/IoMT-Anomaly-Detection
-> **Status:** ALL EXPERIMENTAL PHASES COMPLETE — Thesis writing phase
+> **Status:** ALL EXPERIMENTAL PHASES COMPLETE (1, 2, 3, 4, 5, 6, 6B, 6C, 7) + senior review fixes applied — Thesis writing phase
 
 ---
 
@@ -12,20 +12,21 @@
 
 We built a 4-layer hybrid intrusion detection system for medical IoT (IoMT) networks:
 
-1. **Layer 1 (Supervised):** XGBoost classifies 19 known attack types → F1_macro = 0.9076
+1. **Layer 1 (Supervised):** XGBoost classifies 19 known attack types → F1_macro = 0.9076, accuracy = 99.27%
 2. **Layer 2 (Unsupervised):** Autoencoder detects anomalies by learning "normal" traffic → AUC = 0.9892
-3. **Layer 3 (Fusion):** 4-case decision logic combining both layers → binary F1 = 0.9985
+3. **Layer 3 (Fusion):** 5-case decision logic combining both layers → binary F1 = 0.9985
 4. **Layer 4 (XAI):** Per-class SHAP explains why the model flags each attack type differently
 
-We tested 3 hypotheses — H1 and H3 produced genuine research contributions more valuable than a simple "pass" result; H2 was strictly rejected by AE alone but rescued to 4/4 by Phase 6C's entropy + AE fusion.
+We tested 3 hypotheses, then improved the system in Phase 6C:
 
-| Hypothesis | Claim | Result | What we learned |
-|-----------|-------|--------|----------------|
-| **H1** | Fusion improves macro-F1 over XGBoost | **Δ negligible** (−0.014pp, CI [−0.0002, −0.0001] excludes 0) | Value is in case stratification, not aggregate metrics |
-| **H2 strict** (Phase 6B, AE-only) | AE catches ≥70% of zero-day | **FAIL** (0/5 targets) | AE and E7 share feature space → overlapping blind spots |
-| **H2 strict** (Phase 6C, entropy + AE) | Fusion catches ≥70% of zero-day | **PASS** (4/4 eligible) | Entropy is complementary to AE; their fusion lifts 0/4 → 4/4 |
-| **H2 binary** | Hybrid system detects novel attacks | **PASS** (5/5 at p90) | Novel mechanism: "redundancy through misclassification" |
-| **H3** | SMOTETomek improves minority F1 | **FAIL** (all 4 configs worse) | Boundary-blur on overlapping `DDoS_*↔DoS_*` and `Recon_OS_Scan↔Recon_VulScan` classes (XGB arms have no `class_weight` and degrade *more* than RF arms) |
+| Hypothesis | Claim | Phase 6 result | Phase 6C result | What we learned |
+|---|---|---|---|---|
+| **H1** | Fusion improves macro-F1 over XGBoost | Δ = −0.014 pp | unchanged | Operationally negligible (~125 of 892,268 rows); 95% CI [−0.0166, −0.0117] excludes zero but magnitude doesn't matter. Reframed as "no operationally meaningful difference," not "FAIL." |
+| **H2 strict** | AE catches ≥70% of zero-day | 0/5 FAIL | **4/4 PASS** | Entropy + AE fusion lifts strict avg from 0.314 to 0.804. Entropy alone is insufficient (Recon_VulScan TPR = 0.473 < 0.50); AE channel rescues that target. |
+| **H2 binary** | Hybrid system detects novel attacks | 5/5 PASS | 5/5 PASS | Novel mechanism: "redundancy through misclassification." 82.7% of novel attacks routed to similar known attacks, not "Benign." |
+| **H3** | SMOTETomek improves minority F1 | 0/5 FAIL | unchanged | Mechanism is **boundary-blur on overlapping DDoS↔DoS and Recon↔Recon classes**, NOT class_weight interaction (XGBoost has no class_weight, yet degrades more than RF). |
+
+**Key result:** H2-strict goes from 0/4 (Phase 6/6B) to 4/4 (Phase 6C) at +4 pp benign FPR cost. The supervised model already knew when it was confused — softmax entropy is the signal that exposes that knowledge.
 
 ---
 
@@ -44,9 +45,6 @@ We tested 3 hypotheses — H1 and H3 produced genuine research contributions mor
 - No study combines supervised + unsupervised on this dataset
 - No study does per-attack-class SHAP — Yacoubi only did global SHAP
 - Yacoubi's 99.87% accuracy masks 86.10% macro-precision → systematic minority-class failures
-
-### Problems encountered
-- **None** — desk research phase
 
 ### Output
 - Literature_Review_Chapter2.md, Thesis_Proposal_IoMT_Research_Directions.md, yacoubi_critical_review.md, CICIoMT2024_Deep_Analysis.md
@@ -116,11 +114,22 @@ We tested 3 hypotheses — H1 and H3 produced genuine research contributions mor
 
 ### Key results
 
-**Winner: E7 (XGBoost / full / original) — F1_macro=0.9076, acc=99.27%**
+**Winner: E7 (XGBoost / full / original) — F1_macro = 0.9076, acc = 99.27%**
 
-**H3 REJECTED: SMOTETomek degraded ALL 4 configs** (−0.01 to −0.04 F1)
+**H3 REJECTED: SMOTETomek degraded ALL 4 configs** (−0.011 to −0.045 F1)
 
-**Full features (44) beat reduced (28) consistently** — correlation-based dropping too aggressive
+| Config | F1 (Original) | F1 (SMOTE) | Δ |
+|---|---|---|---|
+| RF/Reduced (E1→E2) | 0.8469 | 0.8356 | −0.011 |
+| RF/Full (E5→E6) | 0.8551 | 0.8380 | −0.017 |
+| XGB/Reduced (E3→E4) | 0.8987 | 0.8538 | −0.045 |
+| XGB/Full (E7→E8) | 0.9076 | 0.8708 | −0.037 |
+
+**The honest mechanism (revised after senior review):** SMOTETomek consistently degrades macro-F1 by 0.011–0.045 across both classifiers and both feature sets. The mechanism is **boundary-blur on already-overlapping class boundaries** (specifically DDoS↔DoS and Recon_OS_Scan↔Recon_VulScan, visible in confusion matrices and confirmed by SHAP cosine similarity = 0.991 for DDoS↔DoS in Phase 7). SMOTE generates synthetic minority points by interpolating between existing samples; when minority classes are *already adjacent* to structurally similar classes in feature space, the synthetic points fall on or across the decision boundary rather than reinforcing the minority cluster.
+
+**The class_weight='balanced' interaction is NOT the mechanism.** XGBoost arms (E3, E4, E7, E8) use no class_weight and no scale_pos_weight, yet degrade *more* (−0.037, −0.045) than RF arms with class_weight='balanced' (−0.011, −0.017). If the mechanism were "compounding correction," XGBoost arms should be relatively unharmed. The opposite is observed.
+
+**Full features (44) beat reduced (28) consistently** — correlation-based dropping was too aggressive
 
 **IAT confirmed #1 feature** (RF importance = 0.14)
 
@@ -132,7 +141,7 @@ We tested 3 hypotheses — H1 and H3 produced genuine research contributions mor
 | verbose=1 spams thousands of lines | Low | Set verbose=0 |
 | joblib compress=3 adds ~1 hour | Medium | Changed to compress=0 |
 | First run interrupted (Ctrl+C) | Low | Resume logic + caffeinate on restart |
-| class_weight='balanced' + SMOTE double-corrects | Medium | Documented as thesis finding (H3 FAIL) |
+| H3 mechanism initially misdiagnosed as "double correction" | Medium (post-hoc) | Senior review caught it; rewrote diagnosis as boundary-blur, supported by experimental matrix and SHAP |
 
 ### Output
 - `results/supervised/` — 8 models, 24 metrics, comparison tables, confusion matrices. Runtime: 60 min
@@ -193,7 +202,7 @@ We tested 3 hypotheses — H1 and H3 produced genuine research contributions mor
 
 ### Key results
 - Case distribution (p90): 93.83% Case 1, 0.69% Case 2, 1.94% Case 3, 3.54% Case 4
-- **H1: Δ negligible** — Δ = −0.014pp at p99 (95% CI [−0.0002, −0.0001] excludes 0; ~125 of 892,268 rows). Zero_day_unknown class penalizes macro-F1 by design
+- **H1 reframed:** Δ macro-F1 = −0.014 pp, 95% CI [−0.0166, −0.0117] (excludes zero, but magnitude is operationally negligible — ~125 of 892,268 rows)
 - **H2 (simulated): FAIL** — 0/5 targets. But this wasn't true LOO → led to Phase 6B
 - Binary F1 = 0.9985 at p99 — system works for detection
 - Recommended operating point: p97 (99.87% recall, 5.3% FPR)
@@ -205,6 +214,7 @@ We tested 3 hypotheses — H1 and H3 produced genuine research contributions mor
 | H1 label space bug (E7 in 19-class vs fusion in 20-class) | High | v3: both in 20-class space |
 | Case 2 precision ~6% (94% are false alarms on benign) | Medium | Fundamental limitation; documented |
 | Simulated LOO isn't real zero-day test | High | Created Phase 6B |
+| H1 originally framed as "FAIL" / catastrophic | Medium (post-hoc) | Senior review: reframed to "no operationally meaningful difference"; same numbers, honest framing |
 
 ### Output
 - `results/fusion/` — case arrays, metrics, h1_h2_verdicts.json, 5 figures. Runtime: ~1 min
@@ -235,6 +245,8 @@ LOO-E7 doesn't call novel attacks "benign" — it maps them to the closest known
 
 The IDS fires a wrong-class alert, but still an alert. Detection via feature-space proximity, not AE novelty detection.
 
+**Aggregate:** 1,341 of 7,764 LOO target samples → Benign (17.3%); 6,423 → other attacks (82.7%). Reproduced empirically from raw .npy files; aligns with the "redundancy through misclassification" claim.
+
 **Stress test:** Recon_VulScan — 53.6% routed to Benign (worst case), binary recall = 0.700 exactly at p90.
 
 ### Problems encountered
@@ -242,10 +254,102 @@ The IDS fires a wrong-class alert, but still an alert. Detection via feature-spa
 | Problem | Fix |
 |---------|-----|
 | Runtime estimate 5 hours | Actually 19 minutes (each XGBoost ~4 min, not 60) |
-| Label space changes per fold (18 classes instead of 19) | Per-fold encoder + inverse mapping |
+| Label space changes per fold (18 classes instead of 19) | Per-fold encoder + inverse mapping (Schema D — sidecar JSONs) |
 
 ### Output
 - `results/zero_day_loo/` — 5 LOO models, predictions, metrics, 4 figures. Runtime: 19.3 min
+
+---
+
+## Phase 6C — Enhanced Fusion (Entropy + Confidence + Ensemble)
+
+### What we did
+
+Phase 6B established that AE-only zero-day detection fails (0/5 strict). Phase 6C re-mines the existing model outputs to extract uncertainty signals XGBoost already produces — without retraining anything.
+
+**Three new signals extracted from saved arrays:**
+
+1. **Softmax entropy** — Shannon entropy of XGBoost's probability vector. High entropy = model is confused = potential novel attack.
+2. **Confidence floor** — `max(softmax)`. Below threshold → route to AE for zero-day check.
+3. **Ensemble unsupervised score** — `max(normalized_AE_MSE, normalized_IF_score)`.
+
+**Generalized 4-case → 5-case fusion** (added Case 5 = Uncertain Alert / Operator Review).
+
+**Built complete ablation table:** 11 fusion variants × 5 LOO targets = 55 evaluations.
+
+### Key results
+
+**Diagnostic that validated the approach:**
+
+| Target (held-out) | Entropy mean (novel) | Entropy mean (known) | Gap |
+|---|---|---|---|
+| Recon_VulScan | 0.483 | 0.090 | **0.393** |
+| ARP_Spoofing | 0.382 | 0.000 | **0.382** |
+| MQTT_Malformed | 0.327 | 0.135 | 0.192 |
+| Recon_Ping_Sweep | 0.304 | 0.118 | 0.187 |
+| MQTT_DoS_Connect | 0.192 | 0.116 | 0.076 |
+
+XGBoost knows it doesn't know — its softmax distribution is more spread out for novel classes. Confirmed across all 5 targets.
+
+**Ablation table (post-recalibration):**
+
+| Variant | H2-strict pass | H2-strict avg | H2-binary pass | H2-binary avg | Avg flag rate | Benign FPR |
+|---|---|---|---|---|---|---|
+| Baseline (AE p90) | 0/4 | 0.314 | 4/5 | 0.849 | 0.965 | 0.189 |
+| Baseline (AE p95) | 0/4 | 0.218 | 4/5 | 0.827 | 0.960 | 0.074 |
+| Confidence floor τ=0.6 | 0/4 | 0.396 | 5/5 | 0.864 | 0.965 | 0.192 |
+| Confidence floor τ=0.7 | 0/4 | 0.538 | 5/5 | 0.891 | 0.965 | 0.197 |
+| Entropy (benign-val p90) | 4/4 | 0.908 | 5/5 | 0.973 | 0.969 | 0.278 |
+| **Entropy (benign-val p95) ★** | **4/4** | **0.804** | **5/5** | **0.949** | **0.967** | **0.229** |
+| Entropy (benign-val p99) | 0/4 | 0.440 | 5/5 | 0.874 | 0.965 | 0.194 |
+| Ensemble AE+IF (p90) | 0/4 | 0.217 | 4/5 | 0.810 | 0.963 | 0.148 |
+| Ensemble AE+IF (p95) | 0/4 | 0.082 | 4/5 | 0.783 | 0.962 | 0.121 |
+| Confidence + Entropy (τ=0.7, p95) | 4/4 | 0.804 | 5/5 | 0.949 | 0.967 | 0.229 |
+| Full enhanced (conf+ent+ensemble) | 2/4 | 0.764 | 5/5 | 0.931 | 0.967 | 0.216 |
+
+**Best variant via Pareto analysis:** `entropy_benign_p95` — 4/4 strict, 5/5 binary, FPR = 22.9% (the natural "elbow" of the Pareto frontier between rescue gain and FPR cost).
+
+**Per-target rescue lift (best variant vs baseline):**
+
+| Target | Baseline AE p90 | Entropy p95 | Δ |
+|---|---|---|---|
+| Recon_Ping_Sweep | 0.161 | 0.968 | **+81 pp** |
+| Recon_VulScan | 0.441 | 0.745 | **+30 pp** |
+| MQTT_Malformed_Data | 0.335 | 0.773 | **+44 pp** |
+| ARP_Spoofing | 0.320 | 0.728 | **+41 pp** |
+
+All four eligible targets cross the 0.70 strict-pass threshold for the first time across all phases.
+
+**H2 final verdict:**
+
+| Phase | Setting | H2-strict | H2-binary |
+|---|---|---|---|
+| 6 | Simulated LOO, AE-only | 0/5 | 5/5 (binary F1=0.9985) |
+| 6B | True LOO, AE-only | 0/5 | 5/5 at p90 (redundancy via misclassification) |
+| **6C** | True LOO, entropy_benign_p95 + AE p90 | **4/4** | **5/5** |
+
+(Denominator /4 — MQTT_DoS_Connect_Flood structurally excluded, 0 LOO→Benign samples.)
+
+### Problems encountered
+
+| Problem | Severity | Fix |
+|---------|----------|-----|
+| **First run: entropy threshold 0.0005 flagged 98% of test (CRITICAL bug)** | **CRITICAL** | Re-calibrated entropy on benign-val (not val-correct) — same convention as AE; threshold became 0.395, FPR became realistic |
+| AE+IF ensemble HURTS strict recall (intuition was wrong) | Medium | Documented as honest negative finding; IF dominates AE in normalization, anomaly ranking misaligned with LOO-missed subset. Final system uses AE only |
+| Single FPR budget (0.25) was a post-hoc cutoff | Medium (post-hoc) | Senior review: replaced with Pareto frontier analysis. The chosen point is now defensible as the "elbow" of the frontier, not an arbitrary cut |
+| Benign val→test entropy distribution shift not measured | Medium (post-hoc) | Senior review: added KS test (KS = 0.0645, modest shift, documented in §15C.10) |
+
+### Calibration discovery (methodological contribution)
+
+The **first run of Phase 6C** calibrated entropy on val-CORRECT samples (samples E7 classified correctly). This produced `ent_p95 = 0.0005` — degenerate, because E7 is 99.72% accurate on val and its correct-prediction entropy distribution is collapsed near zero. The threshold flagged 98% of all test samples → "detection system" became a "flag everything" system.
+
+**The fix:** Calibrate entropy on benign-VAL samples (the same convention used for the AE p90 threshold in Phase 5). Benign traffic is intrinsically more ambiguous than confident attack predictions, so percentiles spread across the operating range. Threshold became 0.395, FPR became defensible.
+
+This is a **publishable methodological finding**: val-correct calibration of uncertainty thresholds is degenerate when the supervised model is highly accurate. Benign-val calibration is the correct convention for IDS uncertainty signals.
+
+### Output
+- `results/enhanced_fusion/` — signals/, metrics/ (ablation_table.csv, per_target_results.csv, entropy_stats.csv, h2_enhanced_verdict.json), figures/ (6 plots + Pareto frontier added in senior review fixes), summary.md
+- Runtime: 4.6 sec
 
 ---
 
@@ -277,7 +381,7 @@ The IDS fires a wrong-class alert, but still an alert. Detection via feature-spa
 
 Global averaging masks these distinct per-class signatures entirely.
 
-**DDoS vs DoS: cosine similarity = 0.991** — near-identical SHAP profiles. Only IAT magnitude differs. Directly explains the confusion boundary.
+**DDoS vs DoS: cosine similarity = 0.991** — near-identical SHAP profiles. Only IAT magnitude differs. Directly explains the confusion boundary AND supports the H3 boundary-blur diagnosis.
 
 **Four-way comparison — feature importance is method-dependent:**
 - Our SHAP vs Yacoubi SHAP: Jaccard = **0.429** (moderate — shifted by deduplication)
@@ -292,25 +396,74 @@ Global averaging masks these distinct per-class signatures entirely.
 |---------|-----|
 | SHAP computation took 70 min (expected 15-30) | Ran with caffeinate — completed fine |
 | SHAP API version differences (old list vs new Explanation) | Script detects and handles both |
+| SHAP background drawn from X_test, not X_train (unconventional) | Senior review: defended in §16.7B (TreeSHAP `feature_perturbation='interventional'` is invariant to background source for i.i.d.-similar data; disjoint slicing prevents self-attribution) |
 
 ### Output
 - `results/shap/` — shap_values.npy (19×5000×44), 10 metrics CSVs, 11 figures. Runtime: 70.3 min
 
 ---
 
-## Complete List of Thesis Contributions
+## Senior Review — Stress Test & Remediation
 
-1. **First hybrid supervised-unsupervised framework on CICIoMT2024** — no prior work combines XGBoost + Autoencoder with structured fusion logic
-2. **37% duplication discovery** — first report ever; explains inflated metrics in all prior literature
-3. **SMOTETomek + class_weight='balanced' shown harmful** — contradicts common IoMT IDS assumption
-4. **Corrected class distribution** — Recon_Ping_Sweep rarest (not ARP_Spoofing), real ratio 2,374:1
-5. **"Redundancy through misclassification"** — novel zero-day mechanism: supervised model maps unknown attacks to similar known classes
-6. **AE reconstruction-error insufficient for zero-day on flow features** — genuine negative finding redirecting future research
-7. **Per-attack-class SHAP analysis** — first on CICIoMT2024; reveals heterogeneous feature importance masked by global averaging
-8. **DDoS↔DoS boundary explained** — cosine similarity 0.991 proves identical feature reliance
-9. **Feature importance is method-dependent** — Cohen's d vs SHAP: Jaccard=0.000, Spearman ρ=−0.741
-10. **Confidence-stratified alerts (4-case fusion)** — operational value beyond binary IDS
-11. **StandardScaler fix for AE on ColumnTransformer output** — practical ML pipeline lesson
+After all 7 experimental phases were complete, an external senior review (10+ years intrusion detection experience, uncertainty-aware ML, academic publishing) audited the project. The review delivered:
+
+### What the review verified as correct (no changes needed)
+- ✅ Train/val/test splits — clean, no leakage (`preprocessing_pipeline.py:339-345`)
+- ✅ Random state consistent (42) across all 8 scripts
+- ✅ Scaler fit on train only, applied to test
+- ✅ AE benign-only training — properly isolated from val/test
+- ✅ LOO label-space mapping (Schema D sidecars) — verified correct, no off-by-one
+- ✅ "Redundancy through misclassification" percentages — reproduce within 0.5 pp from raw .npy files
+- ✅ H2-strict 4/4 — bootstrap-robust (1000 iters), 5%-lower TPR ≥ 0.687 across all 4 targets
+- ✅ No actual code bugs producing wrong numbers
+
+### What needed fixing (all 9 fixes applied)
+
+| # | Fix | What changed | Status |
+|---|---|---|---|
+| 1 | H3 "double correction" diagnosis refuted by own data | Replaced with boundary-blur mechanism, supported by experimental matrix and SHAP cosine similarity | ✅ commit 2457c44 |
+| 2 | requirements.txt missing 6 of 11 packages | Pinned all 11 packages with version bounds, added Python 3.13 + Apple Silicon notes | ✅ commit 3e2f659 |
+| 3 | Benign val→test entropy shift never measured | Added KS test (KS = 0.0645, p ≈ 2.6e-69 from large n; modest shift); §15C.10 limitation now documents the 9.46% entropy-only FPR vs 5% nominal target | ✅ commit 3e2f659 |
+| 4 | FPR = 0.25 budget was post-hoc cutoff | Replaced with Pareto frontier plot + analysis; entropy_benign_p95 defended as the "elbow" of the frontier, not an arbitrary cut | ✅ commit 920fa95 |
+| 5 | H1 framed as "FAIL" sounds catastrophic | Reframed across 7 hits in README + journey doc as "no operationally meaningful difference" (Δ = −0.014 pp, CI [−0.0166, −0.0117], ~125 of 892,268 rows) | ✅ commit 920fa95 |
+| 6 | Entropy contribution overclaimed as "carries actionable zero-day signal" | Reframed as "complementary to AE": entropy alone fails Recon_VulScan (TPR = 0.473 < 0.50); the AE channel rescues that target. Contribution is the *fusion* of entropy + AE | ✅ commit 920fa95 |
+| 7 | 22.9% benign FPR not quantified operationally | New §15C.6B: ~23-92 false alerts/sec on a 40-device IoMT subnet; two architectural responses (hierarchical aggregation, confidence-stratified routing) make case-stratified fusion alerts tractable | ✅ commit 920fa95 |
+| 8 | H3 hypothesis criterion (≥3/5 minority improve) didn't match reported metric (macro-F1) | Tightened to report both: 0/4 macro-F1 + 2/5 minority improvements (still FAIL by both criteria) | ✅ commit 2457c44 |
+| 9 | SHAP background from X_test (unconventional) had no defense | New §16.7B: TreeSHAP invariance argument, self-attribution prevention rationale, train-drawn alternative listed as future work | ✅ commit 920fa95 |
+
+**Defensibility score:** 3.0 → 4.0 / 5 (per senior reviewer's own scoring rubric).
+
+**Critical:** None of these fixes changed any experimental number. The data, models, metrics, and verdicts are all unchanged. The fixes are framing, methodology defense, and one new figure (Pareto frontier).
+
+---
+
+## All Hypothesis Results — Final
+
+| Hypothesis | Original Claim | Result | Evidence | Thesis Value |
+|-----------|---------------|--------|----------|-------------|
+| **H1** | Fusion improves macro-F1 over E7 | **No operationally meaningful difference** | Δ = −0.014 pp, 95% CI [−0.0166, −0.0117] excludes zero but magnitude is ~125 of 892,268 rows | Value is in case stratification (Cases 1-5), not aggregate metrics. Binary F1 = 0.9985. |
+| **H2 strict** | AE catches ≥70% of zero-day | Phase 6/6B: 0/5 FAIL → **Phase 6C: 4/4 PASS** | Entropy + AE fusion lifts strict avg from 0.314 to 0.804 at +4 pp benign FPR | Entropy is the complementary signal that solves the AE blind spot. Calibration discovery (val-correct vs benign-val) is itself publishable. |
+| **H2 binary** | Hybrid system detects novel attacks | **5/5 PASS** (consistent across phases) | 70-100% per-target binary recall via "redundancy through misclassification" | 82.7% of novel attacks routed to similar known attacks, not "Benign" — novel detection mechanism for IoMT IDS literature. |
+| **H3** | SMOTETomek improves minority F1 | **0/4 macro-F1 + 2/5 minority — FAIL** | All 4 configs degrade −0.011 to −0.045; mechanism is boundary-blur on overlapping classes (NOT class-weight interaction; XGBoost has no class_weight yet degrades more than RF) | Boundary-blur explanation supported by Phase 4 confusion matrices + Phase 7 SHAP cosine = 0.991 for DDoS↔DoS. Contradicts common IoMT IDS oversampling assumption. |
+
+---
+
+## Complete List of Thesis Contributions (14 total)
+
+1. **First hybrid 4-layer (XGBoost + AE + 5-case fusion + SHAP) framework on CICIoMT2024** — no prior work combines all 4 layers; Yacoubi is supervised-only
+2. **37% duplication discovery in CICIoMT2024 train (44.7% in test)** — first report ever; explains inflated metrics in all prior literature
+3. **SMOTETomek shown harmful on this dataset** — rejected via boundary-blur mechanism (not class-weight interaction); contradicts common IoMT IDS oversampling assumption
+4. **Corrected class distribution** — Recon_Ping_Sweep rarest (not ARP_Spoofing), real ratio 2,374:1 (not "100:1")
+5. **"Redundancy through misclassification"** — novel zero-day detection mechanism (Phase 6B); 82.7% of novel attacks route to similar known attacks, not "Benign"
+6. **AE reconstruction-error insufficient for zero-day on flow features** — genuine negative finding (Phase 6/6B), redirecting future research toward complementary uncertainty signals
+7. **Softmax entropy as complementary zero-day signal under true LOO** — Phase 6C; first demonstration on CICIoMT2024 that entropy + AE fusion lifts H2-strict from 0/4 to 4/4
+8. **Calibration discovery: val-correct vs benign-val** — methodological contribution; val-correct calibration is degenerate for highly-accurate models, benign-val is the correct convention for IDS uncertainty signals
+9. **Per-attack-class SHAP analysis** — first on CICIoMT2024; reveals heterogeneous feature importance masked by global averaging
+10. **DDoS↔DoS boundary explained** — cosine similarity 0.991 proves identical feature reliance; Only IAT magnitude separates them
+11. **Feature importance is method-dependent** — Cohen's d vs SHAP: Jaccard = 0.000, Spearman ρ = −0.741; reporting one ranking is insufficient
+12. **Confidence-stratified alerts (5-case fusion)** — operational value beyond binary IDS; routes Cases 1/2/3/5 to different SOC tiers
+13. **StandardScaler fix for AE on ColumnTransformer output** — practical ML pipeline lesson: tree models are scale-invariant, AE/IF are not
+14. **Pareto-based variant selection methodology** — replaces arbitrary FPR budget; defensible across operational ranges, allows committee/practitioner to pick their own operating point
 
 ---
 
@@ -323,9 +476,12 @@ Global averaging masks these distinct per-class signatures entirely.
 | Phase 4 | Supervised (24 runs) | 60 min |
 | Phase 5 | Unsupervised (AE + IF) | 34 sec |
 | Phase 6 | Fusion engine | ~1 min |
-| Phase 6B | True LOO (5 XGBoost) | 19.3 min |
+| Phase 6B | True LOO (5 XGBoost retrains) | 19.3 min |
+| Phase 6C | Enhanced fusion (no retraining) | 4.6 sec |
 | Phase 7 | SHAP analysis | 70.3 min |
-| **Total** | | **~6.5 hours** |
+| **Total experimental work** | | **~6.5 hours** |
+
+Senior review remediation (post-hoc, no compute): ~6 hours of writing + Pareto plot generation.
 
 ---
 
@@ -339,6 +495,7 @@ Global averaging masks these distinct per-class signatures entirely.
 | XAI | SHAP 0.45+ (TreeExplainer) |
 | Imbalance | imbalanced-learn (SMOTETomek) |
 | Scaling | scikit-learn (StandardScaler, RobustScaler, MinMaxScaler) |
+| Statistics | scipy (KS test, bootstrap) |
 | Data | NumPy, Pandas, Matplotlib, Seaborn |
 | Hardware | MacBook Air M4, 24GB RAM (CPU only) |
 | Dataset | CICIoMT2024 (Canadian Institute for Cybersecurity) |
@@ -356,19 +513,89 @@ Global averaging masks these distinct per-class signatures entirely.
 │   ├── unsupervised_training.py      # Phase 5
 │   ├── fusion_engine.py              # Phase 6
 │   ├── loo_zero_day.py               # Phase 6B
-│   └── shap_analysis.py             # Phase 7
+│   ├── enhanced_fusion.py            # Phase 6C
+│   ├── pareto_frontier.py            # Senior review fix #4
+│   └── shap_analysis.py              # Phase 7
 ├── preprocessed/                     # 5.7 GB
 ├── results/
 │   ├── supervised/                   # 8 models, 24 metrics
 │   ├── unsupervised/                 # AE + IF + scaler
-│   ├── fusion/                       # 4-case fusion
-│   ├── zero_day_loo/                 # 5 LOO models
+│   ├── fusion/                       # 4-case fusion (Phase 6)
+│   ├── zero_day_loo/                 # 5 LOO models (Phase 6B)
+│   ├── enhanced_fusion/              # 5-case + entropy (Phase 6C)
+│   │   ├── signals/
+│   │   ├── metrics/                  # ablation_table.csv (key output)
+│   │   └── figures/                  # 7 plots including pareto_frontier.png
 │   └── shap/                         # SHAP values + 11 figures
 ├── eda_output/                       # 15+ EDA figures
-└── README.md                         # 1,757 lines, 24 sections
+├── requirements.txt                  # 11 packages, version-bounded
+├── README.md                         # Updated with Phase 6C + senior review fixes
+└── .gitignore
 ```
 
 ---
 
-_Last updated: April 27, 2026 — ALL EXPERIMENTAL PHASES COMPLETE_
+## Final System Architecture (Phase 6C)
+
+**4 layers, 5-case fusion logic:**
+
+```
+IoMT traffic (44 features)
+        │
+        ▼
+Preprocessing + StandardScaler (benign-fitted)
+        │
+        ├──────────────────────┬──────────────────────┐
+        ▼                      ▼                      ▼
+Layer 1: XGBoost E7    [confidence, entropy]   Layer 2: Autoencoder
+F1_macro = 0.9076      (extracted from softmax) AUC = 0.9892
+        │                      │                      │
+        └──────────────────────┴──────────────────────┘
+                               │
+                               ▼
+Layer 3: 5-case fusion engine (entropy_benign_p95 + AE p90)
+H2-strict 4/4 PASS | H2-binary 5/5 PASS | benign FPR 22.9%
+                               │
+        ┌──────────┬──────────┬──────────┬──────────┐
+        ▼          ▼          ▼          ▼          ▼
+     Case 1     Case 2     Case 3     Case 5     Case 4
+   Confirmed  Zero-Day   Low-conf  Uncertain    Clear
+                          (NEW in Phase 6C)
+                               │
+                               ▼
+              Layer 4: SHAP per-class explainability
+              IAT #1 globally; per-class signatures vary widely
+```
+
+**Operational alert routing:**
+- Case 1 → BLOCK (high confidence attack)
+- Case 2 → QUARANTINE + investigate (potential novel attack)
+- Case 3 → MONITOR (model says attack but no anomaly)
+- Case 4 → ALLOW
+- Case 5 → OPERATOR REVIEW (model confused by entropy/conf, AE clean)
+
+---
+
+## What's Next — Thesis Writing Phase
+
+All experimental work is complete. The remaining work is exposition:
+
+- [ ] Chapter 1 — Introduction
+- [ ] Chapter 2 — Literature Review (already drafted as Literature_Review_Chapter2.md)
+- [ ] Chapter 3 — Dataset & Preprocessing
+- [ ] Chapter 4 — Methodology (4-layer framework + 5-case fusion logic)
+- [ ] Chapter 5 — Results & Discussion (Phases 4-7 + 6B + 6C)
+- [ ] Chapter 6 — Conclusion & Future Work
+- [ ] Defense presentation (PowerPoint)
+
+**Future work (deferred from this thesis):**
+- Multi-seed LOO validation (3 days compute) — would tighten H2-strict 4/4 confidence further
+- Continuous threshold sweep between p90 and p95 — may yield slightly tighter operating point
+- Profiling-feature-basis AE — addresses layer-coupling concern (AE and XGBoost share the same 44 features)
+- VAE replacement for reconstruction-error AE — more principled OOD detection
+- Train-drawn SHAP background sensitivity check — verify top-10 rank stability
+
+---
+
+_Last updated: April 27, 2026 — ALL EXPERIMENTAL PHASES COMPLETE + senior review remediation applied_
 _Next step: Thesis writing_
