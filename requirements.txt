@@ -1,5 +1,38 @@
-numpy>=1.21.0
-pandas>=1.3.0
-matplotlib>=3.5.0
-seaborn>=0.11.0
-scikit-learn>=1.0.0
+# IoMT Anomaly Detection — reproducibility manifest
+# Generated: April 2026 | Python 3.13 (downgraded from 3.14 for TF 2.21 wheels)
+#
+# To install on a fresh machine:
+#   python3.13 -m venv venv
+#   source venv/bin/activate
+#   pip install --upgrade pip
+#   pip install -r requirements.txt
+#
+# On Apple Silicon (M1/M2/M3/M4), TensorFlow ships under the same name 'tensorflow' as of TF 2.16+;
+# the legacy 'tensorflow-macos' package is deprecated. If you are on an older macOS/TF combination,
+# replace the tensorflow line with: tensorflow-macos>=2.13,<2.16
+
+# --- Core scientific stack ---
+numpy>=2.0,<3.0
+pandas>=2.2,<3.0
+scipy>=1.13,<2.0
+
+# --- Machine learning ---
+scikit-learn>=1.5,<2.0
+xgboost>=2.0,<3.0
+imbalanced-learn>=0.12,<1.0
+
+# --- Deep learning (Autoencoder) ---
+tensorflow>=2.18,<2.22
+
+# --- Explainability ---
+shap>=0.45,<1.0
+
+# --- Visualization ---
+matplotlib>=3.8,<4.0
+seaborn>=0.13,<1.0
+
+# --- IO + serialization ---
+joblib>=1.4,<2.0
+
+# --- Optional but used in scripts ---
+tqdm>=4.66,<5.0
