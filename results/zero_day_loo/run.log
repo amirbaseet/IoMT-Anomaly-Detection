@@ -1,0 +1,188 @@
+[23:30:20] ======================================================================
+[23:30:20] PHASE 6B — TRUE LEAVE-ONE-ATTACK-OUT ZERO-DAY SIMULATION
+[23:30:20] ======================================================================
+[23:30:20] Loading training data...
+[23:30:21]   X_train: (3612064, 44)  y_train: (3612064, 5)
+[23:30:21] Loading test data...
+[23:30:21]   X_test:  (892268, 44)  y_test:  (892268, 5)
+[23:30:21] Loading existing AE & IF scores (no retraining needed)...
+[23:30:21]   ae_test_mse: (892268,)  if_test_scores: (892268,)
+[23:30:21] Loading AE thresholds...
+[23:30:21]   AE thresholds: {'p90': 0.20127058029174805, 'p95': 0.37264156341552734, 'p99': 1.2025282382965088}
+[23:30:21] Loading label encoders...
+[23:30:21]   Found 19 classes
+[23:30:21] Setup complete in 0.7s
+
+[23:30:21] 
+======================================================================
+[23:30:21] LOO TARGET: Recon_Ping_Sweep
+[23:30:21] ======================================================================
+[23:30:22]   Removed 551 rows of Recon_Ping_Sweep
+[23:30:22]   Training: 3,611,513 rows × 44 cols, 18 classes (was 19)
+[23:33:39]   Training done in 3.3 min
+[23:33:39]   Saved model -> loo_xgb_without_Recon_Ping_Sweep.pkl
+[23:33:46]   Prediction done in 7.1s (pred (892268,), proba (892268, 18))
+[23:33:46]   Saved predictions to predictions/
+[23:33:46] 
+======================================================================
+[23:33:46] LOO TARGET: Recon_VulScan
+[23:33:46] ======================================================================
+[23:33:47]   Removed 1,626 rows of Recon_VulScan
+[23:33:47]   Training: 3,610,438 rows × 44 cols, 18 classes (was 19)
+[23:37:19]   Training done in 3.5 min
+[23:37:19]   Saved model -> loo_xgb_without_Recon_VulScan.pkl
+[23:37:26]   Prediction done in 7.3s (pred (892268,), proba (892268, 18))
+[23:37:26]   Saved predictions to predictions/
+[23:37:26] 
+======================================================================
+[23:37:26] LOO TARGET: MQTT_Malformed_Data
+[23:37:26] ======================================================================
+[23:37:27]   Removed 4,104 rows of MQTT_Malformed_Data
+[23:37:27]   Training: 3,607,960 rows × 44 cols, 18 classes (was 19)
+[23:41:08]   Training done in 3.7 min
+[23:41:08]   Saved model -> loo_xgb_without_MQTT_Malformed_Data.pkl
+[23:41:16]   Prediction done in 7.5s (pred (892268,), proba (892268, 18))
+[23:41:16]   Saved predictions to predictions/
+[23:41:16] 
+======================================================================
+[23:41:16] LOO TARGET: MQTT_DoS_Connect_Flood
+[23:41:16] ======================================================================
+[23:41:17]   Removed 10,218 rows of MQTT_DoS_Connect_Flood
+[23:41:17]   Training: 3,601,846 rows × 44 cols, 18 classes (was 19)
+[23:45:18]   Training done in 4.0 min
+[23:45:18]   Saved model -> loo_xgb_without_MQTT_DoS_Connect_Flood.pkl
+[23:45:26]   Prediction done in 8.2s (pred (892268,), proba (892268, 18))
+[23:45:26]   Saved predictions to predictions/
+[23:45:26] 
+======================================================================
+[23:45:26] LOO TARGET: ARP_Spoofing
+[23:45:26] ======================================================================
+[23:45:27]   Removed 12,808 rows of ARP_Spoofing
+[23:45:27]   Training: 3,599,256 rows × 44 cols, 18 classes (was 19)
+[23:49:27]   Training done in 4.0 min
+[23:49:28]   Saved model -> loo_xgb_without_ARP_Spoofing.pkl
+[23:49:36]   Prediction done in 8.0s (pred (892268,), proba (892268, 18))
+[23:49:36]   Saved predictions to predictions/
+[23:49:36] 
+======================================================================
+[23:49:36] PER-TARGET EVALUATION
+[23:49:36] ======================================================================
+[23:49:36] 
+--- Recon_Ping_Sweep ---
+[23:49:36]   Target test samples: 169
+[23:49:36]   LOO-E7 → Benign:        31 (18.3%)
+[23:49:36]   LOO-E7 → Other attack:  138 (81.7%)
+[23:49:36]   Top-5 predictions: [('Recon_OS_Scan', 75), ('ARP_Spoofing', 63), ('Benign', 31)]
+[23:49:36]   AE @ p90=0.2013: recall=0.544 | on LOO-E7-missed (n=31): 0.161
+[23:49:36]   AE @ p95=0.3726: recall=0.509 | on LOO-E7-missed (n=31): 0.065
+[23:49:36]   AE @ p99=1.203: recall=0.225 | on LOO-E7-missed (n=31): 0.000
+[23:49:36]   Cases @ p90: C1=87, C2=5 (zero-day), C3=51, C4=26 | binary recall=0.846
+[23:49:36]   Cases @ p95: C1=84, C2=2 (zero-day), C3=54, C4=29 | binary recall=0.828
+[23:49:36]   Cases @ p99: C1=38, C2=0 (zero-day), C3=100, C4=31 | binary recall=0.817
+[23:49:36] 
+--- Recon_VulScan ---
+[23:49:36]   Target test samples: 973
+[23:49:36]   LOO-E7 → Benign:        522 (53.6%)
+[23:49:36]   LOO-E7 → Other attack:  451 (46.4%)
+[23:49:36]   Top-5 predictions: [('Benign', 522), ('Recon_Port_Scan', 201), ('Recon_OS_Scan', 159), ('Recon_Ping_Sweep', 79), ('ARP_Spoofing', 8)]
+[23:49:36]   AE @ p90=0.2013: recall=0.630 | on LOO-E7-missed (n=522): 0.441
+[23:49:36]   AE @ p95=0.3726: recall=0.573 | on LOO-E7-missed (n=522): 0.345
+[23:49:36]   AE @ p99=1.203: recall=0.433 | on LOO-E7-missed (n=522): 0.109
+[23:49:36]   Cases @ p90: C1=383, C2=230 (zero-day), C3=68, C4=292 | binary recall=0.700
+[23:49:36]   Cases @ p95: C1=378, C2=180 (zero-day), C3=73, C4=342 | binary recall=0.649
+[23:49:36]   Cases @ p99: C1=364, C2=57 (zero-day), C3=87, C4=465 | binary recall=0.522
+[23:49:36] 
+--- MQTT_Malformed_Data ---
+[23:49:36]   Target test samples: 1,747
+[23:49:36]   LOO-E7 → Benign:        472 (27.0%)
+[23:49:36]   LOO-E7 → Other attack:  1,275 (73.0%)
+[23:49:36]   Top-5 predictions: [('ARP_Spoofing', 950), ('Benign', 472), ('MQTT_DDoS_Connect_Flood', 239), ('Recon_OS_Scan', 68), ('Recon_Port_Scan', 17)]
+[23:49:36]   AE @ p90=0.2013: recall=0.558 | on LOO-E7-missed (n=472): 0.335
+[23:49:36]   AE @ p95=0.3726: recall=0.470 | on LOO-E7-missed (n=472): 0.258
+[23:49:36]   AE @ p99=1.203: recall=0.229 | on LOO-E7-missed (n=472): 0.019
+[23:49:36]   Cases @ p90: C1=816, C2=158 (zero-day), C3=459, C4=314 | binary recall=0.820
+[23:49:36]   Cases @ p95: C1=699, C2=122 (zero-day), C3=576, C4=350 | binary recall=0.800
+[23:49:36]   Cases @ p99: C1=391, C2=9 (zero-day), C3=884, C4=463 | binary recall=0.735
+[23:49:36] 
+--- MQTT_DoS_Connect_Flood ---
+[23:49:36]   Target test samples: 3,131
+[23:49:36]   LOO-E7 → Benign:        0 (0.0%)
+[23:49:36]   LOO-E7 → Other attack:  3,131 (100.0%)
+[23:49:36]   Top-5 predictions: [('MQTT_DDoS_Connect_Flood', 2723), ('MQTT_DDoS_Publish_Flood', 399), ('Recon_OS_Scan', 5), ('MQTT_Malformed_Data', 4)]
+[23:49:36]   AE @ p90=0.2013: recall=1.000 | on LOO-E7-missed (n=0): --
+[23:49:36]   AE @ p95=0.3726: recall=1.000 | on LOO-E7-missed (n=0): --
+[23:49:36]   AE @ p99=1.203: recall=0.989 | on LOO-E7-missed (n=0): --
+[23:49:36]   Cases @ p90: C1=3130, C2=0 (zero-day), C3=1, C4=0 | binary recall=1.000
+[23:49:36]   Cases @ p95: C1=3130, C2=0 (zero-day), C3=1, C4=0 | binary recall=1.000
+[23:49:36]   Cases @ p99: C1=3095, C2=0 (zero-day), C3=36, C4=0 | binary recall=1.000
+[23:49:36] 
+--- ARP_Spoofing ---
+[23:49:36]   Target test samples: 1,744
+[23:49:36]   LOO-E7 → Benign:        316 (18.1%)
+[23:49:36]   LOO-E7 → Other attack:  1,428 (81.9%)
+[23:49:36]   Top-5 predictions: [('Recon_Port_Scan', 813), ('Recon_VulScan', 464), ('Benign', 316), ('MQTT_Malformed_Data', 150), ('Recon_Ping_Sweep', 1)]
+[23:49:36]   AE @ p90=0.2013: recall=0.553 | on LOO-E7-missed (n=316): 0.320
+[23:49:36]   AE @ p95=0.3726: recall=0.286 | on LOO-E7-missed (n=316): 0.206
+[23:49:36]   AE @ p99=1.203: recall=0.025 | on LOO-E7-missed (n=316): 0.041
+[23:49:36]   Cases @ p90: C1=863, C2=101 (zero-day), C3=565, C4=215 | binary recall=0.877
+[23:49:36]   Cases @ p95: C1=434, C2=65 (zero-day), C3=994, C4=251 | binary recall=0.856
+[23:49:36]   Cases @ p99: C1=30, C2=13 (zero-day), C3=1398, C4=303 | binary recall=0.826
+[23:49:36] 
+Saved results/zero_day_loo/metrics/loo_results.csv
+[23:49:36] Saved results/zero_day_loo/metrics/loo_prediction_distribution.csv
+[23:49:36] Saved results/zero_day_loo/metrics/loo_case_distribution.csv
+[23:49:36] Saved comparison vs Phase 6 -> results/zero_day_loo/metrics/loo_vs_phase6_comparison.csv
+[23:49:36] 
+======================================================================
+[23:49:36] H2 RE-EVALUATION (TRUE LOO)
+[23:49:36] ======================================================================
+[23:49:36]   [Strict: AE recall on LOO-missed @ p95] 0/5 ≥ 0.7 → H2 = FAIL
+[23:49:36]       ✗ Recon_Ping_Sweep                0.065
+[23:49:36]       ✗ Recon_VulScan                   0.345
+[23:49:36]       ✗ MQTT_Malformed_Data             0.258
+[23:49:36]       ✗ MQTT_DoS_Connect_Flood          n/a
+[23:49:36]       ✗ ARP_Spoofing                    0.206
+[23:49:36]   [Strict: AE recall on LOO-missed @ p90] 0/5 ≥ 0.7 → H2 = FAIL
+[23:49:36]       ✗ Recon_Ping_Sweep                0.161
+[23:49:36]       ✗ Recon_VulScan                   0.441
+[23:49:36]       ✗ MQTT_Malformed_Data             0.335
+[23:49:36]       ✗ MQTT_DoS_Connect_Flood          n/a
+[23:49:36]       ✗ ARP_Spoofing                    0.320
+[23:49:36]   [Relaxed: AE recall on all target samples @ p95] 1/5 ≥ 0.7 → H2 = FAIL
+[23:49:36]       ✗ Recon_Ping_Sweep                0.509
+[23:49:36]       ✗ Recon_VulScan                   0.573
+[23:49:36]       ✗ MQTT_Malformed_Data             0.470
+[23:49:36]       ✓ MQTT_DoS_Connect_Flood          1.000
+[23:49:36]       ✗ ARP_Spoofing                    0.286
+[23:49:36]   [Relaxed: AE recall on all target samples @ p90] 1/5 ≥ 0.7 → H2 = FAIL
+[23:49:36]       ✗ Recon_Ping_Sweep                0.544
+[23:49:36]       ✗ Recon_VulScan                   0.630
+[23:49:36]       ✗ MQTT_Malformed_Data             0.558
+[23:49:36]       ✓ MQTT_DoS_Connect_Flood          1.000
+[23:49:36]       ✗ ARP_Spoofing                    0.553
+[23:49:36]   [Binary: any-alert recall (Cases 1+2+3) @ p95] 4/5 ≥ 0.7 → H2 = PASS
+[23:49:36]       ✓ Recon_Ping_Sweep                0.828
+[23:49:36]       ✗ Recon_VulScan                   0.649
+[23:49:36]       ✓ MQTT_Malformed_Data             0.800
+[23:49:36]       ✓ MQTT_DoS_Connect_Flood          1.000
+[23:49:36]       ✓ ARP_Spoofing                    0.856
+[23:49:36] 
+Saved results/zero_day_loo/metrics/h2_loo_verdict.json
+[23:49:36] 
+======================================================================
+[23:49:36] BUILDING FIGURES
+[23:49:36] ======================================================================
+[23:49:37]   Saved loo_zero_day_results.png
+[23:49:37]   Saved loo_vs_phase6_comparison.png
+[23:49:37]   Saved loo_prediction_distribution.png
+[23:49:37]   Saved loo_case_distribution.png
+[23:49:37] 
+Writing summary.md...
+[23:49:37] Saved results/zero_day_loo/summary.md
+[23:49:37] 
+======================================================================
+[23:49:37] PHASE 6B COMPLETE — total runtime: 19.3 min
+[23:49:37] ======================================================================
+[23:49:37] Outputs at: /Users/amoorabaseet/IoMT-Project/results/zero_day_loo
+[23:49:37] H2 strict (AE on LOO-missed @ p95) verdict: FAIL (0/5)
+[23:49:37] H2 binary (any-alert @ p95)      verdict: PASS (4/5)

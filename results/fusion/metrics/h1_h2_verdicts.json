@@ -1,0 +1,97 @@
+{
+  "H1": {
+    "description": "Fusion improves multiclass macro-F1 over E7 with paired-bootstrap 95% CI excluding zero (20-class label space incl. zero_day_unknown; E7 evaluated in same 20-label space)",
+    "e7_macro_f1_20class": 0.8622452917382744,
+    "e7_macro_f1_ci": [
+      0.8585722706119906,
+      0.8655130527647369
+    ],
+    "fusion_macro_f1_primary": 0.8581685421573143,
+    "fusion_macro_f1_primary_ci": [
+      0.8545575111549859,
+      0.8615256589219383
+    ],
+    "delta_primary": -0.0040767495809600485,
+    "delta_primary_ci": [
+      -0.004196851355120731,
+      -0.003980279138569231
+    ],
+    "best_variant": "AE_p99",
+    "best_delta_ci": [
+      -0.00016481166024279737,
+      -0.00011894470327992456
+    ],
+    "verdict_primary": "FAIL",
+    "verdict_primary_msg": "FAIL \u2014 \u0394 CI excludes 0 (negative; fusion hurts macro-F1)",
+    "verdict_best": "FAIL",
+    "verdict_best_msg": "FAIL \u2014 \u0394 CI excludes 0 (negative; fusion hurts macro-F1)",
+    "note": "20-class macro-F1 penalises every false zero_day_unknown alarm. See binary metrics for operational view."
+  },
+  "H2": {
+    "description": "AE recall on E7-misclassified samples >= 0.7 on at least 50% of zero-day targets (best threshold per target; targets with n_called_benign < 30 flagged insufficient)",
+    "primary_metric": "ae_recall_on_missed",
+    "per_target_primary": {
+      "Recon_Ping_Sweep": {
+        "value": NaN,
+        "sufficient": false,
+        "passes": false
+      },
+      "Recon_VulScan": {
+        "value": 0.35700934579439253,
+        "sufficient": true,
+        "passes": false
+      },
+      "MQTT_Malformed_Data": {
+        "value": 0.18238993710691823,
+        "sufficient": true,
+        "passes": false
+      },
+      "MQTT_DoS_Connect_Flood": {
+        "value": NaN,
+        "sufficient": false,
+        "passes": false
+      },
+      "ARP_Spoofing": {
+        "value": 0.2222222222222222,
+        "sufficient": true,
+        "passes": false
+      }
+    },
+    "n_pass_primary": 0,
+    "n_total": 5,
+    "verdict": "FAIL",
+    "auxiliary_metric": "ae_recall (raw per-class)",
+    "per_target_auxiliary": {
+      "Recon_Ping_Sweep": {
+        "value": 0.5443786982248521,
+        "passes": false
+      },
+      "Recon_VulScan": {
+        "value": 0.6269270298047277,
+        "passes": false
+      },
+      "MQTT_Malformed_Data": {
+        "value": 0.5552375500858615,
+        "passes": false
+      },
+      "MQTT_DoS_Connect_Flood": {
+        "value": 0.9996806132226126,
+        "passes": true
+      },
+      "ARP_Spoofing": {
+        "value": 0.5481651376146789,
+        "passes": false
+      }
+    },
+    "n_pass_auxiliary": 1
+  },
+  "recommended_threshold": {
+    "percentile": 97,
+    "threshold": 0.5614741444587708,
+    "val_TPR": 0.9992272722014645,
+    "val_FPR": 0.03351839360763763,
+    "test_TPR": 0.9987234704754283,
+    "test_FPR": 0.05288908979711224,
+    "test_F1": 0.9981990621089685
+  }
+}

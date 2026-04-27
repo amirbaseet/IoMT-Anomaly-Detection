@@ -30,3 +30,18 @@ results/supervised/models/
 results/supervised/predictions/
 results/**/*.pkl
 results/**/*.npy
+
+# Editor/tool artifacts
+*.bak
+.claude/
+
+# Phase 6 large derived outputs (regenerable from fusion_engine.py)
+results/fusion/fusion_results/
+results/fusion/run.log
+
+# Phase 6 large derived outputs (regenerable from fusion_engine.py)
+results/fusion/fusion_results/
+results/fusion/run.log
+
+# Backup files
+*.bak
