@@ -7,7 +7,7 @@
 > **Program:** M.Sc. Artificial Intelligence and Machine Learning in Cybersecurity — Sakarya University  
 > **Dataset:** CICIoMT2024 (Canadian Institute for Cybersecurity)  
 > **Reference Paper:** Yacoubi et al. (2025–2026) — *Enhancing IoMT Security with Explainable Machine Learning*  
-> **Status:** Phase 1-6B complete — True LOO zero-day done, SHAP explainability next (Phase 7, final)
+> **Status:** ALL EXPERIMENTAL PHASES COMPLETE (1-7) — Thesis writing phase
 
 ---
 
@@ -34,18 +34,19 @@
 13. [Phase 5 Unsupervised Model Training Results](#13-phase-5-unsupervised-model-training-results)  
 14. [Phase 6 Fusion Engine & Zero-Day Simulation Results](#14-phase-6-fusion-engine--zero-day-simulation-results)  
 15. [Phase 6B True Leave-One-Attack-Out Zero-Day Results](#15-phase-6b-true-leave-one-attack-out-zero-day-results)  
-16. [Project Roadmap](#16-project-roadmap)  
-17. [Related Work — Summary Table](#17-related-work--summary-table)  
-18. [Deep Dive: Yacoubi et al. — Primary Reference Paper](#18-deep-dive-yacoubi-et-al--primary-reference-paper)  
-    - 18.1 [Paper 1: Explainable ML (COCIA 2025)](#181-paper-1-enhancing-iomt-security-with-explainable-ml-cocia-2025)
-    - 18.2 [Paper 2: XAI Feature Selection (AIAI 2025)](#182-paper-2-xai-driven-feature-selection-for-improved-ids-aiai-2025)
-    - 18.3 [Paper 3: Ensemble Strategies (Springer 2026)](#183-paper-3-ensemble-learning-strategies-for-anomaly-based-ids-springer-2026)
-    - 18.4 [Research Gaps & Our Contribution](#184-research-gaps-left-by-yacoubi-et-al)
-19. [Research Design](#19-research-design)
-20. [Proposed Framework Architecture](#20-proposed-framework-architecture)
-21. [Corrections to Published Literature](#21-corrections-to-published-literature)
-22. [Citations](#22-citations)  
-23. [Tech Stack](#23-tech-stack)
+16. [Phase 7 SHAP Explainability Analysis Results](#16-phase-7-shap-explainability-analysis-results)  
+17. [Project Roadmap](#17-project-roadmap)  
+18. [Related Work — Summary Table](#18-related-work--summary-table)  
+19. [Deep Dive: Yacoubi et al. — Primary Reference Paper](#19-deep-dive-yacoubi-et-al--primary-reference-paper)  
+    - 19.1 [Paper 1: Explainable ML (COCIA 2025)](#191-paper-1-enhancing-iomt-security-with-explainable-ml-cocia-2025)
+    - 19.2 [Paper 2: XAI Feature Selection (AIAI 2025)](#192-paper-2-xai-driven-feature-selection-for-improved-ids-aiai-2025)
+    - 19.3 [Paper 3: Ensemble Strategies (Springer 2026)](#193-paper-3-ensemble-learning-strategies-for-anomaly-based-ids-springer-2026)
+    - 19.4 [Research Gaps & Our Contribution](#194-research-gaps-left-by-yacoubi-et-al)
+20. [Research Design](#20-research-design)
+21. [Proposed Framework Architecture](#21-proposed-framework-architecture)
+22. [Corrections to Published Literature](#22-corrections-to-published-literature)
+23. [Citations](#23-citations)  
+24. [Tech Stack](#24-tech-stack)
 
 ---
 
@@ -1209,7 +1210,135 @@ results/zero_day_loo/                           (~200 MB)
 
 ---
 
-## 16. Project Roadmap — 17-Week Plan (Option A: Hybrid Framework)
+## 16. Phase 7 SHAP Explainability Analysis Results
+
+> Pipeline run: April 27, 2026 — MacBook Air M4, 24GB RAM — Total runtime: 70.3 minutes
+> TreeSHAP on E7 (XGBoost) with 5K stratified subsample, 500 background samples
+
+### 16.1 Overview
+
+Phase 7 implements Layer 4 of the hybrid framework: per-attack-class SHAP explainability analysis. This is the first per-class SHAP analysis on CICIoMT2024 — prior studies (Yacoubi et al.) applied SHAP only globally, masking the heterogeneous feature importance patterns across different attack types.
+
+### 16.2 Global SHAP — Top 10 Features
+
+| Rank | Feature | Mean |SHAP| |
+|------|---------|----------------|
+| 1 | **IAT** | **0.8725** |
+| 2 | Rate | 0.2184 |
+| 3 | TCP | 0.1835 |
+| 4 | syn_count | 0.1765 |
+| 5 | Header_Length | 0.1519 |
+| 6 | syn_flag_number | 0.1297 |
+| 7 | UDP | 0.1207 |
+| 8 | Min | 0.1036 |
+| 9 | Number | 0.0927 |
+| 10 | Tot sum | 0.0920 |
+
+IAT is 4× more important than the #2 feature (Rate), confirming its dominance across all methods and datasets.
+
+### 16.3 Per-Class SHAP Analysis (Novel Contribution)
+
+Different attack types rely on completely different features — a pattern hidden by global averaging:
+
+| Attack Class | Top-3 Features | Profile |
+|---|---|---|
+| DDoS_SYN | IAT (0.99), syn_flag_number (0.96), syn_count (0.54) | SYN flood signature |
+| DDoS_UDP | IAT (5.45), Rate (1.13), UDP (0.37) | Volume + protocol |
+| DoS_SYN | IAT (2.28), syn_count (0.71), syn_flag_number (0.54) | Same as DDoS but different magnitude |
+| ARP_Spoofing | Tot size (0.34), Header_Length (0.29), UDP (0.19) | Packet structure anomaly |
+| Recon_VulScan | Min (0.37), Rate (0.23), Header_Length (0.22) | Scan signature |
+| MQTT_Malformed | ack_flag_number (0.31), IAT (0.30), Number (0.22) | Malformed packet flags |
+| Benign | IAT (0.36), rst_count (0.23), fin_count (0.21) | Normal connection lifecycle |
+
+> **Key finding:** A single global feature ranking is misleading for IDS. ARP_Spoofing detection depends on packet size features (Tot size, Header_Length), while DDoS depends on timing features (IAT, Rate). Per-class SHAP signatures can serve as detection templates for SOC analysts.
+
+### 16.4 DDoS vs DoS Boundary Analysis
+
+Category SHAP-profile cosine similarity between DDoS and DoS = **0.991** (near identical).
+
+The model uses the SAME features in the SAME way for both — only the magnitude of IAT and Rate distinguishes them. This directly explains why DDoS↔DoS pairs are the hardest classification boundaries in Phase 4's confusion matrices.
+
+Top discriminating features: IAT (Δ=1.29), syn_flag_number (Δ=0.42), Tot sum (Δ=0.32), TCP (Δ=0.27)
+
+### 16.5 Four-Way Feature Importance Comparison
+
+| Rank | Yacoubi SHAP (raw) | Our SHAP (deduped) | Cohen's d (Phase 2) | RF Importance (Phase 4) |
+|------|---|---|---|---|
+| 1 | IAT | IAT | rst_count | IAT |
+| 2 | Rate | Rate | psh_flag_number | Magnitue |
+| 3 | Header_Length | TCP | Variance | Tot size |
+| 4 | Srate | syn_count | ack_flag_number | AVG |
+| 5 | syn_flag_number | Header_Length | Max | Min |
+
+**Pairwise Jaccard similarity (top-10):**
+
+| | Yacoubi SHAP | Our SHAP | Cohen's d | RF Importance |
+|---|---|---|---|---|
+| Yacoubi SHAP | 1.000 | **0.429** | 0.176 | 0.333 |
+| Our SHAP | 0.429 | 1.000 | **0.000** | 0.333 |
+| Cohen's d | 0.176 | 0.000 | 1.000 | 0.250 |
+| RF Importance | 0.333 | 0.333 | 0.250 | 1.000 |
+
+**Spearman rank correlations:**
+- Our SHAP vs Yacoubi SHAP: ρ = +0.512 (moderate agreement, shifted by deduplication)
+- Our SHAP vs Cohen's d: ρ = **−0.741** (negative correlation — statistical separation ≠ model reliance)
+- Our SHAP vs RF Importance: ρ = +0.186 (weak agreement)
+
+> **Thesis finding:** Feature importance is method-dependent AND preprocessing-dependent. Cohen's d (univariate statistical separation) has ZERO Jaccard overlap and NEGATIVE rank correlation with SHAP (model-conditional contribution). Deduplicating 37% of data shifts even SHAP rankings substantially vs Yacoubi. Reporting a single feature ranking is scientifically insufficient.
+
+### 16.6 Attack Category SHAP Profiles
+
+| Category | Top-3 Features | Signature |
+|---|---|---|
+| DDoS | IAT (1.74), Rate (0.34), TCP (0.33) | Timing + volume + protocol |
+| DoS | IAT (1.80), TCP (0.27), syn_count (0.27) | Nearly identical to DDoS (cosine=0.991) |
+| MQTT | IAT (0.31), Header_Length (0.17), Rate (0.15) | Moderate timing + packet structure |
+| Recon | Rate (0.21), syn_count (0.20), Min (0.19) | Scan rate + connection probing |
+| Spoofing | Tot size (0.34), Header_Length (0.29), UDP (0.19) | Packet structure anomaly |
+
+**Category cosine similarity matrix highlights:**
+- DDoS ↔ DoS: 0.991 (near identical — explains confusion)
+- Recon ↔ Spoofing: 0.752 (moderate similarity — explains some cross-confusion)
+- DDoS ↔ Spoofing: 0.299 (very different — easily separable)
+
+### 16.7 Implications for IoMT IDS
+
+1. **Minimal feature IDS:** Top-15 SHAP features concentrate the model's discriminative power; a deployment could use ~15 features with <1% F1 loss
+2. **Per-class detection templates:** Each attack class has a distinct SHAP signature that can be cached for SOC analyst dashboards — showing WHY a specific alert was raised
+3. **Profiling data opportunity:** Computing per-device SHAP baselines across the 4 lifecycle states (power/idle/active/interaction) would enable device-specific anomaly detection — a direction no prior study has explored
+
+### 16.8 Output Artifacts
+
+```
+results/shap/                                   (~20 MB)
+├── config.json, summary.md
+├── shap_values/
+│   ├── shap_values.npy              (19 × 5000 × 44) — raw SHAP values
+│   ├── X_shap_subset.npy            (5000 × 44)
+│   └── y_shap_subset.csv
+├── metrics/
+│   ├── global_importance.csv         # 44 features ranked
+│   ├── per_class_importance.csv      # 19 × 44 matrix
+│   ├── per_class_top5.csv            # 19 classes × top-5
+│   ├── ddos_vs_dos_features.csv
+│   ├── method_comparison.csv         # 4-way ranking
+│   ├── method_jaccard.csv            # Pairwise Jaccard
+│   ├── method_rank_correlation.csv   # Spearman/Kendall
+│   ├── category_importance.csv       # 5 categories × 44
+│   └── category_similarity.csv       # Cosine similarity matrix
+└── figures/                          # 11 publication-quality plots
+    ├── global_shap_importance.png
+    ├── global_shap_beeswarm.png
+    ├── per_class_shap_heatmap.png
+    ├── class_beeswarm_{DDoS_SYN,DoS_SYN,ARP_Spoofing,Recon_VulScan,Benign}.png
+    ├── ddos_vs_dos_comparison.png
+    ├── category_profiles.png
+    └── method_comparison.png
+```
+
+---
+
+## 17. Project Roadmap — 17-Week Plan (Option A: Hybrid Framework)
 
 | Week | Phase | Key Deliverables | Status |
 |------|-------|------------------|--------|
@@ -1220,9 +1349,8 @@ results/zero_day_loo/                           (~200 MB)
 | 9–10 | Unsupervised Model Training (Layer 2) | AE (AUC=0.9892) + IF (AUC=0.8612), scaling fix, per-class detection | ✅ Complete |
 | 11–12 | Fusion Engine + Zero-Day Simulation (Layer 3) | 4-case fusion, H1 FAIL, H2-simulated FAIL, binary F1=0.9985 | ✅ Complete |
 | 12 | True LOO Zero-Day (Layer 3B) | 5-fold LOO XGBoost retrain, H2-strict FAIL (0/5), H2-binary PASS (5/5 @p90) | ✅ Complete |
-| 13–14 | SHAP Analysis (Layer 4) | Per-class SHAP plots, feature importance comparisons | 🔄 Next |
-| 15 | Profiling Integration (Stretch Goal) | Delta features from profiling data (if time permits) | ⏳ Optional |
-| 16–17 | Documentation & Defense | Complete thesis document, code repository, defense preparation | ⏳ Planned |
+| 13–14 | SHAP Analysis (Layer 4) | Per-class SHAP, 4-way comparison, DDoS/DoS boundary, 11 figures | ✅ Complete |
+| 15–17 | Thesis Writing & Defense | Complete thesis document, code repository, defense preparation | 📝 Writing |
 
 ### Models to Implement
 
@@ -1240,9 +1368,10 @@ results/zero_day_loo/                           (~200 MB)
 - Key finding: zero-day detection via "redundancy through misclassification"
 - Recommended operating point: p97 (99.87% attack recall, 5.3% benign FPR)
 
-**Explainability (Layer 4):**
-- SHAP (TreeSHAP for ensembles, KernelExplainer for Autoencoder)
-- LIME (LimeTabularExplainer for individual predictions)
+**Explainability (Layer 4) — COMPLETE:**
+- TreeSHAP on E7 XGBoost (5K stratified subsample, 70 min compute)
+- IAT confirmed #1 (mean |SHAP|=0.87), per-class SHAP heatmap (19×44), DDoS↔DoS cosine=0.991
+- 4-way comparison: Our SHAP vs Yacoubi (Jaccard=0.429) vs Cohen's d (0.000) vs RF importance (0.333)
 
 ### Classification Tasks (evaluated on all models)
 
@@ -1252,7 +1381,7 @@ results/zero_day_loo/                           (~200 MB)
 
 ---
 
-## 17. Related Work — Summary Table
+## 18. Related Work — Summary Table
 
 | Paper | Approach | Key Result |
 |-------|----------|------------|
@@ -1277,13 +1406,13 @@ results/zero_day_loo/                           (~200 MB)
 
 ---
 
-## 18. Deep Dive: Yacoubi et al. — Primary Reference Paper
+## 19. Deep Dive: Yacoubi et al. — Primary Reference Paper
 
 > Yacoubi, M., Moussaoui, O., Drocourt, C. — University of Picardie Jules Verne & MIS Lab, France
 
 Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, each building on the previous. Together they form the most comprehensive explainable ML study on this dataset.
 
-### 18.1 Paper 1: Enhancing IoMT Security with Explainable ML (COCIA 2025)
+### 19.1 Paper 1: Enhancing IoMT Security with Explainable ML (COCIA 2025)
 
 **Core question:** Can ensemble classifiers be made transparent without sacrificing accuracy?
 
@@ -1331,7 +1460,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 
 **Paper 1 Conclusion:** Both RF and CatBoost achieve strong classification. SHAP provides trustworthy global explanations, while LIME gives actionable instance-level insights. The combination makes ensemble models viable for real-world IoMT security deployment.
 
-### 18.2 Paper 2: XAI-Driven Feature Selection for Improved IDS (AIAI 2025)
+### 19.2 Paper 2: XAI-Driven Feature Selection for Improved IDS (AIAI 2025)
 
 **Key Innovation:** Uses SHAP and LIME not just to *explain* models, but to *select features*. If SHAP says a feature has near-zero importance, drop it. This reduces the 45-feature space, cutting training time while maintaining or improving accuracy.
 
@@ -1357,7 +1486,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 
 **Paper 2 Conclusion:** CatBoost actually *improved* by 4% after removing noisy features via SHAP. Feature selection isn't just about computational efficiency — it actively helps boosting models by removing features that confuse the sequential learning process. XAI-driven feature selection improves IDS efficiency without compromising detection capability.
 
-### 18.3 Paper 3: Ensemble Learning Strategies for Anomaly-Based IDS (Springer 2026)
+### 19.3 Paper 3: Ensemble Learning Strategies for Anomaly-Based IDS (Springer 2026)
 
 **Extended comparison** to 5 models: RF, CatBoost, LightGBM, XGBoost, and a **Stacking ensemble** (two-layer meta-model where CatBoost + RF generate probability estimates in layer 1, and a meta-learner combines them in layer 2).
 
@@ -1376,7 +1505,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 - The precision/recall gap (99.36% accuracy but only 86.10% precision) suggests the model struggles with minority attack classes
 - For real-time IoMT detection, XGBoost or LightGBM may be better choices due to inference speed
 
-### 18.4 Research Gaps Left by Yacoubi et al.
+### 19.4 Research Gaps Left by Yacoubi et al.
 
 These gaps represent opportunities for our project to make a novel contribution:
 
@@ -1392,9 +1521,9 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
-## 19. Research Design
+## 20. Research Design
 
-### 19.1 Research Questions
+### 20.1 Research Questions
 
 **Primary Research Question:**
 
@@ -1408,7 +1537,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 - **Sub-RQ3 (Explainability):** How does per-attack-class SHAP analysis reveal differential feature importance patterns across attack categories (DDoS vs. Recon vs. MQTT vs. Spoofing), and do these patterns change when SMOTETomek resampling is applied?
 
-### 19.2 Hypotheses
+### 20.2 Hypotheses
 
 **H1 — Fusion Framework Performance:**
 - *H0:* The hybrid fusion framework does not produce statistically significant improvements in macro-averaged F1-score compared to the best standalone supervised classifier (p > 0.05, paired t-test across 5-fold stratified cross-validation).
@@ -1426,7 +1555,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 - *H1:* SMOTETomek significantly improves per-class F1-score for at least 3 of the 5 most underrepresented attack classes.
 - **Result: H0 not rejected (H3 FAIL).** SMOTETomek degraded macro-F1 in all 4 configurations when combined with class_weight='balanced'. See Section 12.4.
 
-### 19.3 Research Objectives
+### 20.3 Research Objectives
 
 | ID | Objective | Deliverable |
 |----|-----------|-------------|
@@ -1436,7 +1565,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 | **O4** | Conduct zero-day attack simulation using leave-one-attack-out protocol for all 17 classes. Measure unsupervised detection recall per withheld class. | Zero-day detection rate matrix (17 × 2) |
 | **O5** | Perform per-attack-class SHAP explainability analysis. Compare feature importance rankings before/after SMOTETomek. | SHAP visualizations + feature importance tables |
 
-### 19.4 Expected Contributions
+### 20.4 Expected Contributions
 
 1. **First hybrid supervised-unsupervised fusion framework on CICIoMT2024** — No existing study on this dataset combines these two paradigms in a structured decision fusion. Addresses the zero-day detection gap left by Yacoubi et al.
 
@@ -1448,7 +1577,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
-## 20. Proposed Framework Architecture
+## 21. Proposed Framework Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1537,7 +1666,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
-## 21. Corrections to Published Literature
+## 22. Corrections to Published Literature
 
 The following corrections were discovered through our independent analysis of the CICIoMT2024 dataset during Phase 2 EDA:
 
@@ -1561,12 +1690,14 @@ The following corrections were discovered through our independent analysis of th
 | Phase 3 ColumnTransformer scaling sufficient for all models | **AE requires additional StandardScaler** — RobustScaler leaves features with std>1000, causing million-scale loss and zero Recon detection |
 | Hybrid fusion assumed to improve macro-F1 | **Fusion Δ = −0.0001 at best (p99)** — zero_day_unknown pseudo-class penalizes macro-F1; value is in operational case stratification, not aggregate metric improvement |
 | Reconstruction-error AE assumed sufficient for zero-day detection | **AE catches only 6-44% of samples LOO-E7 misclassifies as benign** — shared flow-feature basis causes overlapping blind spots. However, hybrid system achieves binary recall ≥70% on 5/5 LOO targets through "redundancy via misclassification" |
+| Global SHAP ranking assumed representative for all attack types | **Per-class SHAP reveals heterogeneous feature importance** — DDoS relies on IAT/Rate, ARP_Spoofing on Tot size/Header_Length, Recon on Min/rst_count. Global averaging masks these signatures. DDoS↔DoS cosine similarity = 0.991 explains confusion boundary. |
+| Feature importance assumed method-independent | **4-way comparison shows Jaccard=0.000 between SHAP and Cohen's d**, Spearman ρ=−0.741. Statistical separation ≠ model reliance. Deduplication shifts even SHAP rankings vs Yacoubi (Jaccard=0.429). |
 
 > These corrections constitute a novel methodological contribution to the CICIoMT2024 literature and strengthen the motivation for our preprocessing pipeline.
 
 ---
 
-## 22. Citations
+## 23. Citations
 
 **Dataset:**
 ```
@@ -1610,7 +1741,7 @@ DOI: 10.1016/J.IOT.2024.101351
 
 ---
 
-## 23. Tech Stack
+## 24. Tech Stack
 
 - **Language:** Python 3.13 (downgraded from 3.14 in Phase 5 — TensorFlow 2.21 wheels not yet built for 3.14)
 - **ML Libraries:** scikit-learn, XGBoost, TensorFlow/Keras
@@ -1623,4 +1754,4 @@ DOI: 10.1016/J.IOT.2024.101351
 
 ---
 
-> **Last updated:** April 27, 2026 — Phase 6B true LOO zero-day complete
+> **Last updated:** April 27, 2026 — ALL EXPERIMENTAL PHASES COMPLETE (Phase 7 SHAP)
