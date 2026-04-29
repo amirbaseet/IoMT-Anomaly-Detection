@@ -1,0 +1,145 @@
+[21:03:04] ============================================================================
+[21:03:04] Path B Week 1 — Multi-Seed LOO Retraining
+[21:03:04]   seeds:   [1, 7, 42, 100, 1729]
+[21:03:04]   targets: ['Recon_Ping_Sweep', 'Recon_VulScan', 'MQTT_Malformed_Data', 'MQTT_DoS_Connect_Flood', 'ARP_Spoofing']
+[21:03:04] ============================================================================
+[21:03:04] Loading X_train, y_train, X_test, y_test ...
+[21:03:05]   X_train (3612064, 44)  X_test (892268, 44)  loaded in 0.9s
+[21:03:05] ============================================================================
+[21:03:05] SEED 1
+[21:03:05] ============================================================================
+[21:03:05]   [seed=1] [Recon_Ping_Sweep]
+[21:03:06]     train: 3,611,513 rows × 44 cols, 18 classes (removed 551 Recon_Ping_Sweep)
+[21:06:30]     train: 3.41 min
+[21:06:39]     predict: 8.8s (pred (892268,), proba (892268, 18))
+[21:06:39]     saved: loo_Recon_Ping_Sweep_test_pred.npy, loo_Recon_Ping_Sweep_test_proba.npy
+[21:06:39]     sanity: target=Recon_Ping_Sweep called_Benign=29 (17.2%); top1=('Recon_OS_Scan', 72)
+[21:06:39]   [seed=1] [Recon_VulScan]
+[21:06:40]     train: 3,610,438 rows × 44 cols, 18 classes (removed 1,626 Recon_VulScan)
+[21:10:23]     train: 3.70 min
+[21:10:30]     predict: 7.7s (pred (892268,), proba (892268, 18))
+[21:10:30]     saved: loo_Recon_VulScan_test_pred.npy, loo_Recon_VulScan_test_proba.npy
+[21:10:31]     sanity: target=Recon_VulScan called_Benign=537 (55.2%); top1=('Benign', 537)
+[21:10:31]   [seed=1] [MQTT_Malformed_Data]
+[21:10:32]     train: 3,607,960 rows × 44 cols, 18 classes (removed 4,104 MQTT_Malformed_Data)
+[21:14:27]     train: 3.92 min
+[21:14:34]     predict: 7.8s (pred (892268,), proba (892268, 18))
+[21:14:35]     saved: loo_MQTT_Malformed_Data_test_pred.npy, loo_MQTT_Malformed_Data_test_proba.npy
+[21:14:35]     sanity: target=MQTT_Malformed_Data called_Benign=507 (29.0%); top1=('ARP_Spoofing', 1016)
+[21:14:35]   [seed=1] [MQTT_DoS_Connect_Flood]
+[21:14:36]     train: 3,601,846 rows × 44 cols, 18 classes (removed 10,218 MQTT_DoS_Connect_Flood)
+[21:18:36]     train: 4.00 min
+[21:18:44]     predict: 8.2s (pred (892268,), proba (892268, 18))
+[21:18:44]     saved: loo_MQTT_DoS_Connect_Flood_test_pred.npy, loo_MQTT_DoS_Connect_Flood_test_proba.npy
+[21:18:44]     sanity: target=MQTT_DoS_Connect_Flood called_Benign=0 (0.0%); top1=('MQTT_DDoS_Connect_Flood', 2639)
+[21:18:44]   [seed=1] [ARP_Spoofing]
+[21:18:44]     RESUME: predictions exist (pred=(892268,), proba=(892268, 18))
+[21:18:44]     sanity: target=ARP_Spoofing called_Benign=322 (18.5%); top1=('Recon_Port_Scan', 549)
+[21:18:44] [seed=1] DONE in 15.7 min  → results/zero_day_loo/multi_seed/seed_1/config.json
+[21:18:44] ============================================================================
+[21:18:44] SEED 7
+[21:18:44] ============================================================================
+[21:18:44]   [seed=7] [Recon_Ping_Sweep]
+[21:18:45]     train: 3,611,513 rows × 44 cols, 18 classes (removed 551 Recon_Ping_Sweep)
+[21:22:43]     train: 3.96 min
+[21:22:51]     predict: 8.1s (pred (892268,), proba (892268, 18))
+[21:22:51]     saved: loo_Recon_Ping_Sweep_test_pred.npy, loo_Recon_Ping_Sweep_test_proba.npy
+[21:22:51]     sanity: target=Recon_Ping_Sweep called_Benign=31 (18.3%); top1=('Recon_OS_Scan', 68)
+[21:22:51]   [seed=7] [Recon_VulScan]
+[21:22:52]     train: 3,610,438 rows × 44 cols, 18 classes (removed 1,626 Recon_VulScan)
+[21:26:55]     train: 4.04 min
+[21:27:03]     predict: 8.2s (pred (892268,), proba (892268, 18))
+[21:27:03]     saved: loo_Recon_VulScan_test_pred.npy, loo_Recon_VulScan_test_proba.npy
+[21:27:03]     sanity: target=Recon_VulScan called_Benign=525 (54.0%); top1=('Benign', 525)
+[21:27:03]   [seed=7] [MQTT_Malformed_Data]
+[21:27:04]     train: 3,607,960 rows × 44 cols, 18 classes (removed 4,104 MQTT_Malformed_Data)
+[21:31:11]     train: 4.12 min
+[21:31:19]     predict: 8.1s (pred (892268,), proba (892268, 18))
+[21:31:19]     saved: loo_MQTT_Malformed_Data_test_pred.npy, loo_MQTT_Malformed_Data_test_proba.npy
+[21:31:19]     sanity: target=MQTT_Malformed_Data called_Benign=497 (28.4%); top1=('ARP_Spoofing', 1030)
+[21:31:20]   [seed=7] [MQTT_DoS_Connect_Flood]
+[21:31:20]     train: 3,601,846 rows × 44 cols, 18 classes (removed 10,218 MQTT_DoS_Connect_Flood)
+[21:35:42]     train: 4.36 min
+[21:35:51]     predict: 8.9s (pred (892268,), proba (892268, 18))
+[21:35:51]     saved: loo_MQTT_DoS_Connect_Flood_test_pred.npy, loo_MQTT_DoS_Connect_Flood_test_proba.npy
+[21:35:51]     sanity: target=MQTT_DoS_Connect_Flood called_Benign=0 (0.0%); top1=('MQTT_DDoS_Connect_Flood', 3120)
+[21:35:51]   [seed=7] [ARP_Spoofing]
+[21:35:52]     train: 3,599,256 rows × 44 cols, 18 classes (removed 12,808 ARP_Spoofing)
+[21:40:10]     train: 4.29 min
+[21:40:18]     predict: 8.6s (pred (892268,), proba (892268, 18))
+[21:40:19]     saved: loo_ARP_Spoofing_test_pred.npy, loo_ARP_Spoofing_test_proba.npy
+[21:40:19]     sanity: target=ARP_Spoofing called_Benign=321 (18.4%); top1=('Recon_Port_Scan', 738)
+[21:40:19] [seed=7] DONE in 21.6 min  → results/zero_day_loo/multi_seed/seed_7/config.json
+[21:40:19] [seed=42] SKIP retraining; expecting hardlinked artifacts under results/zero_day_loo/multi_seed/seed_42/predictions/
+[21:40:19] [seed=42] hardlinked artifacts verified
+[21:40:19] ============================================================================
+[21:40:19] SEED 100
+[21:40:19] ============================================================================
+[21:40:19]   [seed=100] [Recon_Ping_Sweep]
+[21:40:20]     train: 3,611,513 rows × 44 cols, 18 classes (removed 551 Recon_Ping_Sweep)
+[21:44:53]     train: 4.56 min
+[21:45:03]     predict: 9.4s (pred (892268,), proba (892268, 18))
+[21:45:03]     saved: loo_Recon_Ping_Sweep_test_pred.npy, loo_Recon_Ping_Sweep_test_proba.npy
+[21:45:03]     sanity: target=Recon_Ping_Sweep called_Benign=27 (16.0%); top1=('Recon_OS_Scan', 75)
+[21:45:03]   [seed=100] [Recon_VulScan]
+[21:45:04]     train: 3,610,438 rows × 44 cols, 18 classes (removed 1,626 Recon_VulScan)
+[21:49:37]     train: 4.55 min
+[21:49:46]     predict: 8.9s (pred (892268,), proba (892268, 18))
+[21:49:46]     saved: loo_Recon_VulScan_test_pred.npy, loo_Recon_VulScan_test_proba.npy
+[21:49:46]     sanity: target=Recon_VulScan called_Benign=524 (53.9%); top1=('Benign', 524)
+[21:49:46]   [seed=100] [MQTT_Malformed_Data]
+[21:49:47]     train: 3,607,960 rows × 44 cols, 18 classes (removed 4,104 MQTT_Malformed_Data)
+[21:54:12]     train: 4.41 min
+[21:54:21]     predict: 8.9s (pred (892268,), proba (892268, 18))
+[21:54:21]     saved: loo_MQTT_Malformed_Data_test_pred.npy, loo_MQTT_Malformed_Data_test_proba.npy
+[21:54:21]     sanity: target=MQTT_Malformed_Data called_Benign=437 (25.0%); top1=('ARP_Spoofing', 1106)
+[21:54:21]   [seed=100] [MQTT_DoS_Connect_Flood]
+[21:54:22]     train: 3,601,846 rows × 44 cols, 18 classes (removed 10,218 MQTT_DoS_Connect_Flood)
+[21:58:56]     train: 4.57 min
+[21:59:06]     predict: 9.4s (pred (892268,), proba (892268, 18))
+[21:59:06]     saved: loo_MQTT_DoS_Connect_Flood_test_pred.npy, loo_MQTT_DoS_Connect_Flood_test_proba.npy
+[21:59:06]     sanity: target=MQTT_DoS_Connect_Flood called_Benign=0 (0.0%); top1=('MQTT_DDoS_Connect_Flood', 2746)
+[21:59:06]   [seed=100] [ARP_Spoofing]
+[21:59:07]     train: 3,599,256 rows × 44 cols, 18 classes (removed 12,808 ARP_Spoofing)
+[22:03:35]     train: 4.47 min
+[22:03:45]     predict: 9.9s (pred (892268,), proba (892268, 18))
+[22:03:45]     saved: loo_ARP_Spoofing_test_pred.npy, loo_ARP_Spoofing_test_proba.npy
+[22:03:45]     sanity: target=ARP_Spoofing called_Benign=312 (17.9%); top1=('MQTT_Malformed_Data', 584)
+[22:03:45] [seed=100] DONE in 23.4 min  → results/zero_day_loo/multi_seed/seed_100/config.json
+[22:03:45] ============================================================================
+[22:03:45] SEED 1729
+[22:03:45] ============================================================================
+[22:03:45]   [seed=1729] [Recon_Ping_Sweep]
+[22:03:46]     train: 3,611,513 rows × 44 cols, 18 classes (removed 551 Recon_Ping_Sweep)
+[22:08:32]     train: 4.76 min
+[22:08:41]     predict: 9.4s (pred (892268,), proba (892268, 18))
+[22:08:41]     saved: loo_Recon_Ping_Sweep_test_pred.npy, loo_Recon_Ping_Sweep_test_proba.npy
+[22:08:42]     sanity: target=Recon_Ping_Sweep called_Benign=31 (18.3%); top1=('Recon_OS_Scan', 69)
+[22:08:42]   [seed=1729] [Recon_VulScan]
+[22:08:43]     train: 3,610,438 rows × 44 cols, 18 classes (removed 1,626 Recon_VulScan)
+[22:13:31]     train: 4.81 min
+[22:13:41]     predict: 9.9s (pred (892268,), proba (892268, 18))
+[22:13:41]     saved: loo_Recon_VulScan_test_pred.npy, loo_Recon_VulScan_test_proba.npy
+[22:13:41]     sanity: target=Recon_VulScan called_Benign=535 (55.0%); top1=('Benign', 535)
+[22:13:41]   [seed=1729] [MQTT_Malformed_Data]
+[22:13:42]     train: 3,607,960 rows × 44 cols, 18 classes (removed 4,104 MQTT_Malformed_Data)
+[22:18:30]     train: 4.79 min
+[22:18:39]     predict: 9.4s (pred (892268,), proba (892268, 18))
+[22:18:39]     saved: loo_MQTT_Malformed_Data_test_pred.npy, loo_MQTT_Malformed_Data_test_proba.npy
+[22:18:39]     sanity: target=MQTT_Malformed_Data called_Benign=495 (28.3%); top1=('ARP_Spoofing', 953)
+[22:18:39]   [seed=1729] [MQTT_DoS_Connect_Flood]
+[22:18:40]     train: 3,601,846 rows × 44 cols, 18 classes (removed 10,218 MQTT_DoS_Connect_Flood)
+[22:23:25]     train: 4.75 min
+[22:23:34]     predict: 9.3s (pred (892268,), proba (892268, 18))
+[22:23:34]     saved: loo_MQTT_DoS_Connect_Flood_test_pred.npy, loo_MQTT_DoS_Connect_Flood_test_proba.npy
+[22:23:34]     sanity: target=MQTT_DoS_Connect_Flood called_Benign=0 (0.0%); top1=('MQTT_DDoS_Connect_Flood', 3121)
+[22:23:34]   [seed=1729] [ARP_Spoofing]
+[22:23:36]     train: 3,599,256 rows × 44 cols, 18 classes (removed 12,808 ARP_Spoofing)
+[22:27:58]     train: 4.38 min
+[22:28:08]     predict: 9.1s (pred (892268,), proba (892268, 18))
+[22:28:08]     saved: loo_ARP_Spoofing_test_pred.npy, loo_ARP_Spoofing_test_proba.npy
+[22:28:08]     sanity: target=ARP_Spoofing called_Benign=311 (17.8%); top1=('Recon_Port_Scan', 811)
+[22:28:08] [seed=1729] DONE in 24.4 min  → results/zero_day_loo/multi_seed/seed_1729/config.json
+[22:28:08] ============================================================================
+[22:28:08] ALL DONE — 85.1 min total
+[22:28:08] ============================================================================

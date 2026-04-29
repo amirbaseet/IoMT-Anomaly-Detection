@@ -1,0 +1,77 @@
+{
+  "seed": 1729,
+  "retrained": true,
+  "phase": "Path B Week 1 multi-seed",
+  "xgb_params": {
+    "n_estimators": 200,
+    "max_depth": 8,
+    "learning_rate": 0.1,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "min_child_weight": 5,
+    "gamma": 0.1,
+    "tree_method": "hist",
+    "n_jobs": -1,
+    "verbosity": 0,
+    "objective": "multi:softprob",
+    "eval_metric": "mlogloss",
+    "random_state": 1729
+  },
+  "zero_day_targets": [
+    "Recon_Ping_Sweep",
+    "Recon_VulScan",
+    "MQTT_Malformed_Data",
+    "MQTT_DoS_Connect_Flood",
+    "ARP_Spoofing"
+  ],
+  "started_at": "2026-04-29T22:03:45",
+  "finished_at": "2026-04-29T22:28:08",
+  "runtime_min": 24.377914067109426,
+  "fold_records": [
+    {
+      "target": "Recon_Ping_Sweep",
+      "seed": 1729,
+      "skipped": false,
+      "train_time_s": 285.8696348667145,
+      "predict_time_s": 9.43178391456604,
+      "pred_sha256": "0cf10d7f459bf0b0d273824ff4abf677f59e1faab2bb9791b31824434e97e1be",
+      "proba_sha256": "6962a83203c316acf6e2225827ac3d7c6996d1f7bdbaee714b8b348b899c40fd"
+    },
+    {
+      "target": "Recon_VulScan",
+      "seed": 1729,
+      "skipped": false,
+      "train_time_s": 288.8053340911865,
+      "predict_time_s": 9.923827886581421,
+      "pred_sha256": "03f07667884760dec9233e5db62c326a32e701710fcb00b65785f0b63cecd038",
+      "proba_sha256": "c386e32fdfee10ed92a45a1e6e17a986a442b7854008468e8252988e86618672"
+    },
+    {
+      "target": "MQTT_Malformed_Data",
+      "seed": 1729,
+      "skipped": false,
+      "train_time_s": 287.243225812912,
+      "predict_time_s": 9.416703939437866,
+      "pred_sha256": "864c77e207b49fa66966e8267b2056554ea3bbc97b9c3f2210d091a139af92df",
+      "proba_sha256": "e67df4be6d1a887977797e16cf3d5eb7f5bc5c4a0d126583db7d0daa0cfa5baa"
+    },
+    {
+      "target": "MQTT_DoS_Connect_Flood",
+      "seed": 1729,
+      "skipped": false,
+      "train_time_s": 284.8158688545227,
+      "predict_time_s": 9.263329982757568,
+      "pred_sha256": "9b535e3272d5f8728471dba318e0c32b5ff0d4b0cfc44ac7156d2e4a2971909e",
+      "proba_sha256": "b1832d4b61b5a5893a48495a26fa797e9b6eb5cdf456a6d871ddc474b2f164fc"
+    },
+    {
+      "target": "ARP_Spoofing",
+      "seed": 1729,
+      "skipped": false,
+      "train_time_s": 262.90541076660156,
+      "predict_time_s": 9.112194061279297,
+      "pred_sha256": "a2ae03c7166b8911eafab0cb8e9d36737a694a138dcef1b5d24399b229059f9e",
+      "proba_sha256": "d720f73cb759a05bf7e9af653e63365ae2ab6dfaeac3ddc5f50fb2708e5ac00c"
+    }
+  ]
+}

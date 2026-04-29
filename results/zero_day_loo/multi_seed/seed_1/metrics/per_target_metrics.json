@@ -1,0 +1,142 @@
+{
+  "Recon_Ping_Sweep": {
+    "n_test_samples": 169,
+    "n_called_benign": 29,
+    "pct_called_benign": 17.159763313609467,
+    "top5_predicted_as": [
+      {
+        "class": "Recon_OS_Scan",
+        "count": 72,
+        "pct": 42.603550295857985
+      },
+      {
+        "class": "ARP_Spoofing",
+        "count": 64,
+        "pct": 37.8698224852071
+      },
+      {
+        "class": "Benign",
+        "count": 29,
+        "pct": 17.159763313609467
+      },
+      {
+        "class": "Recon_VulScan",
+        "count": 4,
+        "pct": 2.366863905325444
+      }
+    ]
+  },
+  "Recon_VulScan": {
+    "n_test_samples": 973,
+    "n_called_benign": 537,
+    "pct_called_benign": 55.190133607399794,
+    "top5_predicted_as": [
+      {
+        "class": "Benign",
+        "count": 537,
+        "pct": 55.190133607399794
+      },
+      {
+        "class": "Recon_OS_Scan",
+        "count": 189,
+        "pct": 19.424460431654676
+      },
+      {
+        "class": "Recon_Port_Scan",
+        "count": 156,
+        "pct": 16.032887975334017
+      },
+      {
+        "class": "Recon_Ping_Sweep",
+        "count": 80,
+        "pct": 8.221993833504625
+      },
+      {
+        "class": "ARP_Spoofing",
+        "count": 8,
+        "pct": 0.8221993833504625
+      }
+    ]
+  },
+  "MQTT_Malformed_Data": {
+    "n_test_samples": 1747,
+    "n_called_benign": 507,
+    "pct_called_benign": 29.021179164281627,
+    "top5_predicted_as": [
+      {
+        "class": "ARP_Spoofing",
+        "count": 1016,
+        "pct": 58.15684029765312
+      },
+      {
+        "class": "Benign",
+        "count": 507,
+        "pct": 29.021179164281627
+      },
+      {
+        "class": "MQTT_DDoS_Connect_Flood",
+        "count": 149,
+        "pct": 8.528906697195191
+      },
+      {
+        "class": "Recon_OS_Scan",
+        "count": 70,
+        "pct": 4.0068689181453925
+      },
+      {
+        "class": "Recon_Port_Scan",
+        "count": 4,
+        "pct": 0.2289639381797367
+      }
+    ]
+  },
+  "MQTT_DoS_Connect_Flood": {
+    "n_test_samples": 3131,
+    "n_called_benign": 0,
+    "pct_called_benign": 0.0,
+    "top5_predicted_as": [
+      {
+        "class": "MQTT_DDoS_Connect_Flood",
+        "count": 2639,
+        "pct": 84.28617055253912
+      },
+      {
+        "class": "MQTT_DDoS_Publish_Flood",
+        "count": 487,
+        "pct": 15.554136058767167
+      },
+      {
+        "class": "Recon_OS_Scan",
+        "count": 5,
+        "pct": 0.15969338869370808
+      }
+    ]
+  },
+  "ARP_Spoofing": {
+    "n_test_samples": 1744,
+    "n_called_benign": 322,
+    "pct_called_benign": 18.46330275229358,
+    "top5_predicted_as": [
+      {
+        "class": "Recon_Port_Scan",
+        "count": 549,
+        "pct": 31.479357798165136
+      },
+      {
+        "class": "Recon_VulScan",
+        "count": 472,
+        "pct": 27.06422018348624
+      },
+      {
+        "class": "MQTT_Malformed_Data",
+        "count": 401,
+        "pct": 22.993119266055047
+      },
+      {
+        "class": "Benign",
+        "count": 322,
+        "pct": 18.46330275229358
+      }
+    ]
+  }
+}

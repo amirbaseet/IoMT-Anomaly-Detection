@@ -1,0 +1,16 @@
+[22:53:24] ============================================================================
+[22:53:24] Path B Week 1 — Multi-seed aggregation & figures
+[22:53:24] ============================================================================
+[22:53:24]   loaded 55 ablation rows, 275 per-target rows
+[22:53:24]   saved results/enhanced_fusion/multi_seed_summary.csv (11 variants)
+[22:53:24]   saved results/enhanced_fusion/multi_seed_per_target_summary.csv (55 rows)
+[22:53:24]   saved seed_stability_per_variant.png
+[22:53:24]   saved seed_stability_per_target.png
+[22:53:24]   saved multi_seed_pareto.png
+[22:53:24] 
+[22:53:24] ============================================================================
+[22:53:24] HEADLINE — entropy_benign_p95 across 5 seeds:
+[22:53:24]   H2-strict avg: 0.7990 ± 0.0225 (min=0.7644, max=0.8267)
+[22:53:24]   Strict pass count (seeds achieving 4/4): 3/5
+[22:53:24]   Operational FPR: 0.2289 ± 0.0003
+[22:53:24] ============================================================================

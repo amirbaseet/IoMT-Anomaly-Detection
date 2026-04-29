@@ -1,0 +1,30 @@
+[22:48:56] ============================================================================
+[22:48:56] Path B Week 1 — Per-Seed Fusion Ablation
+[22:48:56] ============================================================================
+[22:48:56] Loading shared (seed-invariant) state ...
+[22:48:57]   entropy_thresholds: {'ent_p90': 0.13031890988349915, 'ent_p95': 0.3946473002433777, 'ent_p97': 0.6468809843063354, 'ent_p99': 0.9507029056549072}
+[22:48:57]   ensemble_thresholds: {'ens_p90': 0.6076335906982422, 'ens_p95': 0.7318314909934998, 'ens_p99': 0.8497806787490845}
+[22:48:57] --- seed 1 ---
+[22:48:57]   saved → results/enhanced_fusion/multi_seed/seed_1/metrics/ablation_table.csv  (11 rows)
+[22:48:57]   saved → results/enhanced_fusion/multi_seed/seed_1/metrics/per_target_results.csv  (55 rows)
+[22:48:57]   [seed=1] entropy_benign_p95 → strict=3/4 avg=0.764421  binary=5/5 avg=0.9499  FPR=0.2290
+[22:48:57] --- seed 7 ---
+[22:48:58]   saved → results/enhanced_fusion/multi_seed/seed_7/metrics/ablation_table.csv  (11 rows)
+[22:48:58]   saved → results/enhanced_fusion/multi_seed/seed_7/metrics/per_target_results.csv  (55 rows)
+[22:48:58]   [seed=7] entropy_benign_p95 → strict=4/4 avg=0.826729  binary=5/5 avg=0.9558  FPR=0.2288
+[22:48:58] --- seed 42 ---
+[22:48:59]   saved → results/enhanced_fusion/multi_seed/seed_42/metrics/ablation_table.csv  (11 rows)
+[22:48:59]   saved → results/enhanced_fusion/multi_seed/seed_42/metrics/per_target_results.csv  (55 rows)
+[22:48:59]   [seed=42] entropy_benign_p95 → strict=4/4 avg=0.803526  binary=5/5 avg=0.9494  FPR=0.2289
+[22:48:59]   ✓ seed-42 reference check PASSED (actual=0.8035264623662012, diff=0.000e+00)
+[22:48:59] --- seed 100 ---
+[22:48:59]   saved → results/enhanced_fusion/multi_seed/seed_100/metrics/ablation_table.csv  (11 rows)
+[22:48:59]   saved → results/enhanced_fusion/multi_seed/seed_100/metrics/per_target_results.csv  (55 rows)
+[22:48:59]   [seed=100] entropy_benign_p95 → strict=3/4 avg=0.795520  binary=5/5 avg=0.9558  FPR=0.2285
+[22:48:59] --- seed 1729 ---
+[22:49:00]   saved → results/enhanced_fusion/multi_seed/seed_1729/metrics/ablation_table.csv  (11 rows)
+[22:49:00]   saved → results/enhanced_fusion/multi_seed/seed_1729/metrics/per_target_results.csv  (55 rows)
+[22:49:00]   [seed=1729] entropy_benign_p95 → strict=4/4 avg=0.804930  binary=5/5 avg=0.9493  FPR=0.2294
+[22:49:00] ============================================================================
+[22:49:00] ALL SEEDS DONE
+[22:49:00] ============================================================================
