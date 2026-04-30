@@ -1,0 +1,2 @@
+explained_set_n,background_n,background_seed_base,kendall_tau_full44,kendall_tau_top10_union,decision,per_class_jaccard_mean,per_class_jaccard_std,per_class_jaccard_min,n_classes_jaccard_ge_0_6,ddos_dos_cosine_test_bg,ddos_dos_cosine_train_bg,ddos_dos_cosine_abs_delta
+5000,500,42,0.9404255319148936,0.9272727272727274,BULLETPROOF,0.8421052631578947,0.17099639201419237,0.6666666666666666,19,0.9909711480140686,0.9889786243438721,0.001992523670196533

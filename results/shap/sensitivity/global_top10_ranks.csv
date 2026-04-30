@@ -1,0 +1,12 @@
+feature,rank_test_bg,rank_train_bg,in_top10_test_bg,in_top10_train_bg,mean_abs_shap_test_bg,mean_abs_shap_train_bg
+IAT,1,1,True,True,0.8726483,0.86290294
+Rate,2,2,True,True,0.21837893,0.21851853
+TCP,3,3,True,True,0.18345897,0.19578426
+syn_count,4,4,True,True,0.17644511,0.189286
+Header_Length,5,5,True,True,0.15185668,0.15889755
+syn_flag_number,6,6,True,True,0.12965962,0.14723328
+UDP,7,7,True,True,0.120666705,0.12296044
+Min,8,8,True,True,0.10355876,0.10668986
+Number,9,10,True,True,0.09271781,0.09985934
+Tot sum,10,11,True,False,0.09201315,0.095274396
+Protocol Type,12,9,False,True,0.084928386,0.09991573

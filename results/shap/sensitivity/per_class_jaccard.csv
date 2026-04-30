@@ -1,0 +1,20 @@
+class,top5_test_bg,top5_train_bg,jaccard,n_intersection
+ARP_Spoofing,"Tot size, Header_Length, UDP, Variance, Rate","Tot size, Header_Length, UDP, Rate, Protocol Type",0.6666666666666666,4
+Benign,"IAT, rst_count, fin_count, Rate, Number","IAT, rst_count, Number, fin_count, Max",0.6666666666666666,4
+DDoS_ICMP,"IAT, Number, ICMP, TCP, Protocol Type","IAT, ICMP, Protocol Type, Number, TCP",1.0,5
+DDoS_SYN,"IAT, syn_flag_number, syn_count, TCP, rst_flag_number","IAT, syn_flag_number, syn_count, TCP, rst_flag_number",1.0,5
+DDoS_TCP,"TCP, syn_count, IAT, syn_flag_number, Tot sum","TCP, IAT, syn_count, syn_flag_number, Tot sum",1.0,5
+DDoS_UDP,"IAT, Rate, UDP, Protocol Type, Header_Length","IAT, Rate, UDP, Protocol Type, Header_Length",1.0,5
+DoS_ICMP,"IAT, ICMP, Min, Protocol Type, Tot sum","IAT, ICMP, Protocol Type, Min, Rate",0.6666666666666666,4
+DoS_SYN,"IAT, syn_count, syn_flag_number, Tot sum, Number","IAT, syn_count, syn_flag_number, Tot sum, Number",1.0,5
+DoS_TCP,"IAT, TCP, syn_count, Tot sum, syn_flag_number","IAT, TCP, syn_count, Tot sum, syn_flag_number",1.0,5
+DoS_UDP,"IAT, UDP, Rate, Header_Length, Protocol Type","IAT, UDP, Rate, Header_Length, Protocol Type",1.0,5
+MQTT_DDoS_Connect_Flood,"IAT, ack_count, Header_Length, syn_count, rst_flag_number","ack_count, IAT, Header_Length, syn_count, rst_flag_number",1.0,5
+MQTT_DDoS_Publish_Flood,"IAT, Variance, rst_count, TCP, psh_flag_number","Variance, IAT, rst_count, TCP, rst_flag_number",0.6666666666666666,4
+MQTT_DoS_Connect_Flood,"Header_Length, IAT, Rate, psh_flag_number, rst_flag_number","Header_Length, IAT, Rate, Covariance, rst_flag_number",0.6666666666666666,4
+MQTT_DoS_Publish_Flood,"ack_flag_number, Min, Rate, IAT, Variance","Min, ack_flag_number, Rate, IAT, Variance",1.0,5
+MQTT_Malformed_Data,"ack_flag_number, IAT, Number, Protocol Type, Variance","ack_flag_number, IAT, Number, Protocol Type, Rate",0.6666666666666666,4
+Recon_OS_Scan,"TCP, Rate, syn_count, Protocol Type, IAT","TCP, syn_count, Rate, Protocol Type, rst_count",0.6666666666666666,4
+Recon_Ping_Sweep,"Header_Length, Rate, Min, Max, UDP","Header_Length, Rate, Max, Min, ARP",0.6666666666666666,4
+Recon_Port_Scan,"Tot size, syn_count, Number, Min, IAT","Tot size, syn_count, Number, Min, Rate",0.6666666666666666,4
+Recon_VulScan,"Min, Rate, Header_Length, rst_count, syn_count","Min, Rate, Header_Length, rst_count, syn_count",1.0,5
