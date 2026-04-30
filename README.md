@@ -1480,7 +1480,20 @@ H1 (fusion macro-F1 vs E7) is unchanged from Phase 6 — fusion does not improve
 
 ### 15C.10 Limitations
 
-- **Benign val→test entropy distribution shift (measured).** Two-sample Kolmogorov–Smirnov test on E7 entropy over benign rows: KS = 0.0645 (n_val = 38,546; n_test = 37,607; p ≈ 2.6e-69). Benign-val entropy: mean 0.054, p95 = 0.395; benign-test: mean 0.086, p95 = 0.702. The p-value is small only because of the sample size; the effect-size signal is the KS statistic of 6.45% maximum-CDF gap — a small-to-moderate shift, not a structural break. The realized entropy-only FPR on benign-test at the val-calibrated p95 threshold is **9.46%** (vs 5% nominal target on val), a 1.89× ratio. The 22.9% FPR reported for `entropy_benign_p95` in §15C.4 is the *fusion-level* FPR (Cases {1, 2, 3, 5} on benign-test rows) and includes the AE p90 channel; the entropy contribution alone is 9.46%. All FPR numbers in §15C.4 are reported on the test distribution, so the shift does not invalidate any conclusion — it only tightens the interpretation of "p95 = 5% FPR" from a hold-out target to a val-distribution property. Future work: per-fold entropy threshold calibration on a benign-test slice or cross-validation-style threshold search would close this gap.
+- **Benign val→test entropy distribution shift (measured).** Two-sample Kolmogorov–Smirnov test on E7 entropy over benign rows: KS = 0.0645 (n_val = 38,546; n_test = 37,607; p ≈ 2.6e-69). Benign-val entropy: mean 0.054, p95 = 0.395; benign-test: mean 0.086, p95 = 0.702. The p-value is small only because of the sample size; the effect-size signal is the KS statistic of 6.45% maximum-CDF gap — a small-to-moderate shift, not a structural break. The realized entropy-only FPR on benign-test at the val-calibrated p95 threshold is **9.46%** (vs 5% nominal target on val), a 1.89× ratio. The 22.9% FPR reported for `entropy_benign_p95` in §15C.4 is the *fusion-level* FPR (Cases {1, 2, 3, 5} on benign-test rows) and includes the AE p90 channel; the entropy contribution alone is 9.46%. All FPR numbers in §15C.4 are reported on the test distribution, so the shift does not invalidate any conclusion — it only tightens the interpretation of "p95 = 5% FPR" from a hold-out target to a val-distribution property.
+
+  **Per-fold breakdown (Path B Week 2 — Task 2).** The aggregate KS = 0.0645 was decomposed into per-LOO-fold KS statistics (entropy of each fold's `loo_xgb_without_<target>` predictions on benign-val vs benign-test rows; see `notebooks/ks_per_fold.py`). Per-fold KS values fall in a tight band [0.0543, 0.0573] — total spread = 0.0031, i.e. all 5 folds within ±0.0017 of each other:
+
+  | Fold (LOO target)        | KS     | p-value   | val mean | test mean | val p95 | test p95 |
+  |--------------------------|--------|-----------|----------|-----------|---------|----------|
+  | Recon_Ping_Sweep         | 0.0551 | 1.20e-50  | 0.0529   | 0.0938    | 0.391   | 0.827    |
+  | Recon_VulScan            | 0.0568 | 9.67e-54  | 0.0534   | 0.0935    | 0.396   | 0.796    |
+  | MQTT_Malformed_Data      | 0.0543 | 3.56e-49  | 0.0490   | 0.0926    | 0.358   | 0.825    |
+  | MQTT_DoS_Connect_Flood   | 0.0558 | 6.48e-52  | 0.0539   | 0.0986    | 0.401   | 0.856    |
+  | ARP_Spoofing             | 0.0573 | 7.60e-55  | 0.0356   | 0.0615    | 0.223   | 0.530    |
+  | **AGGREGATE (E7)**       | **0.0645** | **2.59e-69** | **0.0543** | **0.0858** | **0.395** | **0.702** |
+
+  Reading: the val→test shift is **uniform across all 5 LOO folds** — no individual fold drives the aggregate. The aggregate (0.0645) is slightly larger than the maximum per-fold value (ARP_Spoofing, 0.0573) because pooling heterogeneous LOO models with E7 itself adds modest cross-distribution variance, not because any single fold has a structural break. Per-fold p-values are uninformative at this n; the KS *statistic* (effect size) is the comparable signal. ARP_Spoofing's lower absolute entropy levels (val mean 0.036, p95 0.223) reflect higher confidence on benign rows but the same shift magnitude (KS=0.0573, Δmean=+0.026) — confirming the calibration shift is a property of the val→test split, not of any single attack-class hold-out. Figure: `results/enhanced_fusion/ks_per_fold/ks_per_fold.png`. Future work: per-fold entropy threshold calibration on a benign-test slice or cross-validation-style threshold search would close this gap.
 - `MQTT_DoS_Connect_Flood` excluded from H2-strict (denominator = 4, not 5) — structural property of the LOO partition with 0 LOO→Benign samples.
 - ~~Single random seed (RANDOM_STATE = 42); per-fold variance not estimated.~~ **Addressed by §15B (Path B Week 1):** Multi-seed validation across {1, 7, 42, 100, 1729} yields H2-strict avg = 0.799 ± 0.022 with 0/19 eligible cells failing the 0.70 threshold; the seed=42 baseline reproduces exactly and sits at the 63rd percentile of the multi-seed distribution. Per-fold bootstrap CIs over the rescue subset remain an optional future extension.
 - Entropy thresholds calibrated on benign val (38,546 samples). The chosen p95 threshold (0.395) is in the operating range, but the p90 variant (which lifts strict avg to 0.91) sits just over the FPR budget at 0.278. Further sweep between p90 and p95 may yield a slightly better operating point.
@@ -1516,10 +1529,64 @@ results/enhanced_fusion/                            (~5 MB)
 
 ### 15C.12 Future Work (from Phase 6C findings)
 
-- **Threshold sweep between benign-val p90 and p95** — the discrete grid leaves a possibly-better operating point unexplored. A continuous sweep with FPR-constrained optimization (e.g., binary search for the threshold that maximizes strict avg subject to FPR ≤ 0.20) would give a tighter operating point.
+- ~~**Threshold sweep between benign-val p90 and p95** — the discrete grid leaves a possibly-better operating point unexplored. A continuous sweep with FPR-constrained optimization (e.g., binary search for the threshold that maximizes strict avg subject to FPR ≤ 0.20) would give a tighter operating point.~~ **Addressed by §15D (Path B Week 2):** A continuous 29-threshold sweep at p85.0–p99.0 (Δ=0.5pp) confirms the trade-off is monotone; under the operational FPR ≤ 0.25 budget the empirical optimum is `entropy_benign_p93.0` (strict_avg = 0.859, FPR = 0.247, 4/4 pass) — a 5.5pp improvement over the discrete-grid pick of `entropy_benign_p95` at the cost of 1.8pp higher FPR.
 - **Per-fold entropy threshold calibration** — currently the entropy threshold is calibrated once on E7 val; a per-fold version (calibrated on each LOO model's val predictions on benign) may better account for fold-specific calibration shift.
 - **Bootstrap CIs on rescue subsets** — the rescue subsets are O(31)–O(522) samples; non-parametric CIs would let us report rescue recall ± uncertainty rather than point estimates.
 - **Replace flow-feature AE with profiling-feature AE** — Phase 6's future-work item that Phase 6C does not address. The AE+IF ensemble's failure on the LOO-missed subset suggests the unsupervised layer needs an independent feature basis from the supervised layer.
+
+---
+
+## 15D. Phase 6C Addendum — Continuous Entropy Threshold Sweep (Path B Week 2)
+
+> Pipeline run: April 30, 2026 — MacBook Air M4, 24GB RAM — Runtime: 4.7 seconds (signal load + 29 fusion evaluations + plotting)
+> Driver: `notebooks/threshold_sweep.py`. No retraining; reuses the seed=42 baseline LOO predictions and AE p90 binary.
+
+### 15D.1 Motivation
+
+§15C.4's ablation grid evaluated `entropy_benign_p{90, 95, 97, 99}` — a 4-point discrete grid. §15C.6 selected `entropy_benign_p95` as the cost-aware best variant under the operational FPR ≤ 0.25 budget. §15C.12 explicitly listed "Threshold sweep between benign-val p90 and p95" as future work because the discrete grid left the operating region between p90 (strict 0.91 / FPR 0.278) and p95 (strict 0.80 / FPR 0.229) unexplored. A continuous sweep closes this methodological gap and answers a sharp question: was the §15C.6 recommendation a discrete-grid artifact, or the actual operational optimum?
+
+### 15D.2 Method
+
+Twenty-nine entropy thresholds at percentiles `{85.0, 85.5, 86.0, …, 99.0}` of the benign-val E7 entropy distribution (Δ = 0.5pp resolution). For each threshold, the existing Phase 6C 5-case `entropy_fusion` logic — copied verbatim from `notebooks/enhanced_fusion.py:499-512`, with a hard reproducibility tripwire that asserts `strict_avg(p=95.0) == 0.8035264623662012` within 1e-9 before sweeping — is applied to the seed=42 baseline LOO predictions of all 5 zero-day targets. Per threshold the script records H2-strict avg over the 4 eligible targets, H2-binary avg over all 5 targets, strict-pass count k/4, and benign-test FPR (mean over 5 targets, fusion-level). The reproducibility guard returned **diff = 0.000e+00** — the copied fusion functions are byte-for-byte equivalent to `enhanced_fusion.py`.
+
+### 15D.3 Results — Operating-point landscape
+
+| Percentile | ent_threshold | strict_pass | strict_avg | binary_avg | FPR    |
+|-----------:|--------------:|:-----------:|-----------:|-----------:|-------:|
+| 85.0       | 0.0376        | 4/4         | 0.9714     | 0.9897     | 0.3186 |
+| 90.0       | 0.1303        | 4/4         | 0.9085     | 0.9729     | 0.2782 |
+| 91.5       | 0.1815        | 4/4         | 0.8865     | 0.9677     | 0.2622 |
+| 92.5       | 0.2213        | 4/4         | 0.8714     | 0.9648     | 0.2525 |
+| **93.0**   | **0.2497**    | **4/4**     | **0.8590** | **0.9621** | **0.2473** |
+| 94.0       | 0.3132        | 4/4         | 0.8392     | 0.9577     | 0.2382 |
+| **95.0**   | **0.3946**    | **4/4**     | **0.8035** | **0.9494** | **0.2289** |
+| 95.5       | 0.4613        | 3/4         | 0.7680     | 0.9426     | 0.2232 |
+| 97.0       | 0.6469        | 1/4         | 0.6881     | 0.9224     | 0.2101 |
+| 99.0       | 0.9507        | 0/4         | 0.4403     | 0.8736     | 0.1935 |
+
+(Anchors only; full 29-row table in `results/enhanced_fusion/threshold_sweep/sweep_table.csv`.)
+
+Three structural facts emerge:
+
+1. **The trade-off is strictly monotone in both dimensions** across the full p85–p99 range: as the threshold percentile rises, both H2-strict avg AND benign-test FPR decrease. Every continuous point is therefore Pareto-optimal — there is no dominated interior point. The figure `pareto_continuous.png` shows the discrete grid {p90, p95, p97, p99} sitting on a smooth empirical frontier rather than at corners of a polygonal envelope.
+2. **The k/4 strict-pass count is brittle to half-percentile shifts in the boundary region.** Pass count holds at 4/4 from p85 down to p95.0 (FPR 0.229), drops to 3/4 at p95.5 (FPR 0.223), then 1/4 at p96.5, and 0/4 by p98. The sharpness of the 95.0 → 95.5 transition is a discrete-grid artifact that the §15C.4 4-point grid could not surface; the underlying strict-recall curve itself is smooth.
+3. **An operationally better point exists.** Under the §15C OPERATIONAL_FPR_BUDGET = 0.25 constraint, the highest H2-strict avg is at **p = 93.0** (strict 0.8590, FPR 0.2473, 4/4 pass) — a **+5.5pp improvement** on strict_avg over the §15C.6 recommendation of `entropy_benign_p95` (strict 0.8035, FPR 0.2289), at the cost of **+1.8pp higher operational FPR**. The empirical max strict_avg of 0.971 sits at p = 85.0 but its FPR (0.319) is well outside any reasonable operational envelope.
+
+### 15D.4 Conclusion — Refined operating point
+
+The §15C.6 recommendation of `entropy_benign_p95` is **valid but not optimal** under the FPR ≤ 0.25 budget; it was a discrete-grid artifact. The continuous sweep identifies `entropy_benign_p93.0` (ent_threshold = 0.2497) as the recall-optimized operating point that still satisfies both the strict-pass criterion (4/4) and the FPR budget. The 1.8pp FPR cost in exchange for 5.5pp higher strict-recall is a thesis-defensible trade-off because the additional false alerts are still within the operational envelope, and the additional 5.5pp of recall lifts the H2-strict pass margin meaningfully above the 0.70 criterion. Alternatively, deployments that prefer FPR margin over recall margin can keep `entropy_benign_p95` — both points are now justified by the same continuous Pareto curve rather than by an arbitrary 4-point grid. Either choice is publishable; the methodological contribution of §15D is the continuous-frontier evidence that distinguishes them.
+
+The reproducibility tripwire (p95 strict_avg matching the canonical 0.8035264623662012 within 1e-9) means future modifications to `enhanced_fusion.py` cannot silently drift this analysis without breaking the sweep — the same defense pattern as `multi_seed_fusion.py:457-470` for §15B.
+
+### 15D.5 Output Artifacts
+
+```
+results/enhanced_fusion/threshold_sweep/      (~0.4 MB)
+├── sweep_table.csv                           # 29 rows × 8 cols (aggregate per threshold)
+├── sweep_per_target.csv                      # 145 rows = 29 × 5 targets (per-(threshold, target) detail)
+├── pareto_continuous.png                     # Scatter (FPR, strict_avg) all 29 + discrete-grid overlay
+└── strict_avg_vs_threshold.png               # Strict_avg + FPR vs percentile, with p95 vline & 0.70 hline
+```
 
 ---
 
