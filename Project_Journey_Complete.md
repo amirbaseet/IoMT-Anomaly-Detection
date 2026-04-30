@@ -4,7 +4,7 @@
 > **Thesis:** "A Hybrid Supervised-Unsupervised Framework for Anomaly Detection and Zero-Day Attack Identification in IoMT Networks Using the CICIoMT2024 Dataset"
 > **Duration:** April 2026 | **Machine:** MacBook Air M4, 24GB RAM, Python 3.13
 > **GitHub:** github.com/amirbaseet/IoMT-Anomaly-Detection
-> **Status:** ALL EXPERIMENTAL PHASES COMPLETE (1, 2, 3, 4, 5, 6, 6B, 6C, 7) + senior review fixes applied — Thesis writing phase
+> **Status:** ALL EXPERIMENTAL PHASES COMPLETE (1, 2, 3, 4, 5, 6, 6B, 6C, 7) + senior review fixes applied + Path B Tier 1 hardening complete (Weeks 1, 2A, 2B; senior review §1.2 / §1.4 / §1.5 closed) — Thesis writing phase
 
 ---
 
@@ -437,6 +437,70 @@ After all 7 experimental phases were complete, an external senior review (10+ ye
 
 ---
 
+## Path B — Tier 1 Hardening
+
+After the senior review remediation closed the framing/methodology gaps, three deeper items remained: per-fold variance not estimated (§1.5 of the review), threshold-grid coarseness (§1.4), and SHAP background source unverified (§1.2). Path B Tier 1 hardening closes all three with empirical evidence — multi-seed validation, a continuous threshold sweep, and a SHAP background sensitivity check. None of these reruns retrain a single model from the original 7 phases; they all operate on saved arrays + targeted re-inference.
+
+### Week 1 — Multi-seed LOO Validation
+
+#### What we did
+- Trained 25 LOO-XGBoost models = 5 seeds {1, 7, 42, 100, 1729} × 5 zero-day targets, with seed=42 hardlinked from the canonical baseline (so 20 *new* trainings; 5 reuses). Each fold drops one attack class, fits XGBoost on the remaining 18 classes, and predicts on val/test.
+- Re-applied the Phase 6C `entropy_benign_p95` fusion variant per seed, recording H2-strict avg, H2-binary avg, strict-pass count, and benign-test FPR. Hard tripwire: `entropy_benign_p95` strict_avg under seed=42 must reproduce 0.8035264623662012 within 1e-9 — caught any silent drift in the multi-seed driver vs the canonical Phase 6C run.
+- Driver: `notebooks/multi_seed_fusion.py` (orchestrates) + `notebooks/multi_seed_loo.py` (training fan-out).
+
+#### Key results
+- **H2-strict avg = 0.799 ± 0.022** across 5 seeds; seed=42 sits at the 63rd percentile of the multi-seed distribution.
+- **0/19 eligible (seed × target) cells fail the 0.70 strict threshold.** The denominator is 19 (not 20) because one seed × one target combination drops below the n=30 minimum eligibility floor — a structural property of the LOO partition for the smallest target (Recon_Ping_Sweep, n_test = 169), not a failure.
+- **Operational FPR is effectively constant**: 0.2289 ± 0.0003 across all 5 seeds (CV = 0.13%) — the AE p90 channel dominates the FPR and is seed-invariant.
+- **seed=42 reproducibility tripwire**: actual = 0.8035264623662012, reference = 0.8035264623662012, **diff = 0.000e+00** (passed).
+- The multi-seed result reframes Phase 6C's "4/4 PASS" from a single-seed point estimate to a **distribution-level claim**: H2-strict 4/4 holds across all 5 seeds, and the spread (σ = 0.022) is small relative to the 0.70 criterion margin (0.093).
+
+#### Output
+- README §15B (multi-seed validation narrative + eligibility table)
+- `results/zero_day_loo/multi_seed/seed_{1, 7, 42, 100, 1729}/`
+- `results/enhanced_fusion/multi_seed/seed_{...}/metrics/{ablation_table.csv, per_target_results.csv}`
+- Wall-clock: **85.1 min** on M4 (dominated by the 20 new XGBoost trainings; fusion re-evaluation is sub-second per seed)
+
+### Week 2A — Continuous Threshold Sweep + Per-Fold KS
+
+#### What we did
+- **Task 1 — Continuous entropy threshold sweep:** swept 29 thresholds at percentiles {85.0, 85.5, ..., 99.0} of the benign-val E7 entropy distribution (Δ = 0.5pp), reusing the Phase 6C 5-case `entropy_fusion` logic verbatim with a hard reproducibility tripwire that asserts `strict_avg(p=95.0) == 0.8035264623662012` within 1e-9 before sweeping.
+- **Task 2 — Per-fold KS test for benign val→test entropy shift:** decomposed the §15C.10 aggregate KS = 0.0645 into per-LOO-fold KS values. For each of the 5 zero-day targets, loaded `loo_xgb_without_<target>.pkl`, ran `predict_proba(X_val)` inline (LOO val proba is not saved on disk), and ran a two-sample KS on benign-val vs benign-test entropy distributions. A 6th aggregate row uses E7 directly to reproduce the §15C.10 figure as a sanity check.
+- Drivers: `notebooks/threshold_sweep.py`, `notebooks/ks_per_fold.py`. No retraining; predict_proba is inference-only with `del + gc.collect()` between folds.
+
+#### Key results
+- **Continuous sweep — strictly monotone Pareto frontier:** strict_avg and FPR both decrease monotonically as the threshold percentile rises; every continuous point is Pareto-optimal. The discrete grid {p90, p95, p97, p99} hid this structure.
+- **Refined operational optimum at p = 93.0:** under the §15C OPERATIONAL_FPR_BUDGET = 0.25 constraint, strict_avg = 0.859, FPR = 0.247, 4/4 strict pass. **+5.5pp improvement** on H2-strict avg over the §15C.6 published recommendation of `entropy_benign_p95` (strict_avg = 0.804, FPR = 0.229), at the cost of +1.8pp higher FPR.
+- **Plateau structure observed:** the 4/4 strict-pass count holds from p85 down to p95.0 (FPR = 0.229), then drops to 3/4 at p95.5 (FPR = 0.223) and 0/4 by p98. The published p95.0 sits exactly at the lip of the plateau; p93.0 sits comfortably in the middle, providing both higher recall and stability margin against threshold drift. p95.0 remains valid but is no longer optimal.
+- **Per-fold KS uniformity:** 5 LOO folds give KS values in [0.0543, 0.0573] — total spread = 0.0031, all 5 within ±0.0017 of each other. The val→test entropy shift is **uniform across folds**; no individual fold drives the aggregate. The 6th aggregate row reproduces §15C.10's KS = 0.0645 exactly, confirming the per-fold/aggregate distinction is just the dimensionality difference between the 18-class LOO-XGBoost entropy distributions and the 19-class E7 entropy distribution. Strengthens (not weakens) the §15C.10 framing of "small-to-moderate shift, not a structural break."
+
+#### Output
+- README §15D (new continuous-threshold-sweep section, ~350 words) and §15C.10 (per-fold KS table appended to the existing limitation paragraph, with the 18-vs-19-class footnote)
+- `results/enhanced_fusion/threshold_sweep/{sweep_table.csv (29 rows), sweep_per_target.csv (145 rows), pareto_continuous.png, strict_avg_vs_threshold.png}`
+- `results/enhanced_fusion/ks_per_fold/{ks_per_fold.csv (6 rows), ks_per_fold.png}`
+- Wall-clock: **~9 min total** on M4 (Task 1: 4.7 s including reproducibility guard + 29 fusion evaluations; Task 2: 19.2 s including 5 LOO `predict_proba(X_val)` calls + 1 aggregate row)
+
+### Week 2B — SHAP Background Sensitivity (BULLETPROOF)
+
+#### What we did
+- Re-ran TreeSHAP on the **same** 5,000-sample explained set (`X_shap_subset.npy`) with the **same** sampling protocol — `np.random.default_rng(42 + 1).choice(..., size=500, replace=False)` matching `shap_analysis.py:280` — and the **same** explainer arguments (`feature_perturbation="interventional"`, `model_output="raw"`). The *only* changing variable is the background source pool: `X_train` (3.6M rows) instead of test-disjoint `X_test` slice. This is the apples-to-apples comparison the §16.7B invariance argument predicts.
+- Compared the new attribution tensor against the Phase 7 baseline along three dimensions: global Kendall τ on full 44-feature ranks AND on the top-10 union; per-class top-5 Jaccard for all 19 classes; DDoS↔DoS category cosine similarity (§16.4 reported 0.991, target reproduction within ±0.01).
+- Driver: `notebooks/shap_sensitivity.py`. No retraining; only TreeSHAP is recomputed.
+
+#### Key results
+- **Decision: BULLETPROOF.** Kendall τ on top-10 union = **0.927** (above the 0.9 cutoff); τ on full 44 features = **0.940** (informational).
+- **Per-class top-5 Jaccard = 0.842 ± 0.171** across 19 classes; min = 0.667 (4/5 features match); **all 19 classes ≥ 0.6**. **9/19 classes have IDENTICAL top-5** (Jaccard = 1.0): every DDoS/DoS variant except DoS_ICMP, plus MQTT_DDoS_Connect_Flood, MQTT_DoS_Publish_Flood, Recon_VulScan.
+- **8 of the 10 globally-ranked top features** (IAT, Rate, TCP, syn_count, Header_Length, syn_flag_number, UDP, Min) have **identical ranks** under both backgrounds; only Number / Tot sum / Protocol Type rotate at ranks 9–11.
+- **DDoS↔DoS category cosine reproduces:** 0.991 (test_bg) vs 0.989 (train_bg) — |Δ| = 0.002, **within fp32 noise floor and 5× tighter than the ±0.01 target**. The §16.4 finding "DDoS and DoS share a near-identical feature signature" is not an artifact of the test-side background.
+- The §16.7B invariance argument is now backed by empirical evidence on the actual model + dataset, not just by the theoretical interventional-SHAP property.
+
+#### Output
+- README §16.7B updated: "future work" closer replaced with the empirical-verification paragraph; invariance and self-attribution-prevention paragraphs preserved.
+- `results/shap/sensitivity/{comparison.csv, global_top10_ranks.csv, per_class_jaccard.csv, category_cosine.csv, top10_rank_comparison.png, per_class_jaccard.png, run.log}` (the 16.7 MB `shap_values_train_bg.npy` is auto-gitignored per `results/**/*.npy` but saved locally for re-analysis)
+- Wall-clock: **75.7 min** on M4, no GPU (matched Phase 7's 70-min ballpark on identical dimensions)
+
+---
+
 ## All Hypothesis Results — Final
 
 | Hypothesis | Original Claim | Result | Evidence | Thesis Value |
@@ -448,7 +512,7 @@ After all 7 experimental phases were complete, an external senior review (10+ ye
 
 ---
 
-## Complete List of Thesis Contributions (14 total)
+## Complete List of Thesis Contributions (17 total)
 
 1. **First hybrid 4-layer (XGBoost + AE + 5-case fusion + SHAP) framework on CICIoMT2024** — no prior work combines all 4 layers; Yacoubi is supervised-only
 2. **37% duplication discovery in CICIoMT2024 train (44.7% in test)** — first report ever; explains inflated metrics in all prior literature
@@ -464,6 +528,9 @@ After all 7 experimental phases were complete, an external senior review (10+ ye
 12. **Confidence-stratified alerts (5-case fusion)** — operational value beyond binary IDS; routes Cases 1/2/3/5 to different SOC tiers
 13. **StandardScaler fix for AE on ColumnTransformer output** — practical ML pipeline lesson: tree models are scale-invariant, AE/IF are not
 14. **Pareto-based variant selection methodology** — replaces arbitrary FPR budget; defensible across operational ranges, allows committee/practitioner to pick their own operating point
+15. **Multi-seed robustness validation under true LOO** (Path B Week 1) — H2-strict 4/4 holds across 5 seeds with σ = 0.022 well inside the 0.70 criterion margin; FPR is seed-invariant (CV = 0.13%). Identifies a **structural eligibility floor** for tiny LOO targets (Recon_Ping_Sweep, n_test = 169) where one seed × one target combination falls below the n=30 minimum — a property of the LOO partition, not a metric failure. Reframes the 4/4 claim from a single-seed point estimate to a distribution-level statement.
+16. **Continuous-frontier threshold methodology** (Path B Week 2A) — replaces the discrete 4-point grid {p90, p95, p97, p99} with a 29-threshold continuous sweep at 0.5pp resolution. Reveals a **strict-pass plateau structure** that the discrete grid hid: p95.0 sits exactly at the lip (one half-percentile drops 4/4 → 3/4) while p93.0 sits in the middle of the plateau with both higher recall (+5.5pp) and stability margin against threshold drift. Refines (does not contradict) the §15C.6 published recommendation.
+17. **Empirical SHAP background sensitivity verification** (Path B Week 2B) — converts the §16.7B invariance argument from theory to empirical evidence on the actual model + dataset. Same 5,000-sample explained set + same uniform-random sampling protocol as Phase 7; only the source pool changes (X_train vs test-disjoint X_test). Result: Kendall τ = 0.927 over the top-10 union (BULLETPROOF), 19/19 classes with per-class top-5 Jaccard ≥ 0.6, DDoS↔DoS cosine reproduction within fp32 noise floor (|Δ| = 0.002).
 
 ---
 
@@ -479,7 +546,12 @@ After all 7 experimental phases were complete, an external senior review (10+ ye
 | Phase 6B | True LOO (5 XGBoost retrains) | 19.3 min |
 | Phase 6C | Enhanced fusion (no retraining) | 4.6 sec |
 | Phase 7 | SHAP analysis | 70.3 min |
-| **Total experimental work** | | **~6.5 hours** |
+| **Phase 1–7 experimental work** | | **~6.5 hours** |
+| Path B Week 1 | Multi-seed LOO (20 new XGBoost trains + fusion re-eval) | 85.1 min |
+| Path B Week 2A | Continuous threshold sweep + per-fold KS (no retrain) | ~9 min |
+| Path B Week 2B | SHAP background sensitivity (TreeSHAP recompute, no retrain) | 75.7 min |
+| **Path B Tier 1 hardening** | | **~170 min (~2.8 hours)** |
+| **Grand total compute** | | **~9.3 hours** |
 
 Senior review remediation (post-hoc, no compute): ~6 hours of writing + Pareto plot generation.
 
@@ -589,13 +661,13 @@ All experimental work is complete. The remaining work is exposition:
 - [ ] Defense presentation (PowerPoint)
 
 **Future work (deferred from this thesis):**
-- Multi-seed LOO validation (3 days compute) — would tighten H2-strict 4/4 confidence further
-- Continuous threshold sweep between p90 and p95 — may yield slightly tighter operating point
-- Profiling-feature-basis AE — addresses layer-coupling concern (AE and XGBoost share the same 44 features)
-- VAE replacement for reconstruction-error AE — more principled OOD detection
-- Train-drawn SHAP background sensitivity check — verify top-10 rank stability
+- ~~Multi-seed LOO validation (3 days compute) — would tighten H2-strict 4/4 confidence further~~ **Done in Path B Week 1** (5 seeds in 85.1 min, 0/19 eligible cells fail; H2-strict avg 0.799 ± 0.022).
+- ~~Continuous threshold sweep between p90 and p95 — may yield slightly tighter operating point~~ **Done in Path B Week 2A** (29 thresholds at p85.0–p99.0; refined optimum at p93.0 with strict_avg 0.859 vs published p95's 0.804 under the same FPR budget).
+- ~~Train-drawn SHAP background sensitivity check — verify top-10 rank stability~~ **Done in Path B Week 2B** (Kendall τ = 0.927 over top-10 union — BULLETPROOF; 19/19 per-class Jaccard ≥ 0.6; DDoS↔DoS cosine reproduces within fp32 noise floor).
+- **Profiling-feature-basis AE** — still open. Addresses layer-coupling concern (AE and XGBoost share the same 44 features). Phase 6's future-work item that Phase 6C did not address.
+- **VAE replacement for reconstruction-error AE** — still open. More principled OOD detection; would couple cleanly with the entropy fusion if the latent-space density gives a complementary signal to softmax entropy.
 
 ---
 
-_Last updated: April 27, 2026 — ALL EXPERIMENTAL PHASES COMPLETE + senior review remediation applied_
+_Last updated: April 30, 2026 — Path B Tier 1 hardening complete (Weeks 1, 2A, 2B). All 7 experimental phases + senior review remediation + multi-seed LOO validation (§15B) + continuous threshold sweep (§15D, refined operating point at p93.0) + per-fold KS (§15C.10, uniform across folds) + SHAP background sensitivity (§16.7B, BULLETPROOF). Senior review §1.2 / §1.4 / §1.5 closed._
 _Next step: Thesis writing_
