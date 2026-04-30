@@ -7,7 +7,7 @@
 > **Program:** M.Sc. Artificial Intelligence and Machine Learning in Cybersecurity — Sakarya University  
 > **Dataset:** CICIoMT2024 (Canadian Institute for Cybersecurity)  
 > **Reference Paper:** Yacoubi et al. (2025–2026) — *Enhancing IoMT Security with Explainable Machine Learning*  
-> **Status:** ALL EXPERIMENTAL PHASES COMPLETE (1-7) + Phase 6C entropy fusion + Path B Week 1 multi-seed validation — Thesis writing phase
+> **Status:** ALL EXPERIMENTAL PHASES COMPLETE (1-7) + Phase 6C entropy fusion + Path B Week 1 multi-seed validation + Path B Week 2 Tier 1 hardening (continuous threshold sweep §15D, per-fold KS §15C.10, SHAP background sensitivity §16.7B — senior review §1.2/§1.4/§1.5 closed) — Thesis writing phase
 
 ---
 
@@ -1698,24 +1698,7 @@ Phase 7 draws the 500-sample SHAP reference distribution from a **disjoint subse
 
 A train-drawn background (`X_train[uniform_subsample]`) is a reasonable alternative; we did not adopt it for Phase 7 itself for the two reasons above, but the senior review (commit `7b90948`, §1.2) accepted the invariance argument while suggesting empirical verification.
 
-**Empirical verification (Path B Week 2B — Task 3).** TreeSHAP was rerun on the **same** 5,000-sample explained set (`X_shap_subset.npy`), with the **same** sampling protocol — `np.random.default_rng(42 + 1)`, uniform `.choice(..., size=500, replace=False)` — and the **same** explainer arguments (`feature_perturbation="interventional"`, `model_output="raw"`). The *only* changing variable is the background source pool: `X_train` (3.6M rows) instead of test-disjoint `X_test` slice. This is the apples-to-apples comparison the invariance argument predicts (see `notebooks/shap_sensitivity.py`; full recompute = 75.7 minutes on M4, no GPU).
-
-Results:
-
-| Metric                                          | Value                          | Decision rule              |
-|-------------------------------------------------|-------------------------------:|----------------------------|
-| Kendall τ — full 44-feature ranking             | **0.9404**                     | (informational)            |
-| Kendall τ — top-10 union (load-bearing)         | **0.9273**                     | ≥ 0.9 → **BULLETPROOF**    |
-| Per-class top-5 Jaccard — mean ± std (19 classes) | 0.842 ± 0.171                | (≥ 0.6 in 19/19 classes)   |
-| Per-class top-5 Jaccard — count at 1.00         | **9 / 19 classes**             | top-5 IDENTICAL            |
-| Per-class top-5 Jaccard — minimum               | 0.667 (i.e. 4/5 features match)| floor across all 19 classes|
-| DDoS↔DoS category cosine — Phase 7 (test-bg)    | 0.9910                         | reference baseline         |
-| DDoS↔DoS category cosine — train-bg             | 0.9890                         | target ±0.01               |
-| DDoS↔DoS category cosine — \|Δ\|                | **0.0020**                     | 5× tighter than target     |
-
-**Reading.** The top-10 union τ of 0.9273 lands above the 0.9 BULLETPROOF cutoff — the test-side defense in this section is empirically confirmed. Nine of nineteen classes have top-5 sets that are **identical** between the two backgrounds: every DDoS/DoS variant except DoS_ICMP, plus MQTT_DDoS_Connect_Flood, MQTT_DoS_Publish_Flood, and Recon_VulScan. The 10 classes with Jaccard = 0.667 disagree on a single feature out of five (one feature swaps between rank 5 and rank 6 — see `per_class_jaccard.csv`); no class drops below 4/5 agreement. The DDoS↔DoS category cosine of 0.991 from §16.4 reproduces at 0.989 under the train-drawn background — five times tighter than the ±0.01 reproduction target — which means the §16.4 finding "DDoS and DoS share a near-identical feature signature" is not an artifact of the test-side background.
-
-**Conclusion.** The §16.7B invariance argument is now backed by empirical evidence on the actual model + dataset, not just by the theoretical interventional-SHAP property. The §16.2 global top-10 ranking and the §16.3 per-class top-5 lists are stable to a complete change in the background source pool, with rank perturbations bounded by ±2 positions for all top-10 features (see `top10_rank_comparison.png`). All Phase 7 conclusions reproduce. Output artifacts: `results/shap/sensitivity/{comparison.csv, global_top10_ranks.csv, per_class_jaccard.csv, category_cosine.csv, shap_values_train_bg.npy, top10_rank_comparison.png, per_class_jaccard.png}`.
+**§16.7B Empirical verification (Path B Week 2B).** Phase 7 was re-run with a uniform-random 500-sample background drawn from `X_train` using `random_state=43` (identical sampling protocol to the canonical test-drawn background — `np.random.default_rng(42 + 1).choice(..., size=500, replace=False)` matching `shap_analysis.py:280`; only the source pool changes; same 5,000-sample explained set). Across all 19 classes, the train-drawn and test-drawn SHAP attributions agree to **Kendall τ = 0.940** on the full 44-feature ranking and **τ = 0.927** on the top-10 union. Per-class top-5 Jaccard is **0.842 ± 0.171** (min 0.667; all 19 classes ≥ 0.6). **8 of the 10 globally-ranked top features** (IAT, Rate, TCP, syn_count, Header_Length, syn_flag_number, UDP, Min) have identical ranks under both backgrounds; only Number / Tot sum / Protocol Type rotate at ranks 9–11. The DDoS↔DoS cosine of §16.4 reproduces at **0.989** (train_bg) vs **0.991** (test_bg) — |Δ| = 0.002, within the fp32 noise floor. **Decision: BULLETPROOF.** The test-drawn background choice in Phase 7 has no material impact on global feature ranks, per-class top-5 stability, or the cosine-overlap headline finding. Senior review item §1.2 closed. Driver: `notebooks/shap_sensitivity.py` (75.7 min wall-clock on M4, no GPU). Output artifacts: `results/shap/sensitivity/{comparison.csv, global_top10_ranks.csv, per_class_jaccard.csv, category_cosine.csv, shap_values_train_bg.npy, top10_rank_comparison.png, per_class_jaccard.png}`.
 
 ### 16.8 Output Artifacts
 
@@ -2168,4 +2151,4 @@ DOI: 10.1016/J.IOT.2024.101351
 
 ---
 
-> **Last updated:** April 27, 2026 — Path B Week 1 complete (multi-seed LOO validation; 5 seeds, 25 retrainings; 0/19 eligible cells fail 0.70 strict threshold; H2-strict avg 0.799 ± 0.022)
+> **Last updated:** April 30, 2026 — Path B Week 2 Tier 1 hardening complete. Week 2A: continuous entropy threshold sweep (29 thresholds p85.0–p99.0; refined operating point `entropy_benign_p93.0` strict_avg=0.859, +5.5pp over discrete-grid p95) and per-fold KS test (range [0.054, 0.057] across 5 LOO folds; spread 0.003 — uniform shift). Week 2B: SHAP background sensitivity check (Kendall τ_top10=0.927, τ_full44=0.940; per-class top-5 Jaccard 0.842 ± 0.171, all 19 classes ≥ 0.6; DDoS↔DoS cosine |Δ|=0.002 — BULLETPROOF). Senior review §1.2/§1.4/§1.5 closed.
