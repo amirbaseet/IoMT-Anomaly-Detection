@@ -2214,4 +2214,11 @@ DOI: 10.1016/J.IOT.2024.101351
 
 ---
 
-> **Last updated:** April 30, 2026 — Path B Week 2 Tier 1 hardening complete. Week 2A: continuous entropy threshold sweep (29 thresholds p85.0–p99.0; refined operating point `entropy_benign_p93.0` strict_avg=0.859, +5.5pp over discrete-grid p95) and per-fold KS test (range [0.054, 0.057] across 5 LOO folds; spread 0.003 — uniform shift). Week 2B: SHAP background sensitivity check (Kendall τ_top10=0.927, τ_full44=0.940; per-class top-5 Jaccard 0.842 ± 0.171, all 19 classes ≥ 0.6; DDoS↔DoS cosine |Δ|=0.002 — BULLETPROOF). Senior review §1.2/§1.4/§1.5 closed.
+> **Last updated:** April 30, 2026 — Path B Tier 1 + Tier 2 complete. 
+> Tier 1: continuous threshold sweep §15D (p93.0 refined optimum, +5.5pp 
+> over discrete-grid p95), per-fold KS §15C.10 (uniform shift, range 0.003), 
+> SHAP background sensitivity §16.7B (Kendall τ_top10=0.927 — BULLETPROOF). 
+> Tier 2: β-VAE Layer 2 substitution robustness check §15E (β=0.5 best, 
+> Δstrict=−0.0001 — substitution-equivalent; deterministic AE retained, 
+> fusion ceiling is the entropy channel). Senior review §1.2/§1.4/§1.5 
+> closed. 18 thesis contributions; 5 robustness axes.
