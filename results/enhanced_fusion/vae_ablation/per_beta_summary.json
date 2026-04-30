@@ -1,0 +1,59 @@
+{
+  "betas": [
+    0.1,
+    0.5,
+    1.0,
+    4.0
+  ],
+  "phase5_ae_test_auc": 0.9892,
+  "summaries": [
+    {
+      "beta": 0.1,
+      "vae_test_auc": 0.9876367817437529,
+      "vae_thresholds": {
+        "p90": 11.094225883483887,
+        "p95": 18.622629165649414,
+        "p99": 49.44581604003906
+      },
+      "vae_score_benign_mean": 7.71428108215332,
+      "vae_score_attack_mean": 1487.816650390625
+    },
+    {
+      "beta": 0.5,
+      "vae_test_auc": 0.9903670463757736,
+      "vae_thresholds": {
+        "p90": 16.587360382080078,
+        "p95": 24.996143341064453,
+        "p99": 63.68540573120117
+      },
+      "vae_score_benign_mean": 9.848557472229004,
+      "vae_score_attack_mean": 1049.9532470703125
+    },
+    {
+      "beta": 1.0,
+      "vae_test_auc": 0.9868377418493748,
+      "vae_thresholds": {
+        "p90": 20.747426986694336,
+        "p95": 29.204437255859375,
+        "p99": 67.221435546875
+      },
+      "vae_score_benign_mean": 14.181468963623047,
+      "vae_score_attack_mean": 1114.1876220703125
+    },
+    {
+      "beta": 4.0,
+      "vae_test_auc": 0.981782822310732,
+      "vae_thresholds": {
+        "p90": 35.88046646118164,
+        "p95": 53.071346282958984,
+        "p99": 117.9278793334961
+      },
+      "vae_score_benign_mean": 21.48012351989746,
+      "vae_score_attack_mean": 2383.035888671875
+    }
+  ],
+  "tripwire_hard_value": 0.8035264623662012,
+  "tripwire_soft_value": 0.8589586873140701,
+  "operational_fpr_budget": 0.25,
+  "ship_delta_threshold": 0.02
+}

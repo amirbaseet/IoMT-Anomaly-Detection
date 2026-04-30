@@ -7,7 +7,7 @@
 > **Program:** M.Sc. Artificial Intelligence and Machine Learning in Cybersecurity — Sakarya University  
 > **Dataset:** CICIoMT2024 (Canadian Institute for Cybersecurity)  
 > **Reference Paper:** Yacoubi et al. (2025–2026) — *Enhancing IoMT Security with Explainable Machine Learning*  
-> **Status:** ALL EXPERIMENTAL PHASES COMPLETE (1-7) + Phase 6C entropy fusion + Path B Week 1 multi-seed validation + Path B Week 2 Tier 1 hardening (continuous threshold sweep §15D, per-fold KS §15C.10, SHAP background sensitivity §16.7B — senior review §1.2/§1.4/§1.5 closed) — Thesis writing phase
+> **Status:** ALL EXPERIMENTAL PHASES COMPLETE (1-7) + Phase 6C entropy fusion + Path B Week 1 multi-seed validation + Path B Week 2 Tier 1 hardening (continuous threshold sweep §15D, per-fold KS §15C.10, SHAP background sensitivity §16.7B — senior review §1.2/§1.4/§1.5 closed) + Path B Week 5 Tier 2 architectural (β-VAE Layer 2 substitution robustness check §15E — interchangeable with deterministic AE; fusion ceiling is the entropy channel) — Thesis writing phase
 
 ---
 
@@ -1533,6 +1533,7 @@ results/enhanced_fusion/                            (~5 MB)
 - **Per-fold entropy threshold calibration** — currently the entropy threshold is calibrated once on E7 val; a per-fold version (calibrated on each LOO model's val predictions on benign) may better account for fold-specific calibration shift.
 - **Bootstrap CIs on rescue subsets** — the rescue subsets are O(31)–O(522) samples; non-parametric CIs would let us report rescue recall ± uncertainty rather than point estimates.
 - **Replace flow-feature AE with profiling-feature AE** — Phase 6's future-work item that Phase 6C does not address. The AE+IF ensemble's failure on the LOO-missed subset suggests the unsupervised layer needs an independent feature basis from the supervised layer.
+- ~~**β-VAE replacement for the deterministic AE** — a probabilistic Layer 2 with a calibrated log-likelihood score may give a complementary OOD signal to softmax entropy, beyond what the deterministic reconstruction error contributes.~~ **Addressed by §15E (Path B Week 5):** β-VAE substitution at β ∈ {0.1, 0.5, 1.0, 4.0} produces fusion strict_avg within sampling noise of the §15D AE-based baseline (β = 0.5 best: Δ strict = −0.0001, Δ FPR = −0.005, Δ AUC = +0.0012; all four βs at 4/4 strict pass). VAE log-likelihood and AE reconstruction error are interchangeable on this dataset's tabular feature space; the fusion's predictive ceiling is set by the entropy channel. Deterministic AE retained for engineering simplicity.
 
 ---
 
@@ -1588,6 +1589,68 @@ results/enhanced_fusion/threshold_sweep/      (~0.4 MB)
 ├── sweep_per_target.csv                      # 145 rows = 29 × 5 targets (per-(threshold, target) detail)
 ├── pareto_continuous.png                     # Scatter (FPR, strict_avg) all 29 + discrete-grid overlay
 └── strict_avg_vs_threshold.png               # Strict_avg + FPR vs percentile, with p95 vline & 0.70 hline
+```
+
+---
+
+## 15E. Phase 6D — β-VAE Layer 2 Substitution Robustness Check (Path B Week 5)
+
+> Pipeline run: April 30, 2026 — MacBook Air M4, 24GB RAM — Runtime: ~50 seconds total (4 β-VAEs trained in 44 s; fusion ablation + decision in ~6 s; no GPU).
+> Drivers: `notebooks/vae_train.py`, `notebooks/vae_fusion.py`, `notebooks/vae_decision.py`. No retraining of E7, the LOO XGBoost models, the Isolation Forest, or the deterministic AE; only the four β-VAEs are new.
+
+### 15E.1 Method
+
+Four β-VAEs (β ∈ {0.1, 0.5, 1.0, 4.0}, latent_dim = 8) were trained on the same benign-only data, scaler (`results/unsupervised/models/scaler.pkl`, no refit), and 80/20 split as the Phase 5 deterministic AE. Encoder/decoder widths are inherited from the saved `autoencoder.keras` config so the VAE cannot drift from the AE structurally: encoder 44 → 32 → 16 → [`z_mean`(8), `z_log_var`(8)], decoder 8 → 16 → 32 → 44(linear), BatchNorm + Dropout(0.2/0.1) on the encoder mirroring Phase 5. Per-sample VAE score (saved to `val_loglik.npy` / `test_loglik.npy`) = sum_d (x − x̂)² + β · 0.5 · sum_k (exp(logvar) + μ² − 1 − logvar) — i.e., loss-direction ELBO (higher ⇒ more anomalous, matching the AE MSE convention so the existing `AE_BINARIES` dict in `enhanced_fusion.py` extends without sign flips). The score replaced AE reconstruction error in the §15D `entropy_p93 + ae_p90` fusion across 8 VAE-conditioned variants × 4 βs × 5 LOO targets. Implementation note (one sentence): Keras 3.14 dropped `Functional.add_loss`, so the KL term lives in a custom `KLLossLayer.add_loss()` invoked inside the forward graph, the `Sampling` layer returns `z_mean` deterministically when `training=False` (bit-stable save/reload), and the recon loss uses sum-over-features reduction per the literature β-VAE convention.
+
+### 15E.2 Results — Best VAE-conditioned variant per β under operational FPR ≤ 0.25
+
+| β | best variant under FPR budget | strict_pass | strict_avg | FPR | VAE test AUC | Δ strict vs §15D | Δ AUC vs AE |
+|--:|---|:---:|---:|---:|---:|---:|---:|
+| 0.1 | `entropy_p93 + vae_p95`       | 4/4 | 0.8192 | 0.180 | 0.9876 | −0.0398 | −0.0016 |
+| **0.5** | **`entropy_p93 + vae_p90`** | **4/4** | **0.8588** | **0.243** | **0.9904** | **−0.0001** | **+0.0012** |
+| 1.0 | `entropy_p93 + vae_p95`       | 4/4 | 0.8267 | 0.179 | 0.9868 | −0.0323 | −0.0024 |
+| 4.0 | `entropy_p93 + vae_p95`       | 4/4 | 0.8057 | 0.208 | 0.9818 | −0.0533 | −0.0074 |
+
+§15D anchor (`entropy_p93 + ae_p90`, no VAE): strict_avg = 0.8590, FPR = 0.2473, AE test AUC = 0.9892. β = 0.5 is the only β whose `entropy_p93 + vae_p90` variant remains within the operational FPR ≤ 0.25 budget — at the other βs that variant's FPR creeps 0.3–1.0 pp over budget and the budget-respecting fallback (`entropy_p93 + vae_p95`) trades 3–5 pp of headline strict_avg for ~7 pp lower FPR. Both reproducibility tripwires (`entropy_p95 + ae_p90` = `0.8035264623662012`, the canonical Week 2A value; `entropy_p93 + ae_p90` = `0.8589586873140701`, the §15D anchor read from `sweep_table.csv` at runtime) reproduced bit-exactly (diff `0.000e+00`) at every β. Full 40-row table (4 βs × 10 variants including the 2 AE-only references) at `results/enhanced_fusion/vae_ablation/all_betas_ablation.csv`; per-β decision summary at `results/enhanced_fusion/vae_decision.csv`.
+
+### 15E.3 Interpretation — the fusion ceiling is the entropy channel
+
+§15C.7's per-signal ablation reading attributed approximately +50 pp of H2-strict lift to the entropy channel (baseline_ae_p90's 0.314 → entropy_benign_p95's 0.804) and ~+5 pp to the AE channel at the operating point. The β-VAE substitution preserves that ~5 pp invariant: at β = 0.5 the headline strict_avg is 0.8588 vs §15D's 0.8590 (Δ = −0.0001, well inside the float-noise / sampling-noise floor) at marginally lower FPR (0.243 vs 0.247) and slightly higher raw test AUC (0.9904 vs 0.9892, +0.12 pp). At the other three βs the substitution costs 1.3–5.3 pp of headline strict_avg via FPR-budget displacement of the natural `entropy_p93 + vae_p90` variant, not via the channel substitution itself. **Reading: VAE log-likelihood and AE reconstruction error capture the same underlying anomaly signal on this dataset's tabular feature space; β-VAE substitution at β ∈ {0.1, 0.5, 1.0, 4.0} produces fusion performance within sampling noise of the §15D baseline. The fusion's predictive ceiling is set by the entropy channel; Layer 2's distributional assumption — deterministic reconstruction vs probabilistic ELBO — is interchangeable.** A secondary β-finding worth flagging: weak-to-moderate KL pressure (β = 0.5) outperforms standard ELBO (β = 1.0) on this data on both raw test/val separation (83.5× vs 17×) and fusion strict_avg (0.859 vs 0.857), but the 0.806–0.859 cross-β spread is small enough that no single β qualifies as a meaningful upgrade.
+
+### 15E.4 Per-target redistribution (footnote)
+
+The fusion-level tie hides per-target redistribution. At β = 0.5, VAE rescue recall is **+3.8 pp on `MQTT_Malformed_Data`** (0.845 vs AE 0.807), slightly worse on **`ARP_Spoofing` (−2.5 pp)** and **`Recon_VulScan` (−1.4 pp)**, and tied at the ceiling on `Recon_Ping_Sweep` (1.000). A future per-target Layer 2 (e.g., AE for ARP/Recon, VAE for MQTT) could exploit this redistribution; not pursued in this thesis.
+
+### 15E.5 Decision — retain deterministic AE
+
+Phase 6D is a robustness check, not a Layer 2 upgrade. The deterministic AE remains the production component: the β-VAE substitution does not lift the headline beyond float noise, while introducing β-tuning, posterior-collapse risk (β = 4.0 collapsed 5 of 8 latent dims), Keras 3 `add_loss` workaround complexity, and probabilistic-vs-deterministic semantics into a code path that can otherwise be replaced with a single saved-array load. Closes the "VAE replacement still open" line in `Project_Journey_Complete.md` "Future work" — a Tier 2 architectural item resolved as **substitution-equivalent**, not substitution-better.
+
+### 15E.6 Output Artifacts
+
+```
+results/unsupervised/vae/                                 (~190 MB; *.npy gitignored, models retained)
+├── beta_{0.1, 0.5, 1.0, 4.0}/
+│   ├── model.keras                          saved β-VAE (Functional + Sampling + KLLossLayer, register_keras_serializable)
+│   ├── manifest.json                        hyperparameters + diagnostic stats (recon/KL means, ratio, latent geometry)
+│   ├── history.json                         loss / val_loss progression
+│   ├── val_loglik.npy / test_loglik.npy     per-sample VAE score (loss convention; higher ⇒ more anomalous)  [gitignored]
+│   ├── latent_z_test.npy                    z_mean per test sample (n_test × 8)                              [gitignored]
+│   └── components.npz                       recon_term, kl_term separately (val + test)                     [gitignored]
+├── all_betas_summary.csv                    4-row training summary (epochs, val_loss, recon, kl, ratio, latent_geom)
+├── _smoke/                                  Phase 1 smoke gate (β=1.0, 5 epochs, 7/7 checks pass)
+├── _arch_summary.txt                        one-time architecture print
+└── run.log                                  Phase 2 caffeinate run log
+
+results/enhanced_fusion/
+├── vae_ablation/
+│   ├── beta_{0.1, 0.5, 1.0, 4.0}/
+│   │   ├── ablation_table.csv               10 rows (8 VAE variants + 2 AE-only references)
+│   │   ├── per_target_results.csv           50 rows = 10 × 5 targets
+│   │   └── vae_thresholds.json              VAE p90/p95/p99 derived on benign-val
+│   ├── all_betas_ablation.csv               40 rows
+│   └── per_beta_summary.json                β metadata for decision
+├── vae_decision.csv                         5 rows (1 §15D baseline + 4 βs)
+└── vae_decision_summary.md                  one-paragraph narrative
 ```
 
 ---
