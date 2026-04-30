@@ -1,0 +1,389 @@
+[19:38:49] [+   0.0s] VAE training script | SMOKE=False | random_state=42
+[19:38:49] [+   0.0s] TensorFlow 2.21.0 | tf.keras 3.14.0 | NumPy 2.4.4
+[19:38:49] [+   0.0s] No GPU detected; CPU training (fine for this size).
+[19:38:49] [+   0.0s] 
+======================================================================
+[19:38:49] [+   0.0s] SECTION 2 . DATA LOADING
+[19:38:49] [+   0.0s] ======================================================================
+[19:38:50] [+   1.0s] Benign rows in train split: 154,186
+[19:38:50] [+   1.0s] AE-train (benign): (123348, 44)
+[19:38:50] [+   1.0s] AE-val   (benign): (30838, 44)
+[19:38:50] [+   1.1s] Loaded Phase 5 scaler: n_samples_seen=123,348.0, means range=[-0.5196, 5281.1010]
+[19:38:50] [+   1.1s] After scaling: benign-train mean=-0.000000, std=0.965307
+[19:38:51] [+   1.2s] Test set (scaled): (892268, 44)
+[19:38:51] [+   1.2s] 
+======================================================================
+[19:38:51] [+   1.2s] SECTION 3 . INHERIT AE STRUCTURAL CONSTANTS FROM SAVED MODEL
+[19:38:51] [+   1.2s] ======================================================================
+[19:38:51] [+   1.3s] Inherited from AE: enc 44 -> 32 -> 16 -> 8 (latent), dec 8 -> 16 -> 32 -> 44; dropout=(0.2, 0.1)
+[19:38:51] [+   1.3s] [OK] Prior smoke gate PASS at results/unsupervised/vae/_smoke/smoke_report.json
+[19:38:51] [+   1.3s] 
+======================================================================
+[19:38:51] [+   1.3s] PHASE 2 . FULL SWEEP (beta in [0.1, 0.5, 1.0, 4.0], max 100 epochs each)
+[19:38:51] [+   1.3s] ======================================================================
+[19:38:51] [+   1.3s] 
+--- Training beta=0.1 -> results/unsupervised/vae/beta_0.1 (epochs<=100, soft cap 600s) ---
+Epoch 1/100
+241/241 - 1s - 5ms/step - loss: 43.6918 - val_loss: 29.0902 - learning_rate: 0.0010
+Epoch 2/100
+241/241 - 0s - 1ms/step - loss: 26.7553 - val_loss: 22.9254 - learning_rate: 0.0010
+Epoch 3/100
+241/241 - 0s - 1ms/step - loss: 22.7568 - val_loss: 20.2609 - learning_rate: 0.0010
+Epoch 4/100
+241/241 - 0s - 989us/step - loss: 20.7926 - val_loss: 18.5657 - learning_rate: 0.0010
+Epoch 5/100
+241/241 - 0s - 1ms/step - loss: 19.2052 - val_loss: 17.2761 - learning_rate: 0.0010
+Epoch 6/100
+241/241 - 0s - 900us/step - loss: 18.2101 - val_loss: 16.6186 - learning_rate: 0.0010
+Epoch 7/100
+241/241 - 0s - 894us/step - loss: 17.6787 - val_loss: 16.1840 - learning_rate: 0.0010
+Epoch 8/100
+241/241 - 0s - 963us/step - loss: 17.1105 - val_loss: 15.8465 - learning_rate: 0.0010
+Epoch 9/100
+241/241 - 0s - 916us/step - loss: 16.7665 - val_loss: 15.3353 - learning_rate: 0.0010
+Epoch 10/100
+241/241 - 0s - 1ms/step - loss: 16.3026 - val_loss: 14.8735 - learning_rate: 0.0010
+Epoch 11/100
+241/241 - 0s - 904us/step - loss: 15.9438 - val_loss: 14.3763 - learning_rate: 0.0010
+Epoch 12/100
+241/241 - 0s - 894us/step - loss: 15.5323 - val_loss: 13.9002 - learning_rate: 0.0010
+Epoch 13/100
+241/241 - 0s - 1ms/step - loss: 15.3085 - val_loss: 13.5204 - learning_rate: 0.0010
+Epoch 14/100
+241/241 - 0s - 943us/step - loss: 14.9766 - val_loss: 13.1732 - learning_rate: 0.0010
+Epoch 15/100
+241/241 - 0s - 962us/step - loss: 14.7159 - val_loss: 12.6749 - learning_rate: 0.0010
+Epoch 16/100
+241/241 - 0s - 1ms/step - loss: 14.3754 - val_loss: 12.3348 - learning_rate: 0.0010
+Epoch 17/100
+241/241 - 0s - 899us/step - loss: 14.1778 - val_loss: 11.7172 - learning_rate: 0.0010
+Epoch 18/100
+241/241 - 0s - 2ms/step - loss: 13.8537 - val_loss: 11.3022 - learning_rate: 0.0010
+Epoch 19/100
+241/241 - 0s - 965us/step - loss: 13.6595 - val_loss: 10.8848 - learning_rate: 0.0010
+Epoch 20/100
+241/241 - 0s - 1ms/step - loss: 13.4680 - val_loss: 10.6600 - learning_rate: 0.0010
+Epoch 21/100
+241/241 - 0s - 935us/step - loss: 13.2224 - val_loss: 10.4943 - learning_rate: 0.0010
+Epoch 22/100
+241/241 - 0s - 943us/step - loss: 12.9443 - val_loss: 10.7731 - learning_rate: 0.0010
+Epoch 23/100
+241/241 - 0s - 976us/step - loss: 12.5511 - val_loss: 10.8310 - learning_rate: 0.0010
+Epoch 24/100
+241/241 - 0s - 932us/step - loss: 12.3400 - val_loss: 10.6536 - learning_rate: 0.0010
+Epoch 25/100
+241/241 - 0s - 999us/step - loss: 12.2307 - val_loss: 10.8758 - learning_rate: 0.0010
+Epoch 26/100
+
+Epoch 26: ReduceLROnPlateau reducing learning rate to 0.0005000000237487257.
+241/241 - 0s - 899us/step - loss: 12.0207 - val_loss: 11.1349 - learning_rate: 0.0010
+Epoch 27/100
+241/241 - 0s - 882us/step - loss: 11.7686 - val_loss: 11.2432 - learning_rate: 5.0000e-04
+Epoch 28/100
+241/241 - 0s - 888us/step - loss: 11.7364 - val_loss: 11.6655 - learning_rate: 5.0000e-04
+Epoch 29/100
+241/241 - 0s - 892us/step - loss: 11.5784 - val_loss: 12.0910 - learning_rate: 5.0000e-04
+Epoch 30/100
+241/241 - 0s - 880us/step - loss: 11.6037 - val_loss: 11.9188 - learning_rate: 5.0000e-04
+Epoch 31/100
+
+Epoch 31: ReduceLROnPlateau reducing learning rate to 0.0002500000118743628.
+241/241 - 0s - 915us/step - loss: 11.4136 - val_loss: 12.4255 - learning_rate: 5.0000e-04
+Epoch 31: early stopping
+Restoring model weights from the end of the best epoch: 21.
+[19:38:59] [+   9.7s] beta=0.1: 31 epochs in 8.4s (0.14 min)
+[19:38:59] [+   9.7s] Scoring benign-val (n=30,838)...
+WARNING:tensorflow:5 out of the last 9 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x11c5d85e0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+WARNING:tensorflow:6 out of the last 12 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x11c5d85e0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+[19:38:59] [+   9.8s] Scoring full test  (n=892,268)...
+[19:39:00] [+  10.3s] 
+--- Training beta=0.5 -> results/unsupervised/vae/beta_0.5 (epochs<=100, soft cap 600s) ---
+Epoch 1/100
+241/241 - 1s - 5ms/step - loss: 53.1310 - val_loss: 36.6374 - learning_rate: 0.0010
+Epoch 2/100
+241/241 - 0s - 907us/step - loss: 33.1529 - val_loss: 27.9735 - learning_rate: 0.0010
+Epoch 3/100
+241/241 - 0s - 889us/step - loss: 28.5265 - val_loss: 24.9770 - learning_rate: 0.0010
+Epoch 4/100
+241/241 - 0s - 881us/step - loss: 25.7849 - val_loss: 22.6133 - learning_rate: 0.0010
+Epoch 5/100
+241/241 - 0s - 887us/step - loss: 24.0715 - val_loss: 21.6372 - learning_rate: 0.0010
+Epoch 6/100
+241/241 - 0s - 910us/step - loss: 23.1198 - val_loss: 20.6736 - learning_rate: 0.0010
+Epoch 7/100
+241/241 - 0s - 1ms/step - loss: 22.1224 - val_loss: 19.5375 - learning_rate: 0.0010
+Epoch 8/100
+241/241 - 0s - 1ms/step - loss: 21.2469 - val_loss: 19.0231 - learning_rate: 0.0010
+Epoch 9/100
+241/241 - 0s - 1ms/step - loss: 20.5823 - val_loss: 18.6696 - learning_rate: 0.0010
+Epoch 10/100
+241/241 - 0s - 942us/step - loss: 20.1177 - val_loss: 18.3140 - learning_rate: 0.0010
+Epoch 11/100
+241/241 - 0s - 883us/step - loss: 19.6609 - val_loss: 17.9047 - learning_rate: 0.0010
+Epoch 12/100
+241/241 - 0s - 894us/step - loss: 19.2154 - val_loss: 17.4511 - learning_rate: 0.0010
+Epoch 13/100
+241/241 - 0s - 882us/step - loss: 18.8171 - val_loss: 17.1537 - learning_rate: 0.0010
+Epoch 14/100
+241/241 - 0s - 877us/step - loss: 18.6131 - val_loss: 16.9448 - learning_rate: 0.0010
+Epoch 15/100
+241/241 - 0s - 903us/step - loss: 18.2067 - val_loss: 16.5528 - learning_rate: 0.0010
+Epoch 16/100
+241/241 - 0s - 908us/step - loss: 17.9894 - val_loss: 16.2172 - learning_rate: 0.0010
+Epoch 17/100
+241/241 - 0s - 936us/step - loss: 17.6861 - val_loss: 15.7461 - learning_rate: 0.0010
+Epoch 18/100
+241/241 - 0s - 986us/step - loss: 17.4023 - val_loss: 15.4868 - learning_rate: 0.0010
+Epoch 19/100
+241/241 - 0s - 918us/step - loss: 16.9967 - val_loss: 15.0511 - learning_rate: 0.0010
+Epoch 20/100
+241/241 - 0s - 885us/step - loss: 16.6564 - val_loss: 14.6315 - learning_rate: 0.0010
+Epoch 21/100
+241/241 - 0s - 882us/step - loss: 16.3237 - val_loss: 14.2029 - learning_rate: 0.0010
+Epoch 22/100
+241/241 - 0s - 943us/step - loss: 16.0852 - val_loss: 13.8653 - learning_rate: 0.0010
+Epoch 23/100
+241/241 - 0s - 946us/step - loss: 15.9375 - val_loss: 13.4202 - learning_rate: 0.0010
+Epoch 24/100
+241/241 - 0s - 891us/step - loss: 15.6686 - val_loss: 13.2468 - learning_rate: 0.0010
+Epoch 25/100
+241/241 - 0s - 908us/step - loss: 15.3869 - val_loss: 12.6864 - learning_rate: 0.0010
+Epoch 26/100
+241/241 - 0s - 920us/step - loss: 15.3508 - val_loss: 12.4980 - learning_rate: 0.0010
+Epoch 27/100
+241/241 - 0s - 888us/step - loss: 15.0874 - val_loss: 12.2987 - learning_rate: 0.0010
+Epoch 28/100
+241/241 - 0s - 914us/step - loss: 14.9441 - val_loss: 12.4201 - learning_rate: 0.0010
+Epoch 29/100
+241/241 - 0s - 904us/step - loss: 14.7094 - val_loss: 12.3343 - learning_rate: 0.0010
+Epoch 30/100
+241/241 - 0s - 886us/step - loss: 14.6076 - val_loss: 12.3092 - learning_rate: 0.0010
+Epoch 31/100
+241/241 - 0s - 878us/step - loss: 14.4555 - val_loss: 12.9894 - learning_rate: 0.0010
+Epoch 32/100
+
+Epoch 32: ReduceLROnPlateau reducing learning rate to 0.0005000000237487257.
+241/241 - 0s - 874us/step - loss: 14.3328 - val_loss: 13.1359 - learning_rate: 0.0010
+Epoch 33/100
+241/241 - 0s - 897us/step - loss: 14.1731 - val_loss: 13.9823 - learning_rate: 5.0000e-04
+Epoch 34/100
+241/241 - 0s - 891us/step - loss: 14.0545 - val_loss: 13.6129 - learning_rate: 5.0000e-04
+Epoch 35/100
+241/241 - 0s - 900us/step - loss: 13.9629 - val_loss: 14.5132 - learning_rate: 5.0000e-04
+Epoch 36/100
+241/241 - 0s - 895us/step - loss: 14.0445 - val_loss: 13.7772 - learning_rate: 5.0000e-04
+Epoch 37/100
+
+Epoch 37: ReduceLROnPlateau reducing learning rate to 0.0002500000118743628.
+241/241 - 0s - 882us/step - loss: 13.9782 - val_loss: 13.5471 - learning_rate: 5.0000e-04
+Epoch 37: early stopping
+Restoring model weights from the end of the best epoch: 27.
+[19:39:09] [+  19.5s] beta=0.5: 37 epochs in 9.1s (0.15 min)
+[19:39:09] [+  19.5s] Scoring benign-val (n=30,838)...
+[19:39:09] [+  19.6s] Scoring full test  (n=892,268)...
+[19:39:10] [+  20.1s] 
+--- Training beta=1.0 -> results/unsupervised/vae/beta_1.0 (epochs<=100, soft cap 600s) ---
+Epoch 1/100
+241/241 - 1s - 5ms/step - loss: 59.4536 - val_loss: 40.3766 - learning_rate: 0.0010
+Epoch 2/100
+241/241 - 0s - 937us/step - loss: 36.7582 - val_loss: 31.7541 - learning_rate: 0.0010
+Epoch 3/100
+241/241 - 0s - 904us/step - loss: 31.5007 - val_loss: 27.5240 - learning_rate: 0.0010
+Epoch 4/100
+241/241 - 0s - 894us/step - loss: 29.0663 - val_loss: 26.1850 - learning_rate: 0.0010
+Epoch 5/100
+241/241 - 0s - 905us/step - loss: 27.8384 - val_loss: 25.5256 - learning_rate: 0.0010
+Epoch 6/100
+241/241 - 0s - 920us/step - loss: 26.9624 - val_loss: 24.7580 - learning_rate: 0.0010
+Epoch 7/100
+241/241 - 0s - 913us/step - loss: 26.0518 - val_loss: 23.6481 - learning_rate: 0.0010
+Epoch 8/100
+241/241 - 0s - 907us/step - loss: 25.0372 - val_loss: 22.8969 - learning_rate: 0.0010
+Epoch 9/100
+241/241 - 0s - 932us/step - loss: 24.3943 - val_loss: 22.3924 - learning_rate: 0.0010
+Epoch 10/100
+241/241 - 0s - 919us/step - loss: 23.7808 - val_loss: 21.9004 - learning_rate: 0.0010
+Epoch 11/100
+241/241 - 0s - 928us/step - loss: 23.1739 - val_loss: 21.0955 - learning_rate: 0.0010
+Epoch 12/100
+241/241 - 0s - 912us/step - loss: 22.4408 - val_loss: 20.3006 - learning_rate: 0.0010
+Epoch 13/100
+241/241 - 0s - 943us/step - loss: 21.8412 - val_loss: 19.7538 - learning_rate: 0.0010
+Epoch 14/100
+241/241 - 0s - 1ms/step - loss: 21.3600 - val_loss: 19.1714 - learning_rate: 0.0010
+Epoch 15/100
+241/241 - 0s - 943us/step - loss: 20.9287 - val_loss: 18.7915 - learning_rate: 0.0010
+Epoch 16/100
+241/241 - 0s - 912us/step - loss: 20.5414 - val_loss: 18.7827 - learning_rate: 0.0010
+Epoch 17/100
+241/241 - 0s - 926us/step - loss: 20.3688 - val_loss: 18.6460 - learning_rate: 0.0010
+Epoch 18/100
+241/241 - 0s - 919us/step - loss: 20.0225 - val_loss: 18.4247 - learning_rate: 0.0010
+Epoch 19/100
+241/241 - 0s - 904us/step - loss: 19.6977 - val_loss: 17.9787 - learning_rate: 0.0010
+Epoch 20/100
+241/241 - 0s - 908us/step - loss: 19.6078 - val_loss: 17.7798 - learning_rate: 0.0010
+Epoch 21/100
+241/241 - 0s - 895us/step - loss: 19.3089 - val_loss: 17.6955 - learning_rate: 0.0010
+Epoch 22/100
+241/241 - 0s - 903us/step - loss: 19.0683 - val_loss: 17.3454 - learning_rate: 0.0010
+Epoch 23/100
+241/241 - 0s - 892us/step - loss: 18.9528 - val_loss: 17.2893 - learning_rate: 0.0010
+Epoch 24/100
+241/241 - 0s - 903us/step - loss: 18.6721 - val_loss: 17.5363 - learning_rate: 0.0010
+Epoch 25/100
+241/241 - 0s - 918us/step - loss: 18.6003 - val_loss: 16.8703 - learning_rate: 0.0010
+Epoch 26/100
+241/241 - 0s - 885us/step - loss: 18.3121 - val_loss: 16.6163 - learning_rate: 0.0010
+Epoch 27/100
+241/241 - 0s - 923us/step - loss: 18.1724 - val_loss: 16.5595 - learning_rate: 0.0010
+Epoch 28/100
+241/241 - 0s - 1ms/step - loss: 17.8651 - val_loss: 16.1880 - learning_rate: 0.0010
+Epoch 29/100
+241/241 - 0s - 938us/step - loss: 17.7834 - val_loss: 16.2465 - learning_rate: 0.0010
+Epoch 30/100
+241/241 - 0s - 902us/step - loss: 17.6687 - val_loss: 15.6577 - learning_rate: 0.0010
+Epoch 31/100
+241/241 - 0s - 926us/step - loss: 17.4547 - val_loss: 15.9721 - learning_rate: 0.0010
+Epoch 32/100
+241/241 - 0s - 936us/step - loss: 17.3167 - val_loss: 15.7238 - learning_rate: 0.0010
+Epoch 33/100
+241/241 - 0s - 907us/step - loss: 17.1360 - val_loss: 15.0309 - learning_rate: 0.0010
+Epoch 34/100
+241/241 - 0s - 902us/step - loss: 17.0256 - val_loss: 15.4492 - learning_rate: 0.0010
+Epoch 35/100
+241/241 - 0s - 903us/step - loss: 16.7777 - val_loss: 15.1175 - learning_rate: 0.0010
+Epoch 36/100
+241/241 - 0s - 932us/step - loss: 16.7215 - val_loss: 15.4316 - learning_rate: 0.0010
+Epoch 37/100
+241/241 - 0s - 902us/step - loss: 16.5662 - val_loss: 15.6372 - learning_rate: 0.0010
+Epoch 38/100
+241/241 - 0s - 902us/step - loss: 16.4969 - val_loss: 14.7895 - learning_rate: 0.0010
+Epoch 39/100
+241/241 - 0s - 898us/step - loss: 16.3863 - val_loss: 15.8185 - learning_rate: 0.0010
+Epoch 40/100
+241/241 - 0s - 906us/step - loss: 16.3125 - val_loss: 16.4306 - learning_rate: 0.0010
+Epoch 41/100
+241/241 - 0s - 985us/step - loss: 16.1161 - val_loss: 15.4862 - learning_rate: 0.0010
+Epoch 42/100
+241/241 - 0s - 1ms/step - loss: 16.1254 - val_loss: 16.5852 - learning_rate: 0.0010
+Epoch 43/100
+
+Epoch 43: ReduceLROnPlateau reducing learning rate to 0.0005000000237487257.
+241/241 - 0s - 931us/step - loss: 16.0339 - val_loss: 15.4592 - learning_rate: 0.0010
+Epoch 44/100
+241/241 - 0s - 893us/step - loss: 15.8956 - val_loss: 15.2746 - learning_rate: 5.0000e-04
+Epoch 45/100
+241/241 - 0s - 1ms/step - loss: 15.8212 - val_loss: 15.8576 - learning_rate: 5.0000e-04
+Epoch 46/100
+241/241 - 0s - 1ms/step - loss: 15.7157 - val_loss: 16.4608 - learning_rate: 5.0000e-04
+Epoch 47/100
+241/241 - 0s - 981us/step - loss: 15.6143 - val_loss: 15.4440 - learning_rate: 5.0000e-04
+Epoch 48/100
+
+Epoch 48: ReduceLROnPlateau reducing learning rate to 0.0002500000118743628.
+241/241 - 0s - 950us/step - loss: 15.7194 - val_loss: 16.1913 - learning_rate: 5.0000e-04
+Epoch 48: early stopping
+Restoring model weights from the end of the best epoch: 38.
+[19:39:21] [+  32.0s] beta=1.0: 48 epochs in 11.9s (0.20 min)
+[19:39:21] [+  32.0s] Scoring benign-val (n=30,838)...
+[19:39:22] [+  32.2s] Scoring full test  (n=892,268)...
+[19:39:22] [+  32.7s] 
+--- Training beta=4.0 -> results/unsupervised/vae/beta_4.0 (epochs<=100, soft cap 600s) ---
+Epoch 1/100
+241/241 - 1s - 6ms/step - loss: 82.6463 - val_loss: 50.6425 - learning_rate: 0.0010
+Epoch 2/100
+241/241 - 0s - 965us/step - loss: 47.1847 - val_loss: 42.1690 - learning_rate: 0.0010
+Epoch 3/100
+241/241 - 0s - 916us/step - loss: 42.1252 - val_loss: 39.4084 - learning_rate: 0.0010
+Epoch 4/100
+241/241 - 0s - 1ms/step - loss: 38.8172 - val_loss: 36.1757 - learning_rate: 0.0010
+Epoch 5/100
+241/241 - 0s - 1ms/step - loss: 37.2795 - val_loss: 34.4725 - learning_rate: 0.0010
+Epoch 6/100
+241/241 - 0s - 977us/step - loss: 36.1792 - val_loss: 33.5406 - learning_rate: 0.0010
+Epoch 7/100
+241/241 - 0s - 960us/step - loss: 35.1912 - val_loss: 31.9601 - learning_rate: 0.0010
+Epoch 8/100
+241/241 - 0s - 954us/step - loss: 34.3733 - val_loss: 31.3236 - learning_rate: 0.0010
+Epoch 9/100
+241/241 - 0s - 952us/step - loss: 33.6990 - val_loss: 30.8440 - learning_rate: 0.0010
+Epoch 10/100
+241/241 - 0s - 1ms/step - loss: 33.2580 - val_loss: 30.4492 - learning_rate: 0.0010
+Epoch 11/100
+241/241 - 0s - 1ms/step - loss: 32.7216 - val_loss: 30.2030 - learning_rate: 0.0010
+Epoch 12/100
+241/241 - 0s - 1ms/step - loss: 32.4141 - val_loss: 29.7918 - learning_rate: 0.0010
+Epoch 13/100
+241/241 - 0s - 1ms/step - loss: 32.0766 - val_loss: 29.4578 - learning_rate: 0.0010
+Epoch 14/100
+241/241 - 0s - 2ms/step - loss: 31.8402 - val_loss: 29.1028 - learning_rate: 0.0010
+Epoch 15/100
+241/241 - 0s - 1ms/step - loss: 31.4946 - val_loss: 28.6821 - learning_rate: 0.0010
+Epoch 16/100
+241/241 - 0s - 1ms/step - loss: 30.9406 - val_loss: 27.7167 - learning_rate: 0.0010
+Epoch 17/100
+241/241 - 0s - 1ms/step - loss: 30.2653 - val_loss: 27.2614 - learning_rate: 0.0010
+Epoch 18/100
+241/241 - 0s - 917us/step - loss: 29.7485 - val_loss: 26.8426 - learning_rate: 0.0010
+Epoch 19/100
+241/241 - 0s - 902us/step - loss: 29.3066 - val_loss: 26.2439 - learning_rate: 0.0010
+Epoch 20/100
+241/241 - 0s - 914us/step - loss: 28.9505 - val_loss: 25.8751 - learning_rate: 0.0010
+Epoch 21/100
+241/241 - 0s - 919us/step - loss: 28.6420 - val_loss: 25.7083 - learning_rate: 0.0010
+Epoch 22/100
+241/241 - 0s - 913us/step - loss: 28.4554 - val_loss: 25.3447 - learning_rate: 0.0010
+Epoch 23/100
+241/241 - 0s - 901us/step - loss: 28.3947 - val_loss: 25.2227 - learning_rate: 0.0010
+Epoch 24/100
+241/241 - 0s - 903us/step - loss: 28.0732 - val_loss: 24.7908 - learning_rate: 0.0010
+Epoch 25/100
+241/241 - 0s - 919us/step - loss: 27.9004 - val_loss: 24.6461 - learning_rate: 0.0010
+Epoch 26/100
+241/241 - 0s - 941us/step - loss: 27.6643 - val_loss: 24.3004 - learning_rate: 0.0010
+Epoch 27/100
+241/241 - 0s - 917us/step - loss: 27.5125 - val_loss: 23.6564 - learning_rate: 0.0010
+Epoch 28/100
+241/241 - 0s - 894us/step - loss: 27.3159 - val_loss: 23.4433 - learning_rate: 0.0010
+Epoch 29/100
+241/241 - 0s - 909us/step - loss: 26.9478 - val_loss: 23.1149 - learning_rate: 0.0010
+Epoch 30/100
+241/241 - 0s - 927us/step - loss: 26.7745 - val_loss: 22.9013 - learning_rate: 0.0010
+Epoch 31/100
+241/241 - 0s - 895us/step - loss: 26.4709 - val_loss: 23.2637 - learning_rate: 0.0010
+Epoch 32/100
+241/241 - 0s - 1ms/step - loss: 26.4188 - val_loss: 25.1870 - learning_rate: 0.0010
+Epoch 33/100
+241/241 - 0s - 962us/step - loss: 26.1502 - val_loss: 26.0379 - learning_rate: 0.0010
+Epoch 34/100
+241/241 - 0s - 997us/step - loss: 26.0807 - val_loss: 25.3605 - learning_rate: 0.0010
+Epoch 35/100
+
+Epoch 35: ReduceLROnPlateau reducing learning rate to 0.0005000000237487257.
+241/241 - 0s - 1ms/step - loss: 25.8541 - val_loss: 25.3733 - learning_rate: 0.0010
+Epoch 36/100
+241/241 - 0s - 882us/step - loss: 25.7124 - val_loss: 25.8593 - learning_rate: 5.0000e-04
+Epoch 37/100
+241/241 - 0s - 880us/step - loss: 25.5693 - val_loss: 25.7610 - learning_rate: 5.0000e-04
+Epoch 38/100
+241/241 - 0s - 879us/step - loss: 25.5690 - val_loss: 27.0377 - learning_rate: 5.0000e-04
+Epoch 39/100
+241/241 - 0s - 884us/step - loss: 25.4045 - val_loss: 26.0008 - learning_rate: 5.0000e-04
+Epoch 40/100
+
+Epoch 40: ReduceLROnPlateau reducing learning rate to 0.0002500000118743628.
+241/241 - 0s - 899us/step - loss: 25.3533 - val_loss: 26.7710 - learning_rate: 5.0000e-04
+Epoch 40: early stopping
+Restoring model weights from the end of the best epoch: 30.
+[19:39:33] [+  43.6s] beta=4.0: 40 epochs in 10.9s (0.18 min)
+[19:39:33] [+  43.6s] Scoring benign-val (n=30,838)...
+[19:39:33] [+  43.7s] Scoring full test  (n=892,268)...
+[19:39:34] [+  44.2s] 
+Full-sweep summary:
+[19:39:34] [+  44.2s] 
+ beta  epochs_actual  best_val_loss  training_time_s  val_score_median  val_score_p90  val_score_p95  val_score_p99  val_recon_mean  val_kl_mean  recon_to_kl_ratio  latent_geom_strict_pass  early_stopped_by_budget
+  0.1             31        10.4943              8.4            1.6891        11.0942        18.6226        49.4458          9.2740      12.2027              0.760                    False                    False
+  0.5             37        12.2987              9.1            2.8340        16.5874        24.9961        63.6854          9.6069       5.3837              1.784                    False                    False
+  1.0             48        14.7895             11.9            4.7157        20.7474        29.2044        67.2214         10.9846       3.8050              2.887                    False                    False
+  4.0             40        22.9013             10.9            6.1108        35.8805        53.0713       117.9279         16.7352       1.5415             10.856                    False                    False

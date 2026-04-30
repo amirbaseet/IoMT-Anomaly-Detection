@@ -1,0 +1,85 @@
+{
+  "overall_pass": true,
+  "checks": {
+    "val_loss_finite": true,
+    "val_loss_decreased": true,
+    "score_in_sanity_range": true,
+    "latent_means_centered": true,
+    "latent_stds_reasonable": true,
+    "no_nan_in_scores": true,
+    "roundtrip_ok": true
+  },
+  "manifest": {
+    "beta": 1.0,
+    "latent_dim": 8,
+    "input_dim": 44,
+    "epochs_max": 5,
+    "epochs_actual": 5,
+    "batch_size": 512,
+    "learning_rate": 0.001,
+    "patience": 10,
+    "best_val_loss": 24.084259033203125,
+    "training_time_s": 2.1358420848846436,
+    "early_stopped_by_budget": false,
+    "score_formula": "score = sum_d(x - x_hat)^2 + beta * 0.5 * sum_k(exp(logvar) + mu^2 - 1 - logvar); higher => more anomalous",
+    "z_mean_used_for_scoring": true,
+    "logvar_clip": [
+      -10.0,
+      10.0
+    ],
+    "tf_version": "2.21.0",
+    "keras_version": "3.14.0",
+    "random_state": 42,
+    "val_score_median": 4.7553911209106445,
+    "val_score_p90": 33.553749084472656,
+    "val_score_p95": 48.304508209228516,
+    "val_score_p99": 117.04918670654297,
+    "val_recon_mean": 20.25389289855957,
+    "val_recon_p95": 36.81497573852539,
+    "val_kl_mean": 3.8303630352020264,
+    "val_kl_p95": 14.054163932800293,
+    "test_score_median": 297.27044677734375,
+    "test_recon_mean": 2769.554443359375,
+    "test_kl_mean": 124.64163970947266,
+    "latent_z_mean_per_dim": [
+      -0.9988143444061279,
+      2.3191583156585693,
+      0.6757152676582336,
+      -1.4109835624694824,
+      1.099810004234314,
+      3.157115936279297,
+      -1.1616406440734863,
+      -1.061378002166748
+    ],
+    "latent_z_std_per_dim": [
+      2.326341152191162,
+      3.186527729034424,
+      4.121613502502441,
+      1.676574468612671,
+      2.6001205444335938,
+      3.5335092544555664,
+      2.566758871078491,
+      3.945690393447876
+    ],
+    "latent_z_mean_overall": 0.32737287878990173,
+    "latent_z_std_overall": 2.9946420192718506
+  },
+  "val_loss_progression": [
+    40.23612976074219,
+    31.001768112182617,
+    27.653324127197266,
+    25.390979766845703,
+    24.084259033203125
+  ],
+  "reload_max_abs_diff": 0.0,
+  "reload_mean_abs_diff": 0.0,
+  "smoke_score_median_range": [
+    3.0,
+    80.0
+  ],
+  "smoke_latent_mean_abs_max": 5.0,
+  "smoke_latent_std_range": [
+    0.1,
+    10.0
+  ]
+}

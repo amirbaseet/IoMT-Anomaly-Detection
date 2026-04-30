@@ -4,7 +4,7 @@
 > **Thesis:** "A Hybrid Supervised-Unsupervised Framework for Anomaly Detection and Zero-Day Attack Identification in IoMT Networks Using the CICIoMT2024 Dataset"
 > **Duration:** April 2026 | **Machine:** MacBook Air M4, 24GB RAM, Python 3.13
 > **GitHub:** github.com/amirbaseet/IoMT-Anomaly-Detection
-> **Status:** ALL EXPERIMENTAL PHASES COMPLETE (1, 2, 3, 4, 5, 6, 6B, 6C, 7) + senior review fixes applied + Path B Tier 1 hardening complete (Weeks 1, 2A, 2B; senior review §1.2 / §1.4 / §1.5 closed) — Thesis writing phase
+> **Status:** ALL EXPERIMENTAL PHASES COMPLETE (1, 2, 3, 4, 5, 6, 6B, 6C, 7) + senior review fixes applied + Path B Tier 1 hardening complete (Weeks 1, 2A, 2B; senior review §1.2 / §1.4 / §1.5 closed) + Path B Tier 2 architectural (Week 5 / Phase 6D — β-VAE Layer 2 substitution robustness check, §15E; substitution-equivalent, AE retained) — Thesis writing phase
 
 ---
 
@@ -501,6 +501,37 @@ After the senior review remediation closed the framing/methodology gaps, three d
 
 ---
 
+## Path B — Tier 2 Architectural
+
+After Tier 1 hardening closed the framing/methodology gaps, one architectural item from the original "Future work" list remained: a probabilistic Layer 2 (β-VAE) with a calibrated log-likelihood score, which Phase 5 had deliberately deferred in favour of a deterministic AE. Tier 2 settles that question with a substitution robustness check — does swapping the deterministic Layer 2 for a probabilistic one move the published headline?
+
+### Week 5 / Phase 6D — β-VAE Layer 2 Substitution Robustness Check (SHELVE)
+
+#### What we did
+- Trained four β-VAEs at β ∈ {0.1, 0.5, 1.0, 4.0} with latent_dim = 8 (matched to the Phase 5 AE bottleneck for fair comparison) on the same benign-only data, the same `scaler.pkl` (no refit), and the same 80/20 split as the deterministic AE. Encoder/decoder widths inherited at runtime from the saved `autoencoder.keras` config so the VAE cannot drift structurally from the AE. Per-sample score = sum_d (x − x̂)² + β · 0.5 · sum_k (exp(logvar) + μ² − 1 − logvar) — loss-direction ELBO, higher ⇒ more anomalous, matching the AE MSE convention so the existing `AE_BINARIES` dict in `enhanced_fusion.py` extends without sign flips.
+- Substituted the VAE log-likelihood for AE reconstruction error in the §15D `entropy_p93 + ae_p90` fusion, evaluated 8 VAE-conditioned variants × 4 βs × 5 LOO targets, and produced a decision-ready CSV with per-β `entropy_p93 + vae_p90` strict_avg compared against the §15D anchor (0.8590).
+- Drivers: `notebooks/vae_train.py` (resumable; smoke gate at β=1.0/5 epochs as a safety net), `notebooks/vae_fusion.py` (defensive copies of `entropy_fusion` etc. plus two reproducibility tripwires), `notebooks/vae_decision.py`. Implementation cost in narrative: Keras 3.14 dropped `Functional.add_loss`, so the KL term lives in a custom `KLLossLayer.add_loss()`, the `Sampling` layer returns `z_mean` deterministically when `training=False` for bit-stable save/reload, and the recon loss uses sum-over-features reduction per the literature β-VAE convention. None of these affect the science, but they're the kind of detail a reviewer asks about.
+
+#### Key results
+- **Decision: SHELVE** (substitution-equivalent, not substitution-better). The deterministic AE is retained.
+- **β = 0.5 best** (`entropy_p93 + vae_p90`): strict_avg = 0.8588, FPR = 0.243, 4/4 strict pass, VAE test AUC = 0.9904. **Δ vs §15D**: strict = −0.0001, FPR = −0.005, AUC = +0.0012 — every direction within sampling noise of the AE-based baseline. The other three βs (0.1, 1.0, 4.0) hold 4/4 strict pass but their best `entropy_p93 + vae_p90` variant breaches the FPR ≤ 0.25 budget; the budget-respecting fallback (`entropy_p93 + vae_p95`) trades 3–5 pp of headline strict_avg for ~7 pp lower FPR.
+- **Both reproducibility tripwires pass bit-exactly** (diff `0.000e+00`) at every β: `entropy_p95 + ae_p90` = `0.8035264623662012` (canonical Week 2A), `entropy_p93 + ae_p90` = `0.8589586873140701` (§15D anchor read from `sweep_table.csv`). The defensive-copy pattern from Week 1 / Week 2A continues to work.
+- **VAE-only test AUC at β = 0.5 (0.9904) marginally beats Phase 5 AE (0.9892, +0.12 pp)** — the only β where this holds. β = 4.0 collapsed 5 of 8 latent dims under heavy KL pressure (effective latent dim ≈ 3) but still passes 4/4 strict; β = 0.5 is healthiest by both raw separation (83.5× val→test) and dim utilization (6 of 8 active).
+- **Per-target redistribution behind the headline tie**: at β = 0.5, VAE is +3.8 pp on `MQTT_Malformed_Data` (0.845 vs 0.807), worse on `ARP_Spoofing` (−2.5 pp) and `Recon_VulScan` (−1.4 pp), tied at the ceiling on `Recon_Ping_Sweep`. A future per-target Layer 2 could exploit this; not pursued in this thesis.
+
+#### Reading
+The β-VAE substitution preserves §15C.7's per-signal ablation invariant — entropy contributes ~+50 pp of H2-strict lift at the operating point, AE/VAE contributes ~+5 pp — and that ~5 pp is unchanged when the AE channel is replaced by VAE log-likelihood. The fusion's predictive ceiling is set by the entropy channel; Layer 2's distributional assumption (deterministic vs probabilistic) is interchangeable on this dataset's tabular feature space. SHELVE is not a failure verdict — it is a robustness finding that strengthens the published §15D claim by showing it does not depend on the specific Layer 2 distributional family.
+
+#### Output
+- README §15E added (~400-word subsection between §15D and §16) and §15C.12 future-work line struck through with pointer.
+- `notebooks/vae_train.py`, `notebooks/vae_fusion.py`, `notebooks/vae_decision.py` (~1100 lines combined; defensive copies of `entropy_fusion`/`confidence_fusion`/`full_enhanced_fusion`).
+- `results/unsupervised/vae/{_smoke, beta_0.1, beta_0.5, beta_1.0, beta_4.0}/{model.keras, manifest.json, history.json, val_loglik.npy, test_loglik.npy, latent_z_test.npy, components.npz}` (~190 MB, *.npy gitignored).
+- `results/enhanced_fusion/vae_ablation/{beta_*/ablation_table.csv, beta_*/per_target_results.csv, all_betas_ablation.csv, per_beta_summary.json}`.
+- `results/enhanced_fusion/{vae_decision.csv, vae_decision_summary.md}`.
+- Wall-clock: ~50 seconds total (44 s for 4 β-VAE training, 2 s for fusion ablation, 0 s for decision); no GPU; under `caffeinate -dimsu` for the training pass.
+
+---
+
 ## All Hypothesis Results — Final
 
 | Hypothesis | Original Claim | Result | Evidence | Thesis Value |
@@ -512,7 +543,7 @@ After the senior review remediation closed the framing/methodology gaps, three d
 
 ---
 
-## Complete List of Thesis Contributions (17 total)
+## Complete List of Thesis Contributions (18 total)
 
 1. **First hybrid 4-layer (XGBoost + AE + 5-case fusion + SHAP) framework on CICIoMT2024** — no prior work combines all 4 layers; Yacoubi is supervised-only
 2. **37% duplication discovery in CICIoMT2024 train (44.7% in test)** — first report ever; explains inflated metrics in all prior literature
@@ -531,6 +562,7 @@ After the senior review remediation closed the framing/methodology gaps, three d
 15. **Multi-seed robustness validation under true LOO** (Path B Week 1) — H2-strict 4/4 holds across 5 seeds with σ = 0.022 well inside the 0.70 criterion margin; FPR is seed-invariant (CV = 0.13%). Identifies a **structural eligibility floor** for tiny LOO targets (Recon_Ping_Sweep, n_test = 169) where one seed × one target combination falls below the n=30 minimum — a property of the LOO partition, not a metric failure. Reframes the 4/4 claim from a single-seed point estimate to a distribution-level statement.
 16. **Continuous-frontier threshold methodology** (Path B Week 2A) — replaces the discrete 4-point grid {p90, p95, p97, p99} with a 29-threshold continuous sweep at 0.5pp resolution. Reveals a **strict-pass plateau structure** that the discrete grid hid: p95.0 sits exactly at the lip (one half-percentile drops 4/4 → 3/4) while p93.0 sits in the middle of the plateau with both higher recall (+5.5pp) and stability margin against threshold drift. Refines (does not contradict) the §15C.6 published recommendation.
 17. **Empirical SHAP background sensitivity verification** (Path B Week 2B) — converts the §16.7B invariance argument from theory to empirical evidence on the actual model + dataset. Same 5,000-sample explained set + same uniform-random sampling protocol as Phase 7; only the source pool changes (X_train vs test-disjoint X_test). Result: Kendall τ = 0.927 over the top-10 union (BULLETPROOF), 19/19 classes with per-class top-5 Jaccard ≥ 0.6, DDoS↔DoS cosine reproduction within fp32 noise floor (|Δ| = 0.002).
+18. **Layer 2 substitution robustness check** (Path B Week 5 / Phase 6D) — β-VAE substitution at β ∈ {0.1, 0.5, 1.0, 4.0} with latent_dim = 8 (matched to AE bottleneck) produces fusion strict_avg within sampling noise of the §15D AE-based baseline (β = 0.5 best: Δ strict = −0.0001, Δ FPR = −0.005, Δ AUC = +0.0012; all four βs at 4/4 strict pass). Establishes that VAE log-likelihood and AE reconstruction error are **interchangeable** on this dataset's tabular feature space; the fusion's predictive ceiling is set by the entropy channel, and Layer 2's distributional assumption (deterministic vs probabilistic) does not move the headline. Strengthens §15D by showing the published claim does not depend on the specific Layer 2 distributional family. Deterministic AE retained for engineering simplicity.
 
 ---
 
@@ -551,6 +583,8 @@ After the senior review remediation closed the framing/methodology gaps, three d
 | Path B Week 2A | Continuous threshold sweep + per-fold KS (no retrain) | ~9 min |
 | Path B Week 2B | SHAP background sensitivity (TreeSHAP recompute, no retrain) | 75.7 min |
 | **Path B Tier 1 hardening** | | **~170 min (~2.8 hours)** |
+| Path B Week 5 / Phase 6D | β-VAE Layer 2 substitution (4 β trains + fusion ablation + decision) | ~0.8 min |
+| **Path B Tier 2 architectural** | | **~0.8 min** |
 | **Grand total compute** | | **~9.3 hours** |
 
 Senior review remediation (post-hoc, no compute): ~6 hours of writing + Pareto plot generation.
@@ -665,9 +699,9 @@ All experimental work is complete. The remaining work is exposition:
 - ~~Continuous threshold sweep between p90 and p95 — may yield slightly tighter operating point~~ **Done in Path B Week 2A** (29 thresholds at p85.0–p99.0; refined optimum at p93.0 with strict_avg 0.859 vs published p95's 0.804 under the same FPR budget).
 - ~~Train-drawn SHAP background sensitivity check — verify top-10 rank stability~~ **Done in Path B Week 2B** (Kendall τ = 0.927 over top-10 union — BULLETPROOF; 19/19 per-class Jaccard ≥ 0.6; DDoS↔DoS cosine reproduces within fp32 noise floor).
 - **Profiling-feature-basis AE** — still open. Addresses layer-coupling concern (AE and XGBoost share the same 44 features). Phase 6's future-work item that Phase 6C did not address.
-- **VAE replacement for reconstruction-error AE** — still open. More principled OOD detection; would couple cleanly with the entropy fusion if the latent-space density gives a complementary signal to softmax entropy.
+- ~~VAE replacement for reconstruction-error AE — more principled OOD detection; would couple cleanly with the entropy fusion if the latent-space density gives a complementary signal to softmax entropy.~~ **Done in Path B Phase 6D (Week 5)** (β ∈ {0.1, 0.5, 1.0, 4.0} × latent_dim = 8; ~50 s total wall-clock; both reproducibility tripwires pass bit-exactly): β = 0.5 best variant `entropy_p93 + vae_p90` ties §15D within sampling noise (Δ strict = −0.0001, Δ FPR = −0.005, Δ AUC = +0.0012; 4/4 strict pass at all four βs). VAE log-likelihood and AE reconstruction error capture the same anomaly signal on this dataset's tabular feature space; the fusion's predictive ceiling is the entropy channel, Layer 2's distributional assumption is interchangeable. Deterministic AE retained for engineering simplicity. See §15E.
 
 ---
 
-_Last updated: April 30, 2026 — Path B Tier 1 hardening complete (Weeks 1, 2A, 2B). All 7 experimental phases + senior review remediation + multi-seed LOO validation (§15B) + continuous threshold sweep (§15D, refined operating point at p93.0) + per-fold KS (§15C.10, uniform across folds) + SHAP background sensitivity (§16.7B, BULLETPROOF). Senior review §1.2 / §1.4 / §1.5 closed._
-_Next step: Thesis writing_
+_Last updated: April 30, 2026 — Path B Tier 2 architectural complete (Week 5 / Phase 6D — β-VAE Layer 2 substitution robustness check). All 7 experimental phases + senior review remediation + Tier 1 hardening (Weeks 1, 2A, 2B; senior review §1.2 / §1.4 / §1.5 closed) + Tier 2 architectural (β-VAE substitution-equivalent: deterministic AE retained, fusion ceiling is the entropy channel, §15E)._
+_Next step: Tier 3 — dashboard + workshop paper. Thesis writing in parallel._

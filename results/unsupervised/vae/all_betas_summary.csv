@@ -1,0 +1,5 @@
+beta,epochs_actual,best_val_loss,training_time_s,val_score_median,val_score_p90,val_score_p95,val_score_p99,val_recon_mean,val_kl_mean,recon_to_kl_ratio,latent_geom_strict_pass,early_stopped_by_budget
+0.1,31,10.4943,8.4,1.6891,11.0942,18.6226,49.4458,9.274,12.2027,0.76,False,False
+0.5,37,12.2987,9.1,2.834,16.5874,24.9961,63.6854,9.6069,5.3837,1.784,False,False
+1.0,48,14.7895,11.9,4.7157,20.7474,29.2044,67.2214,10.9846,3.805,2.887,False,False
+4.0,40,22.9013,10.9,6.1108,35.8805,53.0713,117.9279,16.7352,1.5415,10.856,False,False
