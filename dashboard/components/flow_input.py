@@ -40,10 +40,10 @@ OOD_YELLOW_MAX: Final[int] = 3  # >3 features OOD escalates to a warning, not a 
 # Pre-selected demo flows (resolved from y_test.csv first-occurrence search;
 # row indices documented for reproducibility — see scripts/precompute_dashboard_artifacts.py).
 SAMPLE_FLOWS: Final[dict[str, int]] = {
-    "ARP_Spoofing (test row 0, case 1)": 0,
-    "Benign (test row 1744, case 2)": 1744,
-    "Recon_Ping_Sweep (test row 106007, case 1)": 106007,
-    "MQTT_Malformed_Data (test row 101319, case 4)": 101319,
+    "ARP_Spoofing (test row 0)": 0,
+    "Benign (test row 1744)": 1744,
+    "Recon_Ping_Sweep (test row 106007)": 106007,
+    "MQTT_Malformed_Data (test row 101319)": 101319,
 }
 
 

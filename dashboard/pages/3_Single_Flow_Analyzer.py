@@ -11,6 +11,8 @@ Key invariants:
   Per-class signatures from §16 live on Page 3 — different code path.
 - AE is gracefully optional: if TF env breaks, the AE card shows
   "unavailable" and the rest of the page still works.
+- Fusion: §15D 5-case entropy_fusion (canonical source:
+  notebooks/enhanced_fusion.py:499-512).
 """
 
 from __future__ import annotations
@@ -67,44 +69,105 @@ def _shap_config() -> dict:
 def _classify_case(
     *,
     pred_idx: int,
+    entropy: float,
     ae_mse: float | None,
+    ent_threshold: float,
 ) -> tuple[int, str, str]:
-    """Apply the canonical §15D 4-case fusion partition to one flow.
+    """Apply the canonical §15D 5-case entropy_fusion partition to one flow.
 
-    Mirrors `notebooks/fusion_engine.py:apply_fusion` exactly:
-        sup_attack = (E7 prediction != Benign)
-        ae_anomaly = (AE recon MSE > AE_THRESHOLD_P90)
+    Source of truth: ``entropy_fusion`` at notebooks/enhanced_fusion.py:499-512.
+    Mirrors that function's np.where chain exactly:
 
-        Case 1: sup_attack &  ae_anomaly  → Confirmed Alert     (HIGH)
-        Case 2: ¬sup_attack &  ae_anomaly → Zero-Day Warning   (MEDIUM_HIGH)
-        Case 3:  sup_attack & ¬ae_anomaly → Low-Confidence     (MEDIUM_LOW)
-        Case 4: ¬sup_attack & ¬ae_anomaly → Clear              (HIGH)
+        sup_attack   = (E7 prediction != Benign)
+        high_entropy = (entropy > ent_threshold)
+        ae_anomaly   = (AE recon MSE > AE_THRESHOLD_P90)
 
-    **Entropy is NOT a case-defining signal** in the published partition —
-    it gates a separate §15D entropy-rescue branch on Page 4 (Threshold
-    Tuning), not the 4-case fusion. When entropy is elevated alongside a
-    Case 4 verdict, surface that separately as an advisory; do NOT
-    re-route the case number.
+        Case 1: sup_attack &  ae_anomaly & ¬high_entropy  → Confirmed Alert
+        Case 2: ¬sup_attack &  ae_anomaly                 → Zero-Day Warning
+        Case 2:  high_entropy &  ae_anomaly               → Zero-Day Warning
+        Case 5:  high_entropy & ¬ae_anomaly               → Uncertain Alert
+        Case 3:  sup_attack & ¬ae_anomaly & ¬high_entropy → Low-Confidence Alert
+        Case 4: otherwise                                 → Clear
 
-    When AE is unavailable (TF env regression), treat the AE signal as
-    neutral (not anomaly) — Case 1/2 collapse to 3/4 respectively. The
-    advisory caption surfaces the degraded mode.
+    A flow that is sup_attack & ae_anomaly & high_entropy is *promoted* to
+    Case 2 — the entropy signal escalates a "confirmed" verdict to a
+    "zero-day" one, on the theory that high model uncertainty stacked on top
+    of an anomaly signal suggests a novel attack rather than a familiar one.
+
+    AE-unavailable degradation: when the TF env regression makes the AE
+    unavailable, ``ae_mse is None`` and ``ae_anomaly`` collapses to False
+    uniformly. The partition then reduces to {3, 4, 5} only — Cases 1 and 2
+    become unreachable. The AE card on the page already surfaces "unavailable"
+    in that mode, so no per-case override is needed here.
+
+    Concretely, the four sample fixtures degrade as follows when AE drops out:
+        Recon_Ping_Sweep    : Case 1 → 3   (AE confirmation lost)
+        ARP_Spoofing        : Case 2 → 5   (entropy still escalates → review)
+        Benign              : Case 2 → 4   (AE rescue lost — silent false negative)
+        MQTT_Malformed_Data : Case 5 → 5   (entropy-only verdict; unchanged)
+
+    The Benign Case 2 → Case 4 collapse is the load-bearing one: a flow that
+    AE *rescued* from a false-benign becomes a silent false negative when AE
+    drops out. This is partition-mechanical, not a partition bug — but it
+    deserves a Model Card limitation note in the next README update.
 
     Severity colors (alarm-priority ordering, not signal-confidence):
-        Case 1 (confirmed attack)   → red
-        Case 2 (zero-day warning)   → red
-        Case 3 (low-confidence)     → yellow
-        Case 4 (clear)              → green
+        Case 1 (confirmed attack)   → FAIL (red)
+        Case 2 (zero-day warning)   → FAIL (red)
+        Case 3 (low-confidence)     → BORDER (yellow)
+        Case 4 (clear)              → PASS (green)
+        Case 5 (uncertain alert)    → BORDER (yellow) — operator review
     """
-    is_attack = pred_idx != BENIGN_CLASS_IDX
-    is_anomaly = (ae_mse is not None) and (ae_mse > AE_THRESHOLD_P90)
-    if is_attack and is_anomaly:
-        return 1, "Confirmed alert — E7 attack + AE anomaly agree", FAIL
-    if not is_attack and is_anomaly:
-        return 2, "Zero-day warning — AE flags an E7-benign flow", FAIL
-    if is_attack and not is_anomaly:
-        return 3, "Low-confidence alert — E7 attack, AE clean", BORDER
-    return 4, "Clear — E7 benign and AE clean", PASS
+    sup_attack = (pred_idx != BENIGN_CLASS_IDX)
+    high_entropy = (entropy > ent_threshold)
+    ae_anomaly = (ae_mse is not None) and (ae_mse > AE_THRESHOLD_P90)
+
+    if sup_attack and ae_anomaly and not high_entropy:
+        return 1, "Confirmed Alert — E7 attack + AE anomaly agree", FAIL
+    if not sup_attack and ae_anomaly:
+        return 2, "Zero-Day Warning — AE flags an E7-benign flow", FAIL
+    if high_entropy and ae_anomaly:
+        return 2, "Zero-Day Warning — high entropy + AE anomaly agree", FAIL
+    if high_entropy and not ae_anomaly:
+        return 5, "Uncertain Alert — high entropy, AE clean (operator review)", BORDER
+    if sup_attack and not ae_anomaly and not high_entropy:
+        return 3, "Low-Confidence Alert — E7 attack but AE clean", BORDER
+    return 4, "Clear — E7 benign, AE clean, low entropy", PASS
+
+
+def _assert_classify_case_canonical() -> None:
+    """Defensive partition-logic self-check, run once at module load.
+
+    Validates that ``_classify_case`` produces the canonical case numbers
+    for four hardcoded signal triples spanning Cases 1, 2, and 5. Same
+    defensive pattern as Week 7's E7 + SHA256 tripwires — failure raises
+    AssertionError before any UI renders, so Page 2 cannot ship a partition
+    that has drifted from notebooks/enhanced_fusion.py.
+
+    The threshold (0.1) is synthetic, chosen to bracket the four sample-flow
+    entropies (0.0022, 0.0041, 0.5212, 1.1802) cleanly. This is a logic-only
+    check and is intentionally decoupled from sweep_table.csv regeneration.
+    """
+    THR = 0.1
+    fixtures = [
+        # (pred_idx, entropy, ae_mse, expected_case, name)
+        (3, 0.0022, 0.4266, 1, "Recon_Ping_Sweep"),
+        (3, 0.5212, 0.2809, 2, "ARP_Spoofing"),
+        (1, 0.0041, 0.2993, 2, "Benign"),
+        (1, 1.1802, 0.1937, 5, "MQTT_Malformed_Data"),
+    ]
+    for pred, ent, ae, expected, name in fixtures:
+        actual, _, _ = _classify_case(
+            pred_idx=pred, entropy=ent, ae_mse=ae, ent_threshold=THR,
+        )
+        assert actual == expected, (
+            f"_classify_case partition drift: {name} expected Case {expected}, "
+            f"got Case {actual}. Canonical source: "
+            f"notebooks/enhanced_fusion.py:499-512."
+        )
+
+
+_assert_classify_case_canonical()
 
 
 def _entropy_marker_chart(entropy: float, ent_thr: dict[str, float]) -> "object":
@@ -281,7 +344,9 @@ ent_thr = _entropy_thresholds()
 ent_p93 = float(sweep_row_at(PUBLISHED_PERCENTILE)["ent_threshold"])
 case_n, case_label, case_color = _classify_case(
     pred_idx=result["pred_class_idx"],
+    entropy=result["entropy"],
     ae_mse=result["ae_mse"],
+    ent_threshold=ent_p93,
 )
 ent_elevated = result["entropy"] > ent_p93
 
@@ -329,15 +394,19 @@ c4.metric(
                  "inverse" if case_color == FAIL else "off"),
 )
 
-# Entropy advisory — surfaces the §15D rescue-branch signal even when the
-# 4-case partition (which uses E7 + AE only) lands on a green "Clear"
-# verdict. Mirrors the entropy-driven branch on Page 4 (Threshold Tuning).
+# Entropy advisory — reinforces the entropy-aware case verdict for high-
+# entropy flows. Pre-Week-7.1 this fired *instead* of routing entropy through
+# the partition; now the partition itself uses entropy (canonical 5-case
+# entropy_fusion), so this banner is contextual reinforcement of the Case 2
+# entropy-promotion or Case 5 uncertain-alert verdict above — not a separate
+# signal. Banner trigger condition (ent_elevated) intentionally unchanged.
 if ent_elevated:
     st.warning(
-        f"⚠ Entropy {result['entropy']:.4f} is above p93 ({ent_p93:.4f}). "
-        f"Even though the 4-case partition uses only E7 + AE, the §15D "
-        f"entropy-rescue branch on Page 4 would treat this as a candidate "
-        f"for further review."
+        f"⚠ §15D entropy-rescue branch context: this flow's entropy "
+        f"{result['entropy']:.4f} exceeds the p93 threshold ({ent_p93:.4f}), "
+        f"which contributed to the Case {case_n} verdict above. The threshold "
+        f"sweep on Page 4 explores how this boundary moves under different "
+        f"operating points."
     )
 
 # Entropy + AE static-marker bars
