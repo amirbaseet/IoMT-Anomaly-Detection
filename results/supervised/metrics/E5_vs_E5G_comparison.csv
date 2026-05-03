@@ -1,0 +1,7 @@
+metric_label,metric_key,rf_gini_E5G,rf_entropy_E5,diff_pp_entropy_minus_gini
+Test Accuracy,test_accuracy,0.984825,0.985165,0.034
+Macro F1,test_f1_macro,0.8504,0.855087,0.4687
+Weighted F1,test_f1_weighted,0.983908,0.984353,0.0445
+MCC,test_mcc,0.98068,0.981109,0.0429
+Macro Precision,test_precision_macro,0.87346,0.877028,0.3568
+Macro Recall,test_recall_macro,0.878533,0.880589,0.2056

@@ -1,0 +1,2 @@
+[NbConvertApp] Converting notebook course-project/notebooks/course_project_demo_v2.ipynb to notebook
+[NbConvertApp] Writing 1164613 bytes to course-project/notebooks/course_project_demo_v2.ipynb
