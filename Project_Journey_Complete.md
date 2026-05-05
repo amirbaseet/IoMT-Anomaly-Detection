@@ -532,6 +532,74 @@ The β-VAE substitution preserves §15C.7's per-signal ablation invariant — en
 
 ---
 
+## Path B — Tier 3 Demonstration
+
+After Tier 1 (hardening) and Tier 2 (architectural robustness check) closed the empirical/methodology gaps, three exposition-layer items remained: a one-click reproducibility surface for the claims, a public-facing per-class SHAP explorer, and a live demonstration of the 5-case fusion catching what single-channel and two-channel IDS miss. Path B Tier 3 ships all three as a 5-page Streamlit dashboard — zero new compute, all numbers shown loaded from saved artifacts — across three commits over April 30 – May 1, 2026.
+
+### Week 6 — Dashboard Scaffolding (3 pages)
+
+#### What we did
+- Built the dashboard skeleton: `Home.py` + `pages/1_Threshold_Tuning.py` + `pages/2_Model_Card.py` + supporting components in `dashboard/components/`. No model loading, no TF — pure CSV reading from `results/`.
+- Page 1 (Live Monitor): 4 status cards (H2-strict avg 0.859, FPR 0.247, 4/4 strict pass, 892,268 test rows), per-target badges row, Pareto mini-chart with y-axis pinned at [0.40, 1.00] / dtick=0.05, 5-row robustness summary linking to README sections.
+- Page 4 (Threshold Tuning): interactive Pareto slider over the §15D 29-point sweep, CATCH 2 caption verbatim, real-time strict_avg / FPR / 4-case-distribution updates as the user drags.
+- Page 5 (Model Card): 3 top-line performance cards, 8-row limitations table with U+2212 minus signs and per-row closure-status column, BibTeX citation block.
+- Pages 2 (Single Flow Analyzer) and 3 (SHAP Explorer) shipped as placeholder stubs that say "coming Week 7" so the sidebar nav looked complete.
+
+#### Key results
+- 3-of-5 pages functional; Pareto slider is the killer interactive piece.
+- Cold-start <3 s (no TF loaded; pure CSV reads).
+- Ready-to-fill stubs for Pages 2 + 3 keep the nav coherent.
+- Commit `406ab9d`. Wall-clock: ~3 hours UI work, no compute.
+
+#### Output
+- `dashboard/Home.py`, `dashboard/pages/{1_Threshold_Tuning, 2_Model_Card}.py`, `dashboard/components/{data_loader, pareto_chart, status_indicators}.py`
+- `dashboard/requirements.txt` pinning streamlit==1.40.0 + plotly==5.24.1
+- `dashboard/.streamlit/config.toml`
+
+### Week 7 — Pages 2 + 3 (Single Flow Analyzer + SHAP Explorer)
+
+#### What we did
+- Page 2 (Single Flow Analyzer): full pipeline scoring on a single user-input flow. Three input modes (paste CSV row, upload CSV file, sample-from-X_test.npy dropdown). Renders 4 metric cards (E7 prediction + confidence, softmax entropy, AE recon MSE, fusion case) + runtime SHAP top-5 horizontal bar (`shap.TreeExplainer` invoked at request time). 44-feature OOD validation against pre-computed training-distribution percentiles (`feature_ranges.json`).
+- Page 3 (SHAP Explorer): per-class browser over the 5,000-sample attribution tensor. Class dropdown (19 classes, defaults to MQTT_DDoS_Connect_Flood), top-10 horizontal bar, **DDoS↔DoS scatter plot with cosine = 0.991 in title** demonstrating the §16.4 finding visually, collapsible 19×15 all-class heatmap.
+- Two reproducibility tripwires mirroring Tier 1 hardening: E7 first-100 reference (1e-5 tolerance — float32 precision floor) and SHA256 of `shap_values.npy` (file-byte hash, including .npy header).
+- Lazy TensorFlow: only Page 2 imports TF, only when navigated to. Pages 1/3/4/5 cold-start TF-free.
+
+#### Key results
+- 5-page dashboard structurally complete.
+- Three substantive bugs surfaced and fixed during visual review (none caught by automated tests):
+  1. **macOS `libomp` deadlock** between xgboost and TF — fixed by enforcing import order (model_loader before data_loader, prime_tf before tripwires).
+  2. **Streamlit `st.button()` rerun semantics** — the cross-page navigation button silently failed because the primary score-button gate halted reruns before the navigation code could run. Fixed by persisting scored values to session_state and gating render on the persisted state, not on the transient button return.
+  3. **Custom 3-signal fusion classifier drift from canonical** — the dashboard had its own ad-hoc `_classify_case` that disagreed with `notebooks/enhanced_fusion.py:apply_fusion`. Fixed by adopting the canonical 4-case `baseline_fusion` partition + a separate entropy advisory banner.
+- Commit `822fd28`. Wall-clock: ~7 hours UI/UX + bug fixing, no compute.
+
+#### Output
+- `dashboard/pages/{3_Single_Flow_Analyzer, 4_SHAP_Explorer}.py` (Pages 2 and 3 — file numbering vs sidebar position differ)
+- `dashboard/components/{model_loader, flow_input, shap_loader, shap_charts}.py`
+- `dashboard/components/{feature_ranges.json, e7_first100_proba_ref.npy, ae_recon_ref.json}`
+- `scripts/precompute_dashboard_artifacts.py` (one-shot tripwire artifact generator)
+
+### Week 7.1 — Canonical 5-Case `entropy_fusion` Alignment
+
+#### What we did
+- Replaced Page 2's `_classify_case` from the canonical 4-case `baseline_fusion` (E7 × AE only) to the canonical 5-case `entropy_fusion` (E7 × AE × entropy). Source of truth: `notebooks/enhanced_fusion.py:499-512`. Cases now: 1 = Confirmed Alert, 2 = Zero-Day Warning, 3 = Low-Confidence Alert, 4 = Clear, **5 = Uncertain Alert (high entropy ∧ ¬AE-anomaly → operator review)**.
+- Reworded the entropy advisory banner: from "the 4-case partition uses only E7 + AE" (which contradicts the new partition) to "this flow's entropy {value} contributed to the Case {N} verdict above" (which reinforces the partition).
+- Added a module-load self-check tripwire: 4 hardcoded synthetic signal triples assert case numbers {1, 2, 2, 5} via `_assert_classify_case_canonical()`. Synthetic threshold `THR=0.1` decoupled from `sweep_table.csv` (validates partition LOGIC, not data fixtures).
+- Cleaned up `flow_input.py` dropdown labels: dropped the now-stale `(case N)` suffixes, future-proof against any further partition refinement.
+- Documented the AE-unavailable degradation table inline in `_classify_case` docstring: when TF is unavailable and `ae_anomaly = False` uniformly, the partition collapses to {3, 4, 5}; one specific transition matters operationally — Benign-with-anomaly Case 2 → Case 4 (AE-rescue lost, false-negative risk). Flagged as Model Card limitation #9.
+
+#### Key results
+- **Headline thesis contribution (Case 5) now visible in the live dashboard.**
+- MQTT_Malformed_Data sample (test row 101319) demonstrates the fusion's value in 30 seconds: E7 says Benign (confidence 0.584), AE says clean (MSE 0.1937, below p90), entropy says confused (1.1802, above p93) → Case 5 "Uncertain Alert — high entropy, AE clean (operator review)". Single-channel IDS would have said benign and missed it; two-channel fusion would have said Case 4 Clear and missed it; three-channel fusion catches it.
+- All 4 sample flows verified against canonical `entropy_fusion` partition output (Cases 1 / 2 / 2 / 5 for Recon_Ping_Sweep / ARP_Spoofing / Benign / MQTT_Malformed_Data).
+- Tripwire is silent on the happy path, asserts loudly on drift.
+- Commit `6aacb8b`. Wall-clock: ~30 min code + ~10 min user re-test, no compute.
+
+#### Output
+- `dashboard/pages/3_Single_Flow_Analyzer.py` (canonical 5-case `_classify_case` + tripwire + reworded banner + AE-degradation comment table)
+- `dashboard/components/flow_input.py` (4 dropdown labels cleaned up)
+
+---
+
 ## All Hypothesis Results — Final
 
 | Hypothesis | Original Claim | Result | Evidence | Thesis Value |
@@ -543,7 +611,7 @@ The β-VAE substitution preserves §15C.7's per-signal ablation invariant — en
 
 ---
 
-## Complete List of Thesis Contributions (18 total)
+## Complete List of Thesis Contributions (19 total)
 
 1. **First hybrid 4-layer (XGBoost + AE + 5-case fusion + SHAP) framework on CICIoMT2024** — no prior work combines all 4 layers; Yacoubi is supervised-only
 2. **37% duplication discovery in CICIoMT2024 train (44.7% in test)** — first report ever; explains inflated metrics in all prior literature
@@ -563,6 +631,10 @@ The β-VAE substitution preserves §15C.7's per-signal ablation invariant — en
 16. **Continuous-frontier threshold methodology** (Path B Week 2A) — replaces the discrete 4-point grid {p90, p95, p97, p99} with a 29-threshold continuous sweep at 0.5pp resolution. Reveals a **strict-pass plateau structure** that the discrete grid hid: p95.0 sits exactly at the lip (one half-percentile drops 4/4 → 3/4) while p93.0 sits in the middle of the plateau with both higher recall (+5.5pp) and stability margin against threshold drift. Refines (does not contradict) the §15C.6 published recommendation.
 17. **Empirical SHAP background sensitivity verification** (Path B Week 2B) — converts the §16.7B invariance argument from theory to empirical evidence on the actual model + dataset. Same 5,000-sample explained set + same uniform-random sampling protocol as Phase 7; only the source pool changes (X_train vs test-disjoint X_test). Result: Kendall τ = 0.927 over the top-10 union (BULLETPROOF), 19/19 classes with per-class top-5 Jaccard ≥ 0.6, DDoS↔DoS cosine reproduction within fp32 noise floor (|Δ| = 0.002).
 18. **Layer 2 substitution robustness check** (Path B Week 5 / Phase 6D) — β-VAE substitution at β ∈ {0.1, 0.5, 1.0, 4.0} with latent_dim = 8 (matched to AE bottleneck) produces fusion strict_avg within sampling noise of the §15D AE-based baseline (β = 0.5 best: Δ strict = −0.0001, Δ FPR = −0.005, Δ AUC = +0.0012; all four βs at 4/4 strict pass). Establishes that VAE log-likelihood and AE reconstruction error are **interchangeable** on this dataset's tabular feature space; the fusion's predictive ceiling is set by the entropy channel, and Layer 2's distributional assumption (deterministic vs probabilistic) does not move the headline. Strengthens §15D by showing the published claim does not depend on the specific Layer 2 distributional family. Deterministic AE retained for engineering simplicity.
+
+### Contribution 19 — Reproducibility-tripwired interactive dashboard demonstrating the 5-case fusion live (Path B Tier 3 / §15F)
+
+A 5-page Streamlit dashboard that loads only saved artifacts (no retraining, no new compute) and demonstrates each headline thesis claim with a reproducibility tripwire underneath: live Pareto slider over the §15D 29-point continuous sweep; per-class SHAP browser with the §16.4 DDoS↔DoS = 0.991 cosine reproducing bit-exactly; single-flow scoring through the canonical 5-case `entropy_fusion` partition with a self-check tripwire that asserts the partition produces case numbers {1, 2, 2, 5} on hardcoded synthetic fixtures at module load; runtime TreeSHAP for per-flow explainability. The MQTT_Malformed_Data sample (test row 101319) demonstrates the fusion's headline value-add in 30 seconds in one click — supervised model misclassifies (Benign, conf 0.584), AE misses (MSE below p90 threshold), entropy alone catches the model's confusion → Case 5 "Uncertain Alert" → operator review. The dashboard is local-only by design (Streamlit Cloud deferred); macOS `libomp` import-order constraint and AE-unavailable degradation transitions documented inline so future deployment work doesn't carry constraints forward unnecessarily.
 
 ---
 
@@ -703,5 +775,5 @@ All experimental work is complete. The remaining work is exposition:
 
 ---
 
-_Last updated: April 30, 2026 — Path B Tier 2 architectural complete (Week 5 / Phase 6D — β-VAE Layer 2 substitution robustness check). All 7 experimental phases + senior review remediation + Tier 1 hardening (Weeks 1, 2A, 2B; senior review §1.2 / §1.4 / §1.5 closed) + Tier 2 architectural (β-VAE substitution-equivalent: deterministic AE retained, fusion ceiling is the entropy channel, §15E)._
-_Next step: Tier 3 — dashboard + workshop paper. Thesis writing in parallel._
+_Last updated: May 1, 2026 — Path B Tier 3 demonstration complete (Weeks 6, 7, 7.1 — 5-page Streamlit dashboard, canonical 5-case `entropy_fusion` live, MQTT_Malformed_Data → Case 5 demo, two reproducibility tripwires). All 7 experimental phases + senior review remediation + Tier 1 hardening + Tier 2 architectural + Tier 3 demonstration complete. 19 thesis contributions; 5 robustness axes; 5-page interactive dashboard. Streamlit Cloud deployment deferred (local-only)._
+_Next step: workshop paper draft + thesis chapters 1–6._

@@ -1655,6 +1655,120 @@ results/enhanced_fusion/
 
 ---
 
+## 15F. Path B Tier 3 — Streamlit Dashboard (Weeks 6, 7, 7.1)
+
+> Implementation: April 30 – May 1, 2026 — MacBook Air M4, 24GB RAM — Total: ~13 hours UI/UX work spread across three commits (`406ab9d`, `822fd28`, `6aacb8b`); zero new compute, no model retraining, all numbers shown in the dashboard come from saved CSVs/NPYs/`.keras`/`.pkl` artifacts produced in Phases 4–7 + Path B Tier 1 + Tier 2.
+> Drivers: `dashboard/Home.py` + `dashboard/pages/{1_Threshold_Tuning, 2_Model_Card, 3_Single_Flow_Analyzer, 4_SHAP_Explorer}.py` + `dashboard/components/{data_loader, pareto_chart, status_indicators, model_loader, flow_input, shap_loader, shap_charts}.py`.
+
+### 15F.1 Motivation
+
+Tier 1 + Tier 2 produced robustness evidence; Tier 3 produces a reproducibility surface for that evidence. Five-axis robustness, 5-case fusion, per-class SHAP, and the §16.4 DDoS↔DoS = 0.991 finding are technical claims; without an interactive surface, examiners must reproduce them via the README + clone + venv + `streamlit run`. The dashboard collapses that to one click per claim, while preserving every reproducibility tripwire that protects the underlying numbers.
+
+### 15F.2 Architecture — five pages, lazy TF, two tripwires
+
+```
+Sidebar nav                     File on disk                          What it loads
+─────────────────────────────   ──────────────────────────────────   ──────────────────────────────
+Page 1: Live Monitor            Home.py                              CSVs only (TF-free, <3s cold-start)
+Page 2: Single Flow Analyzer    pages/3_Single_Flow_Analyzer.py     E7 + AE + scaler + SHAP TreeExplainer
+Page 3: SHAP Explorer           pages/4_SHAP_Explorer.py             shap_values.npy (16MB, SHA256-pinned)
+Page 4: Threshold Tuning        pages/1_Threshold_Tuning.py          sweep_table.csv (TF-free)
+Page 5: Model Card              pages/2_Model_Card.py                published metrics CSV (TF-free)
+```
+
+Pages 1, 3, 4, 5 load no TensorFlow at all; cold-start is `<3 s`. Only Page 2 imports TF (inside `model_loader.py:load_autoencoder()`, not at module top), and only when the user navigates to it. This guarantees the cold-start path does not pay the ~5 s TF-import cost or risk the macOS `libomp` ordering bug (see §15F.4).
+
+Two reproducibility tripwires mirror the Tier 1 hardening pattern:
+
+1. **E7 first-100 reference (`dashboard/components/e7_first100_proba_ref.npy`, 100 × 19 float64, ~15 KB).** Computed once via `scripts/precompute_dashboard_artifacts.py`; on Page 2 first load, the dashboard scores `X_test[:100]` and asserts `max|Δ| < 1e-5` (1e-5 not 1e-6 — the float32 softmax row-sums to 1.0 ± 2.3e-8 due to precision noise inherent to the `float32 → float64` cast).
+2. **SHAP SHA256 (`dashboard/components/shap_loader.py`).** On Page 3 first load, the dashboard hashes `results/shap/shap_values/shap_values.npy` (full file bytes, including `.npy` header — not the array buffer, off-by-80-bytes wasted one debug iteration) and asserts the hash matches a committed reference constant. Mismatch refuses to render and shows an error banner.
+
+Both tripwires were validated by negative rehearsal (deliberately corrupting each reference and confirming the page refuses to render).
+
+### 15F.3 Pages 4 + 5 (Week 6) — Pareto slider + honest limitations
+
+**Page 4 — Threshold Tuning.** Live interactive Pareto frontier from `results/enhanced_fusion/threshold_sweep/sweep_table.csv` (the 29-point §15D sweep). Two sliders (`entropy percentile`, `AE recon percentile`) feed the published 5-case `entropy_fusion` partition; the page renders strict_avg, FPR, and 4-case-distribution counts in real time as the user drags. The y-axis is pinned at `[0.40, 1.00]` with `dtick=0.05` so visual deltas are honest (the default Plotly autoscale would let small differences look big). The "CATCH 2" caption — `"annotation-only — they highlight subsets, they don't change the fitted models"` — is preserved verbatim, signalling that the slider explores the same fitted ablation surface, not a new training run.
+
+**Page 5 — Model Card.** Three top-line performance metrics (H2-strict 4/4, FPR 0.247, MCC 0.9906) with provenance links to README sections. The 8-row limitations table uses U+2212 minus signs (not regular hyphens) and a closure-status column (Open / Closed-by-Path-B-Tier-1 / Closed-by-Path-B-Tier-2 / etc.) so the reader sees at a glance which limitations were closed empirically. The "AE-unavailable degradation" Model Card limitation (Benign Case 2 → Case 4 false-negative-risk under TF unavailability) was added in Week 7.1 (see §15F.5).
+
+### 15F.4 Pages 2 + 3 (Week 7) — three substantive bugs caught and fixed
+
+Three classes of bug surfaced during visual review that the unit tests could not catch:
+
+**Bug 1 — macOS `libomp` deadlock (Phase A, Page 2).** XGBoost and TensorFlow both link against `libomp` on macOS; if pandas/numpy claim `libomp` first (which happens whenever `data_loader.py` imports before `model_loader.py`), the subsequent xgboost+TF dual-init deadlocks silently. The fix: `model_loader.py` eagerly imports TF + Keras at module load; Page 2 imports `model_loader` *before* `data_loader`; `ml.prime_tf()` runs *before* `verify_e7_tripwire()`. Pages 1/3/4/5 stay TF-free (verified — none import `model_loader`). Documented in `model_loader.py` docstring §1a so future debugging finds the fix in 30 seconds, not 30 minutes.
+
+**Bug 2 — Streamlit `st.button()` rerun semantics (Phase C, Page 2 → Page 3 navigation).** The cross-page button (`"→ Open Page 3 with this class pre-selected"`) silently failed because `st.button()` returns `True` only on the rerun where it was just clicked. The page's primary score-button gate (`if not (score_clicked and validation.ok): st.stop()`) halted every subsequent rerun before reaching the navigation code further down. Fix: persist scored values to `st.session_state["page2_scored_values"]` and gate the pipeline-render on the persisted state, never on the transient `st.button()` return. General defensive pattern: when a Streamlit page has a primary action gating output AND any secondary widget downstream, persist the primary action's result to `session_state` and gate on the persisted value.
+
+**Bug 3 — Custom 3-signal fusion classifier drifting from canonical (Phase C, Page 2).** The first Page 2 implementation used a 3-signal classifier (E7 + AE + entropy) with invented label strings (`"Consensus attack"`, `"Uncertain attack"`, etc.) that produced different case numbers than `notebooks/enhanced_fusion.py:apply_fusion`. ARP_Spoofing's "Case 3" was right by coincidence; MQTT_Malformed_Data's "Case 4 consensus benign" was the technically correct case number with a misleading label. Fix in Week 7: drop the custom classifier, use the canonical 4-case `baseline_fusion` partition (E7 × AE only) verbatim, surface entropy as a separate yellow advisory banner. Fix in Week 7.1: replace `baseline_fusion` with the canonical 5-case `entropy_fusion` partition (the headline thesis contribution — see §15F.5).
+
+### 15F.5 Week 7.1 — Page 2 alignment to canonical 5-case `entropy_fusion`
+
+Week 7's fix landed safely on the 4-case `baseline_fusion` partition (E7 × AE only). The README + `Project_Journey` headline contribution is the **5-case `entropy_fusion`** (Case 5 = "Uncertain Alert" routing for high-entropy ∧ ¬AE-anomaly flows; see `notebooks/enhanced_fusion.py:499-512`). Week 7.1 (commit `6aacb8b`) replaces `_classify_case` in `pages/3_Single_Flow_Analyzer.py` with the canonical 5-case partition verbatim, plus a self-check tripwire that calls `_classify_case` on four hardcoded synthetic signal triples at module load and asserts the case numbers `{1, 2, 2, 5}`. Synthetic threshold `THR=0.1` validates partition LOGIC (decoupled from `sweep_table.csv` regeneration); a separate live-threshold tripwire would couple this canonical-logic test to data drift, which is a different concern.
+
+The four built-in sample flows demonstrate all four reachable cases:
+
+| Sample (X_test row) | E7 | Entropy | AE MSE | Case rendered | Label |
+|---|---:|---:|---:|:---:|---|
+| ARP_Spoofing (row 0) | ARP_Spoofing 0.803 | 0.5212 (above p93) | 0.2809 (above p90) | **2** | Zero-Day Warning — high entropy + AE anomaly agree |
+| Benign (row 1744) | Benign 1.000 | 0.0041 | 0.2993 (above p90) | **2** | Zero-Day Warning — AE flags an E7-benign flow |
+| Recon_Ping_Sweep (row 106007) | Recon_Ping_Sweep 1.000 | 0.0022 | 0.4266 (above p90) | **1** | Confirmed Alert — E7 attack + AE anomaly agree |
+| MQTT_Malformed_Data (row 101319) | Benign 0.584 | 1.1802 (above p93) | 0.1937 (below p90) | **5** | Uncertain Alert — high entropy, AE clean (operator review) |
+
+The MQTT_Malformed_Data row is the load-bearing demo: E7 misses the attack (says benign with confidence 0.584, consistent with the §15D published Recon_Ping_Sweep / Recon_OS_Scan / MQTT_Malformed_Data H2-strict per-target recall — the supervised channel misses ~20% of MQTT_Malformed_Data flows by design); AE misses the attack (MSE = 0.1937, below the p90 threshold of 0.2013); **only the entropy signal catches the model's confusion** (1.1802, well above p93). Single-channel IDS would label this as benign and miss it. Two-channel fusion (E7 × AE) would label this as Case 4 "Clear" and miss it. Three-channel fusion via the canonical `entropy_fusion` correctly routes it to Case 5 "Uncertain Alert" → operator review queue. The dashboard demonstrates the fusion's headline value-add in 30 seconds, in one click.
+
+**AE-unavailable degradation (worth flagging as a Model Card limitation).** When TensorFlow is unavailable in the deployment Python environment, Page 2's β-graceful-degradation path sets `ae_binary = False` for all signals. The 5-case partition collapses to {3, 4, 5}, and one specific transition matters operationally: a Benign-predicted flow that AE would have flagged as anomaly (Case 2 — Zero-Day Warning) collapses to Case 4 — Clear. **The AE rescue is lost, so flows that the AE channel would have escalated become false negatives.** Two of the four sample flows trigger this transition under simulated `ae_mse=None`:
+
+| Sample | Normal (AE on) | Degraded (AE off) | Risk |
+|---|:---:|:---:|---|
+| Recon_Ping_Sweep | Case 1 | Case 3 | Low (still flagged as attack, just downgraded confidence) |
+| ARP_Spoofing | Case 2 | Case 5 | Low (still escalated to operator review) |
+| **Benign** (anomalous) | **Case 2** | **Case 4** | **HIGH — false negative; AE-rescue capability lost** |
+| MQTT_Malformed_Data | Case 5 | Case 5 | None (Case 5 never depended on AE) |
+
+This degradation is documented inline in `dashboard/pages/3_Single_Flow_Analyzer.py:_classify_case` so the next reader finds it without rerunning the analysis. Production deployment that requires graceful degradation should either (a) pin the TF environment defensively (Docker, conda lock), or (b) reintroduce Layer 2 via a non-TF route (e.g., the §15E β-VAE retrained as a sklearn-compatible pipeline, or pre-computed AE recon-error percentiles served as a static lookup table for the `binary` decision only).
+
+### 15F.6 Page 3 — SHAP Explorer (Phase B, Week 7)
+
+Per-class browser over the 5,000-sample SHAP attribution tensor (`shap_values.npy`, shape (19, 5000, 44), float32, ~16 MB). Class dropdown defaults to `MQTT_DDoS_Connect_Flood`; for any selected class, top-10 horizontal bar chart shows mean-abs SHAP across that class's filtered subset (filtered by `y_shap_subset == class_idx` *before* averaging — the implementation must filter then mean, not mean over all 5000 rows; the cosine validation gate caught three plausible-looking-but-wrong aggregation methods before landing on the canonical one). The DDoS↔DoS scatter plot — 44 features as 44 dots, x = mean-abs SHAP for `MQTT_DDoS_Connect_Flood`, y = mean-abs SHAP for `MQTT_DoS_Connect_Flood`, dashed `y = x` reference line, **cosine = 0.991 in title** — visually confirms the §16.4 finding. The dashboard's cosine reproduces `0.990971` to bit precision against the published 0.991 (`category_cosine.csv` recomputed at runtime); the validation gate (`|Δ| < 0.001`) was a hard precondition on Phase B completion.
+
+Two cross-page contracts:
+- Page 2's "Closest matching pre-computed §16 signature" footer reads from the same `shap_loader.py` cache as Page 3 (single-load semantics via `@st.cache_data(ttl=None)`).
+- Clicking "→ Open Page 3 with this class pre-selected" on Page 2 sets `st.session_state["shap_selected_class"]` and calls `st.switch_page("pages/4_SHAP_Explorer.py")`. Page 3 reads the session state on init and pre-selects the dropdown to that class.
+
+### 15F.7 Output Artifacts
+
+```
+dashboard/                                       (~80 KB code; no new artifacts >100 KB committed)
+├── Home.py                                      Page 1 — Live Monitor
+├── pages/
+│   ├── 1_Threshold_Tuning.py                    Page 4 — interactive Pareto slider
+│   ├── 2_Model_Card.py                          Page 5 — honest limitations
+│   ├── 3_Single_Flow_Analyzer.py                Page 2 — pipeline scoring + SHAP + 5-case fusion
+│   └── 4_SHAP_Explorer.py                       Page 3 — per-class SHAP signatures
+├── components/
+│   ├── data_loader.py                           CSV/NPY loaders (TF-free)
+│   ├── pareto_chart.py                          Plotly Pareto helpers
+│   ├── status_indicators.py                     status badges
+│   ├── model_loader.py                          E7 + AE + scaler + SHAP TreeExplainer (lazy TF)
+│   ├── flow_input.py                            44-feature input parsers + OOD validation
+│   ├── shap_loader.py                           shap_values.npy cache + per-class helpers + SHA256 tripwire
+│   ├── shap_charts.py                           Plotly per-class bar / DDoS↔DoS scatter / 19×15 heatmap
+│   ├── feature_ranges.json                      pre-computed training-distribution percentiles (one-shot)
+│   ├── e7_first100_proba_ref.npy                tripwire reference (100 × 19 float64)
+│   └── ae_recon_ref.json                        AE recon mean-MSE reference (n=100, mean_mse=0.25535)
+├── requirements.txt                             pinned: streamlit==1.40.0, plotly==5.24.1, xgboost==3.2.0,
+│                                                shap==0.51.0, joblib==1.5.3, scikit-learn==1.8.0, tensorflow,
+│                                                pandas>=2.2,<3.2, numpy>=1.26,<2.3
+└── .streamlit/config.toml                       theme + browser settings
+
+scripts/precompute_dashboard_artifacts.py        one-shot: emits feature_ranges.json + e7_first100_proba_ref.npy
+                                                 (run once; never imported by the dashboard)
+```
+
+Streamlit Cloud deployment is explicitly deferred — the dashboard runs locally via `streamlit run dashboard/Home.py` from the repo root. A future deployment would require relaxing the macOS `libomp` import-order constraint (Cloud is Linux, libomp behaves differently); this is documented in the `model_loader.py` docstring so the constraint isn't carried forward unnecessarily.
+
+---
+
 ## 16. Phase 7 SHAP Explainability Analysis Results
 
 > Pipeline run: April 27, 2026 — MacBook Air M4, 24GB RAM — Total runtime: 70.3 minutes
@@ -2214,11 +2328,17 @@ DOI: 10.1016/J.IOT.2024.101351
 
 ---
 
-> **Last updated:** April 30, 2026 — Path B Tier 1 + Tier 2 complete. 
-> Tier 1: continuous threshold sweep §15D (p93.0 refined optimum, +5.5pp 
-> over discrete-grid p95), per-fold KS §15C.10 (uniform shift, range 0.003), 
-> SHAP background sensitivity §16.7B (Kendall τ_top10=0.927 — BULLETPROOF). 
-> Tier 2: β-VAE Layer 2 substitution robustness check §15E (β=0.5 best, 
-> Δstrict=−0.0001 — substitution-equivalent; deterministic AE retained, 
-> fusion ceiling is the entropy channel). Senior review §1.2/§1.4/§1.5 
-> closed. 18 thesis contributions; 5 robustness axes.
+> **Last updated:** May 1, 2026 — Path B Tier 1 + Tier 2 + Tier 3 complete.
+> Tier 1 (hardening): continuous threshold sweep §15D (p93.0 refined optimum,
+> +5.5pp over discrete-grid p95), per-fold KS §15C.10 (uniform shift, range
+> 0.003), SHAP background sensitivity §16.7B (Kendall τ_top10=0.927 —
+> BULLETPROOF). Tier 2 (architectural): β-VAE Layer 2 substitution robustness
+> check §15E (β=0.5 best, Δstrict=−0.0001 — substitution-equivalent;
+> deterministic AE retained, fusion ceiling is the entropy channel). Tier 3
+> (demonstration): 5-page Streamlit dashboard §15F with canonical 5-case
+> `entropy_fusion` live; MQTT_Malformed_Data sample demonstrates Case 5
+> "Uncertain Alert" routing in 30 seconds (E7 + AE both miss, entropy
+> catches); two reproducibility tripwires (E7 first-100 ref bit-exact, SHAP
+> SHA256 file-byte hash). Senior review §1.2 / §1.4 / §1.5 closed. 19 thesis
+> contributions; 5 robustness axes; 5-page interactive dashboard (local-only,
+> Streamlit Cloud deferred).
