@@ -7,7 +7,7 @@
 > **Ders:** Siber Güvenlik Analitiği
 > **Tarih:** Mayıs 2026
 > **Veri Seti:** CICIoMT2024 (Canadian Institute for Cybersecurity)
-
+> **Github** https://github.com/amirbaseet/IoMT-Anomaly-Detection/tree/main/course-project
 ---
 
 ## Özet
