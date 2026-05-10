@@ -1,0 +1,56 @@
+[15:22:40] [+   0.0s] LSTM-AE training script | SMOKE=True | random_state=42
+[15:22:40] [+   0.0s] TensorFlow 2.21.0 | tf.keras 3.14.0 | NumPy 2.2.6
+[15:22:40] [+   0.0s] No GPU detected; CPU training (LSTM is slower than dense AE here).
+[15:22:40] [+   0.0s] 
+======================================================================
+[15:22:40] [+   0.0s] SECTION 2 . DATA LOADING
+[15:22:40] [+   0.0s] ======================================================================
+[15:22:40] [+   0.8s] Benign rows in train split: 154,186
+[15:22:40] [+   0.8s] AE-train (benign): (123348, 44)
+[15:22:40] [+   0.8s] AE-val   (benign): (30838, 44)
+[15:22:40] [+   0.8s] Loaded Phase 5 scaler: n_samples_seen=123,348.0, means range=[-0.5196, 5281.1010]
+[15:22:40] [+   0.8s] After scaling: benign-train mean=-0.000000, std=0.965307
+[15:22:41] [+   1.0s] Test set (scaled): (892268, 44), benign=37,607, attack=854,661
+[15:22:41] [+   1.0s] 
+======================================================================
+[15:22:41] [+   1.0s] PHASE 1 . SMOKE GATE (c1, 5 epochs, _smoke/ dir)
+[15:22:41] [+   1.0s] ======================================================================
+[15:22:41] [+   1.2s] 
+--- Training c1 -> results/unsupervised/lstm_ae/_smoke (epochs<=5, cap 600s, units=64/32, lr=0.001, rec_dropout=0.0) ---
+[15:22:41] [+   1.2s]   [c1] starting epoch 1/5 (241 batches)
+[15:24:07] [+  86.9s]   [c1] epoch   1/5 done: loss=0.8279  val_loss=0.8007  max_grad_norm=9.0050  lr=1.00e-03  elapsed=85.7s
+[15:24:07] [+  86.9s]   [c1] starting epoch 2/5 (241 batches)
+[15:25:33] [+ 173.4s]   [c1] epoch   2/5 done: loss=0.6969  val_loss=0.6749  max_grad_norm=5.1009  lr=1.00e-03  elapsed=172.2s
+[15:25:33] [+ 173.4s]   [c1] starting epoch 3/5 (241 batches)
+[15:26:58] [+ 258.4s]   [c1] epoch   3/5 done: loss=0.6042  val_loss=0.6048  max_grad_norm=7.2440  lr=1.00e-03  elapsed=257.2s
+[15:26:58] [+ 258.4s]   [c1] starting epoch 4/5 (241 batches)
+[15:28:23] [+ 342.9s]   [c1] epoch   4/5 done: loss=0.5412  val_loss=0.5639  max_grad_norm=10.6249  lr=1.00e-03  elapsed=341.7s
+[15:28:23] [+ 342.9s]   [c1] starting epoch 5/5 (241 batches)
+[15:29:47] [+ 427.8s]   [c1] epoch   5/5 done: loss=0.5159  val_loss=0.5410  max_grad_norm=12.6139  lr=1.00e-03  elapsed=426.6s
+[15:29:47] [+ 427.8s] c1: 5 epochs in 426.6s (7.11 min)
+[15:29:47] [+ 427.8s] Scoring benign-val (n=30,838)...
+[15:29:49] [+ 429.7s] Scoring full test  (n=892,268)...
+[15:30:46] [+ 486.6s] 
+[15:30:46] [+ 486.6s] Smoke pass criteria (per plan §8.1):
+[15:30:46] [+ 486.6s]   [PASS] a_model_builds
+[15:30:46] [+ 486.6s]   [PASS] b_forward_pass_shape
+[15:30:46] [+ 486.6s]   [PASS] c_train_loss_decreases
+[15:30:46] [+ 486.6s]   [PASS] d_val_within_10x_train
+[15:30:46] [+ 486.6s]   [FAIL] e_benign_recon_close
+[15:30:46] [+ 486.6s]   [FAIL] f_attack_recon_higher
+[15:30:46] [+ 486.6s]   [PASS] g_roundtrip_bit_stable
+[15:30:46] [+ 486.6s]   [PASS] h_population_auc_above_floor
+[15:30:46] [+ 486.6s] 
+[15:30:46] [+ 486.6s] Diagnostics:
+[15:30:46] [+ 486.6s]   train_loss epochs:      ['0.8279', '0.6969', '0.6042', '0.5412', '0.5159']
+[15:30:46] [+ 486.6s]   val_loss   epochs:      ['0.8007', '0.6749', '0.6048', '0.5639', '0.5410']
+[15:30:46] [+ 486.6s]   benign-sample MSE:      10.684216  (threshold < 5.0)
+[15:30:46] [+ 486.6s]   attack-sample MSE:      0.947817
+[15:30:46] [+ 486.6s]   reload max abs diff:    0.000000e+00  (tolerance < 0.0001)
+[15:30:46] [+ 486.6s]   population AUC:         0.976913  (floor >= 0.85)
+[15:30:46] [+ 486.6s] 
+======================================================================
+[15:30:46] [+ 486.6s] SMOKE GATE: FAIL (['e_benign_recon_close', 'f_attack_recon_higher']) - DO NOT launch full sweep
+[15:30:46] [+ 486.6s] Per LSTM_Integration_Decision_Report.md §3.4: documenting negative
+[15:30:46] [+ 486.6s] finding and stopping. NO architectural escalation.
+[15:30:46] [+ 486.6s] ======================================================================

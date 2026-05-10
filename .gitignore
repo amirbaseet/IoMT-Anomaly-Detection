@@ -5,6 +5,10 @@ eda_output/train_cleaned.csv
 eda_output/test_cleaned.csv
 eda_output/cache/
 
+# Pcap captures (raw network data — track download path in docs instead of bytes)
+*.pcap
+*.pcapng
+
 # Python
 venv/
 __pycache__/

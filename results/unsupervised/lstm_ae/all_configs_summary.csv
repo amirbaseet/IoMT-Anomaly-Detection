@@ -1,0 +1,7 @@
+config_id,enc_units_64,enc_units_32,learning_rate,recurrent_dropout,training_path,epochs_actual,best_val_loss,ae_reference_val_loss,ae_reference_threshold_1_5x,training_time_s,val_recon_mean,val_recon_p90,val_recon_p95,val_recon_p99,test_recon_mean,test_recon_std_over_mean,test_recon_max_over_mean,test_recon_unimodal,test_recon_finite,gate1_g1_1_descriptive_pass,gate1_g1_2_descriptive_pass,gate1_g1_3_descriptive_pass,early_stopped_by_budget
+c1,64,32,0.001,0.0,gradient_tape_pure_numpy,38,0.268369,0.198779,0.298168,3634.9,0.268369,0.192054,0.356295,1.312574,49.501141,13.6619,2832.3871,True,True,True,True,False,True
+c2,64,32,0.0005,0.0,gradient_tape_pure_numpy,37,0.330944,0.198779,0.298168,3638.3,0.330944,0.29893,0.587298,1.690843,54.603531,12.4958,2565.6789,True,True,False,True,False,True
+c3,32,16,0.001,0.0,gradient_tape_pure_numpy,50,0.315476,0.198779,0.298168,3667.5,0.315476,0.304941,0.595625,1.67319,50.87759,13.3705,2755.318,True,True,False,True,False,True
+c4,128,64,0.001,0.0,gradient_tape_pure_numpy,27,0.230644,0.198779,0.298168,3709.4,0.230644,0.123238,0.251732,0.944787,45.67408,14.8079,3063.9455,True,True,True,True,False,True
+c5,64,32,0.001,0.1,gradient_tape_pure_numpy,20,0.368156,0.198779,0.298168,3730.2,0.368156,0.346472,0.602726,2.128266,56.543716,12.042,2482.389,True,True,False,True,False,True
+c6,64,32,0.001,0.0,gradient_tape_pure_numpy,39,0.258989,0.198779,0.298168,3617.6,0.258989,0.233162,0.415234,1.312488,43.352921,15.1649,3170.4323,True,True,True,True,False,True

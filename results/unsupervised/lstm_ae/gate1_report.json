@@ -1,0 +1,531 @@
+{
+  "schema_version": "1.0",
+  "phase": "D",
+  "task": "Phase D Task 1 — Gate 1 binary verdict report",
+  "date": "2026-05-08",
+  "report_path": "results/unsupervised/lstm_ae/gate1_report.json",
+  "methodology_notes": {
+    "binary_verdict_rule": "PASS = G1.1 ∧ G1.2 (G1.3 reframed as descriptive per Phase C Step 2)",
+    "g1_1_definition": "best_val_loss ≤ 1.5 × AE_BEST_VAL_LOSS = 0.29816796630620956 (plan §6.1)",
+    "g1_2_definition": "max(grad_norm) over all epochs ≤ 1e3 (plan §6.2)",
+    "g1_3_status": "REFRAMED — std/mean ≤ 5.0 threshold inappropriate for this dataset's heavy-tailed reconstruction-error distributions (AE itself fails it: val-benign std/mean = 47.67). Reported descriptively only.",
+    "fusion_pipeline": "vae_fusion.py imported read-only; HARD + SOFT tripwires verified bit-exactly before any LSTM-AE numbers reported.",
+    "data_sources": {
+      "per_config_manifests": "results/unsupervised/lstm_ae/c{1..6}/manifest.json",
+      "summary_csv": "results/unsupervised/lstm_ae/all_configs_summary.csv",
+      "ae_published": "results/unsupervised/{config.json, thresholds.json, benign_error_stats.json}",
+      "ae_15d_anchor": "results/enhanced_fusion/threshold_sweep/sweep_table.csv (percentile=93)",
+      "ae_layer2_auc": "notebooks/vae_fusion.py:101 (PHASE5_AE_TEST_AUC = 0.9892)",
+      "g1_3_descriptive": "live-recomputed in this report; per-config descriptive stats at configs[*].g1_3_attack_dominated_test_descriptive_only",
+      "fusion_integration": "live-recomputed in this report; per-config fusion stats at configs[*].fusion_integration",
+      "phase_b_pause": "results/unsupervised/lstm_ae/_phase_b_pause.json v1.7"
+    },
+    "reproducibility": "All numerical fields recomputed live in this report run; no values copied from markdown reports. Verifiable against on-disk artifacts via vae_fusion.py + numpy + scipy."
+  },
+  "ae_reference": {
+    "architecture": "dense 44 → 32 → 16 → 8 → 16 → 32 → 44",
+    "latent_dim": 8,
+    "epochs_actual": 36,
+    "training_time_s": 8.23514699935913,
+    "best_val_loss": 0.1987786442041397,
+    "val_benign_p90_threshold": 0.20127058029174805,
+    "val_benign_mean": 0.19877859950065613,
+    "val_benign_std": 9.475044250488281,
+    "val_benign_p99": 1.2025282382965088,
+    "val_benign_max": 1176.67236328125,
+    "val_benign_std_over_mean": 47.66631958515739,
+    "fusion_15d_strict_avg": 0.8589586873140701,
+    "fusion_15d_fpr": 0.247331613795304,
+    "layer2_test_auc": 0.9892
+  },
+  "configs": [
+    {
+      "config_id": "c1",
+      "architecture": "LSTM 64/32 (baseline)",
+      "enc_units_64": 64,
+      "enc_units_32": 32,
+      "learning_rate": 0.001,
+      "recurrent_dropout": 0.0,
+      "latent_dim": 8,
+      "epochs_actual": 38,
+      "training_time_s": 3634.928384065628,
+      "early_stopped_by_budget": true,
+      "best_val_loss": 0.26836857199668884,
+      "g1_1": {
+        "value": 0.26836857199668884,
+        "threshold": 0.29816796630620956,
+        "definition": "best_val_loss ≤ 1.5 × AE_BEST_VAL_LOSS",
+        "pass": true
+      },
+      "g1_2": {
+        "value": 29.885921478271484,
+        "threshold": 1000.0,
+        "definition": "max(grad_norm) over all epochs ≤ 1e3",
+        "pass": true
+      },
+      "g1_3_attack_dominated_test_descriptive_only": {
+        "phase_b_test_set_verdict_recorded_in_manifest": false,
+        "test_recon_unimodal": true,
+        "test_recon_std_over_mean": 13.661873487979395,
+        "test_recon_max_over_mean": 2832.38707110979,
+        "val_benign_recomputation": {
+          "n": 30838,
+          "mean": 0.26836857199668884,
+          "std": 11.614133834838867,
+          "p90": 0.19205419719219208,
+          "p99": 1.312574028968811,
+          "max": 1339.7764892578125,
+          "std_over_mean": 43.27680304898803,
+          "max_over_mean": 4992.300250695312,
+          "unimodal": true,
+          "all_finite": true
+        },
+        "benign_test_recomputation": {
+          "n": 37607,
+          "mean": 0.1884017288684845,
+          "std": 3.937286138534546,
+          "p90": 0.310588538646698,
+          "p99": 1.0188628435134888,
+          "max": 392.6640930175781,
+          "std_over_mean": 20.898354607366706,
+          "max_over_mean": 2084.1851896788103,
+          "unimodal": true,
+          "all_finite": true
+        },
+        "interpretation": "Phase B G1.3 verdict was computed against the attack-dominated test set (96% attacks). The std/mean ≤ 5.0 sub-threshold was inappropriate for this dataset's heavy-tailed reconstruction-error distributions — the AE itself fails the threshold (val-benign std/mean = 47.67). G1.3 is reframed as descriptive only; binary verdict rests on G1.1 ∧ G1.2."
+      },
+      "verdict": "PASS",
+      "verdict_rationale": "G1.1 PASS (0.268369 ≤ 0.298168) ∧ G1.2 PASS (29.8859 ≤ 1000.0)",
+      "verdict_failed_criteria": [],
+      "fusion_integration": {
+        "evaluated": true,
+        "operating_point": "entropy_benign_p93 + lstm_ae_c1_p90",
+        "val_benign_p90_threshold": 0.19205419719219208,
+        "strict_avg": 0.8930248121487422,
+        "h2_strict_pass": "4/4",
+        "h2_binary_avg": 0.9700678822609774,
+        "fpr": 0.2552609886457308,
+        "layer2_test_auc": 0.9913007257553733,
+        "delta_vs_ae": {
+          "strict_avg": 0.034066124834672085,
+          "fpr": 0.007929374850426829,
+          "layer2_test_auc": 0.002100725755373345
+        }
+      }
+    },
+    {
+      "config_id": "c2",
+      "architecture": "LSTM 64/32 (half learning rate)",
+      "enc_units_64": 64,
+      "enc_units_32": 32,
+      "learning_rate": 0.0005,
+      "recurrent_dropout": 0.0,
+      "latent_dim": 8,
+      "epochs_actual": 37,
+      "training_time_s": 3638.252830028534,
+      "early_stopped_by_budget": true,
+      "best_val_loss": 0.3309440314769745,
+      "g1_1": {
+        "value": 0.3309440314769745,
+        "threshold": 0.29816796630620956,
+        "definition": "best_val_loss ≤ 1.5 × AE_BEST_VAL_LOSS",
+        "pass": false
+      },
+      "g1_2": {
+        "value": 25.210391998291016,
+        "threshold": 1000.0,
+        "definition": "max(grad_norm) over all epochs ≤ 1e3",
+        "pass": true
+      },
+      "g1_3_attack_dominated_test_descriptive_only": {
+        "phase_b_test_set_verdict_recorded_in_manifest": false,
+        "test_recon_unimodal": true,
+        "test_recon_std_over_mean": 12.495827158720546,
+        "test_recon_max_over_mean": 2565.6788623827265,
+        "val_benign_recomputation": {
+          "n": 30838,
+          "mean": 0.3309440314769745,
+          "std": 11.638676643371582,
+          "p90": 0.2989296615123749,
+          "p99": 1.690842628479004,
+          "max": 1306.821533203125,
+          "std_over_mean": 35.168111633345305,
+          "max_over_mean": 3948.7690029365203,
+          "unimodal": true,
+          "all_finite": true
+        },
+        "benign_test_recomputation": {
+          "n": 37607,
+          "mean": 0.2550438940525055,
+          "std": 4.1979660987854,
+          "p90": 0.4254235327243805,
+          "p99": 1.4261791706085205,
+          "max": 398.4481506347656,
+          "std_over_mean": 16.459778872107293,
+          "max_over_mean": 1562.2728476406407,
+          "unimodal": true,
+          "all_finite": true
+        },
+        "interpretation": "Phase B G1.3 verdict was computed against the attack-dominated test set (96% attacks). The std/mean ≤ 5.0 sub-threshold was inappropriate for this dataset's heavy-tailed reconstruction-error distributions — the AE itself fails the threshold (val-benign std/mean = 47.67). G1.3 is reframed as descriptive only; binary verdict rests on G1.1 ∧ G1.2."
+      },
+      "verdict": "FAIL",
+      "verdict_rationale": "G1.1 FAIL (0.330944 > 0.298168) | G1.2 PASS (25.2104 ≤ 1000.0)",
+      "verdict_failed_criteria": [
+        "g1_1"
+      ],
+      "fusion_integration": {
+        "evaluated": false,
+        "reason": "G1.1 FAIL — fusion evaluation out of scope per Phase C Step 3"
+      }
+    },
+    {
+      "config_id": "c3",
+      "architecture": "LSTM 32/16 (half width)",
+      "enc_units_64": 32,
+      "enc_units_32": 16,
+      "learning_rate": 0.001,
+      "recurrent_dropout": 0.0,
+      "latent_dim": 8,
+      "epochs_actual": 50,
+      "training_time_s": 3667.4884638786316,
+      "early_stopped_by_budget": true,
+      "best_val_loss": 0.3154762089252472,
+      "g1_1": {
+        "value": 0.3154762089252472,
+        "threshold": 0.29816796630620956,
+        "definition": "best_val_loss ≤ 1.5 × AE_BEST_VAL_LOSS",
+        "pass": false
+      },
+      "g1_2": {
+        "value": 262.46563720703125,
+        "threshold": 1000.0,
+        "definition": "max(grad_norm) over all epochs ≤ 1e3",
+        "pass": true
+      },
+      "g1_3_attack_dominated_test_descriptive_only": {
+        "phase_b_test_set_verdict_recorded_in_manifest": false,
+        "test_recon_unimodal": true,
+        "test_recon_std_over_mean": 13.37048140715612,
+        "test_recon_max_over_mean": 2755.317950507807,
+        "val_benign_recomputation": {
+          "n": 30838,
+          "mean": 0.3154762089252472,
+          "std": 11.034728050231934,
+          "p90": 0.30494147539138794,
+          "p99": 1.6731903553009033,
+          "max": 1099.9910888671875,
+          "std_over_mean": 34.97800384956013,
+          "max_over_mean": 3486.7640023144595,
+          "unimodal": true,
+          "all_finite": true
+        },
+        "benign_test_recomputation": {
+          "n": 37607,
+          "mean": 0.2327861487865448,
+          "std": 3.9805519580841064,
+          "p90": 0.4091127812862396,
+          "p99": 1.3457046747207642,
+          "max": 385.69561767578125,
+          "std_over_mean": 17.099608283541418,
+          "max_over_mean": 1656.8666979814511,
+          "unimodal": true,
+          "all_finite": true
+        },
+        "interpretation": "Phase B G1.3 verdict was computed against the attack-dominated test set (96% attacks). The std/mean ≤ 5.0 sub-threshold was inappropriate for this dataset's heavy-tailed reconstruction-error distributions — the AE itself fails the threshold (val-benign std/mean = 47.67). G1.3 is reframed as descriptive only; binary verdict rests on G1.1 ∧ G1.2."
+      },
+      "verdict": "FAIL",
+      "verdict_rationale": "G1.1 FAIL (0.315476 > 0.298168) | G1.2 PASS (262.4656 ≤ 1000.0)",
+      "verdict_failed_criteria": [
+        "g1_1"
+      ],
+      "fusion_integration": {
+        "evaluated": false,
+        "reason": "G1.1 FAIL — fusion evaluation out of scope per Phase C Step 3"
+      }
+    },
+    {
+      "config_id": "c4",
+      "architecture": "LSTM 128/64 (double width)",
+      "enc_units_64": 128,
+      "enc_units_32": 64,
+      "learning_rate": 0.001,
+      "recurrent_dropout": 0.0,
+      "latent_dim": 8,
+      "epochs_actual": 27,
+      "training_time_s": 3709.4407300949097,
+      "early_stopped_by_budget": true,
+      "best_val_loss": 0.23064373433589935,
+      "g1_1": {
+        "value": 0.23064373433589935,
+        "threshold": 0.29816796630620956,
+        "definition": "best_val_loss ≤ 1.5 × AE_BEST_VAL_LOSS",
+        "pass": true
+      },
+      "g1_2": {
+        "value": 32.392608642578125,
+        "threshold": 1000.0,
+        "definition": "max(grad_norm) over all epochs ≤ 1e3",
+        "pass": true
+      },
+      "g1_3_attack_dominated_test_descriptive_only": {
+        "phase_b_test_set_verdict_recorded_in_manifest": false,
+        "test_recon_unimodal": true,
+        "test_recon_std_over_mean": 14.807914952628314,
+        "test_recon_max_over_mean": 3063.9454795072925,
+        "val_benign_recomputation": {
+          "n": 30838,
+          "mean": 0.23064373433589935,
+          "std": 12.066351890563965,
+          "p90": 0.12323764711618423,
+          "p99": 0.944786548614502,
+          "max": 1395.6512451171875,
+          "std_over_mean": 52.31597522172903,
+          "max_over_mean": 6051.112765476744,
+          "unimodal": true,
+          "all_finite": true
+        },
+        "benign_test_recomputation": {
+          "n": 37607,
+          "mean": 0.13879112899303436,
+          "std": 3.878648042678833,
+          "p90": 0.20749004185199738,
+          "p99": 0.8074849843978882,
+          "max": 432.8960266113281,
+          "std_over_mean": 27.945936248371424,
+          "max_over_mean": 3119.046798971239,
+          "unimodal": true,
+          "all_finite": true
+        },
+        "interpretation": "Phase B G1.3 verdict was computed against the attack-dominated test set (96% attacks). The std/mean ≤ 5.0 sub-threshold was inappropriate for this dataset's heavy-tailed reconstruction-error distributions — the AE itself fails the threshold (val-benign std/mean = 47.67). G1.3 is reframed as descriptive only; binary verdict rests on G1.1 ∧ G1.2."
+      },
+      "verdict": "PASS",
+      "verdict_rationale": "G1.1 PASS (0.230644 ≤ 0.298168) ∧ G1.2 PASS (32.3926 ≤ 1000.0)",
+      "verdict_failed_criteria": [],
+      "fusion_integration": {
+        "evaluated": true,
+        "operating_point": "entropy_benign_p93 + lstm_ae_c4_p90",
+        "val_benign_p90_threshold": 0.12323764711618423,
+        "strict_avg": 0.8684786884073519,
+        "h2_strict_pass": "4/4",
+        "h2_binary_avg": 0.9658496957217748,
+        "fpr": 0.2452468955247693,
+        "layer2_test_auc": 0.9918823689712088,
+        "delta_vs_ae": {
+          "strict_avg": 0.009520001093281771,
+          "fpr": -0.002084718270534691,
+          "layer2_test_auc": 0.0026823689712088816
+        }
+      }
+    },
+    {
+      "config_id": "c5",
+      "architecture": "LSTM 64/32 (recurrent_dropout=0.1)",
+      "enc_units_64": 64,
+      "enc_units_32": 32,
+      "learning_rate": 0.001,
+      "recurrent_dropout": 0.1,
+      "latent_dim": 8,
+      "epochs_actual": 20,
+      "training_time_s": 3730.1788399219513,
+      "early_stopped_by_budget": true,
+      "best_val_loss": 0.36815643310546875,
+      "g1_1": {
+        "value": 0.36815643310546875,
+        "threshold": 0.29816796630620956,
+        "definition": "best_val_loss ≤ 1.5 × AE_BEST_VAL_LOSS",
+        "pass": false
+      },
+      "g1_2": {
+        "value": 17.893796920776367,
+        "threshold": 1000.0,
+        "definition": "max(grad_norm) over all epochs ≤ 1e3",
+        "pass": true
+      },
+      "g1_3_attack_dominated_test_descriptive_only": {
+        "phase_b_test_set_verdict_recorded_in_manifest": false,
+        "test_recon_unimodal": true,
+        "test_recon_std_over_mean": 12.042037440675035,
+        "test_recon_max_over_mean": 2482.3890055426186,
+        "val_benign_recomputation": {
+          "n": 30838,
+          "mean": 0.36815643310546875,
+          "std": 12.045865058898926,
+          "p90": 0.3464715778827667,
+          "p99": 2.1282660961151123,
+          "max": 1211.756591796875,
+          "std_over_mean": 32.71942026732981,
+          "max_over_mean": 3291.417676924671,
+          "unimodal": true,
+          "all_finite": true
+        },
+        "benign_test_recomputation": {
+          "n": 37607,
+          "mean": 0.27481555938720703,
+          "std": 4.839049816131592,
+          "p90": 0.3753073215484619,
+          "p99": 1.5989887714385986,
+          "max": 487.55584716796875,
+          "std_over_mean": 17.608354588516995,
+          "max_over_mean": 1774.1202436104315,
+          "unimodal": true,
+          "all_finite": true
+        },
+        "interpretation": "Phase B G1.3 verdict was computed against the attack-dominated test set (96% attacks). The std/mean ≤ 5.0 sub-threshold was inappropriate for this dataset's heavy-tailed reconstruction-error distributions — the AE itself fails the threshold (val-benign std/mean = 47.67). G1.3 is reframed as descriptive only; binary verdict rests on G1.1 ∧ G1.2."
+      },
+      "verdict": "FAIL",
+      "verdict_rationale": "G1.1 FAIL (0.368156 > 0.298168) | G1.2 PASS (17.8938 ≤ 1000.0)",
+      "verdict_failed_criteria": [
+        "g1_1"
+      ],
+      "fusion_integration": {
+        "evaluated": false,
+        "reason": "G1.1 FAIL — fusion evaluation out of scope per Phase C Step 3"
+      }
+    },
+    {
+      "config_id": "c6",
+      "architecture": "LSTM 64/32 (replica of c1, grad-norm logger)",
+      "enc_units_64": 64,
+      "enc_units_32": 32,
+      "learning_rate": 0.001,
+      "recurrent_dropout": 0.0,
+      "latent_dim": 8,
+      "epochs_actual": 39,
+      "training_time_s": 3617.5814321041107,
+      "early_stopped_by_budget": true,
+      "best_val_loss": 0.2589890658855438,
+      "g1_1": {
+        "value": 0.2589890658855438,
+        "threshold": 0.29816796630620956,
+        "definition": "best_val_loss ≤ 1.5 × AE_BEST_VAL_LOSS",
+        "pass": true
+      },
+      "g1_2": {
+        "value": 51.09817886352539,
+        "threshold": 1000.0,
+        "definition": "max(grad_norm) over all epochs ≤ 1e3",
+        "pass": true
+      },
+      "g1_3_attack_dominated_test_descriptive_only": {
+        "phase_b_test_set_verdict_recorded_in_manifest": false,
+        "test_recon_unimodal": true,
+        "test_recon_std_over_mean": 15.16488835436863,
+        "test_recon_max_over_mean": 3170.432310271412,
+        "val_benign_recomputation": {
+          "n": 30838,
+          "mean": 0.2589890658855438,
+          "std": 10.179930686950684,
+          "p90": 0.23316170275211334,
+          "p99": 1.312488079071045,
+          "max": 1136.98486328125,
+          "std_over_mean": 39.306411072386915,
+          "max_over_mean": 4390.088281888019,
+          "unimodal": true,
+          "all_finite": true
+        },
+        "benign_test_recomputation": {
+          "n": 37607,
+          "mean": 0.19780966639518738,
+          "std": 3.373563766479492,
+          "p90": 0.4137965738773346,
+          "p99": 1.1736714839935303,
+          "max": 354.86151123046875,
+          "std_over_mean": 17.05459509617559,
+          "max_over_mean": 1793.9543486288512,
+          "unimodal": true,
+          "all_finite": true
+        },
+        "interpretation": "Phase B G1.3 verdict was computed against the attack-dominated test set (96% attacks). The std/mean ≤ 5.0 sub-threshold was inappropriate for this dataset's heavy-tailed reconstruction-error distributions — the AE itself fails the threshold (val-benign std/mean = 47.67). G1.3 is reframed as descriptive only; binary verdict rests on G1.1 ∧ G1.2."
+      },
+      "verdict": "PASS",
+      "verdict_rationale": "G1.1 PASS (0.258989 ≤ 0.298168) ∧ G1.2 PASS (51.0982 ≤ 1000.0)",
+      "verdict_failed_criteria": [],
+      "fusion_integration": {
+        "evaluated": true,
+        "operating_point": "entropy_benign_p93 + lstm_ae_c6_p90",
+        "val_benign_p90_threshold": 0.23316170275211334,
+        "strict_avg": 0.8906876145171353,
+        "h2_strict_pass": "4/4",
+        "h2_binary_avg": 0.9690631532641462,
+        "fpr": 0.2446565798920414,
+        "layer2_test_auc": 0.9899666496110346,
+        "delta_vs_ae": {
+          "strict_avg": 0.031728927203065194,
+          "fpr": -0.002675033903262597,
+          "layer2_test_auc": 0.0007666496110346754
+        }
+      }
+    }
+  ],
+  "summary": {
+    "total_configs": 6,
+    "g1_1_pass_count": 3,
+    "g1_2_pass_count": 6,
+    "binary_verdict_pass_count": 3,
+    "passing_configs": [
+      "c1",
+      "c4",
+      "c6"
+    ],
+    "failing_configs": [
+      "c2",
+      "c3",
+      "c5"
+    ],
+    "best_val_loss": {
+      "config": "c4",
+      "value": 0.23064373433589935
+    },
+    "best_strict_avg": {
+      "config": "c1",
+      "value": 0.8930248121487422
+    },
+    "best_layer2_auc": {
+      "config": "c4",
+      "value": 0.9918823689712088
+    },
+    "best_fusion_fpr": {
+      "config": "c6",
+      "value": 0.2446565798920414
+    },
+    "qualitative_verdict": "§15E.7 positive case — three Layer-2 architectures interchangeable at fusion-level §15D operating point; LSTM-AE configs match-or-beat AE on strict_avg / FPR (c4, c6) / Layer-2 AUC; capacity-vs-fusion inverse finding (c1/c6 win on strict_avg despite c4 winning on Layer-2 metrics) is a research observation worth Phase D narrative attention."
+  },
+  "audit_trail": {
+    "calibration_issues_discovered_during_path_b_t2": [
+      {
+        "id": 1,
+        "name": "Smoke (e)/(f) threshold contradicted own rationale",
+        "discovered_at_phase": "B v3 smoke",
+        "discovered_at_date": "2026-05-07",
+        "what": "Plan §8.1 rationale stated threshold should be 'well above benign p99=1.20', but threshold was set to 0.5 (BELOW p99). Sample-of-one (e)/(f) checks failed deterministically.",
+        "resolution": "Recalibrated (e) threshold 0.5→5.0; loosened (f) interpretation; added (h) population-AUC ≥ 0.85 check."
+      },
+      {
+        "id": 2,
+        "name": "Smoke (e)/(f) sample-of-one fundamentally fragile",
+        "discovered_at_phase": "B v4 smoke",
+        "discovered_at_date": "2026-05-07",
+        "what": "Recalibrated (e) threshold of 5.0 also failed because X_test[benign_test_mask][0] under seed=42 deterministically reproduces an outlier with MSE=10.68 (p99-p99.5 tail). No threshold short of including attack distribution would help; sample-of-one design is structurally fragile.",
+        "resolution": "Senior-engineer review override; SMOKE_OVERRIDE=1 env var added with documented authorization tied to v4-specific failure profile (structural checks all PASS, only loose checks FAIL).",
+        "ref": "results/unsupervised/lstm_ae/_phase_b_pause.json v1.6"
+      },
+      {
+        "id": 3,
+        "name": "PER_CONFIG_TIME_CAP_S 600 s budget mismatch",
+        "discovered_at_phase": "B senior review",
+        "discovered_at_date": "2026-05-08",
+        "what": "Cap of 600 s permitted ~7 epochs at observed 86 s/epoch — vs AE's 36-epoch reference budget of ~3100 s on equivalent compute. Comparing 7-epoch LSTM val_loss to 36-epoch AE val_loss was a budget-mismatched test, not an architecture test.",
+        "resolution": "Cap raised 600→3600 (16% above AE-equivalent budget); resume threshold lowered 30→20 to match new cap semantics."
+      },
+      {
+        "id": 4,
+        "name": "G1.3 std/mean ≤ 5.0 inappropriate for heavy-tailed reconstruction-error distributions",
+        "discovered_at_phase": "C step 2",
+        "discovered_at_date": "2026-05-08",
+        "what": "All 6 configs failed G1.3 in Phase B against the attack-dominated test set. Phase C recomputation against AE val-benign reference revealed the AE itself has std/mean = 47.67 (9.5× over threshold). The 5.0 ceiling was never appropriate for this dataset.",
+        "resolution": "G1.3 reframed as descriptive comparison; binary verdict rule simplified to G1.1 ∧ G1.2. AE val-benign and LSTM-AE benign-test stats reported descriptively."
+      }
+    ],
+    "common_finding": "All four issues were planning-time errors that surfaced during execution; none were model failures. The multi-gate plan-and-pause discipline surfaced them rather than letting them propagate into the §15E.7 thesis writeup."
+  }
+}

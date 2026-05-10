@@ -1,0 +1,319 @@
+{
+  "schema_version": "1.0",
+  "phase": "D",
+  "task": "Phase D Task 2 — canonical reference for LSTM-AE tripwires",
+  "date": "2026-05-08",
+  "report_path": "results/unsupervised/lstm_ae/lstm_ae_recon_ref.json",
+  "methodology_notes": {
+    "purpose": "Canonical val-benign + test-benign + fusion-level numbers for the 3 Gate-1-passing LSTM-AE configs (c1, c4, c6). Future tripwire checks (analog of dashboard/components/model_loader.py:verify_ae_tripwire) assert reproductions match within tolerance.",
+    "tolerance_tiers": {
+      "tier_A_disk_recompute": "1e-9 — recomputing aggregates from saved .npy arrays is deterministic (numpy/scipy)",
+      "tier_B_fusion_recompute": "1e-9 — fusion via vae_fusion.py is deterministic given identical .npy inputs",
+      "tier_C_model_reload": "1e-4 — reloading model.keras and re-inferring incurs float32 accumulation noise (matches ROUNDTRIP_MAX_ABS_DIFF_TOL convention at vae_train.py:77)"
+    },
+    "configs_excluded": {
+      "ids": [
+        "c2",
+        "c3",
+        "c5"
+      ],
+      "reason": "G1.1 FAIL — best_val_loss above 1.5×AE threshold (0.298168). Their artifacts remain on disk for the audit trail but are not tripwire-canonical."
+    },
+    "ae_pattern_followed": [
+      "results/unsupervised/benign_error_stats.json (AE val-benign aggregates)",
+      "dashboard/components/ae_recon_ref.json (AE first-100 reload reference)",
+      "dashboard/components/model_loader.py:214 verify_ae_tripwire (assertion logic)"
+    ],
+    "live_recompute": "All numerical fields recomputed live during this report run; verifiable by re-running the build script. SHA-256 hashes give bit-exact identity check on source artifacts."
+  },
+  "global_invariants": {
+    "benign_mask_n_required": 37607,
+    "y_test_n_total": 892268,
+    "val_benign_n_required": 30838,
+    "first_100_sample_recipe": "scaler.transform(np.load(preprocessed/full_features/X_test.npy)[:100]).astype(float32).reshape((100, 44, 1))",
+    "scaler_path": "results/unsupervised/models/scaler.pkl",
+    "scaler_sha256": "e09e4836b2ff13f6b6101bc352fe3f33e1095755486b62b50d17c1e1ecd0f8b2",
+    "sweep_table_path": "results/enhanced_fusion/threshold_sweep/sweep_table.csv",
+    "sweep_table_sha256": "d6a75ac741f8250dbfeda035750b563bf00008e0f1d41ae73b9af815c44ef1f9",
+    "y_test_label_columns_used": [
+      "binary_label",
+      "label"
+    ],
+    "random_state_used_in_training": 42,
+    "tf_version": "2.21.0",
+    "keras_version": "3.14.0"
+  },
+  "ae_reference_for_comparison": {
+    "best_val_loss": 0.1987786442041397,
+    "val_benign_p90_threshold": 0.20127058029174805,
+    "fusion_15d_strict_avg": 0.8589586873140701,
+    "fusion_15d_fpr": 0.247331613795304,
+    "layer2_test_auc": 0.9892
+  },
+  "configs": {
+    "c1": {
+      "architecture": "LSTM 64/32 (baseline)",
+      "rationale_for_canonical_status": "Gate 1 PASS; baseline architecture (matches c6); fusion strict_avg = 0.8930 (highest in sweep)",
+      "source_files_sha256": {
+        "model.keras": "ef9dfb4a8b3d3f232f09f9b5cfa30ef7eadf0db2d35ae4121efe13145b6bb86e",
+        "manifest.json": "f2004726e1acd1889ff637b69a8defc9f16163fa62fcf54f6a24346cc85ad5e2",
+        "val_recon_err.npy": "b0e51a9adef6e1252569dc19d684ccbf9d15a1df1228acd2dc2b56d3c723d6bd",
+        "test_recon_err.npy": "e855b0bf3055069c9c6f17c093f74973baacdf32a8133913f1683ddfc7360e0b",
+        "recon_test_first100.npy": "cda754965d8dd2016fd2774dfbfdc4a66e7177ce0c9cd72cf48580d21fd0aaa8"
+      },
+      "manifest_canonical": {
+        "best_val_loss": 0.26836857199668884,
+        "epochs_actual": 38,
+        "training_time_s": 3634.928384065628,
+        "early_stopped_by_budget": true,
+        "max_grad_norm_overall": 29.885921478271484,
+        "tolerance": 1e-09,
+        "tier": "A",
+        "verification_python_snippet": "import json\nm = json.load(open('results/unsupervised/lstm_ae/c1/manifest.json'))\nassert abs(float(m['best_val_loss']) - 0.26836857199668884) < 1e-9, 'c1 best_val_loss drifted'"
+      },
+      "val_benign_canonical": {
+        "n": 30838,
+        "mean": 0.26836857199668884,
+        "std": 11.614133834838867,
+        "p90": 0.19205419719219208,
+        "p99": 1.312574028968811,
+        "max": 1339.7764892578125,
+        "std_over_mean": 43.27680304898803,
+        "max_over_mean": 4992.300250695312,
+        "unimodal": true,
+        "all_finite": true,
+        "tolerance": 1e-09,
+        "tier": "A",
+        "verification_python_snippet": "import numpy as np\narr = np.load('results/unsupervised/lstm_ae/c1/val_recon_err.npy')\nassert abs(float(arr.mean()) - 0.26836857199668884) < 1e-9, 'c1 val_benign mean drifted'"
+      },
+      "test_benign_canonical": {
+        "n": 37607,
+        "mean": 0.1884017288684845,
+        "std": 3.937286138534546,
+        "p90": 0.310588538646698,
+        "p99": 1.0188628435134888,
+        "max": 392.6640930175781,
+        "std_over_mean": 20.898354607366706,
+        "max_over_mean": 2084.1851896788103,
+        "unimodal": true,
+        "all_finite": true,
+        "tolerance": 1e-09,
+        "tier": "A",
+        "verification_python_snippet": "import numpy as np, pandas as pd\ny = pd.read_csv('preprocessed/full_features/y_test.csv')\nmask = (y['binary_label'] == 0).values\narr = np.load('results/unsupervised/lstm_ae/c1/test_recon_err.npy')[mask]\nassert abs(float(arr.mean()) - 0.18840172886848450) < 1e-9, 'c1 test_benign mean drifted'"
+      },
+      "layer2_test_auc_canonical": {
+        "value": 0.9913007257553733,
+        "tolerance": 1e-09,
+        "tier": "A",
+        "verification_python_snippet": "import numpy as np, pandas as pd\nfrom sklearn.metrics import roc_auc_score\ny = pd.read_csv('preprocessed/full_features/y_test.csv')\ny_bin = (y['binary_label'] != 0).astype('int8').values\nerr = np.load('results/unsupervised/lstm_ae/c1/test_recon_err.npy')\nauc = float(roc_auc_score(y_bin, err))\nassert abs(auc - 0.99130072575537331) < 1e-9, 'c1 layer2 AUC drifted'"
+      },
+      "first_100_reload_canonical": {
+        "n_rows": 100,
+        "mean_mse": 0.626372754573822,
+        "max_mse": 29.720417022705078,
+        "min_mse": 0.0268954336643219,
+        "tolerance": 0.0001,
+        "tier": "C",
+        "verification_python_snippet": "import numpy as np, joblib, tensorflow as tf\nscaler = joblib.load('results/unsupervised/models/scaler.pkl')\nX = np.load('preprocessed/full_features/X_test.npy').astype('float32')\nx100 = scaler.transform(X[:100]).astype('float32')\nm = tf.keras.models.load_model('results/unsupervised/lstm_ae/c1/model.keras', compile=False)\npred = m(x100, training=False).numpy()\nmean_mse = float(np.mean((x100 - pred) ** 2, axis=1).mean())\nassert abs(mean_mse - 0.62637275457382202) < 1e-4, 'c1 reload mean_mse drifted'"
+      },
+      "fusion_15d_canonical": {
+        "operating_point": "entropy_benign_p93 + lstm_ae_c1_p90",
+        "val_benign_p90_threshold": 0.19205419719219208,
+        "strict_avg": 0.8930248121487422,
+        "h2_strict_pass": "4/4",
+        "h2_binary_avg": 0.9700678822609774,
+        "fpr": 0.2552609886457308,
+        "tolerance": 1e-09,
+        "tier": "B",
+        "verification_python_snippet": "import sys, numpy as np, pandas as pd\nsys.path.insert(0, 'notebooks')\nimport vae_fusion as VF\nsignals = VF.load_baseline_signals()\nsoft = VF.load_soft_tripwire_value()\nerr = np.load('results/unsupervised/lstm_ae/c1/test_recon_err.npy')\nval_err = np.load('results/unsupervised/lstm_ae/c1/val_recon_err.npy')\np90 = float(np.percentile(val_err, 90))\nVF.VARIANTS = [(\n    'entropy_benign_p93_lstm_ae_c1_p90',\n    'Entropy p93 + LSTM-AE c1 p90',\n    dict(family='entropy', ent='ent_p93', ae='lstm_ae_c1_p90'))\n]\nVF.VARIANTS.append(('entropy_benign_p93_ae_p90', '...',\n    dict(family='entropy', ent='ent_p93', ae='ae_p90')))\nVF.VARIANTS.append(('entropy_benign_p95_ae_p90', '...',\n    dict(family='entropy', ent='ent_p95', ae='ae_p90')))\nbinaries = {'ae_p90': signals['ae_p90_binary'],\n             'lstm_ae_c1_p90': (err > p90)}\nper_target = VF.evaluate_per_target(binaries, signals)\nablation = VF.aggregate_ablation(per_target)\nVF.assert_tripwires_pass(ablation, soft)\nrow = ablation[ablation['variant'] == 'entropy_benign_p93_lstm_ae_c1_p90'].iloc[0]\nassert abs(float(row['h2_strict_avg']) - 0.89302481214874219) < 1e-9, 'c1 fusion strict_avg drifted'"
+      }
+    },
+    "c4": {
+      "architecture": "LSTM 128/64 (double width)",
+      "rationale_for_canonical_status": "Gate 1 PASS; lowest best_val_loss in sweep (0.2306); highest Layer-2 AUC (0.9919); below-AE FPR at §15D",
+      "source_files_sha256": {
+        "model.keras": "5e2d6a0ef129d2c1e0673c70d57082cc12c62ee5dd92368a7bc0cb22ad90f1d5",
+        "manifest.json": "f0a4bb045913078a9268a4235d0167d0b3661858d1b20b13fb8133510663af17",
+        "val_recon_err.npy": "a31ece678be6e024dd706ea2dc248b504a9ad670e120812206ed4586ff173b55",
+        "test_recon_err.npy": "6eee8c5a225210886a3b0277b97020d7faa1a0f840b201db41e33da83338b243",
+        "recon_test_first100.npy": "4c3a5590e974fc1b060913c812a04921e86df789ddc9abef3bad1cfe1c428761"
+      },
+      "manifest_canonical": {
+        "best_val_loss": 0.23064373433589935,
+        "epochs_actual": 27,
+        "training_time_s": 3709.4407300949097,
+        "early_stopped_by_budget": true,
+        "max_grad_norm_overall": 32.392608642578125,
+        "tolerance": 1e-09,
+        "tier": "A",
+        "verification_python_snippet": "import json\nm = json.load(open('results/unsupervised/lstm_ae/c4/manifest.json'))\nassert abs(float(m['best_val_loss']) - 0.23064373433589935) < 1e-9, 'c4 best_val_loss drifted'"
+      },
+      "val_benign_canonical": {
+        "n": 30838,
+        "mean": 0.23064373433589935,
+        "std": 12.066351890563965,
+        "p90": 0.12323764711618423,
+        "p99": 0.944786548614502,
+        "max": 1395.6512451171875,
+        "std_over_mean": 52.31597522172903,
+        "max_over_mean": 6051.112765476744,
+        "unimodal": true,
+        "all_finite": true,
+        "tolerance": 1e-09,
+        "tier": "A",
+        "verification_python_snippet": "import numpy as np\narr = np.load('results/unsupervised/lstm_ae/c4/val_recon_err.npy')\nassert abs(float(arr.mean()) - 0.23064373433589935) < 1e-9, 'c4 val_benign mean drifted'"
+      },
+      "test_benign_canonical": {
+        "n": 37607,
+        "mean": 0.13879112899303436,
+        "std": 3.878648042678833,
+        "p90": 0.20749004185199738,
+        "p99": 0.8074849843978882,
+        "max": 432.8960266113281,
+        "std_over_mean": 27.945936248371424,
+        "max_over_mean": 3119.046798971239,
+        "unimodal": true,
+        "all_finite": true,
+        "tolerance": 1e-09,
+        "tier": "A",
+        "verification_python_snippet": "import numpy as np, pandas as pd\ny = pd.read_csv('preprocessed/full_features/y_test.csv')\nmask = (y['binary_label'] == 0).values\narr = np.load('results/unsupervised/lstm_ae/c4/test_recon_err.npy')[mask]\nassert abs(float(arr.mean()) - 0.13879112899303436) < 1e-9, 'c4 test_benign mean drifted'"
+      },
+      "layer2_test_auc_canonical": {
+        "value": 0.9918823689712088,
+        "tolerance": 1e-09,
+        "tier": "A",
+        "verification_python_snippet": "import numpy as np, pandas as pd\nfrom sklearn.metrics import roc_auc_score\ny = pd.read_csv('preprocessed/full_features/y_test.csv')\ny_bin = (y['binary_label'] != 0).astype('int8').values\nerr = np.load('results/unsupervised/lstm_ae/c4/test_recon_err.npy')\nauc = float(roc_auc_score(y_bin, err))\nassert abs(auc - 0.99188236897120885) < 1e-9, 'c4 layer2 AUC drifted'"
+      },
+      "first_100_reload_canonical": {
+        "n_rows": 100,
+        "mean_mse": 0.31210213899612427,
+        "max_mse": 12.60158634185791,
+        "min_mse": 0.010376283898949623,
+        "tolerance": 0.0001,
+        "tier": "C",
+        "verification_python_snippet": "import numpy as np, joblib, tensorflow as tf\nscaler = joblib.load('results/unsupervised/models/scaler.pkl')\nX = np.load('preprocessed/full_features/X_test.npy').astype('float32')\nx100 = scaler.transform(X[:100]).astype('float32')\nm = tf.keras.models.load_model('results/unsupervised/lstm_ae/c4/model.keras', compile=False)\npred = m(x100, training=False).numpy()\nmean_mse = float(np.mean((x100 - pred) ** 2, axis=1).mean())\nassert abs(mean_mse - 0.31210213899612427) < 1e-4, 'c4 reload mean_mse drifted'"
+      },
+      "fusion_15d_canonical": {
+        "operating_point": "entropy_benign_p93 + lstm_ae_c4_p90",
+        "val_benign_p90_threshold": 0.12323764711618423,
+        "strict_avg": 0.8684786884073519,
+        "h2_strict_pass": "4/4",
+        "h2_binary_avg": 0.9658496957217748,
+        "fpr": 0.2452468955247693,
+        "tolerance": 1e-09,
+        "tier": "B",
+        "verification_python_snippet": "import sys, numpy as np, pandas as pd\nsys.path.insert(0, 'notebooks')\nimport vae_fusion as VF\nsignals = VF.load_baseline_signals()\nsoft = VF.load_soft_tripwire_value()\nerr = np.load('results/unsupervised/lstm_ae/c4/test_recon_err.npy')\nval_err = np.load('results/unsupervised/lstm_ae/c4/val_recon_err.npy')\np90 = float(np.percentile(val_err, 90))\nVF.VARIANTS = [(\n    'entropy_benign_p93_lstm_ae_c4_p90',\n    'Entropy p93 + LSTM-AE c4 p90',\n    dict(family='entropy', ent='ent_p93', ae='lstm_ae_c4_p90'))\n]\nVF.VARIANTS.append(('entropy_benign_p93_ae_p90', '...',\n    dict(family='entropy', ent='ent_p93', ae='ae_p90')))\nVF.VARIANTS.append(('entropy_benign_p95_ae_p90', '...',\n    dict(family='entropy', ent='ent_p95', ae='ae_p90')))\nbinaries = {'ae_p90': signals['ae_p90_binary'],\n             'lstm_ae_c4_p90': (err > p90)}\nper_target = VF.evaluate_per_target(binaries, signals)\nablation = VF.aggregate_ablation(per_target)\nVF.assert_tripwires_pass(ablation, soft)\nrow = ablation[ablation['variant'] == 'entropy_benign_p93_lstm_ae_c4_p90'].iloc[0]\nassert abs(float(row['h2_strict_avg']) - 0.86847868840735187) < 1e-9, 'c4 fusion strict_avg drifted'"
+      }
+    },
+    "c6": {
+      "architecture": "LSTM 64/32 (replica of c1, grad-norm logger)",
+      "rationale_for_canonical_status": "Gate 1 PASS; replica of c1; lowest fusion FPR (0.2447); confirms reproducibility of baseline at fusion level",
+      "source_files_sha256": {
+        "model.keras": "7018041d4793c11fdb6dbb664b1a418a00641b288c3e9a1714f72f154ccde61b",
+        "manifest.json": "052e0f04fef9c5058653c91821b89a033f55696e3f4e6b60f66095dce86c9f89",
+        "val_recon_err.npy": "87402551cbef0da41ec05091ddbf78e1dfd3cc743fcdb7c999a276049d3c4235",
+        "test_recon_err.npy": "d9b3a8341ce9ea8e7cbed6c8415745672d757e1de21efb2efe9000016d3c82d9",
+        "recon_test_first100.npy": "5a0d9d119d704db900f2fd326a84f275a79d5285fb0e08f4260641ade1f20fb2"
+      },
+      "manifest_canonical": {
+        "best_val_loss": 0.2589890658855438,
+        "epochs_actual": 39,
+        "training_time_s": 3617.5814321041107,
+        "early_stopped_by_budget": true,
+        "max_grad_norm_overall": 51.09817886352539,
+        "tolerance": 1e-09,
+        "tier": "A",
+        "verification_python_snippet": "import json\nm = json.load(open('results/unsupervised/lstm_ae/c6/manifest.json'))\nassert abs(float(m['best_val_loss']) - 0.25898906588554382) < 1e-9, 'c6 best_val_loss drifted'"
+      },
+      "val_benign_canonical": {
+        "n": 30838,
+        "mean": 0.2589890658855438,
+        "std": 10.179930686950684,
+        "p90": 0.23316170275211334,
+        "p99": 1.312488079071045,
+        "max": 1136.98486328125,
+        "std_over_mean": 39.306411072386915,
+        "max_over_mean": 4390.088281888019,
+        "unimodal": true,
+        "all_finite": true,
+        "tolerance": 1e-09,
+        "tier": "A",
+        "verification_python_snippet": "import numpy as np\narr = np.load('results/unsupervised/lstm_ae/c6/val_recon_err.npy')\nassert abs(float(arr.mean()) - 0.25898906588554382) < 1e-9, 'c6 val_benign mean drifted'"
+      },
+      "test_benign_canonical": {
+        "n": 37607,
+        "mean": 0.19780966639518738,
+        "std": 3.373563766479492,
+        "p90": 0.4137965738773346,
+        "p99": 1.1736714839935303,
+        "max": 354.86151123046875,
+        "std_over_mean": 17.05459509617559,
+        "max_over_mean": 1793.9543486288512,
+        "unimodal": true,
+        "all_finite": true,
+        "tolerance": 1e-09,
+        "tier": "A",
+        "verification_python_snippet": "import numpy as np, pandas as pd\ny = pd.read_csv('preprocessed/full_features/y_test.csv')\nmask = (y['binary_label'] == 0).values\narr = np.load('results/unsupervised/lstm_ae/c6/test_recon_err.npy')[mask]\nassert abs(float(arr.mean()) - 0.19780966639518738) < 1e-9, 'c6 test_benign mean drifted'"
+      },
+      "layer2_test_auc_canonical": {
+        "value": 0.9899666496110346,
+        "tolerance": 1e-09,
+        "tier": "A",
+        "verification_python_snippet": "import numpy as np, pandas as pd\nfrom sklearn.metrics import roc_auc_score\ny = pd.read_csv('preprocessed/full_features/y_test.csv')\ny_bin = (y['binary_label'] != 0).astype('int8').values\nerr = np.load('results/unsupervised/lstm_ae/c6/test_recon_err.npy')\nauc = float(roc_auc_score(y_bin, err))\nassert abs(auc - 0.98996664961103464) < 1e-9, 'c6 layer2 AUC drifted'"
+      },
+      "first_100_reload_canonical": {
+        "n_rows": 100,
+        "mean_mse": 0.5053437948226929,
+        "max_mse": 19.198564529418945,
+        "min_mse": 0.03223714977502823,
+        "tolerance": 0.0001,
+        "tier": "C",
+        "verification_python_snippet": "import numpy as np, joblib, tensorflow as tf\nscaler = joblib.load('results/unsupervised/models/scaler.pkl')\nX = np.load('preprocessed/full_features/X_test.npy').astype('float32')\nx100 = scaler.transform(X[:100]).astype('float32')\nm = tf.keras.models.load_model('results/unsupervised/lstm_ae/c6/model.keras', compile=False)\npred = m(x100, training=False).numpy()\nmean_mse = float(np.mean((x100 - pred) ** 2, axis=1).mean())\nassert abs(mean_mse - 0.50534379482269287) < 1e-4, 'c6 reload mean_mse drifted'"
+      },
+      "fusion_15d_canonical": {
+        "operating_point": "entropy_benign_p93 + lstm_ae_c6_p90",
+        "val_benign_p90_threshold": 0.23316170275211334,
+        "strict_avg": 0.8906876145171353,
+        "h2_strict_pass": "4/4",
+        "h2_binary_avg": 0.9690631532641462,
+        "fpr": 0.2446565798920414,
+        "tolerance": 1e-09,
+        "tier": "B",
+        "verification_python_snippet": "import sys, numpy as np, pandas as pd\nsys.path.insert(0, 'notebooks')\nimport vae_fusion as VF\nsignals = VF.load_baseline_signals()\nsoft = VF.load_soft_tripwire_value()\nerr = np.load('results/unsupervised/lstm_ae/c6/test_recon_err.npy')\nval_err = np.load('results/unsupervised/lstm_ae/c6/val_recon_err.npy')\np90 = float(np.percentile(val_err, 90))\nVF.VARIANTS = [(\n    'entropy_benign_p93_lstm_ae_c6_p90',\n    'Entropy p93 + LSTM-AE c6 p90',\n    dict(family='entropy', ent='ent_p93', ae='lstm_ae_c6_p90'))\n]\nVF.VARIANTS.append(('entropy_benign_p93_ae_p90', '...',\n    dict(family='entropy', ent='ent_p93', ae='ae_p90')))\nVF.VARIANTS.append(('entropy_benign_p95_ae_p90', '...',\n    dict(family='entropy', ent='ent_p95', ae='ae_p90')))\nbinaries = {'ae_p90': signals['ae_p90_binary'],\n             'lstm_ae_c6_p90': (err > p90)}\nper_target = VF.evaluate_per_target(binaries, signals)\nablation = VF.aggregate_ablation(per_target)\nVF.assert_tripwires_pass(ablation, soft)\nrow = ablation[ablation['variant'] == 'entropy_benign_p93_lstm_ae_c6_p90'].iloc[0]\nassert abs(float(row['h2_strict_avg']) - 0.89068761451713530) < 1e-9, 'c6 fusion strict_avg drifted'"
+      }
+    }
+  },
+  "fusion_tripwires_global": {
+    "soft_anchor": {
+      "variant": "entropy_benign_p93_ae_p90",
+      "value": 0.8589586873140701,
+      "source": "results/enhanced_fusion/threshold_sweep/sweep_table.csv (percentile=93.0)",
+      "source_sha256": "d6a75ac741f8250dbfeda035750b563bf00008e0f1d41ae73b9af815c44ef1f9",
+      "tolerance": 1e-09,
+      "tier": "B"
+    },
+    "hard_anchor": {
+      "variant": "entropy_benign_p95_ae_p90",
+      "value": 0.8035264623662012,
+      "source": "notebooks/vae_fusion.py:92 TRIPWIRE_HARD_VALUE (Week 2A canonical)",
+      "tolerance": 1e-09,
+      "tier": "B"
+    }
+  },
+  "verification_helpers": {
+    "tier_A_disk_recompute_example": "# Tier A: deterministic recompute from saved .npy — tolerance 1e-9\nimport numpy as np\narr = np.load('results/unsupervised/lstm_ae/c4/val_recon_err.npy')\nassert abs(float(arr.mean()) - 0.23064373433589935) < 1e-9, \\\n    'c4 val_benign mean drifted'",
+    "tier_B_fusion_recompute_example": "# Tier B: vae_fusion.py re-run is deterministic — tolerance 1e-9\nimport sys, numpy as np\nsys.path.insert(0, 'notebooks')\nimport vae_fusion as VF\nsignals = VF.load_baseline_signals()\nsoft = VF.load_soft_tripwire_value()\nerr = np.load('results/unsupervised/lstm_ae/c4/test_recon_err.npy')\nval = np.load('results/unsupervised/lstm_ae/c4/val_recon_err.npy')\np90 = float(np.percentile(val, 90))\nVF.VARIANTS = [\n    ('entropy_benign_p93_lstm_ae_c4_p90', '...',\n        dict(family='entropy', ent='ent_p93', ae='lstm_ae_c4_p90')),\n    ('entropy_benign_p93_ae_p90', '...', dict(family='entropy', ent='ent_p93', ae='ae_p90')),\n    ('entropy_benign_p95_ae_p90', '...', dict(family='entropy', ent='ent_p95', ae='ae_p90')),\n]\nbinaries = {'ae_p90': signals['ae_p90_binary'], 'lstm_ae_c4_p90': (err > p90)}\nper_target = VF.evaluate_per_target(binaries, signals)\nablation = VF.aggregate_ablation(per_target)\nVF.assert_tripwires_pass(ablation, soft)  # bit-exact HARD+SOFT\nrow = ablation[ablation['variant'] == 'entropy_benign_p93_lstm_ae_c4_p90'].iloc[0]\nassert abs(float(row['h2_strict_avg']) - 0.86847868840735187) < 1e-9, \\\n    'c4 fusion strict_avg drifted'",
+    "tier_C_model_reload_example": "# Tier C: model.keras reload incurs float32 noise — tolerance 1e-4\nimport numpy as np, joblib, tensorflow as tf\nscaler = joblib.load('results/unsupervised/models/scaler.pkl')\nX = np.load('preprocessed/full_features/X_test.npy').astype('float32')\nx100 = scaler.transform(X[:100]).astype('float32')\nm = tf.keras.models.load_model('results/unsupervised/lstm_ae/c4/model.keras',\n                                compile=False)\npred = m(x100, training=False).numpy()\nmean_mse = float(np.mean((x100 - pred) ** 2, axis=1).mean())\nassert abs(mean_mse - 0.31210213899612427) < 1e-4, \\\n    'c4 reload mean_mse drifted'"
+  },
+  "references": {
+    "gate1_verdict": "results/unsupervised/lstm_ae/gate1_report.json",
+    "training_script": "notebooks/lstm_ae_train.py",
+    "fusion_machinery": "notebooks/vae_fusion.py",
+    "ae_canonical_pattern": [
+      "results/unsupervised/benign_error_stats.json",
+      "dashboard/components/ae_recon_ref.json",
+      "dashboard/components/model_loader.py:214 (verify_ae_tripwire)"
+    ],
+    "phase_b_pause": "results/unsupervised/lstm_ae/_phase_b_pause.json (v1.7)"
+  }
+}

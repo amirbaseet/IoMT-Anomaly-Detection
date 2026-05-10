@@ -1,0 +1,156 @@
+{
+  "schema_version": "1.7",
+  "phase": "B",
+  "step": "FULL SWEEP COMPLETE — Phase D (Gate 1 verdict + §15E.7-vs-§15F-LSTM-NEGATIVE choice + docs) is the human reviewer's",
+  "status": "COMPLETE — full sweep ran to completion in 6h 14m. 3/6 configs pass G1.1 descriptively (C1, C4, C6). C4 has lowest best_val_loss (0.2306). All 6 pass G1.2. All 6 fail G1.3 sub-thresholds but test_recon_unimodal=True for all. No gate1_report.json written (Phase C). No commits (Phase D).",
+  "timestamps": {
+    "first_run_started":             "2026-05-06 23:34:56",
+    "first_run_killed":              "2026-05-06 ~23:50",
+    "second_run_started":            "2026-05-07 07:57:58",
+    "second_run_killed":             "2026-05-07 ~08:00",
+    "fix_1_applied_at":              "2026-05-07 ~08:30",
+    "third_run_with_fix_1_killed":   "2026-05-07 ~08:31",
+    "fix_3_applied_at":              "2026-05-07",
+    "smoke_v3_completed_at":         "2026-05-07 11:15 (8.2 min)",
+    "phase_c_population_review_at":  "2026-05-07 ~11:15-11:45",
+    "smoke_recalibrated_at":         "2026-05-07",
+    "smoke_v4_completed_at":         "2026-05-07 15:30",
+    "senior_review_recorded_at":     "2026-05-07",
+    "option_1_selected_at":          "2026-05-08",
+    "cap_revision_applied_at":       "2026-05-08",
+    "full_sweep_started_at":         "2026-05-08 16:43 (PID 56526 launched under nohup + caffeinate -dimsu)",
+    "full_sweep_completed_at":       "2026-05-08 22:58 (6h 14m total wall-clock; 22480 s)"
+  },
+  "full_sweep_per_config_results": {
+    "c1": {
+      "architecture":  "64/32, lr=1e-3, no recurrent_dropout (baseline)",
+      "epochs_actual": 38, "early_stopped_by_budget": true, "training_time_s": 3634.9,
+      "best_val_loss": 0.268369,
+      "val_recon_p99": 1.312574,
+      "max_grad_norm_overall": 29.8859,
+      "test_recon_std_over_mean": 13.6619, "test_recon_max_over_mean": 2832.3871, "test_recon_unimodal": true,
+      "gate1": {"G1_1": true,  "G1_2": true,  "G1_3": false}
+    },
+    "c2": {
+      "architecture":  "64/32, lr=5e-4 (half LR)",
+      "epochs_actual": 37, "early_stopped_by_budget": true, "training_time_s": 3638.3,
+      "best_val_loss": 0.330944,
+      "val_recon_p99": 1.690843,
+      "max_grad_norm_overall": 25.2104,
+      "test_recon_std_over_mean": 12.4958, "test_recon_max_over_mean": 2565.6789, "test_recon_unimodal": true,
+      "gate1": {"G1_1": false, "G1_2": true,  "G1_3": false}
+    },
+    "c3": {
+      "architecture":  "32/16, lr=1e-3 (half width)",
+      "epochs_actual": 50, "early_stopped_by_budget": true, "training_time_s": 3667.5,
+      "best_val_loss": 0.315476,
+      "val_recon_p99": 1.67319,
+      "max_grad_norm_overall": 262.4656,
+      "test_recon_std_over_mean": 13.3705, "test_recon_max_over_mean": 2755.318, "test_recon_unimodal": true,
+      "gate1": {"G1_1": false, "G1_2": true,  "G1_3": false},
+      "note": "highest max_grad_norm in sweep (262 — still 4× below the 1e3 G1.2 floor)"
+    },
+    "c4": {
+      "architecture":  "128/64, lr=1e-3 (double width)",
+      "epochs_actual": 27, "early_stopped_by_budget": true, "training_time_s": 3709.4,
+      "best_val_loss": 0.230644,
+      "val_recon_p99": 0.944787,
+      "max_grad_norm_overall": 32.3926,
+      "test_recon_std_over_mean": 14.8079, "test_recon_max_over_mean": 3063.9455, "test_recon_unimodal": true,
+      "gate1": {"G1_1": true,  "G1_2": true,  "G1_3": false},
+      "note": "BEST val_loss in sweep at 0.2306; doubled width gave the most capacity; 27 epochs is fewer due to slower per-epoch (~137s) but quality dominated quantity"
+    },
+    "c5": {
+      "architecture":  "64/32, lr=1e-3, recurrent_dropout=0.1",
+      "epochs_actual": 20, "early_stopped_by_budget": true, "training_time_s": 3730.2,
+      "best_val_loss": 0.368156,
+      "val_recon_p99": 2.128266,
+      "max_grad_norm_overall": 17.8938,
+      "test_recon_std_over_mean": 12.042, "test_recon_max_over_mean": 2482.389, "test_recon_unimodal": true,
+      "gate1": {"G1_1": false, "G1_2": true,  "G1_3": false},
+      "note": "recurrent_dropout doubled per-epoch wall time (~195s vs C1's 93s) — only 20 epochs fit in cap, insufficient for convergence"
+    },
+    "c6": {
+      "architecture":  "64/32, lr=1e-3 (replica of C1, grad-norm logger)",
+      "epochs_actual": 39, "early_stopped_by_budget": true, "training_time_s": 3617.6,
+      "best_val_loss": 0.258989,
+      "val_recon_p99": 1.312488,
+      "max_grad_norm_overall": 51.0982,
+      "test_recon_std_over_mean": 15.1649, "test_recon_max_over_mean": 3170.4323, "test_recon_unimodal": true,
+      "gate1": {"G1_1": true,  "G1_2": true,  "G1_3": false},
+      "grad_norms_json_present": true,
+      "note": "structurally identical to C1; reached val_loss 0.2590 (slightly better than C1's 0.2684) due to RNG-state difference from sweep ordering"
+    }
+  },
+  "summary_observations_descriptive_only": {
+    "G1_1_pass_count": "3 of 6 configs (C1, C4, C6 — all wider/baseline architectures with full LR)",
+    "G1_1_fail_modes": [
+      "C2 (half LR, 0.5×): convergence too slow — 0.331 vs 0.298 threshold",
+      "C3 (half width, 32/16): capacity-bound — 0.315 vs 0.298 threshold",
+      "C5 (recurrent_dropout=0.1): per-epoch slowdown ate the budget — only 20 epochs reached"
+    ],
+    "G1_2_pass_count": "6 of 6 — all max grad norms well below 1e3 floor; highest observed 262 (C3)",
+    "G1_3_pass_count": "0 of 6 — but test_recon_unimodal=True for ALL configs; failure is on std/mean and max/mean sub-thresholds",
+    "G1_3_failure_locus": "test_recon_std_over_mean range 12-15 (limit was [0.1, 5.0]); test_recon_max_over_mean range 2482-3170 (limit was 100)",
+    "G1_3_design_consideration": "the test set is 854K attacks vs 38K benigns. Attack reconstructions are by design large (that is what makes the AE/LSTM-AE work as anomaly detectors). The G1.3 std/mean and max/mean thresholds were calibrated against benign-only-shaped distributions but applied to attack-dominated test data. Phase C call: whether to evaluate G1.3 on benign-val instead, or to revise the G1.3 sub-thresholds for mixed test data, or to accept this as a discoverable plan-design quirk.",
+    "best_overall_config": "C4 (128/64, lr=1e-3) with best_val_loss=0.2306. C4 also has lowest val_recon_p99 (0.945). Doubled width is the strongest architecture in this sweep.",
+    "AE_reference_comparison": "AE val_loss=0.1988 at 36 epochs (Phase 5). C4 val_loss=0.2306 at 27 epochs (cap-bound). Gap: 16% above AE; same compute budget (~3700s vs AE's equivalent). C4 likely converges further with more time — at cap, val_loss was still descending."
+  },
+  "what_assistant_did_NOT_do_in_phase_b": [
+    "did NOT write gate1_report.json (Phase C — human reviewer's)",
+    "did NOT make a Gate 1 PASS/FAIL verdict (Phase C)",
+    "did NOT choose between §15E.7 (positive) and §15F-LSTM-NEGATIVE (negative) (Phase C)",
+    "did NOT update README.md with §15E.7 or §15F-LSTM-NEGATIVE (Phase D)",
+    "did NOT write dashboard/components/lstm_ae_recon_ref.json tripwire (Phase D)",
+    "did NOT git add, git commit, or git push (Phase D)",
+    "did NOT modify any thesis document",
+    "did NOT touch architecture, did NOT add C7+ configs (Decision Report §3.4 binding honored)"
+  ],
+  "phase_b_artifact_inventory": {
+    "training_script":          "notebooks/lstm_ae_train.py (uncommitted, fix-3 + recalibration + cap-revision applied)",
+    "plan_with_addenda":        ".claude/plans/lstm_ae_plan.md (uncommitted, 3 addenda: 2026-05-07, 2026-05-07b, 2026-05-08)",
+    "pause_file":               "results/unsupervised/lstm_ae/_phase_b_pause.json (this file, v1.7)",
+    "arch_summary":             "results/unsupervised/lstm_ae/_arch_summary.txt (unchanged from first build, 59,721 params)",
+    "smoke_artifacts":          "results/unsupervised/lstm_ae/_smoke/ (8 files; v4 recalibrated smoke output)",
+    "phase_b_logs":             "results/unsupervised/lstm_ae/_phase_b_logs/ (v1, v2, v3, v4, full_sweep stdout/stderr — 8 files)",
+    "per_config_dirs":          "results/unsupervised/lstm_ae/c{1,2,3,4,5,6}/ (each with model.keras, manifest.json, history.json, val_recon_err.npy, test_recon_err.npy, recon_test_first100.npy; c6 also has grad_norms.json)",
+    "summary_csv":              "results/unsupervised/lstm_ae/all_configs_summary.csv (6 rows, schema per plan §7.1)",
+    "no_gate1_report_json":     "intentionally NOT written — Phase C deliverable",
+    "no_recon_ref_json":        "intentionally NOT written — Phase C/D deliverable",
+    "git_state":                "no commits, no push; all work in working tree as uncommitted untracked files (results/unsupervised/lstm_ae/, notebooks/lstm_ae_train.py, LSTM_Integration_Decision_Report.md, .claude/plans/lstm_ae_plan.md untracked)"
+  },
+  "phase_b_state_invariants_at_completion": {
+    "no_git_push":              true,
+    "no_git_commit":            true,
+    "all_phase_b_edits_left_uncommitted": true,
+    "_arch_summary_preserved":  true,
+    "_phase_b_logs_preserved":  true,
+    "_smoke_artifacts_preserved": true,
+    "all_6_per_config_dirs_present": true,
+    "all_configs_summary_csv_written": true,
+    "c6_grad_norms_json_present": true,
+    "lingering_python_processes": "none — PID 56526 exited cleanly at sweep completion"
+  },
+  "ready_for_phase_c": true,
+  "session_closure_2026_05_08_evening": {
+    "closing_state":         "Phase B complete. Session closing. User going to sleep.",
+    "user_resume_plan":      "tomorrow morning ~09:00 with Phase C visual review + benign-only G1.3 recomputation",
+    "phase_c_owner":         "human reviewer (NOT the assistant)",
+    "phase_d_owner":         "human reviewer (NOT the assistant)",
+    "phase_c_planned_actions_per_user": [
+      "visual review of all 6 per-config manifests + all_configs_summary.csv",
+      "recompute G1.3 sub-thresholds against val_recon_err.npy (benign-val) instead of test_recon_err.npy (attack-dominated test) — addresses the descriptive G1.3 fail on all 6 configs that was driven by the test set's 854K-attack vs 38K-benign composition",
+      "decide Gate 1 PASS/FAIL verdict per-config and overall",
+      "write results/unsupervised/lstm_ae/gate1_report.json (the binary Phase C deliverable)"
+    ],
+    "phase_d_pending_after_c": [
+      "if any config passes Gate 1: write README §15E.7 (three-row AE / β-VAE-best / LSTM-AE comparison) + dashboard/components/lstm_ae_recon_ref.json tripwire",
+      "if no config passes Gate 1: write README §15F-LSTM-NEGATIVE quoting Decision Report §3.4 verbatim with full per-config table",
+      "in either case: local commit only, no push, no Co-Authored-By trailer, author = amirbaseet <amer8basit@gmail.com>"
+    ],
+    "headline_for_resume": "3/6 PASS G1.1 (C4=0.2306 best, C6=0.2590, C1=0.2684); 6/6 PASS G1.2; 0/6 PASS G1.3 descriptively (BUT test_recon_unimodal=True for all 6 — Phase C should recompute G1.3 against benign-val per the calibration finding)",
+    "ae_reference_for_phase_c": "AE best_val_loss = 0.1987786442041397 at 36 epochs (config.json:66). C4 val_loss=0.2306 at 27 epochs (cap-bound). 16% gap on equivalent compute budget.",
+    "no_assistant_actions_overnight": true,
+    "no_git_state_changes_overnight": true
+  }
+}

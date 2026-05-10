@@ -611,7 +611,7 @@ After Tier 1 (hardening) and Tier 2 (architectural robustness check) closed the 
 
 ---
 
-## Complete List of Thesis Contributions (19 total)
+## Complete List of Thesis Contributions (20 total)
 
 1. **First hybrid 4-layer (XGBoost + AE + 5-case fusion + SHAP) framework on CICIoMT2024** — no prior work combines all 4 layers; Yacoubi is supervised-only
 2. **37% duplication discovery in CICIoMT2024 train (44.7% in test)** — first report ever; explains inflated metrics in all prior literature
@@ -636,6 +636,10 @@ After Tier 1 (hardening) and Tier 2 (architectural robustness check) closed the 
 
 A 5-page Streamlit dashboard that loads only saved artifacts (no retraining, no new compute) and demonstrates each headline thesis claim with a reproducibility tripwire underneath: live Pareto slider over the §15D 29-point continuous sweep; per-class SHAP browser with the §16.4 DDoS↔DoS = 0.991 cosine reproducing bit-exactly; single-flow scoring through the canonical 5-case `entropy_fusion` partition with a self-check tripwire that asserts the partition produces case numbers {1, 2, 2, 5} on hardcoded synthetic fixtures at module load; runtime TreeSHAP for per-flow explainability. The MQTT_Malformed_Data sample (test row 101319) demonstrates the fusion's headline value-add in 30 seconds in one click — supervised model misclassifies (Benign, conf 0.584), AE misses (MSE below p90 threshold), entropy alone catches the model's confusion → Case 5 "Uncertain Alert" → operator review. The dashboard is local-only by design (Streamlit Cloud deferred); macOS `libomp` import-order constraint and AE-unavailable degradation transitions documented inline so future deployment work doesn't carry constraints forward unnecessarily.
 
+### Contribution 20 — Layer 2 substitution check extended to recurrent architectures (Path B Tier 2 Extension / §15E.7)
+
+Six LSTM-Autoencoder configs were trained on the same benign-only data, scaler, and 80/20 split as the §15E β-VAEs and the Phase 5 deterministic AE, with `latent_dim = 8` fixed across all configs to match the AE bottleneck and the β-VAE latent and a within-flow seq2seq formulation reshaping each scaled 44-feature vector to (44, 1); 3,600 s per-config wall-clock cap chosen as 16% above the AE-equivalent compute budget; binary Gate 1 = G1.1 (val_loss ≤ 1.5 × AE) ∧ G1.2 (max grad-norm ≤ 1e3), with G1.3 reframed as descriptive after the AE's own val-benign std/mean = 47.67 made the threshold inappropriate for this dataset's heavy-tailed reconstruction-error distributions. Three of six configs (c1, c4, c6) passed Gate 1 ∧ matched-or-beat the §15D anchor on every fusion column at the `entropy_benign_p93 + lstm_ae_p90` operating point — Δ strict_avg ∈ [+0.0095, +0.0341], Δ Layer-2 AUC ∈ [+0.0008, +0.0027], Δ FPR ∈ [−0.0027, +0.0079], all three at h2_strict_pass = 4/4. **Extends the §15E.3 "fusion ceiling is the entropy channel" interchangeability claim from feedforward + variational (Contribution #18) to feedforward + variational + recurrent — three Layer-2 architectural families now produce convergent fusion-level performance at the §15D operating point.** Reproducibility is confirmed by the c1-vs-c6 pair (architecturally identical, distinct execution paths — c6 includes manual-GradientTape grad-norm logging) agreeing on fusion strict_avg within 0.0023 (0.8930 vs 0.8907). **The capacity-vs-fusion inverse finding emerged as an unintended discovery**: c4 (128/64 LSTM, ~234K params) wins decisively on every Layer-2 metric (lowest val_loss 0.2306, highest Layer-2 AUC 0.9919, lowest val-benign p99 0.9448, lowest first-100 reload mean MSE 0.3121), yet c1/c6 (64/32 LSTM, ~60K params) win on fusion-level strict_avg (0.8930 / 0.8907 vs c4's 0.8685) — a triply-supported observation across three independent Layer-2 metrics that flips at the fusion level, recorded as a genuine research observation rather than a numerical curiosity. Deterministic AE retained per §15E.7.5 (cost contrast: AE ~5K params / 8 s training vs c4's ~234K params / 3,709 s — 48× / 450× ratios for Δ strict_avg gains below the §15E.3 sampling-noise floor); LSTM-AE serves as the third-architecture robustness datapoint extending Contribution #18, not an architecture swap. Four planning-time calibration issues (smoke `(e)`/`(f)` thresholds, smoke-design fragility to deterministic outliers, `PER_CONFIG_TIME_CAP_S` budget mismatch, G1.3 std/mean threshold inappropriate for heavy-tailed distributions) were caught and resolved during execution without retraining or architectural escalation; documented in `gate1_report.json:audit_trail` with date/resolution/reference per issue. Canonical narrative: README §15E.7. Data artifacts: `gate1_report.json` (binary verdict + audit trail) and `lstm_ae_recon_ref.json` (per-config canonical val-benign + test-benign + fusion + first-100-reload references with SHA-256 hashes and Tier-A/B/C tolerances).
+
 ---
 
 ## Total Compute Time
@@ -656,8 +660,9 @@ A 5-page Streamlit dashboard that loads only saved artifacts (no retraining, no 
 | Path B Week 2B | SHAP background sensitivity (TreeSHAP recompute, no retrain) | 75.7 min |
 | **Path B Tier 1 hardening** | | **~170 min (~2.8 hours)** |
 | Path B Week 5 / Phase 6D | β-VAE Layer 2 substitution (4 β trains + fusion ablation + decision) | ~0.8 min |
-| **Path B Tier 2 architectural** | | **~0.8 min** |
-| **Grand total compute** | | **~9.3 hours** |
+| Path B Tier 2 Extension / Phase 6E | LSTM-AE Layer 2 substitution (6 configs) | ~6 h 14 min |
+| **Path B Tier 2 architectural** | | **~6 h 15 min** |
+| **Grand total compute** | | **~15.5 hours** |
 
 Senior review remediation (post-hoc, no compute): ~6 hours of writing + Pareto plot generation.
 

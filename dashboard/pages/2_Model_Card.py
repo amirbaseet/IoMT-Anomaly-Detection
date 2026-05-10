@@ -76,6 +76,37 @@ st.caption(
 
 st.divider()
 
+# --- Layer-2 substitution robustness -------------------------------------
+st.subheader("Layer-2 substitution robustness")
+st.markdown(
+    "The §15D operating point (`entropy_benign_p93 + layer2_p90`) was tested "
+    "across three Layer-2 architectural families to confirm the §15E.3 "
+    "interchangeability claim — the fusion's predictive ceiling is set by the "
+    "entropy channel, not by Layer-2 architecture."
+)
+
+substitution = pd.DataFrame(
+    [
+        {"Architecture": "AE (§15D anchor, dense 44→32→16→8)", "strict_avg": "0.8590", "FPR": "0.2473", "Layer-2 AUC": "0.9892", "Δ strict vs AE": "—"},
+        {"Architecture": "β-VAE (β = 0.5)",                    "strict_avg": "0.8588", "FPR": "0.2425", "Layer-2 AUC": "0.9904", "Δ strict vs AE": "−0.0001"},
+        {"Architecture": "LSTM-AE (c4, 128/64)",               "strict_avg": "0.8685", "FPR": "0.2452", "Layer-2 AUC": "0.9919", "Δ strict vs AE": "+0.0095"},
+    ]
+)
+st.table(substitution)
+st.caption(
+    "Sources: AE row from §15D anchor (sweep_table.csv at percentile = 93); "
+    "β-VAE row from §15E.2 (β = 0.5 best variant under FPR ≤ 0.25 budget, "
+    "all_betas_ablation.csv); LSTM-AE row from §15E.7.2 (c4 canonical, "
+    "full precision in `gate1_report.json`). LSTM-AE c4 (128/64 LSTM widths, "
+    "27 epochs, ~234K params) selected as canonical for this Model Card "
+    "comparison. The full c1 / c4 / c6 sweep at the §15D operating point "
+    "produced strict_avg ∈ [0.8685, 0.8930]; c1 / c6 (64/32 LSTM, ~60K params) "
+    "win on fusion strict_avg while c4 wins on every Layer-2 metric — the "
+    "capacity-vs-fusion inverse finding documented in README §15E.7.4."
+)
+
+st.divider()
+
 # --- Known limitations ---------------------------------------------------
 st.subheader("Known limitations & closure status")
 
@@ -86,6 +117,7 @@ limitations = pd.DataFrame(
         {"Limitation": "Aggregate-only KS",           "Closed by / Status": "Closed by §15C.10 update (per-fold KS table)"},
         {"Limitation": "Test-drawn SHAP background",  "Closed by / Status": "Closed by §16.7B (train-bg → test-bg Kendall τ_top10 = 0.927)"},
         {"Limitation": "VAE replacement open",        "Closed by / Status": "Closed by §15E (β-VAE β=0.5 substitution-equivalent: Δ_strict_avg = −0.0001)"},
+        {"Limitation": "LSTM Layer-2 alternative open", "Closed by / Status": "Closed by §15E.7 (LSTM-AE substitution-equivalent: 3/6 configs PASS Gate-1, all 3 match-or-beat AE strict_avg by Δ ∈ [+0.0095, +0.0341]; capacity-vs-fusion inverse finding documented)"},
         {"Limitation": "DDoS vs DoS boundary",        "Closed by / Status": "Open: §16.4 cosine = 0.991 documented; future per-class layer (§17 roadmap)"},
         {"Limitation": "Profiling data unused",       "Closed by / Status": "Open: §17 future work — vendor / device-fingerprint signals not yet integrated"},
         {"Limitation": "Recon_Ping_Sweep eligibility", "Closed by / Status": "Open: dataset-driven, n_test = 169 (small sample → high recall variance)"},
@@ -93,7 +125,7 @@ limitations = pd.DataFrame(
 )
 st.table(limitations)
 st.caption(
-    "Five Tier-1 / Tier-2 limitations are closed by the corresponding hardening "
+    "Six Tier-1 / Tier-2 limitations are closed by the corresponding hardening "
     "sections; three remain open and are routed to §17 future work."
 )
 

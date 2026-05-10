@@ -1,0 +1,20 @@
+[07:57:58] [+   0.0s] LSTM-AE training script | SMOKE=True | random_state=42
+[07:57:58] [+   0.0s] TensorFlow 2.21.0 | tf.keras 3.14.0 | NumPy 2.2.6
+[07:57:58] [+   0.0s] No GPU detected; CPU training (LSTM is slower than dense AE here).
+[07:57:58] [+   0.0s] 
+======================================================================
+[07:57:58] [+   0.0s] SECTION 2 . DATA LOADING
+[07:57:58] [+   0.0s] ======================================================================
+[07:58:00] [+   1.2s] Benign rows in train split: 154,186
+[07:58:00] [+   1.2s] AE-train (benign): (123348, 44)
+[07:58:00] [+   1.2s] AE-val   (benign): (30838, 44)
+[07:58:00] [+   1.2s] Loaded Phase 5 scaler: n_samples_seen=123,348.0, means range=[-0.5196, 5281.1010]
+[07:58:00] [+   1.3s] After scaling: benign-train mean=-0.000000, std=0.965307
+[07:58:00] [+   1.4s] Test set (scaled): (892268, 44), benign=37,607, attack=854,661
+[07:58:00] [+   1.4s] 
+======================================================================
+[07:58:00] [+   1.4s] PHASE 1 . SMOKE GATE (c1, 5 epochs, _smoke/ dir)
+[07:58:00] [+   1.4s] ======================================================================
+[07:58:00] [+   1.6s] 
+--- Training c1 -> results/unsupervised/lstm_ae/_smoke (epochs<=5, cap 600s, units=64/32, lr=0.001, rec_dropout=0.0, tape=False) ---
+Epoch 1/5

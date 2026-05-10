@@ -1,0 +1,17 @@
+{
+  "failed_checks": [
+    "e_benign_recon_close",
+    "f_attack_recon_higher"
+  ],
+  "checks": {
+    "a_model_builds": true,
+    "b_forward_pass_shape": true,
+    "c_train_loss_decreases": true,
+    "d_val_within_10x_train": true,
+    "e_benign_recon_close": false,
+    "f_attack_recon_higher": false,
+    "g_roundtrip_bit_stable": true,
+    "h_population_auc_above_floor": true
+  },
+  "failure_reason": null
+}
