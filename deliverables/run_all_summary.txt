@@ -1,0 +1,747 @@
+run_all_summary.txt — generated 2026-05-15 12:56:33
+PROJECT_ROOT: /Users/amoorabaseet/IoMT-Project
+Python: 3.13.13
+Total elapsed: 12.78s
+
+================================================================
+  Per-script stdout (verbatim)
+================================================================
+
+
+===== deliverables.scripts.00_env_check (Phase 0) — exit 0, 4.27s =====
+==============================================================================
+  Phase 0 — Environment check
+==============================================================================
+Python: 3.13.13
+[Phase 0] python_version = 3.13.13  (source: sys.version)
+  numpy: 2.2.6
+[Phase 0] numpy_version = 2.2.6  (source: importlib)
+  pandas: 2.3.3
+[Phase 0] pandas_version = 2.3.3  (source: importlib)
+  sklearn: 1.8.0
+[Phase 0] sklearn_version = 1.8.0  (source: importlib)
+  xgboost: 3.2.0
+[Phase 0] xgboost_version = 3.2.0  (source: importlib)
+  tensorflow: 2.21.0
+[Phase 0] tensorflow_version = 2.21.0  (source: importlib)
+  shap: 0.51.0
+[Phase 0] shap_version = 0.51.0  (source: importlib)
+  scipy: 1.17.1
+[Phase 0] scipy_version = 1.17.1  (source: importlib)
+
+Required artefact directories:
+  phase4             results/supervised: OK
+  phase5             results/unsupervised: OK
+  phase5_unscaled    results/unsupervised_unscaled: OK
+  phase6             results/fusion: OK
+  phase6B            results/zero_day_loo: OK
+  phase6C            results/enhanced_fusion: OK
+  phase7             results/shap: OK
+
+Spot-check required files:
+  OK: results/supervised/metrics/E7_multiclass.json
+  OK: results/unsupervised/thresholds.json
+  OK: results/fusion/metrics/h1_h2_verdicts.json
+  OK: results/zero_day_loo/metrics/h2_loo_verdict.json
+  OK: results/enhanced_fusion/metrics/h2_enhanced_verdict.json
+  OK: results/enhanced_fusion/metrics/ablation_table.csv
+  OK: results/shap/shap_values/shap_values.npy
+  OK: preprocessed/full_features/y_test.csv
+
+OK — environment is ready for the deliverable run.
+
+
+===== deliverables.scripts.01_data_preprocessing (Phase 2–3) — exit 0, 0.23s =====
+==============================================================================
+  Phase 2–3 — Data + preprocessing reproducibility
+==============================================================================
+[Phase 2] deduped_train_rows = 4515080  (source: eda_output/imbalance_table.csv (sum of class rows))
+[Phase 2] deduped_test_rows = 892268  (source: eda_output/imbalance_table.csv (sum of class rows))
+[Phase 2] rarest_class = Recon_Ping_Sweep  (source: eda_output/imbalance_table.csv)
+[Phase 2] rarest_class_train_rows = 689  (source: eda_output/imbalance_table.csv)
+[Phase 2] largest_class = DDoS_UDP  (source: eda_output/imbalance_table.csv)
+[Phase 2] max_imbalance_ratio = 2374.4  (source: eda_output/imbalance_table.csv (largest.train / rarest.train))
+[Phase 2] raw_train_rows = 7160831  (source: README §2)
+[Phase 2] raw_test_rows = 1614182  (source: README §2)
+[Phase 2] raw_rows_total = 8775013  (source: README §2)
+[Phase 2] train_duplicate_rate_pct = 36.95  (source: README §2, §10.1)
+[Phase 2] test_duplicate_rate_pct = 44.72  (source: README §2, §10.1)
+[Phase 3] n_features_raw = 45  (source: README §6)
+[Phase 3] n_features_full = 44  (source: README §11.2 (Drate dropped))
+[Phase 3] n_features_reduced = 28  (source: README §11.2 (Drate + 11 correlated + 5 noise))
+[Phase 3] train_rows = 3612064  (source: README §11.4)
+[Phase 3] val_rows = 903016  (source: README §11.4)
+[Phase 3] test_rows = 892268  (source: README §11.4)
+[Phase 3] smote_minorities_boosted = 8  (source: README §11.5)
+[Phase 3] smote_target_size = ~50000  (source: README §11.5 (Recon_Ping_Sweep 551 → 49,799 etc.))
+[Phase 3] post_smote_rows_full = 3869271  (source: README §11.5)
+[Phase 3] ae_train_rows = 123348  (source: README §11.6)
+[Phase 3] ae_val_rows = 30838  (source: README §11.6)
+[Phase 3] loo_held_out_Recon_Ping_Sweep = 169  (source: README §11.7)
+[Phase 3] loo_held_out_Recon_VulScan = 973  (source: README §11.7)
+[Phase 3] loo_held_out_MQTT_Malformed_Data = 1747  (source: README §11.7)
+[Phase 3] loo_held_out_MQTT_DoS_Connect_Flood = 3131  (source: README §11.7)
+[Phase 3] loo_held_out_ARP_Spoofing = 1744  (source: README §11.7)
+[Phase 2] cohens_d_top4 = rst_count, psh_flag_number, Variance, ack_flag_number  (source: eda_output/feature_target_cohens_d.csv)
+[Phase 3] preprocessed_config_loaded = OK  (source: preprocessed/config.json)
+[Phase 3] random_state = 42  (source: preprocessed/config.json:random_state)
+
+Phase 2/3 reproducibility: all headline numbers above are read from
+on-disk artefacts (eda_output/, preprocessed/) or anchored to README
+§2, §8.1, §10.1, §11 when the corresponding EDA file is absent.
+
+
+===== deliverables.scripts.02_supervised_phase4 (Phase 4) — exit 0, 0.02s =====
+==============================================================================
+  Phase 4 — Supervised layer
+==============================================================================
+[Phase 4] E7_test_f1_macro = 0.9076266229  (source: results/supervised/metrics/E7_multiclass.json:test_f1_macro)
+[Phase 4] E7_test_accuracy = 0.992655794  (source: results/supervised/metrics/E7_multiclass.json:test_accuracy)
+[Phase 4] E7_test_mcc = 0.9906169668  (source: results/supervised/metrics/E7_multiclass.json:test_mcc)
+[Phase 4] E7_test_precision_macro = 0.9421339151  (source: results/supervised/metrics/E7_multiclass.json:test_precision_macro)
+[Phase 4] E7_test_recall_macro = 0.8876352253  (source: results/supervised/metrics/E7_multiclass.json:test_recall_macro)
+
+E1–E8 + E5G macro-F1 ranking:
+  E7     F1_macro=0.9076  acc=0.9927  MCC=0.9906 ★
+[Phase 4] E7_test_f1_macro = 0.9076266229  (source: results/supervised/metrics/E7_multiclass.json)
+  E3     F1_macro=0.8987  acc=0.9925  MCC=0.9905
+[Phase 4] E3_test_f1_macro = 0.8986543741  (source: results/supervised/metrics/E3_multiclass.json)
+  E8     F1_macro=0.8708  acc=0.9879  MCC=0.9846
+[Phase 4] E8_test_f1_macro = 0.8708397495  (source: results/supervised/metrics/E8_multiclass.json)
+  E5     F1_macro=0.8551  acc=0.9852  MCC=0.9811
+[Phase 4] E5_test_f1_macro = 0.8550869669  (source: results/supervised/metrics/E5_multiclass.json)
+  E4     F1_macro=0.8538  acc=0.9859  MCC=0.9821
+[Phase 4] E4_test_f1_macro = 0.8537700781  (source: results/supervised/metrics/E4_multiclass.json)
+  E5G    F1_macro=0.8504  acc=0.9848  MCC=0.9807
+[Phase 4] E5G_test_f1_macro = 0.8504004351  (source: results/supervised/metrics/E5G_multiclass.json)
+  E1     F1_macro=0.8469  acc=0.9843  MCC=0.9801
+[Phase 4] E1_test_f1_macro = 0.8469353689  (source: results/supervised/metrics/E1_multiclass.json)
+  E6     F1_macro=0.8380  acc=0.9841  MCC=0.9798
+[Phase 4] E6_test_f1_macro = 0.8380315464  (source: results/supervised/metrics/E6_multiclass.json)
+  E2     F1_macro=0.8356  acc=0.9837  MCC=0.9793
+[Phase 4] E2_test_f1_macro = 0.8355503668  (source: results/supervised/metrics/E2_multiclass.json)
+
+SMOTE-vs-Original macro-F1 deltas:
+  RF/Reduced         E1 0.8469 → E2 0.8356  Δ = -0.0114
+[Phase 4] smote_delta_RF_Reduced = -0.0114  (source: results/supervised/metrics/E2 vs E1)
+  RF/Full            E5 0.8551 → E6 0.8380  Δ = -0.0171
+[Phase 4] smote_delta_RF_Full = -0.0171  (source: results/supervised/metrics/E6 vs E5)
+  XGBoost/Reduced    E3 0.8987 → E4 0.8538  Δ = -0.0449
+[Phase 4] smote_delta_XGBoost_Reduced = -0.0449  (source: results/supervised/metrics/E4 vs E3)
+  XGBoost/Full       E7 0.9076 → E8 0.8708  Δ = -0.0368
+[Phase 4] smote_delta_XGBoost_Full = -0.0368  (source: results/supervised/metrics/E8 vs E7)
+[Phase 4] H3_macro_F1_pass_count = 0/4 configs improve  (source: smote_comparison.csv + per-config E*_multiclass.json)
+[Phase 4] H3_minority_pass_count = 2/5 (RF/Reduced only)  (source: README §20.2 H3)
+[Phase 4] H3_verdict = FAIL on both criteria  (source: README §20.2 H3)
+[Phase 4] yacoubi_RF_accuracy_raw_pct = 99.87  (source: README §12.7)
+[Phase 4] our_E5_accuracy_pct = 98.52  (source: results/supervised/metrics/E5_multiclass.json:test_accuracy)
+[Phase 4] yacoubi_XGB_accuracy_raw_pct = 99.8  (source: README §12.7)
+[Phase 4] our_E7_accuracy_pct = 99.27  (source: results/supervised/metrics/E7_multiclass.json:test_accuracy)
+[Phase 4] E7_vs_yacoubi_xgb_gap_pp = -0.53  (source: derived from E7_multiclass.json - 99.80)
+[Phase 4] yacoubi_macro_precision_paper3_pct = 86.1  (source: README §19.3)
+
+Phase 4 reproducibility: all 9 E*_multiclass.json files loaded;
+E7 confirmed as the canonical fusion-input model.
+
+
+===== deliverables.scripts.03_unsupervised_phase5 (Phase 5) — exit 0, 0.93s =====
+==============================================================================
+  Phase 5 — Unsupervised layer
+==============================================================================
+[Phase 5] AE_best_val_loss = 0.1988  (source: results/unsupervised/ae_training_history.json:min(val_loss))
+[Phase 5] AE_epochs_trained = 36  (source: results/unsupervised/ae_training_history.json:len(val_loss))
+[Phase 5] AE_threshold_p90 = 0.2012705803  (source: results/unsupervised/thresholds.json:thresholds.p90)
+[Phase 5] AE_threshold_p95 = 0.3726415634  (source: results/unsupervised/thresholds.json:thresholds.p95)
+[Phase 5] AE_threshold_p99 = 1.2025282383  (source: results/unsupervised/thresholds.json:thresholds.p99)
+[Phase 5] AE_selected_threshold = p90  (source: thresholds.json:selected.name)
+[Phase 5] AE_selected_threshold_value = 0.2012705803  (source: thresholds.json:selected.value)
+[Phase 5] AE_selected_F1_on_val = 0.9907894163  (source: thresholds.json:selected.f1_on_val)
+[Phase 5] AE_p90_val_recall = 0.9862135181  (source: thresholds.json:p90.recall)
+[Phase 5] AE_p90_val_fpr = 0.1020339335  (source: thresholds.json:p90.fpr)
+[Phase 5] Autoencoder_AUC-ROC = 0.9892  (source: model_comparison.csv:AUC-ROC (test):Autoencoder)
+[Phase 5] IsolationForest_AUC-ROC = 0.8612  (source: model_comparison.csv:AUC-ROC (test):IsolationForest)
+[Phase 5] Autoencoder_Anomaly_F1 = 0.9853  (source: model_comparison.csv:Anomaly F1 (test):Autoencoder)
+[Phase 5] IsolationForest_Anomaly_F1 = 0.7327  (source: model_comparison.csv:Anomaly F1 (test):IsolationForest)
+[Phase 5] Autoencoder_Per-class_avg_recall = 0.7999  (source: model_comparison.csv:Per-class avg recall:Autoencoder)
+[Phase 5] IsolationForest_Per-class_avg_recall = 0.1627  (source: model_comparison.csv:Per-class avg recall:IsolationForest)
+[Phase 5] Autoencoder_FPR_at_95pctTPR = 0.0203  (source: model_comparison.csv:FPR @ 95%TPR (test):Autoencoder)
+[Phase 5] IsolationForest_FPR_at_95pctTPR = 0.2721  (source: model_comparison.csv:FPR @ 95%TPR (test):IsolationForest)
+[Phase 5] AE_p90_per_class_avg_recall_excl_benign = 0.7999  (source: per_class_detection_rates.csv (AE rows, excl. Benign))
+[Phase 5] AE_test_AUC_computed_live = 0.9892  (source: derived from ae_test_mse.npy + y_test.csv)
+[Phase 5] scaling_fix_val_loss_pre = 101414  (source: README §13.6 (pre-fix))
+[Phase 5] scaling_fix_val_loss_post = 0.199  (source: README §13.6 (post-fix))
+[Phase 5] scaling_fix_AUC_pre = 0.9728  (source: README §13.6 (pre-fix))
+[Phase 5] scaling_fix_AUC_post = 0.9892  (source: README §13.6 (post-fix))
+[Phase 5] scaling_fix_Recon_Ping_Sweep_recall_pre = 0.0  (source: README §13.6)
+[Phase 5] scaling_fix_Recon_Ping_Sweep_recall_post = 0.544  (source: README §13.6)
+[Phase 5] scaling_fix_avg_recall_improvement = 0.700 → 0.800  (source: README §13.6)
+[Phase 5] scaling_fix_val_loss_ratio = 510×  (source: derived: 101414 / 0.199 ≈ 509.6)
+
+Phase 5 reproducibility: AE thresholds + IF/AE comparison loaded from
+on-disk artefacts; AE test AUC computed live and verified against
+the published 0.9892 within 0.001.
+
+
+===== deliverables.scripts.04_fusion_phase6 (Phase 6/6B/6C) — exit 0, 0.24s =====
+==============================================================================
+  Phase 6 / 6B / 6C — Fusion engine
+==============================================================================
+
+>>> Phase 6 (4-case fusion, simulated zero-day)
+[Phase 6] E7_macro_f1_20class = 0.8622452917  (source: h1_h2_verdicts.json:H1.e7_macro_f1_20class)
+[Phase 6] fusion_primary_macro_f1 = 0.8581685422  (source: h1_h2_verdicts.json:H1.fusion_macro_f1_primary)
+[Phase 6] delta_primary = -0.0040767496  (source: h1_h2_verdicts.json:H1.delta_primary)
+[Phase 6] delta_primary_CI_lower = -0.0041968514  (source: h1_h2_verdicts.json:H1.delta_primary_ci[0])
+[Phase 6] delta_primary_CI_upper = -0.0039802791  (source: h1_h2_verdicts.json:H1.delta_primary_ci[1])
+[Phase 6] best_variant = AE_p99  (source: h1_h2_verdicts.json:H1.best_variant)
+[Phase 6] best_delta_CI = [-0.00016481166024279737, -0.00011894470327992456]  (source: h1_h2_verdicts.json:H1.best_delta_ci)
+[Phase 6] H1_verdict = no operationally meaningful difference  (source: h1_h2_verdicts.json:H1 + senior-review fix #5)
+[Phase 6] H2_simulated_strict_pass = 0  (source: h1_h2_verdicts.json:H2.n_pass_primary)
+[Phase 6] H2_simulated_strict_total = 5  (source: h1_h2_verdicts.json:H2.n_total)
+[Phase 6] recommended_threshold_percentile = 97  (source: h1_h2_verdicts.json:recommended_threshold.percentile)
+[Phase 6] recommended_test_TPR = 0.9987234705  (source: h1_h2_verdicts.json:recommended_threshold.test_TPR)
+[Phase 6] recommended_test_FPR = 0.0528890898  (source: h1_h2_verdicts.json:recommended_threshold.test_FPR)
+[Phase 6] recommended_test_F1 = 0.9981990621  (source: h1_h2_verdicts.json:recommended_threshold.test_F1)
+
+Case distribution (raw counts):
+variant  threshold  case1_n  case1_pct  case2_n  case2_pct  case3_n  case3_pct  case4_n  case4_pct
+ AE_p90   0.205798   837209  93.829320     6140   0.688134    17317   1.940785    31602   3.541761
+ AE_p95   0.384499   834022  93.472141     2236   0.250597    20504   2.297964    35506   3.979298
+ AE_p99   1.315197   747621  83.788839      325   0.036424   106905  11.981266    37417   4.193471
+     IF        NaN   496369  55.630035     4118   0.461521   358157  40.140070    33624   3.768375
+
+>>> Phase 6B (true LOO, AE-only)
+[Phase 6B] H2_strict_AE_only_pass_p90 = 0  (source: h2_loo_verdict.json:evaluations.h2_strict_ae_on_loo_missed_p90.n_pass)
+[Phase 6B] H2_strict_AE_only_total = 5  (source: h2_loo_verdict.json:evaluations.h2_strict_ae_on_loo_missed_p90.n_total)
+
+Per-target AE-on-LOO-missed @ p90 (Phase 6B):
+  Recon_Ping_Sweep             value=0.16129032258064516  passes=False
+[Phase 6B] AE_on_LOO_missed_p90_Recon_Ping_Sweep = 0.1613  (source: h2_loo_verdict.json:Recon_Ping_Sweep)
+  Recon_VulScan                value=0.44061302681992337  passes=False
+[Phase 6B] AE_on_LOO_missed_p90_Recon_VulScan = 0.4406  (source: h2_loo_verdict.json:Recon_VulScan)
+  MQTT_Malformed_Data          value=0.3347457627118644  passes=False
+[Phase 6B] AE_on_LOO_missed_p90_MQTT_Malformed_Data = 0.3347  (source: h2_loo_verdict.json:MQTT_Malformed_Data)
+  MQTT_DoS_Connect_Flood       value=n/a         passes=False
+  ARP_Spoofing                 value=0.31962025316455694  passes=False
+[Phase 6B] AE_on_LOO_missed_p90_ARP_Spoofing = 0.3196  (source: h2_loo_verdict.json:ARP_Spoofing)
+[Phase 6B] redundancy_misclass_distribution_csv_loaded = OK  (source: results/zero_day_loo/metrics/loo_prediction_distribution.csv)
+[Phase 6B] redundancy_attack_to_benign_pct = 17.3  (source: README §15.3)
+[Phase 6B] redundancy_attack_to_other_attack_pct = 82.7  (source: README §15.3)
+
+>>> Phase 6C (enhanced fusion + 11-variant ablation)
+[Phase 6C] strict_best_variant = entropy_benign_p95  (source: h2_enhanced_verdict.json:phase_6c_h2_strict_best.variant)
+[Phase 6C] strict_best_pass = 4/4  (source: h2_enhanced_verdict.json:phase_6c_h2_strict_best.pass)
+[Phase 6C] strict_best_avg_recall = 0.8035264624  (source: h2_enhanced_verdict.json:phase_6c_h2_strict_best.avg_recall)
+[Phase 6C] binary_best_variant = entropy_benign_p95  (source: h2_enhanced_verdict.json:phase_6c_h2_binary_best.variant)
+[Phase 6C] binary_best_pass = 5/5  (source: h2_enhanced_verdict.json:phase_6c_h2_binary_best.pass)
+[Phase 6C] binary_best_avg_recall = 0.9493664825  (source: h2_enhanced_verdict.json:phase_6c_h2_binary_best.avg_recall)
+
+Tripwire 1 — entropy_benign_p95 strict_avg
+  expected: 0.8035264623662012
+  actual:   0.8035264623662012
+  diff:     0.000e+00
+  status:   PASS (diff < 1e-09)
+[Phase 6C] tripwire_strict_avg_p95_pass = PASS  (source: h2_enhanced_verdict.json vs hardcoded 0.8035264623662012)
+
+Tripwire 2 — entropy_benign_p93 + ae_p90 strict_avg (§15D anchor)
+  expected: 0.8589586873140701
+  actual:   0.8589586873140701
+  diff:     0.000e+00
+  status:   PASS (diff < 1e-7)
+[Phase 6C] tripwire_strict_avg_p93_pass = PASS  (source: sweep_table.csv p=93.0 row vs hardcoded 0.8589586873140701)
+
+Ablation table (11 variants):
+           variant h2_strict_pass  h2_strict_avg h2_binary_pass  h2_binary_avg  avg_false_alert_rate
+   baseline_ae_p90            0/4       0.314067            4/5       0.848607              0.188805
+   baseline_ae_p95            0/4       0.218379            4/5       0.826529              0.074188
+    confidence_0.6            0/4       0.395680            5/5       0.864053              0.192363
+    confidence_0.7            0/4       0.538124            5/5       0.891457              0.197282
+entropy_benign_p90            4/4       0.908467            5/5       0.972884              0.278177
+entropy_benign_p95            4/4       0.803526            5/5       0.949366              0.228910
+entropy_benign_p99            0/4       0.440267            5/5       0.873598              0.193517
+      ensemble_p90            0/4       0.216651            4/5       0.809998              0.148414
+      ensemble_p95            0/4       0.082076            4/5       0.782503              0.120834
+    conf07_ent_p95            4/4       0.803526            5/5       0.949366              0.228910
+     full_enhanced            2/4       0.763726            5/5       0.930804              0.215885
+[Phase 6C] ablation_baseline_ae_p90_strict_avg = 0.3141  (source: ablation_table.csv:variant=baseline_ae_p90:h2_strict_avg)
+[Phase 6C] ablation_baseline_ae_p90_FPR = 0.1888  (source: ablation_table.csv:variant=baseline_ae_p90:avg_false_alert_rate)
+[Phase 6C] ablation_baseline_ae_p95_strict_avg = 0.2184  (source: ablation_table.csv:variant=baseline_ae_p95:h2_strict_avg)
+[Phase 6C] ablation_baseline_ae_p95_FPR = 0.0742  (source: ablation_table.csv:variant=baseline_ae_p95:avg_false_alert_rate)
+[Phase 6C] ablation_confidence_0.6_strict_avg = 0.3957  (source: ablation_table.csv:variant=confidence_0.6:h2_strict_avg)
+[Phase 6C] ablation_confidence_0.6_FPR = 0.1924  (source: ablation_table.csv:variant=confidence_0.6:avg_false_alert_rate)
+[Phase 6C] ablation_confidence_0.7_strict_avg = 0.5381  (source: ablation_table.csv:variant=confidence_0.7:h2_strict_avg)
+[Phase 6C] ablation_confidence_0.7_FPR = 0.1973  (source: ablation_table.csv:variant=confidence_0.7:avg_false_alert_rate)
+[Phase 6C] ablation_entropy_benign_p90_strict_avg = 0.9085  (source: ablation_table.csv:variant=entropy_benign_p90:h2_strict_avg)
+[Phase 6C] ablation_entropy_benign_p90_FPR = 0.2782  (source: ablation_table.csv:variant=entropy_benign_p90:avg_false_alert_rate)
+[Phase 6C] ablation_entropy_benign_p95_strict_avg = 0.8035  (source: ablation_table.csv:variant=entropy_benign_p95:h2_strict_avg)
+[Phase 6C] ablation_entropy_benign_p95_FPR = 0.2289  (source: ablation_table.csv:variant=entropy_benign_p95:avg_false_alert_rate)
+[Phase 6C] ablation_entropy_benign_p99_strict_avg = 0.4403  (source: ablation_table.csv:variant=entropy_benign_p99:h2_strict_avg)
+[Phase 6C] ablation_entropy_benign_p99_FPR = 0.1935  (source: ablation_table.csv:variant=entropy_benign_p99:avg_false_alert_rate)
+[Phase 6C] ablation_ensemble_p90_strict_avg = 0.2167  (source: ablation_table.csv:variant=ensemble_p90:h2_strict_avg)
+[Phase 6C] ablation_ensemble_p90_FPR = 0.1484  (source: ablation_table.csv:variant=ensemble_p90:avg_false_alert_rate)
+[Phase 6C] ablation_ensemble_p95_strict_avg = 0.0821  (source: ablation_table.csv:variant=ensemble_p95:h2_strict_avg)
+[Phase 6C] ablation_ensemble_p95_FPR = 0.1208  (source: ablation_table.csv:variant=ensemble_p95:avg_false_alert_rate)
+[Phase 6C] ablation_conf07_ent_p95_strict_avg = 0.8035  (source: ablation_table.csv:variant=conf07_ent_p95:h2_strict_avg)
+[Phase 6C] ablation_conf07_ent_p95_FPR = 0.2289  (source: ablation_table.csv:variant=conf07_ent_p95:avg_false_alert_rate)
+[Phase 6C] ablation_full_enhanced_strict_avg = 0.7637  (source: ablation_table.csv:variant=full_enhanced:h2_strict_avg)
+[Phase 6C] ablation_full_enhanced_FPR = 0.2159  (source: ablation_table.csv:variant=full_enhanced:avg_false_alert_rate)
+
+Per-target rescue (baseline_ae_p90 → entropy_benign_p95):
+[Phase 6C] operational_FPR_pct = 22.9  (source: README §15C.4 (entropy_benign_p95))
+[Phase 6C] operational_alerts_per_sec_low = 23  (source: README §15C.6B (40 devices × 2 flows/sec × 0.229))
+[Phase 6C] operational_alerts_per_sec_high = 92  (source: README §15C.6B (40 devices × 10 flows/sec × 0.229))
+[Phase 6C] entropy_only_fpr_pct = 9.46  (source: README §15C.10 (no AE channel))
+
+Phase 6/6B/6C reproducibility: 2 tripwires pass; 11-variant ablation
+table loaded; per-target rescue lifts reproduced from per_target_results.csv.
+
+
+===== deliverables.scripts.05_explainability_phase7 (Phase 7) — exit 0, 0.24s =====
+==============================================================================
+  Phase 7 — SHAP explainability
+==============================================================================
+
+Global SHAP top-10:
+  IAT                        mean|SHAP|=0.8725
+  Rate                       mean|SHAP|=0.2184
+  TCP                        mean|SHAP|=0.1835
+  syn_count                  mean|SHAP|=0.1765
+  Header_Length              mean|SHAP|=0.1519
+  syn_flag_number            mean|SHAP|=0.1297
+  UDP                        mean|SHAP|=0.1207
+  Min                        mean|SHAP|=0.1036
+  Number                     mean|SHAP|=0.0927
+  Tot sum                    mean|SHAP|=0.0920
+[Phase 7] global_top1_feature = IAT  (source: results/shap/metrics/global_importance.csv:top-1)
+[Phase 7] global_top1_mean_abs_shap = 0.8725  (source: results/shap/metrics/global_importance.csv:top-1.mean_abs_shap)
+[Phase 7] global_top1_to_top2_ratio = 4.0  (source: derived from global_importance.csv (top-1 / top-2))
+
+Per-class top features (sample):
+[Phase 7] DDoS_vs_DoS_cosine = 0.991  (source: results/shap/metrics/category_similarity.csv:DDoS↔DoS)
+
+Method-Jaccard (top-10) matrix:
+       method  Yacoubi SHAP  Our SHAP  Cohen's d  RF Importance
+ Yacoubi SHAP      1.000000  0.428571   0.176471       0.333333
+     Our SHAP      0.428571  1.000000   0.000000       0.333333
+    Cohen's d      0.176471  0.000000   1.000000       0.250000
+RF Importance      0.333333  0.333333   0.250000       1.000000
+[Phase 7] SHAP_vs_CohensD_Jaccard = 0.0  (source: results/shap/metrics/method_jaccard.csv)
+[Phase 7] method_rank_correlation_loaded = OK  (source: results/shap/metrics/method_rank_correlation.csv)
+[Phase 7] SHAP_vs_Yacoubi_SHAP_Jaccard = 0.429  (source: README §16.5)
+[Phase 7] SHAP_vs_RF_importance_Jaccard = 0.333  (source: README §16.5)
+[Phase 7] SHAP_vs_CohensD_Spearman_rho = -0.741  (source: README §16.5)
+
+Background sensitivity (X_test vs X_train backgrounds):
+ explained_set_n  background_n  background_seed_base  kendall_tau_full44  kendall_tau_top10_union    decision  per_class_jaccard_mean  per_class_jaccard_std  per_class_jaccard_min  n_classes_jaccard_ge_0_6  ddos_dos_cosine_test_bg  ddos_dos_cosine_train_bg  ddos_dos_cosine_abs_delta
+            5000           500                    42            0.940426                 0.927273 BULLETPROOF                0.842105               0.170996               0.666667                        19                 0.990971                  0.988979                   0.001993
+[Phase 7] background_Kendall_tau_top10 = 0.927  (source: README §16.7B)
+[Phase 7] background_Kendall_tau_full_44 = 0.94  (source: README §16.7B)
+[Phase 7] background_perclass_top5_Jaccard_mean = 0.842  (source: README §16.7B)
+[Phase 7] background_perclass_top5_Jaccard_min = 0.667  (source: README §16.7B)
+[Phase 7] background_DDoS_vs_DoS_cosine_train_bg = 0.989  (source: README §16.7B)
+[Phase 7] background_DDoS_vs_DoS_cosine_test_bg = 0.991  (source: README §16.7B)
+
+SHAP tensor shape: (19, 5000, 44)  → 4,180,000 attributions
+[Phase 7] shap_tensor_shape = (19, 5000, 44)  (source: results/shap/shap_values/shap_values.npy:shape)
+[Phase 7] shap_tensor_total_attributions = 4180000  (source: derived from shap_values.npy size)
+[Phase 7] shap_subsample_size = 5000  (source: README §16.1)
+[Phase 7] shap_background_size = 500  (source: README §16.7B)
+
+Phase 7 reproducibility: global top-10 loaded; DDoS↔DoS cosine = 0.991
+anchored to category_similarity.csv; method-Jaccard matrix loaded;
+background-sensitivity Kendall τ = 0.927 anchored to README §16.7B
+with results/shap/sensitivity/comparison.csv loaded as evidence.
+
+
+===== deliverables.scripts.06_path_b_hardening (Path B) — exit 0, 0.24s =====
+==============================================================================
+  Path B Tier 1 + Tier 2 — Hardening + Architectural
+==============================================================================
+
+>>> Tier 1 Week 1 — Multi-seed LOO validation
+[Path B T1W1] multi_seed_h2_strict_avg_mean = 0.799  (source: multi_seed_summary.csv:entropy_benign_p95:h2_strict_avg_mean)
+[Path B T1W1] multi_seed_h2_strict_avg_std = 0.0225  (source: multi_seed_summary.csv:entropy_benign_p95:h2_strict_avg_std)
+[Path B T1W1] n_seeds = 5  (source: README §15B.2)
+[Path B T1W1] seeds = 1, 7, 42, 100, 1729  (source: README §15B.2)
+[Path B T1W1] H2_strict_avg_mean = 0.799  (source: README §15B.3)
+[Path B T1W1] H2_strict_avg_std = 0.022  (source: README §15B.3)
+[Path B T1W1] H2_strict_avg_range_low = 0.764  (source: README §15B.3)
+[Path B T1W1] H2_strict_avg_range_high = 0.827  (source: README §15B.3)
+[Path B T1W1] seed_42_z_score = 0.2  (source: README §15B.3)
+[Path B T1W1] operational_FPR_mean = 0.2289  (source: README §15B.6)
+[Path B T1W1] operational_FPR_CV_pct = 0.13  (source: README §15B.6)
+[Path B T1W1] cells_failing_strict = 0/19 eligible  (source: README §15B.4)
+[Path B T1W1] tripwire_seed42_diff = 0.000e+00  (source: README §15B.2)
+[Path B T1W1] Recon_Ping_Sweep_eligibility_drops = 2/5 seeds (n_loo_benign < 30)  (source: README §15B.5)
+
+>>> Tier 1 Week 2A — Continuous threshold sweep + per-fold KS
+[Path B T1W2A] sweep_n_points = 29  (source: results/enhanced_fusion/threshold_sweep/sweep_table.csv (row count))
+Threshold sweep (anchor rows from 29 total):
+  p= 85.0  strict_avg=0.9714  FPR=0.3186  pass=4/4
+  p= 90.0  strict_avg=0.9085  FPR=0.2782  pass=4/4
+  p= 93.0  strict_avg=0.8590  FPR=0.2473  pass=4/4
+[Path B T1W2A] refined_optimum_p93_strict_avg = 0.859  (source: sweep_table.csv:p=93.0:h2_strict_avg)
+[Path B T1W2A] refined_optimum_p93_FPR = 0.2473  (source: sweep_table.csv:p=93.0:avg_false_alert_rate)
+  p= 95.0  strict_avg=0.8035  FPR=0.2289  pass=4/4
+  p= 95.5  strict_avg=0.7680  FPR=0.2232  pass=3/4
+  p= 97.0  strict_avg=0.6881  FPR=0.2101  pass=1/4
+  p= 99.0  strict_avg=0.4403  FPR=0.1935  pass=0/4
+[Path B T1W2A] n_thresholds = 29  (source: README §15D.2)
+[Path B T1W2A] threshold_resolution_pp = 0.5  (source: README §15D.2)
+[Path B T1W2A] improvement_over_p95_pp = 5.5  (source: README §15D.3)
+[Path B T1W2A] FPR_cost_over_p95_pp = 1.8  (source: README §15D.3)
+
+Per-fold KS:
+                target  ks_statistic    ks_pvalue  n_val_benign  n_test_benign  val_mean  test_mean  val_p95  test_p95  delta_mean
+      Recon_Ping_Sweep      0.055087 1.198996e-50         38546          37607  0.052905   0.093819 0.391308  0.827302    0.040914
+         Recon_VulScan      0.056757 9.671228e-54         38546          37607  0.053359   0.093498 0.395685  0.796029    0.040138
+   MQTT_Malformed_Data      0.054274 3.557023e-49         38546          37607  0.048954   0.092610 0.358152  0.824913    0.043656
+MQTT_DoS_Connect_Flood      0.055778 6.479422e-52         38546          37607  0.053937   0.098550 0.400537  0.855898    0.044613
+          ARP_Spoofing      0.057342 7.597713e-55         38546          37607  0.035620   0.061471 0.223436  0.529768    0.025851
+          AGGREGATE_E7      0.064510 2.593156e-69         38546          37607  0.054336   0.085810 0.394647  0.702340    0.031474
+[Path B T1W2A] ks_per_fold_min = 0.0543  (source: ks_per_fold.csv:min(ks_statistic))
+[Path B T1W2A] ks_per_fold_max = 0.0573  (source: ks_per_fold.csv:max(ks_statistic))
+[Path B T1W2A] ks_aggregate_E7 = 0.0645  (source: ks_per_fold.csv:AGGREGATE_E7:ks_statistic)
+[Path B T1W2A] ks_per_fold_range = [0.0543, 0.0573]  (source: README §15C.10)
+[Path B T1W2A] ks_aggregate = 0.0645  (source: README §15C.10)
+
+>>> Tier 1 Week 2B — SHAP background sensitivity
+[Path B T1W2B] Kendall_tau_top10 = 0.927  (source: README §16.7B)
+[Path B T1W2B] Kendall_tau_full_44 = 0.94  (source: README §16.7B)
+[Path B T1W2B] perclass_top5_Jaccard_mean = 0.842  (source: README §16.7B)
+[Path B T1W2B] perclass_top5_Jaccard_std = 0.171  (source: README §16.7B)
+[Path B T1W2B] perclass_top5_Jaccard_min = 0.667  (source: README §16.7B)
+[Path B T1W2B] classes_with_identical_top5 = 9/19  (source: README §16.7B)
+[Path B T1W2B] DDoS_DoS_cosine_train_bg = 0.989  (source: README §16.7B)
+[Path B T1W2B] DDoS_DoS_cosine_test_bg = 0.991  (source: README §16.7B)
+[Path B T1W2B] decision = BULLETPROOF  (source: README §16.7B)
+[Path B T1W2B] sensitivity_csv_loaded = OK  (source: results/shap/sensitivity/comparison.csv)
+
+>>> Tier 2 Week 5 — β-VAE Layer 2 substitution
+β-VAE decision table:
+     row_kind beta                    variant strict_pass  strict_avg  binary_avg      fpr  delta_strict_vs_baseline  delta_fpr_vs_baseline  fpr_within_budget  vae_only_p90_strict_avg  vae_test_auc  vae_auc_vs_ae  n_candidates_under_budget  ship_eligible  replace_eligible             decision_flag
+baseline_§15D    —  entropy_benign_p93_ae_p90         4/4    0.858959    0.962103 0.247332                  0.000000               0.000000               True                      NaN           NaN            NaN                        NaN          False             False                  BASELINE
+        vae_β  0.1 entropy_benign_p93_vae_p95         4/4    0.819157    0.951217 0.180094                 -0.039802              -0.067237               True                 0.314376      0.987637      -0.001563                        7.0          False             False          SHELVE-CANDIDATE
+        vae_β  0.5 entropy_benign_p93_vae_p90         4/4    0.858811    0.961808 0.242513                 -0.000148              -0.004818               True                 0.300386      0.990367       0.001167                        8.0          False              True REPLACE-AE-ONLY-CANDIDATE
+        vae_β  1.0 entropy_benign_p93_vae_p95         4/4    0.826681    0.953093 0.178945                 -0.032278              -0.068386               True                 0.331064      0.986838      -0.002362                        7.0          False             False          SHELVE-CANDIDATE
+        vae_β  4.0 entropy_benign_p93_vae_p95         4/4    0.805668    0.946669 0.207876                 -0.053291              -0.039455               True                 0.304793      0.981783      -0.007417                        7.0          False             False          SHELVE-CANDIDATE
+[Path B T2W5] betas_tested = 0.1, 0.5, 1.0, 4.0  (source: README §15E.1)
+[Path B T2W5] latent_dim = 8  (source: README §15E.1 (matched to AE bottleneck))
+[Path B T2W5] best_beta = 0.5  (source: README §15E.2)
+[Path B T2W5] best_beta_strict_avg = 0.8588  (source: README §15E.2)
+[Path B T2W5] best_beta_FPR = 0.243  (source: README §15E.2)
+[Path B T2W5] best_beta_VAE_AUC = 0.9904  (source: README §15E.2)
+[Path B T2W5] delta_strict_vs_anchor = -0.0001  (source: README §15E.2)
+[Path B T2W5] delta_FPR_vs_anchor = -0.005  (source: README §15E.2)
+[Path B T2W5] delta_AUC_vs_AE = 0.0012  (source: README §15E.2)
+[Path B T2W5] all_betas_pass_4_of_4 = Yes (4/4 strict at every β)  (source: README §15E.2)
+[Path B T2W5] beta_4_latent_collapse = 5 of 8 dims collapsed under KL pressure  (source: README §15E.5)
+[Path B T2W5] decision = SHELVE (substitution-equivalent; AE retained)  (source: README §15E.5)
+
+>>> Tier 2 Extension — LSTM-AE Layer 2 substitution
+Gate-1 per-config verdicts:
+  c1: verdict=PASS  val_loss=?
+  c2: verdict=FAIL  val_loss=?
+  c3: verdict=FAIL  val_loss=?
+  c4: verdict=PASS  val_loss=?
+  c5: verdict=FAIL  val_loss=?
+  c6: verdict=PASS  val_loss=?
+
+LSTM-AE config grid:
+[Path B T2Ext] n_configs = 6  (source: README §15E.7.1)
+[Path B T2Ext] configs_passing_gate1 = 3 of 6 (c1, c4, c6)  (source: README §15E.7.2)
+[Path B T2Ext] c1_strict_avg = 0.893  (source: README §15E.7.2)
+[Path B T2Ext] c1_delta_strict_vs_anchor = 0.0341  (source: README §15E.7.2)
+[Path B T2Ext] c4_strict_avg = 0.8685  (source: README §15E.7.2)
+[Path B T2Ext] c4_delta_strict_vs_anchor = 0.0095  (source: README §15E.7.2)
+[Path B T2Ext] c6_strict_avg = 0.8907  (source: README §15E.7.2)
+[Path B T2Ext] c6_delta_strict_vs_anchor = 0.0317  (source: README §15E.7.2)
+[Path B T2Ext] c4_lowest_val_loss = 0.2306  (source: README §15E.7.2 — highest L2 capacity wins L2 metrics, loses fusion)
+[Path B T2Ext] c4_highest_AUC = 0.9919  (source: README §15E.7.2)
+[Path B T2Ext] capacity_vs_fusion_inverse_finding = c4 wins every L2 metric but loses fusion to c1/c6 (triply-supported)  (source: README §15E.7.4)
+[Path B T2Ext] c1_vs_c6_reproducibility = |Δ strict_avg| = 0.0023  (source: README §15E.7.4)
+[Path B T2Ext] AE_param_count = ~5,000  (source: README §15E.7.5)
+[Path B T2Ext] c4_param_count = ~234,000 (~48× AE)  (source: README §15E.7.5)
+[Path B T2Ext] AE_training_time_sec = 8.24  (source: README §15E.7.5)
+[Path B T2Ext] c4_training_time_sec = 3709  (source: README §15E.7.5 (~450× AE))
+[Path B T2Ext] decision = RETAIN AE (cost contrast decisive)  (source: README §15E.7.5)
+[Path B T2Ext] audit_trail_issues_caught = 4  (source: README §15E.7.6 (smoke (e)/(f) threshold, deterministic outlier, time-cap budget, G1.3 std/mean threshold))
+
+>>> Defensibility score trajectory
+[Path B Summary] defensibility_baseline = 3.0/5  (source: PJ Senior Review pre-baseline)
+[Path B Summary] defensibility_after_senior_review = 4.0/5  (source: PJ Senior Review)
+[Path B Summary] defensibility_after_Tier_1 = 4.3/5  (source: README §15B.9)
+[Path B Summary] defensibility_after_Tier_2 = 4.5/5 (forward target)  (source: thesis plan; 4.3 is the last evidence-backed value)
+
+Path B reproducibility: all 5 robustness axes (Tier 1 + Tier 2 + Tier 2 ext)
+loaded from on-disk artefacts; defensibility 3.0 → 4.0 → 4.3 → 4.5 trajectory
+anchored to README §15B.9 (4.3) plus task-plan forward target (4.5).
+
+
+===== deliverables.scripts.07_generate_figures (Phase F) — exit 0, 6.61s =====
+==============================================================================
+  Phase F — Figure generation (17 figures, deliverables/figures/)
+==============================================================================
+  wrote deliverables/figures/fig01_class_distribution.png
+  wrote deliverables/figures/fig02_cohens_d_top10.png
+  wrote deliverables/figures/fig03_correlation_heatmap.png
+  wrote deliverables/figures/fig04_pca_2d.png
+  wrote deliverables/figures/fig05_e7_confusion_matrix.png
+  wrote deliverables/figures/fig06_e1_e8_comparison.png
+  wrote deliverables/figures/fig07_smote_effect.png
+  wrote deliverables/figures/fig08_ae_loss_curve.png
+  wrote deliverables/figures/fig09_ae_recon_error_hist.png
+  wrote deliverables/figures/fig10_detection_rate_heatmap.png
+  wrote deliverables/figures/fig11_ae_vs_if_roc.png
+  wrote deliverables/figures/fig12_pareto_frontier.png
+  wrote deliverables/figures/fig13_threshold_sweep.png
+  wrote deliverables/figures/fig14_per_target_rescue.png
+  wrote deliverables/figures/fig15_shap_global_top10.png
+  wrote deliverables/figures/fig16_shap_ddos_vs_dos.png
+  wrote deliverables/figures/fig17_multi_seed_distribution.png
+
+Generated 17 / 17 figures
+
+
+================================================================
+  Headline-numbers summary (grep '[Phase' or '[Path B')
+================================================================
+[Phase 0] python_version = 3.13.13  (source: sys.version)
+[Phase 0] numpy_version = 2.2.6  (source: importlib)
+[Phase 0] pandas_version = 2.3.3  (source: importlib)
+[Phase 0] sklearn_version = 1.8.0  (source: importlib)
+[Phase 0] xgboost_version = 3.2.0  (source: importlib)
+[Phase 0] tensorflow_version = 2.21.0  (source: importlib)
+[Phase 0] shap_version = 0.51.0  (source: importlib)
+[Phase 0] scipy_version = 1.17.1  (source: importlib)
+[Phase 2] deduped_train_rows = 4515080  (source: eda_output/imbalance_table.csv (sum of class rows))
+[Phase 2] deduped_test_rows = 892268  (source: eda_output/imbalance_table.csv (sum of class rows))
+[Phase 2] rarest_class = Recon_Ping_Sweep  (source: eda_output/imbalance_table.csv)
+[Phase 2] rarest_class_train_rows = 689  (source: eda_output/imbalance_table.csv)
+[Phase 2] largest_class = DDoS_UDP  (source: eda_output/imbalance_table.csv)
+[Phase 2] max_imbalance_ratio = 2374.4  (source: eda_output/imbalance_table.csv (largest.train / rarest.train))
+[Phase 2] raw_train_rows = 7160831  (source: README §2)
+[Phase 2] raw_test_rows = 1614182  (source: README §2)
+[Phase 2] raw_rows_total = 8775013  (source: README §2)
+[Phase 2] train_duplicate_rate_pct = 36.95  (source: README §2, §10.1)
+[Phase 2] test_duplicate_rate_pct = 44.72  (source: README §2, §10.1)
+[Phase 3] n_features_raw = 45  (source: README §6)
+[Phase 3] n_features_full = 44  (source: README §11.2 (Drate dropped))
+[Phase 3] n_features_reduced = 28  (source: README §11.2 (Drate + 11 correlated + 5 noise))
+[Phase 3] train_rows = 3612064  (source: README §11.4)
+[Phase 3] val_rows = 903016  (source: README §11.4)
+[Phase 3] test_rows = 892268  (source: README §11.4)
+[Phase 3] smote_minorities_boosted = 8  (source: README §11.5)
+[Phase 3] smote_target_size = ~50000  (source: README §11.5 (Recon_Ping_Sweep 551 → 49,799 etc.))
+[Phase 3] post_smote_rows_full = 3869271  (source: README §11.5)
+[Phase 3] ae_train_rows = 123348  (source: README §11.6)
+[Phase 3] ae_val_rows = 30838  (source: README §11.6)
+[Phase 3] loo_held_out_Recon_Ping_Sweep = 169  (source: README §11.7)
+[Phase 3] loo_held_out_Recon_VulScan = 973  (source: README §11.7)
+[Phase 3] loo_held_out_MQTT_Malformed_Data = 1747  (source: README §11.7)
+[Phase 3] loo_held_out_MQTT_DoS_Connect_Flood = 3131  (source: README §11.7)
+[Phase 3] loo_held_out_ARP_Spoofing = 1744  (source: README §11.7)
+[Phase 2] cohens_d_top4 = rst_count, psh_flag_number, Variance, ack_flag_number  (source: eda_output/feature_target_cohens_d.csv)
+[Phase 3] preprocessed_config_loaded = OK  (source: preprocessed/config.json)
+[Phase 3] random_state = 42  (source: preprocessed/config.json:random_state)
+[Phase 4] E7_test_f1_macro = 0.9076266229  (source: results/supervised/metrics/E7_multiclass.json:test_f1_macro)
+[Phase 4] E7_test_accuracy = 0.992655794  (source: results/supervised/metrics/E7_multiclass.json:test_accuracy)
+[Phase 4] E7_test_mcc = 0.9906169668  (source: results/supervised/metrics/E7_multiclass.json:test_mcc)
+[Phase 4] E7_test_precision_macro = 0.9421339151  (source: results/supervised/metrics/E7_multiclass.json:test_precision_macro)
+[Phase 4] E7_test_recall_macro = 0.8876352253  (source: results/supervised/metrics/E7_multiclass.json:test_recall_macro)
+[Phase 4] E7_test_f1_macro = 0.9076266229  (source: results/supervised/metrics/E7_multiclass.json)
+[Phase 4] E3_test_f1_macro = 0.8986543741  (source: results/supervised/metrics/E3_multiclass.json)
+[Phase 4] E8_test_f1_macro = 0.8708397495  (source: results/supervised/metrics/E8_multiclass.json)
+[Phase 4] E5_test_f1_macro = 0.8550869669  (source: results/supervised/metrics/E5_multiclass.json)
+[Phase 4] E4_test_f1_macro = 0.8537700781  (source: results/supervised/metrics/E4_multiclass.json)
+[Phase 4] E5G_test_f1_macro = 0.8504004351  (source: results/supervised/metrics/E5G_multiclass.json)
+[Phase 4] E1_test_f1_macro = 0.8469353689  (source: results/supervised/metrics/E1_multiclass.json)
+[Phase 4] E6_test_f1_macro = 0.8380315464  (source: results/supervised/metrics/E6_multiclass.json)
+[Phase 4] E2_test_f1_macro = 0.8355503668  (source: results/supervised/metrics/E2_multiclass.json)
+[Phase 4] smote_delta_RF_Reduced = -0.0114  (source: results/supervised/metrics/E2 vs E1)
+[Phase 4] smote_delta_RF_Full = -0.0171  (source: results/supervised/metrics/E6 vs E5)
+[Phase 4] smote_delta_XGBoost_Reduced = -0.0449  (source: results/supervised/metrics/E4 vs E3)
+[Phase 4] smote_delta_XGBoost_Full = -0.0368  (source: results/supervised/metrics/E8 vs E7)
+[Phase 4] H3_macro_F1_pass_count = 0/4 configs improve  (source: smote_comparison.csv + per-config E*_multiclass.json)
+[Phase 4] H3_minority_pass_count = 2/5 (RF/Reduced only)  (source: README §20.2 H3)
+[Phase 4] H3_verdict = FAIL on both criteria  (source: README §20.2 H3)
+[Phase 4] yacoubi_RF_accuracy_raw_pct = 99.87  (source: README §12.7)
+[Phase 4] our_E5_accuracy_pct = 98.52  (source: results/supervised/metrics/E5_multiclass.json:test_accuracy)
+[Phase 4] yacoubi_XGB_accuracy_raw_pct = 99.8  (source: README §12.7)
+[Phase 4] our_E7_accuracy_pct = 99.27  (source: results/supervised/metrics/E7_multiclass.json:test_accuracy)
+[Phase 4] E7_vs_yacoubi_xgb_gap_pp = -0.53  (source: derived from E7_multiclass.json - 99.80)
+[Phase 4] yacoubi_macro_precision_paper3_pct = 86.1  (source: README §19.3)
+[Phase 5] AE_best_val_loss = 0.1988  (source: results/unsupervised/ae_training_history.json:min(val_loss))
+[Phase 5] AE_epochs_trained = 36  (source: results/unsupervised/ae_training_history.json:len(val_loss))
+[Phase 5] AE_threshold_p90 = 0.2012705803  (source: results/unsupervised/thresholds.json:thresholds.p90)
+[Phase 5] AE_threshold_p95 = 0.3726415634  (source: results/unsupervised/thresholds.json:thresholds.p95)
+[Phase 5] AE_threshold_p99 = 1.2025282383  (source: results/unsupervised/thresholds.json:thresholds.p99)
+[Phase 5] AE_selected_threshold = p90  (source: thresholds.json:selected.name)
+[Phase 5] AE_selected_threshold_value = 0.2012705803  (source: thresholds.json:selected.value)
+[Phase 5] AE_selected_F1_on_val = 0.9907894163  (source: thresholds.json:selected.f1_on_val)
+[Phase 5] AE_p90_val_recall = 0.9862135181  (source: thresholds.json:p90.recall)
+[Phase 5] AE_p90_val_fpr = 0.1020339335  (source: thresholds.json:p90.fpr)
+[Phase 5] Autoencoder_AUC-ROC = 0.9892  (source: model_comparison.csv:AUC-ROC (test):Autoencoder)
+[Phase 5] IsolationForest_AUC-ROC = 0.8612  (source: model_comparison.csv:AUC-ROC (test):IsolationForest)
+[Phase 5] Autoencoder_Anomaly_F1 = 0.9853  (source: model_comparison.csv:Anomaly F1 (test):Autoencoder)
+[Phase 5] IsolationForest_Anomaly_F1 = 0.7327  (source: model_comparison.csv:Anomaly F1 (test):IsolationForest)
+[Phase 5] Autoencoder_Per-class_avg_recall = 0.7999  (source: model_comparison.csv:Per-class avg recall:Autoencoder)
+[Phase 5] IsolationForest_Per-class_avg_recall = 0.1627  (source: model_comparison.csv:Per-class avg recall:IsolationForest)
+[Phase 5] Autoencoder_FPR_at_95pctTPR = 0.0203  (source: model_comparison.csv:FPR @ 95%TPR (test):Autoencoder)
+[Phase 5] IsolationForest_FPR_at_95pctTPR = 0.2721  (source: model_comparison.csv:FPR @ 95%TPR (test):IsolationForest)
+[Phase 5] AE_p90_per_class_avg_recall_excl_benign = 0.7999  (source: per_class_detection_rates.csv (AE rows, excl. Benign))
+[Phase 5] AE_test_AUC_computed_live = 0.9892  (source: derived from ae_test_mse.npy + y_test.csv)
+[Phase 5] scaling_fix_val_loss_pre = 101414  (source: README §13.6 (pre-fix))
+[Phase 5] scaling_fix_val_loss_post = 0.199  (source: README §13.6 (post-fix))
+[Phase 5] scaling_fix_AUC_pre = 0.9728  (source: README §13.6 (pre-fix))
+[Phase 5] scaling_fix_AUC_post = 0.9892  (source: README §13.6 (post-fix))
+[Phase 5] scaling_fix_Recon_Ping_Sweep_recall_pre = 0.0  (source: README §13.6)
+[Phase 5] scaling_fix_Recon_Ping_Sweep_recall_post = 0.544  (source: README §13.6)
+[Phase 5] scaling_fix_avg_recall_improvement = 0.700 → 0.800  (source: README §13.6)
+[Phase 5] scaling_fix_val_loss_ratio = 510×  (source: derived: 101414 / 0.199 ≈ 509.6)
+[Phase 6] E7_macro_f1_20class = 0.8622452917  (source: h1_h2_verdicts.json:H1.e7_macro_f1_20class)
+[Phase 6] fusion_primary_macro_f1 = 0.8581685422  (source: h1_h2_verdicts.json:H1.fusion_macro_f1_primary)
+[Phase 6] delta_primary = -0.0040767496  (source: h1_h2_verdicts.json:H1.delta_primary)
+[Phase 6] delta_primary_CI_lower = -0.0041968514  (source: h1_h2_verdicts.json:H1.delta_primary_ci[0])
+[Phase 6] delta_primary_CI_upper = -0.0039802791  (source: h1_h2_verdicts.json:H1.delta_primary_ci[1])
+[Phase 6] best_variant = AE_p99  (source: h1_h2_verdicts.json:H1.best_variant)
+[Phase 6] best_delta_CI = [-0.00016481166024279737, -0.00011894470327992456]  (source: h1_h2_verdicts.json:H1.best_delta_ci)
+[Phase 6] H1_verdict = no operationally meaningful difference  (source: h1_h2_verdicts.json:H1 + senior-review fix #5)
+[Phase 6] H2_simulated_strict_pass = 0  (source: h1_h2_verdicts.json:H2.n_pass_primary)
+[Phase 6] H2_simulated_strict_total = 5  (source: h1_h2_verdicts.json:H2.n_total)
+[Phase 6] recommended_threshold_percentile = 97  (source: h1_h2_verdicts.json:recommended_threshold.percentile)
+[Phase 6] recommended_test_TPR = 0.9987234705  (source: h1_h2_verdicts.json:recommended_threshold.test_TPR)
+[Phase 6] recommended_test_FPR = 0.0528890898  (source: h1_h2_verdicts.json:recommended_threshold.test_FPR)
+[Phase 6] recommended_test_F1 = 0.9981990621  (source: h1_h2_verdicts.json:recommended_threshold.test_F1)
+[Phase 6B] H2_strict_AE_only_pass_p90 = 0  (source: h2_loo_verdict.json:evaluations.h2_strict_ae_on_loo_missed_p90.n_pass)
+[Phase 6B] H2_strict_AE_only_total = 5  (source: h2_loo_verdict.json:evaluations.h2_strict_ae_on_loo_missed_p90.n_total)
+[Phase 6B] AE_on_LOO_missed_p90_Recon_Ping_Sweep = 0.1613  (source: h2_loo_verdict.json:Recon_Ping_Sweep)
+[Phase 6B] AE_on_LOO_missed_p90_Recon_VulScan = 0.4406  (source: h2_loo_verdict.json:Recon_VulScan)
+[Phase 6B] AE_on_LOO_missed_p90_MQTT_Malformed_Data = 0.3347  (source: h2_loo_verdict.json:MQTT_Malformed_Data)
+[Phase 6B] AE_on_LOO_missed_p90_ARP_Spoofing = 0.3196  (source: h2_loo_verdict.json:ARP_Spoofing)
+[Phase 6B] redundancy_misclass_distribution_csv_loaded = OK  (source: results/zero_day_loo/metrics/loo_prediction_distribution.csv)
+[Phase 6B] redundancy_attack_to_benign_pct = 17.3  (source: README §15.3)
+[Phase 6B] redundancy_attack_to_other_attack_pct = 82.7  (source: README §15.3)
+[Phase 6C] strict_best_variant = entropy_benign_p95  (source: h2_enhanced_verdict.json:phase_6c_h2_strict_best.variant)
+[Phase 6C] strict_best_pass = 4/4  (source: h2_enhanced_verdict.json:phase_6c_h2_strict_best.pass)
+[Phase 6C] strict_best_avg_recall = 0.8035264624  (source: h2_enhanced_verdict.json:phase_6c_h2_strict_best.avg_recall)
+[Phase 6C] binary_best_variant = entropy_benign_p95  (source: h2_enhanced_verdict.json:phase_6c_h2_binary_best.variant)
+[Phase 6C] binary_best_pass = 5/5  (source: h2_enhanced_verdict.json:phase_6c_h2_binary_best.pass)
+[Phase 6C] binary_best_avg_recall = 0.9493664825  (source: h2_enhanced_verdict.json:phase_6c_h2_binary_best.avg_recall)
+[Phase 6C] tripwire_strict_avg_p95_pass = PASS  (source: h2_enhanced_verdict.json vs hardcoded 0.8035264623662012)
+[Phase 6C] tripwire_strict_avg_p93_pass = PASS  (source: sweep_table.csv p=93.0 row vs hardcoded 0.8589586873140701)
+[Phase 6C] ablation_baseline_ae_p90_strict_avg = 0.3141  (source: ablation_table.csv:variant=baseline_ae_p90:h2_strict_avg)
+[Phase 6C] ablation_baseline_ae_p90_FPR = 0.1888  (source: ablation_table.csv:variant=baseline_ae_p90:avg_false_alert_rate)
+[Phase 6C] ablation_baseline_ae_p95_strict_avg = 0.2184  (source: ablation_table.csv:variant=baseline_ae_p95:h2_strict_avg)
+[Phase 6C] ablation_baseline_ae_p95_FPR = 0.0742  (source: ablation_table.csv:variant=baseline_ae_p95:avg_false_alert_rate)
+[Phase 6C] ablation_confidence_0.6_strict_avg = 0.3957  (source: ablation_table.csv:variant=confidence_0.6:h2_strict_avg)
+[Phase 6C] ablation_confidence_0.6_FPR = 0.1924  (source: ablation_table.csv:variant=confidence_0.6:avg_false_alert_rate)
+[Phase 6C] ablation_confidence_0.7_strict_avg = 0.5381  (source: ablation_table.csv:variant=confidence_0.7:h2_strict_avg)
+[Phase 6C] ablation_confidence_0.7_FPR = 0.1973  (source: ablation_table.csv:variant=confidence_0.7:avg_false_alert_rate)
+[Phase 6C] ablation_entropy_benign_p90_strict_avg = 0.9085  (source: ablation_table.csv:variant=entropy_benign_p90:h2_strict_avg)
+[Phase 6C] ablation_entropy_benign_p90_FPR = 0.2782  (source: ablation_table.csv:variant=entropy_benign_p90:avg_false_alert_rate)
+[Phase 6C] ablation_entropy_benign_p95_strict_avg = 0.8035  (source: ablation_table.csv:variant=entropy_benign_p95:h2_strict_avg)
+[Phase 6C] ablation_entropy_benign_p95_FPR = 0.2289  (source: ablation_table.csv:variant=entropy_benign_p95:avg_false_alert_rate)
+[Phase 6C] ablation_entropy_benign_p99_strict_avg = 0.4403  (source: ablation_table.csv:variant=entropy_benign_p99:h2_strict_avg)
+[Phase 6C] ablation_entropy_benign_p99_FPR = 0.1935  (source: ablation_table.csv:variant=entropy_benign_p99:avg_false_alert_rate)
+[Phase 6C] ablation_ensemble_p90_strict_avg = 0.2167  (source: ablation_table.csv:variant=ensemble_p90:h2_strict_avg)
+[Phase 6C] ablation_ensemble_p90_FPR = 0.1484  (source: ablation_table.csv:variant=ensemble_p90:avg_false_alert_rate)
+[Phase 6C] ablation_ensemble_p95_strict_avg = 0.0821  (source: ablation_table.csv:variant=ensemble_p95:h2_strict_avg)
+[Phase 6C] ablation_ensemble_p95_FPR = 0.1208  (source: ablation_table.csv:variant=ensemble_p95:avg_false_alert_rate)
+[Phase 6C] ablation_conf07_ent_p95_strict_avg = 0.8035  (source: ablation_table.csv:variant=conf07_ent_p95:h2_strict_avg)
+[Phase 6C] ablation_conf07_ent_p95_FPR = 0.2289  (source: ablation_table.csv:variant=conf07_ent_p95:avg_false_alert_rate)
+[Phase 6C] ablation_full_enhanced_strict_avg = 0.7637  (source: ablation_table.csv:variant=full_enhanced:h2_strict_avg)
+[Phase 6C] ablation_full_enhanced_FPR = 0.2159  (source: ablation_table.csv:variant=full_enhanced:avg_false_alert_rate)
+[Phase 6C] operational_FPR_pct = 22.9  (source: README §15C.4 (entropy_benign_p95))
+[Phase 6C] operational_alerts_per_sec_low = 23  (source: README §15C.6B (40 devices × 2 flows/sec × 0.229))
+[Phase 6C] operational_alerts_per_sec_high = 92  (source: README §15C.6B (40 devices × 10 flows/sec × 0.229))
+[Phase 6C] entropy_only_fpr_pct = 9.46  (source: README §15C.10 (no AE channel))
+[Phase 7] global_top1_feature = IAT  (source: results/shap/metrics/global_importance.csv:top-1)
+[Phase 7] global_top1_mean_abs_shap = 0.8725  (source: results/shap/metrics/global_importance.csv:top-1.mean_abs_shap)
+[Phase 7] global_top1_to_top2_ratio = 4.0  (source: derived from global_importance.csv (top-1 / top-2))
+[Phase 7] DDoS_vs_DoS_cosine = 0.991  (source: results/shap/metrics/category_similarity.csv:DDoS↔DoS)
+[Phase 7] SHAP_vs_CohensD_Jaccard = 0.0  (source: results/shap/metrics/method_jaccard.csv)
+[Phase 7] method_rank_correlation_loaded = OK  (source: results/shap/metrics/method_rank_correlation.csv)
+[Phase 7] SHAP_vs_Yacoubi_SHAP_Jaccard = 0.429  (source: README §16.5)
+[Phase 7] SHAP_vs_RF_importance_Jaccard = 0.333  (source: README §16.5)
+[Phase 7] SHAP_vs_CohensD_Spearman_rho = -0.741  (source: README §16.5)
+[Phase 7] background_Kendall_tau_top10 = 0.927  (source: README §16.7B)
+[Phase 7] background_Kendall_tau_full_44 = 0.94  (source: README §16.7B)
+[Phase 7] background_perclass_top5_Jaccard_mean = 0.842  (source: README §16.7B)
+[Phase 7] background_perclass_top5_Jaccard_min = 0.667  (source: README §16.7B)
+[Phase 7] background_DDoS_vs_DoS_cosine_train_bg = 0.989  (source: README §16.7B)
+[Phase 7] background_DDoS_vs_DoS_cosine_test_bg = 0.991  (source: README §16.7B)
+[Phase 7] shap_tensor_shape = (19, 5000, 44)  (source: results/shap/shap_values/shap_values.npy:shape)
+[Phase 7] shap_tensor_total_attributions = 4180000  (source: derived from shap_values.npy size)
+[Phase 7] shap_subsample_size = 5000  (source: README §16.1)
+[Phase 7] shap_background_size = 500  (source: README §16.7B)
+[Path B T1W1] multi_seed_h2_strict_avg_mean = 0.799  (source: multi_seed_summary.csv:entropy_benign_p95:h2_strict_avg_mean)
+[Path B T1W1] multi_seed_h2_strict_avg_std = 0.0225  (source: multi_seed_summary.csv:entropy_benign_p95:h2_strict_avg_std)
+[Path B T1W1] n_seeds = 5  (source: README §15B.2)
+[Path B T1W1] seeds = 1, 7, 42, 100, 1729  (source: README §15B.2)
+[Path B T1W1] H2_strict_avg_mean = 0.799  (source: README §15B.3)
+[Path B T1W1] H2_strict_avg_std = 0.022  (source: README §15B.3)
+[Path B T1W1] H2_strict_avg_range_low = 0.764  (source: README §15B.3)
+[Path B T1W1] H2_strict_avg_range_high = 0.827  (source: README §15B.3)
+[Path B T1W1] seed_42_z_score = 0.2  (source: README §15B.3)
+[Path B T1W1] operational_FPR_mean = 0.2289  (source: README §15B.6)
+[Path B T1W1] operational_FPR_CV_pct = 0.13  (source: README §15B.6)
+[Path B T1W1] cells_failing_strict = 0/19 eligible  (source: README §15B.4)
+[Path B T1W1] tripwire_seed42_diff = 0.000e+00  (source: README §15B.2)
+[Path B T1W1] Recon_Ping_Sweep_eligibility_drops = 2/5 seeds (n_loo_benign < 30)  (source: README §15B.5)
+[Path B T1W2A] sweep_n_points = 29  (source: results/enhanced_fusion/threshold_sweep/sweep_table.csv (row count))
+[Path B T1W2A] refined_optimum_p93_strict_avg = 0.859  (source: sweep_table.csv:p=93.0:h2_strict_avg)
+[Path B T1W2A] refined_optimum_p93_FPR = 0.2473  (source: sweep_table.csv:p=93.0:avg_false_alert_rate)
+[Path B T1W2A] n_thresholds = 29  (source: README §15D.2)
+[Path B T1W2A] threshold_resolution_pp = 0.5  (source: README §15D.2)
+[Path B T1W2A] improvement_over_p95_pp = 5.5  (source: README §15D.3)
+[Path B T1W2A] FPR_cost_over_p95_pp = 1.8  (source: README §15D.3)
+[Path B T1W2A] ks_per_fold_min = 0.0543  (source: ks_per_fold.csv:min(ks_statistic))
+[Path B T1W2A] ks_per_fold_max = 0.0573  (source: ks_per_fold.csv:max(ks_statistic))
+[Path B T1W2A] ks_aggregate_E7 = 0.0645  (source: ks_per_fold.csv:AGGREGATE_E7:ks_statistic)
+[Path B T1W2A] ks_per_fold_range = [0.0543, 0.0573]  (source: README §15C.10)
+[Path B T1W2A] ks_aggregate = 0.0645  (source: README §15C.10)
+[Path B T1W2B] Kendall_tau_top10 = 0.927  (source: README §16.7B)
+[Path B T1W2B] Kendall_tau_full_44 = 0.94  (source: README §16.7B)
+[Path B T1W2B] perclass_top5_Jaccard_mean = 0.842  (source: README §16.7B)
+[Path B T1W2B] perclass_top5_Jaccard_std = 0.171  (source: README §16.7B)
+[Path B T1W2B] perclass_top5_Jaccard_min = 0.667  (source: README §16.7B)
+[Path B T1W2B] classes_with_identical_top5 = 9/19  (source: README §16.7B)
+[Path B T1W2B] DDoS_DoS_cosine_train_bg = 0.989  (source: README §16.7B)
+[Path B T1W2B] DDoS_DoS_cosine_test_bg = 0.991  (source: README §16.7B)
+[Path B T1W2B] decision = BULLETPROOF  (source: README §16.7B)
+[Path B T1W2B] sensitivity_csv_loaded = OK  (source: results/shap/sensitivity/comparison.csv)
+[Path B T2W5] betas_tested = 0.1, 0.5, 1.0, 4.0  (source: README §15E.1)
+[Path B T2W5] latent_dim = 8  (source: README §15E.1 (matched to AE bottleneck))
+[Path B T2W5] best_beta = 0.5  (source: README §15E.2)
+[Path B T2W5] best_beta_strict_avg = 0.8588  (source: README §15E.2)
+[Path B T2W5] best_beta_FPR = 0.243  (source: README §15E.2)
+[Path B T2W5] best_beta_VAE_AUC = 0.9904  (source: README §15E.2)
+[Path B T2W5] delta_strict_vs_anchor = -0.0001  (source: README §15E.2)
+[Path B T2W5] delta_FPR_vs_anchor = -0.005  (source: README §15E.2)
+[Path B T2W5] delta_AUC_vs_AE = 0.0012  (source: README §15E.2)
+[Path B T2W5] all_betas_pass_4_of_4 = Yes (4/4 strict at every β)  (source: README §15E.2)
+[Path B T2W5] beta_4_latent_collapse = 5 of 8 dims collapsed under KL pressure  (source: README §15E.5)
+[Path B T2W5] decision = SHELVE (substitution-equivalent; AE retained)  (source: README §15E.5)
+[Path B T2Ext] n_configs = 6  (source: README §15E.7.1)
+[Path B T2Ext] configs_passing_gate1 = 3 of 6 (c1, c4, c6)  (source: README §15E.7.2)
+[Path B T2Ext] c1_strict_avg = 0.893  (source: README §15E.7.2)
+[Path B T2Ext] c1_delta_strict_vs_anchor = 0.0341  (source: README §15E.7.2)
+[Path B T2Ext] c4_strict_avg = 0.8685  (source: README §15E.7.2)
+[Path B T2Ext] c4_delta_strict_vs_anchor = 0.0095  (source: README §15E.7.2)
+[Path B T2Ext] c6_strict_avg = 0.8907  (source: README §15E.7.2)
+[Path B T2Ext] c6_delta_strict_vs_anchor = 0.0317  (source: README §15E.7.2)
+[Path B T2Ext] c4_lowest_val_loss = 0.2306  (source: README §15E.7.2 — highest L2 capacity wins L2 metrics, loses fusion)
+[Path B T2Ext] c4_highest_AUC = 0.9919  (source: README §15E.7.2)
+[Path B T2Ext] capacity_vs_fusion_inverse_finding = c4 wins every L2 metric but loses fusion to c1/c6 (triply-supported)  (source: README §15E.7.4)
+[Path B T2Ext] c1_vs_c6_reproducibility = |Δ strict_avg| = 0.0023  (source: README §15E.7.4)
+[Path B T2Ext] AE_param_count = ~5,000  (source: README §15E.7.5)
+[Path B T2Ext] c4_param_count = ~234,000 (~48× AE)  (source: README §15E.7.5)
+[Path B T2Ext] AE_training_time_sec = 8.24  (source: README §15E.7.5)
+[Path B T2Ext] c4_training_time_sec = 3709  (source: README §15E.7.5 (~450× AE))
+[Path B T2Ext] decision = RETAIN AE (cost contrast decisive)  (source: README §15E.7.5)
+[Path B T2Ext] audit_trail_issues_caught = 4  (source: README §15E.7.6 (smoke (e)/(f) threshold, deterministic outlier, time-cap budget, G1.3 std/mean threshold))
+[Path B Summary] defensibility_baseline = 3.0/5  (source: PJ Senior Review pre-baseline)
+[Path B Summary] defensibility_after_senior_review = 4.0/5  (source: PJ Senior Review)
+[Path B Summary] defensibility_after_Tier_1 = 4.3/5  (source: README §15B.9)
+[Path B Summary] defensibility_after_Tier_2 = 4.5/5 (forward target)  (source: thesis plan; 4.3 is the last evidence-backed value)
