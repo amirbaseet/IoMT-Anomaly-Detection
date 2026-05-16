@@ -162,3 +162,94 @@ Triggered by the follow-up-2 task: the first follow-up generated 17 figures from
 - `deliverables/scripts/00_env_check.py` through `07_generate_figures.py` — not modified (the new figures are static copies, not generated)
 - `decisions_ledger.md`, `artifact_manifest.md`, `numbers_map.md`, `thesis_walkthrough.ipynb` — untouched
 
+## Follow-up 5: notebook pipeline + report cross-references (2026-05-16)
+
+### Goal
+
+Make `deliverables/thesis_walkthrough.ipynb` self-locating: each phase section now points to (1) the pipeline script in `notebooks/` that produced its numbers, (2) the per-phase `summary.md` (or the closest equivalent if none exists), (3) the corresponding section in `full_report.md`, and (4) the key figures already present in `deliverables/figures/`.
+
+Constraints honored: no code cells modified, no printed numbers changed, no assertions touched, no retraining, no new figures generated, no `results/` or `notebooks/` files touched, no edits to `full_report.md` (one-way navigation only).
+
+### What was added
+
+**9 new markdown cells inserted** (notebook grew from 36 → 45 cells). Insertions performed in reverse current-index order so each insertion did not shift later target indices.
+
+| # | Inserted | Header | Coverage |
+|---|---|---|---|
+| 1 | After env-check (new cell [3]) | `## Notebook navigation map` | Master phase→script→report table covering all 13 mapping rows + link to `full_report.md` |
+| 2 | New cell [11] (after existing §4 header, before its code cell) | `## Phase 2 + 3 — Data exploration and preprocessing` | Stacked `### Phase 2 — EDA` + `### Phase 3 — Preprocessing` cards |
+| 3 | New cell [15] | `## Phase 4 — Supervised layer` | Single card |
+| 4 | New cell [19] | `## Phase 5 — Unsupervised layer` | Single card |
+| 5 | New cell [23] | `## Phase 6 — Fusion Engine v1 (simulated zero-day)` | Single card + forward pointer to Phase 6B |
+| 6 | New cell [25] (between Phase 6 and Phase 6C code cells) | `## Phase 6B + 6C — True LOO retraining + Enhanced Fusion` | Stacked `### Phase 6B — LOO retraining` + `### Phase 6C — Enhanced Fusion (TRIPWIRE)` cards |
+| 7 | New cell [32] | `## Phase 7 — SHAP explainability` | Single card |
+| 8 | New cell [38] | `## Path B Tier 1 — Hardening` | Stacked `### W1 multi-seed` + `### W2A threshold sweep + KS (markdown-only — no code cell)` + `### W2B SHAP sensitivity` cards |
+| 9 | New cell [41] (between W2B and Tier 2 β-VAE code cells) | `## Path B Tier 2 — Architectural substitution` | Stacked `### β-VAE (Decision: SHELVE)` + `### LSTM-AE (Decision: RETAIN AE)` cards, each leading with the verdict before the evidence table |
+
+### Per-phase cross-references
+
+Each card follows the same template: 5-row reference table (Pipeline script | Output directory | Phase summary | Report section | Headline result) + bulleted figure list + inline figure embeds.
+
+| Phase | Pipeline script(s) | Output dir | Summary | Report § | Inline figures |
+|---|---|---|---|---|---|
+| Phase 2 EDA | `ciciomt2024_eda.py` | `eda_output/` *(repo root)* | `eda_output/findings.md` | §4 | fig01, fig02 |
+| Phase 3 Preprocessing | `preprocessing_pipeline.py` | `preprocessed/` *(repo root)* | `preprocessed/config.json` | §4 | — |
+| Phase 4 | `supervised_training.py` | `results/supervised/` | `summary.md` | §5 | fig05, fig06 |
+| Phase 5 | `unsupervised_training.py` | `results/unsupervised/` | `summary.md` | §6 | fig08, fig10, fig18 |
+| Phase 6 | `fusion_engine.py` | `results/fusion/` | `summary.md` | §7 | fig22 |
+| Phase 6B | `loo_zero_day.py` | `results/zero_day_loo/` | `summary.md` | §7 | fig20, fig21 |
+| Phase 6C | `enhanced_fusion.py`, `pareto_frontier.py` | `results/enhanced_fusion/` | `summary.md` | §7 | fig12, fig23, fig24, fig25 |
+| Phase 7 | `shap_analysis.py` | `results/shap/` | `summary.md` | §8 | fig15, fig28, fig29 |
+| Path B W1 | `multi_seed_loo.py`, `multi_seed_fusion.py`, `multi_seed_aggregate.py` | `results/zero_day_loo/multi_seed/`, `results/enhanced_fusion/multi_seed/` | none — per-seed subdirs + `run_phase{2,3,4}.log` | §9 | fig17, fig27 |
+| Path B W2A | `threshold_sweep.py`, `ks_per_fold.py` | `results/enhanced_fusion/threshold_sweep/`, `results/enhanced_fusion/ks_per_fold/` | none — `sweep_table.csv` | §9 | fig13, fig26 |
+| Path B W2B | `shap_sensitivity.py` | `results/shap/sensitivity/` | none — `comparison.csv` | §8 + §9 | fig32, fig33 |
+| Tier 2 β-VAE | `vae_train.py`, `vae_fusion.py`, `vae_decision.py` | `results/unsupervised/vae/`, `results/enhanced_fusion/vae_ablation/` | `enhanced_fusion/vae_decision_summary.md` | §9 | — (Decision: SHELVE) |
+| Tier 2 LSTM-AE | `lstm_ae_train.py` | `results/unsupervised/lstm_ae/` | none — `all_configs_summary.csv` + `gate1_report.json` | §9 | — (Decision: RETAIN AE) |
+
+23 unique figure references across the 9 cells; all 23 PNGs verified to exist in `deliverables/figures/`.
+
+### Path corrections vs. the original mapping table
+
+Three artifact paths the source mapping promised were either at the wrong location or did not exist; the cards were updated to reflect what actually exists on disk:
+
+| Mapping table said | Reality | Card now says |
+|---|---|---|
+| `results/eda_output/` | `eda_output/` at repo root | `eda_output/` *(repo root, not under `results/`)*; summary = `eda_output/findings.md` |
+| `results/preprocessed/config.json` | `preprocessed/config.json` at repo root | `preprocessed/config.json` *(repo root, not under `results/`)* |
+| `results/zero_day_loo/multi_seed/multi_seed_summary.csv` | No such file; actual aggregate = per-seed subdirs + phase logs | "No `summary.md` — see per-seed subdirs (`seed_1/`, `seed_42/`, `seed_100/`, `seed_1729/`, `seed_7/`) plus `run_phase{2,3,4}.log` aggregate logs" |
+
+### Adjacent ## headers (left intact per instruction)
+
+The cards were inserted before each phase's code cell. In every case there is also a pre-existing thin section header above the code cell, so the inserted card sits between two visually-adjacent ## headers. This was anticipated and flagged for a possible follow-up cleanup.
+
+Adjacent-header pairs created (post-insertion final indices):
+
+- **§4**: cell [10] `## 4 — Phase 2 + 3: Data + preprocessing` (existing) → cell [11] `## Phase 2 + 3 — Data exploration and preprocessing` (new)
+- **§5**: cell [14] `## 5 — Phase 4: Supervised layer` (existing) → cell [15] `## Phase 4 — Supervised layer` (new)
+- **§6**: cell [18] `## 6 — Phase 5: Unsupervised layer` (existing) → cell [19] `## Phase 5 — Unsupervised layer` (new)
+- **§7**: cell [22] `## 7 — Phase 6 / 6B / 6C: The Fusion Engine` (existing) → cell [23] `## Phase 6 — Fusion Engine v1` (new) → [code cell 24] → cell [25] `## Phase 6B + 6C — True LOO + Enhanced Fusion` (new)
+- **§8**: cell [31] `## 8 — Phase 7: SHAP explainability` (existing) → cell [32] `## Phase 7 — SHAP explainability` (new)
+- **§9**: cell [37] `## 9 — Senior review and Path B hardening` (existing) → cell [38] `## Path B Tier 1 — Hardening` (new) → [code cells 39, 40] → cell [41] `## Path B Tier 2 — Architectural substitution` (new)
+
+To clean up in a follow-up: either delete the existing thin headers (cells [10], [14], [18], [22], [31], [37]) and let the new cards serve as the only section dividers, or rewrite the new cards to use `###` subsection headings under the existing `##` parent.
+
+### Cross-reference link style
+
+GFM section anchors (`#section-anchor`) deliberately omitted — they render differently across Jupyter, GitHub, and VS Code preview, so all report-section links use the plain form `[full_report.md §N](full_report.md)`. The reader uses Ctrl+F on the section number. Trade-off: no broken-link risk, mild manual navigation cost.
+
+### Verification
+
+- `jupyter nbconvert --to notebook --execute deliverables/thesis_walkthrough.ipynb --output thesis_walkthrough.ipynb --ExecutePreprocessor.timeout=600` → exit 0, no warnings after stripping the nbformat-4.4-incompatible `id` field from inserted cells.
+- Canonical Phase 6C tripwire `0.8035264623662012` still fires (10 occurrences in the executed notebook).
+- 0 error outputs across all 26 code cells.
+- 23 figure references → 23 PNGs on disk (symmetric difference = ∅).
+
+### Untouched per task constraint
+
+- All existing code cells (26 cells)
+- All existing markdown cells (10 pre-existing)
+- All printed numbers, tables, assertions
+- `full_report.md` / `full_report.docx` / `full_report.pdf`
+- `figures/` directory (no new figures generated)
+- `results/` and `notebooks/` directories
+- `decisions_ledger.md`, `artifact_manifest.md`, `numbers_map.md`, `AUDIT_REPORT.md`, `README.md`, `scripts/`
