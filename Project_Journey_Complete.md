@@ -449,11 +449,11 @@ After the senior review remediation closed the framing/methodology gaps, three d
 - Driver: `notebooks/multi_seed_fusion.py` (orchestrates) + `notebooks/multi_seed_loo.py` (training fan-out).
 
 #### Key results
-- **H2-strict avg = 0.799 ± 0.022** across 5 seeds; seed=42 sits at the 63rd percentile of the multi-seed distribution.
+- **H2-strict avg = 0.799 ± 0.023** across 5 seeds; seed=42 sits at the 63rd percentile of the multi-seed distribution.
 - **0/19 eligible (seed × target) cells fail the 0.70 strict threshold.** The denominator is 19 (not 20) because one seed × one target combination drops below the n=30 minimum eligibility floor — a structural property of the LOO partition for the smallest target (Recon_Ping_Sweep, n_test = 169), not a failure.
 - **Operational FPR is effectively constant**: 0.2289 ± 0.0003 across all 5 seeds (CV = 0.13%) — the AE p90 channel dominates the FPR and is seed-invariant.
 - **seed=42 reproducibility tripwire**: actual = 0.8035264623662012, reference = 0.8035264623662012, **diff = 0.000e+00** (passed).
-- The multi-seed result reframes Phase 6C's "4/4 PASS" from a single-seed point estimate to a **distribution-level claim**: H2-strict 4/4 holds across all 5 seeds, and the spread (σ = 0.022) is small relative to the 0.70 criterion margin (0.093).
+- The multi-seed result reframes Phase 6C's "4/4 PASS" from a single-seed point estimate to a **distribution-level claim**: H2-strict 4/4 holds across all 5 seeds, and the spread (σ = 0.023 on H2-strict avg rescue recall) is small relative to the 0.70 criterion margin (0.093).
 
 #### Output
 - README §15B (multi-seed validation narrative + eligibility table)
@@ -627,7 +627,7 @@ After Tier 1 (hardening) and Tier 2 (architectural robustness check) closed the 
 12. **Confidence-stratified alerts (5-case fusion)** — operational value beyond binary IDS; routes Cases 1/2/3/5 to different SOC tiers
 13. **StandardScaler fix for AE on ColumnTransformer output** — practical ML pipeline lesson: tree models are scale-invariant, AE/IF are not
 14. **Pareto-based variant selection methodology** — replaces arbitrary FPR budget; defensible across operational ranges, allows committee/practitioner to pick their own operating point
-15. **Multi-seed robustness validation under true LOO** (Path B Week 1) — H2-strict 4/4 holds across 5 seeds with σ = 0.022 well inside the 0.70 criterion margin; FPR is seed-invariant (CV = 0.13%). Identifies a **structural eligibility floor** for tiny LOO targets (Recon_Ping_Sweep, n_test = 169) where one seed × one target combination falls below the n=30 minimum — a property of the LOO partition, not a metric failure. Reframes the 4/4 claim from a single-seed point estimate to a distribution-level statement.
+15. **Multi-seed robustness validation under true LOO** (Path B Week 1) — H2-strict 4/4 holds across 5 seeds with σ = 0.023 (H2-strict avg rescue recall) well inside the 0.70 criterion margin; FPR is seed-invariant (CV = 0.13%). Identifies a **structural eligibility floor** for tiny LOO targets (Recon_Ping_Sweep, n_test = 169) where one seed × one target combination falls below the n=30 minimum — a property of the LOO partition, not a metric failure. Reframes the 4/4 claim from a single-seed point estimate to a distribution-level statement.
 16. **Continuous-frontier threshold methodology** (Path B Week 2A) — replaces the discrete 4-point grid {p90, p95, p97, p99} with a 29-threshold continuous sweep at 0.5pp resolution. Reveals a **strict-pass plateau structure** that the discrete grid hid: p95.0 sits exactly at the lip (one half-percentile drops 4/4 → 3/4) while p93.0 sits in the middle of the plateau with both higher recall (+5.5pp) and stability margin against threshold drift. Refines (does not contradict) the §15C.6 published recommendation.
 17. **Empirical SHAP background sensitivity verification** (Path B Week 2B) — converts the §16.7B invariance argument from theory to empirical evidence on the actual model + dataset. Same 5,000-sample explained set + same uniform-random sampling protocol as Phase 7; only the source pool changes (X_train vs test-disjoint X_test). Result: Kendall τ = 0.927 over the top-10 union (BULLETPROOF), 19/19 classes with per-class top-5 Jaccard ≥ 0.6, DDoS↔DoS cosine reproduction within fp32 noise floor (|Δ| = 0.002).
 18. **Layer 2 substitution robustness check** (Path B Week 5 / Phase 6D) — β-VAE substitution at β ∈ {0.1, 0.5, 1.0, 4.0} with latent_dim = 8 (matched to AE bottleneck) produces fusion strict_avg within sampling noise of the §15D AE-based baseline (β = 0.5 best: Δ strict = −0.0001, Δ FPR = −0.005, Δ AUC = +0.0012; all four βs at 4/4 strict pass). Establishes that VAE log-likelihood and AE reconstruction error are **interchangeable** on this dataset's tabular feature space; the fusion's predictive ceiling is set by the entropy channel, and Layer 2's distributional assumption (deterministic vs probabilistic) does not move the headline. Strengthens §15D by showing the published claim does not depend on the specific Layer 2 distributional family. Deterministic AE retained for engineering simplicity.
@@ -759,6 +759,177 @@ H2-strict 4/4 PASS | H2-binary 5/5 PASS | benign FPR 22.9%
 
 ---
 
+## Competitive Landscape — How This Work Compares to the Closest Prior Art
+
+As of June 2026, a systematic literature review identified **28 obtainable studies** using the CICIoMT2024 dataset (29 listed; one paywalled). The full review is in `Literature_Review_Chapter2_v6.4.md`. Two competitors deserve direct head-to-head treatment: **Uddin et al. (2025)** — the only other work that explicitly performs leave-one-out zero-day evaluation; and **Alfageer et al. (2026)** — the closest architectural prior art, an AE-gated supervised hybrid with confidence-based zero-day rejection.
+
+### Closest zero-day protocol precedent — Uddin, Chu & Rafeh (2025)
+
+A 3-layer hierarchical IDS using meta-learning (Reptile) and usfAD one-class classification, distributed across Near Edge / Far Edge / Cloud tiers. Their zero-day evaluation uses **category-level holdout** — one of 5 attack categories withheld at a time.
+
+#### Architecture comparison
+
+```
+UDDIN ET AL. (Sequential Filter)              THIS WORK (Parallel Fusion)
+─────────────────────────────────              ──────────────────────────────────
+Layer 1: usfAD (OCC)                           Layer 1: XGBoost E7 (19-class supervised)
+  → Binary: Normal vs Attack                     → 19-class prediction + softmax entropy
+  → 99.77% accuracy                              → 99.27% acc, macro-F1 0.9076 (dedup)
+  → If attack → pass down                        ↓ (runs on EVERY flow)
+
+Layer 2: usfAD (OCC on known attacks)          Layer 2: Autoencoder + Isolation Forest
+  → Known vs Unknown attack                      → Anomaly score per flow
+  → LOO at 5-category level                      → AUC 0.9892
+  → Best zero-day F1: 91.03% (DoS category)      ↓ (runs on EVERY flow)
+  → Worst: 26.29% (Spoofing category)
+  → If known → pass down                       Layer 3: 5-Case Fusion Engine
+                                                  → Combines: XGB pred + confidence +
+Layer 3-4: Random Forest (Cloud)                       AE anomaly + softmax entropy
+  → 6-class category → 19-class subtype          → Routes to: BLOCK / QUARANTINE /
+  → RF1: 99.89% subcategory                            MONITOR / ALLOW / OPERATOR REVIEW
+  → No XAI                                       → LOO at per-attack subtype level
+                                                  → H2-strict: 0/4 (Phase 6B) → 4/4 (Phase 6C)
+
+                                               Layer 4: Per-class TreeSHAP
+                                                  → 19 attack-specific feature signatures
+                                                  → DDoS↔DoS cosine = 0.991
+```
+
+#### Head-to-head metrics
+
+| Metric | Uddin et al. | This work | Notes |
+|---|---|---|---|
+| Binary detection | 99.77% (usfAD) | F1 ≈ 0.9985 (deduplicated) | Not like-for-like — raw vs dedup |
+| 19-class accuracy | 99.89% (RF, raw, ~9.3M rows) | 99.27% (XGBoost, deduplicated) | Different data populations |
+| Zero-day LOO granularity | 5 categories | per-attack subtypes (18/19) | This work is finer-grained |
+| Best zero-day F1 (their metric) | 91.03% (DoS) | — (different protocol) | Not directly comparable |
+| Worst zero-day case | 26.29% (Spoofing) | Recon_VulScan (stress case) | Both identify hard cases |
+| Fusion mechanism | None — sequential filter | 5-case parallel fusion | Architectural |
+| Explainability | None | Per-class TreeSHAP (19 classes) | — |
+| MCC | Not reported | **0.9906** | Grep-verified: zero of 28 papers report MCC |
+| Imbalance analysis | None | SMOTETomek tested + rejected; boundary-blur mechanism documented | — |
+| Deduplication | Not addressed (raw ~9.3M) | 36.95% / 44.72% per-split removal | — |
+| Deployment architecture | Distributed (Near/Far Edge/Cloud) | Centralized + Streamlit demo | Uddin closer to realistic IoMT |
+| Data efficiency | Meta-learning with <1% data | Full dataset required | Uddin's advantage |
+| Multi-seed validation | Not performed | **5 seeds, σ = 0.023 on H2-strict avg rescue recall** | Distribution-level confidence |
+| Layer-2 substitution check | Not performed | **AE ≈ β-VAE ≈ LSTM-AE** at the fusion level | Entropy channel is ~17× more impactful than the Layer-2 swap |
+| Reproducibility | Code not available | GitHub repo + dashboard | — |
+
+#### What Uddin et al. validates about this work
+
+1. **LOO is the right evaluation** — independent adoption of the same methodology.
+2. **Isolation Forest is inadequate** — their IF 82.34% vs usfAD 99.77% mirrors this work's Phase 5 finding.
+3. **Spoofing / Recon are universally hard** — their 26% Spoofing F1 converges with this work's Recon_VulScan stress case.
+4. **Sequential filtering loses misclassified benign instances** — they document ~831 lost; this work's parallel fusion avoids the problem.
+
+#### Where this work is stronger
+
+- **LOO at subtype level** (18/19) — harder than 5-category; tests detection of *specific novel variants* within a familiar category
+- **Parallel fusion** — XGBoost and AE run on every flow; no information loss from sequential gating
+- **Softmax entropy** as complementary signal — rescued strict H2 from 0/4 to 4/4 at p95
+- **Per-class TreeSHAP** — actionable for SOC analysts; absent in Uddin
+- **Deduplication** — 36.95% / 44.72% removed before training
+- **Multi-seed robustness** — σ = 0.023 on H2-strict avg rescue recall, over 5 seeds
+
+#### Where Uddin et al. is stronger
+
+- **Distributed deployment** — Near Edge / Far Edge / Cloud model is more realistic for actual IoMT environments
+- **Meta-learning data efficiency** — Reptile with <1% of data is powerful for resource-constrained edge devices
+- **usfAD as Layer 1** — OCC requires only benign data; addresses the cold-start problem this work does not explicitly solve
+
+---
+
+### Closest architectural prior art — Alfageer, Ghaleb, Aljoby & Felemban (2026)
+
+Published March 2026 in *IEEE Access*: an AE gate + hierarchical RF/XGBoost/Lightweight-CNN with **confidence-thresholding** for zero-day rejection. This is the **single most architecturally similar peer-reviewed work** — an AE-gated supervised hybrid on CICIoMT2024 that rejects low-confidence predictions as "Unknown."
+
+#### Key parallels — and the decisive empirical difference
+
+| Dimension | Alfageer et al. (2026) | This work |
+|---|---|---|
+| AE gate | Yes (28K params, 95th-pct threshold) | Yes (AUC 0.9892) + Isolation Forest |
+| Supervised classifier | Hierarchical RF/XGBoost/Lightweight-CNN | XGBoost E7 (19-class, single-stage) |
+| **Zero-day signal** | **max-probability** floor (τ = 0.65) | **softmax entropy** of full prediction vector |
+| **Zero-day protocol** | **2 attack classes** held out | **per-attack LOO** across all eligible subtypes |
+| Data preprocessing | Raw, merged + shuffled, **no deduplication** | Deduplicated (37% / 45% per split) |
+| Explainability | **None** (named as future work, §VI) | Per-class TreeSHAP (19 classes) |
+| Multi-seed validation | Not performed | 5 seeds, σ = 0.023 on H2-strict avg rescue recall |
+| Layer-2 robustness check | Not performed | AE ≈ β-VAE ≈ LSTM-AE at the fusion level |
+
+#### The decisive ablation result
+
+The closest possible objection to this thesis is *"this is just Alfageer with entropy instead of max-probability."* The answer is empirical and internal to this thesis's ablation:
+
+**This work tested a max-probability confidence floor (Alfageer's mechanism) at τ = 0.6 and τ = 0.7 in its own pipeline, all other components held fixed.** The max-probability gate scored **0 / 4 strict zero-day rescues**. The softmax-entropy gate scored **4 / 4**. The entropy of the full prediction vector is a strictly richer signal than max-probability because max-probability ignores how the remaining probability mass is distributed across the other 18 classes.
+
+This is therefore not a cosmetic threshold swap. The mechanism Alfageer uses was tested in this pipeline and **does not work** under the strict per-attack protocol; the mechanism this work uses does.
+
+#### What Alfageer et al. validates
+
+- AE-gated supervised hybridization is a productive paradigm — independent peer-reviewed adoption
+- Confidence-based zero-day rejection is methodologically sound — they validate the approach
+- **Explainability is a recognized gap** — their §VI explicitly names *"explainability to improve operator trust in clinical environments"* as future work; this thesis's Layer 4 fills that named gap
+
+#### What this work adds beyond Alfageer
+
+- **Per-attack LOO** across all eligible subtypes vs their 2-class held-out test
+- **Softmax entropy** empirically beating max-probability (4/4 vs 0/4)
+- **5-case decision-fusion engine** with operator-facing alert tiers, not a single binary reject
+- **Deduplication** addressing the duplicate-row leakage Alfageer does not analyze
+- **Per-class TreeSHAP** — their explicitly-named future work
+- **MCC reporting** on minority classes (0.9906)
+
+---
+
+### Second methodological comparator — Doménech et al. (2025): cross-dataset critique
+
+The only published study that **critically examines CICIoMT2024's design choices** rather than simply using it as-is. Trained on CICIoT2023 and tested on CICIoMT2024 (and vice versa), they reported a **66.87% F1 drop** on cross-dataset transfer.
+
+**Key findings relevant to this work:**
+
+- **66.87% F1 drop on cross-dataset transfer** confirms IoMT-specific datasets are non-negotiable; general IoT benchmarks cannot substitute for medical device traffic
+- **Preprocessing matters as much as model selection** — their optimized pipeline achieved 99.85%, comparable to best model-focused studies
+- **Dataset design critiques** (windowing, train-test splits, temporal correlation, imbalance handling) are **complementary** to this work's duplicate-row leakage finding — Doménech does not deduplicate, so the duplicate-driven inflation analyzed in this work persists in their optimized figure as well
+- **Independent confirmation** that the CICIoMT2024 pre-defined split has methodological issues, although Doménech identifies a different set of issues than the duplicate-leakage problem documented here
+
+---
+
+### Deduplication landscape — three papers, identical figures
+
+Cross-corpus grep verification (markitdown extracts of all 28 obtainable papers) revealed an under-recognized pattern: **three independent papers report exactly the same deduplication count.**
+
+| Paper | Number deduplicated | Reports per-split? | Analyzes leakage? |
+|---|---|---|---|
+| Riyadi et al. (2025) — #16 | 5,119 rows (~0.07%) | No | No |
+| Akkal et al. (2024) — #19 | 5,119 rows (~0.07%) | No | No |
+| Kharoubi et al. (2025) — #26 | 5,119 rows (~0.07%) | No | No |
+| Naeem et al. (2024) — #27 | Qualitative description (no count published) | No | No |
+| Jaiswal et al. (2026) — #24 | "Cleaned" data (procedure unspecified) | No | No |
+| **This work** | **36.95% train / 44.72% test** | **Yes** | **Yes — flood-class concentration, DDoS-ICMP 86.32%** |
+
+Two of the three explicit reporters share authorship (Cherbal, Akkal). The identical 5,119 figure across three independent reports is itself the strongest evidence that the literature is operating on a shared pre-redistributed input version rather than the released raw 72-file distribution. This work's per-split rates on the raw distribution are approximately **500× larger** than the literature's identical count — a discrepancy that is itself the leakage signal the literature has uniformly missed.
+
+---
+
+### Verified unique contributions
+
+The following contributions of this thesis hold against the 28-paper corpus and were verified by cross-corpus grep against the markitdown extracts:
+
+| Claim | Verification |
+|---|---|
+| **No other study reports MCC** | grep `matthews\|MCC` returned 3 false positives (substring matches in DCNN/MCMC/etc.); zero papers genuinely report MCC |
+| **No other study performs per-attack-subtype LOO** | grep `leave.one.*zero\|zero.day.*leave\|LOAO\|held.out.attack` returned only Alfageer (2 classes); Uddin uses 5-category, finer than nobody |
+| **Per-class SHAP precedent is Lipsa only (one paper)** | grep `per-class\|class-specific` + waterfall verification; this work's conjunction (per-class TreeSHAP on **deduplicated 19-class XGBoost** contrasted vs global, cross-checked vs Cohen's-d) is unprecedented |
+| **No other study quantifies per-split duplicate rate or analyzes leakage** | Three papers report identical 5,119 (~0.07%); none separates dedup from NaN; none analyzes flood-class concentration; none analyzes train-vs-test leakage signature |
+| **Softmax-entropy zero-day signal beats max-probability in the same ablation** | Internal: max-prob τ ∈ {0.6, 0.7} → 0/4 strict; entropy → 4/4 |
+| **AE ≈ β-VAE ≈ LSTM-AE at the fusion level; entropy channel is ~17× more impactful than the Layer-2 swap** | §15E architectural substitution test (Path B Week 5 Tier 2) |
+| **SMOTETomek rejected with documented boundary-blur mechanism** | H3 result — minority F1 degrades; cause identified as overlap between DDoS↔DoS and Recon↔Recon sibling subtypes (cosine = 0.991) |
+
+**No published CICIoMT2024 study combines supervised + unsupervised + parallel fusion + per-class explainability + per-attack LOO + deduplicated evaluation + MCC reporting.** The contribution is argued at the level of integrated system + evaluation rigor, not at the level of any single component.
+
+---
+
+
 ## What's Next — Thesis Writing Phase
 
 All experimental work is complete. The remaining work is exposition:
@@ -772,7 +943,7 @@ All experimental work is complete. The remaining work is exposition:
 - [ ] Defense presentation (PowerPoint)
 
 **Future work (deferred from this thesis):**
-- ~~Multi-seed LOO validation (3 days compute) — would tighten H2-strict 4/4 confidence further~~ **Done in Path B Week 1** (5 seeds in 85.1 min, 0/19 eligible cells fail; H2-strict avg 0.799 ± 0.022).
+- ~~Multi-seed LOO validation (3 days compute) — would tighten H2-strict 4/4 confidence further~~ **Done in Path B Week 1** (5 seeds in 85.1 min, 0/19 eligible cells fail; H2-strict avg 0.799 ± 0.023).
 - ~~Continuous threshold sweep between p90 and p95 — may yield slightly tighter operating point~~ **Done in Path B Week 2A** (29 thresholds at p85.0–p99.0; refined optimum at p93.0 with strict_avg 0.859 vs published p95's 0.804 under the same FPR budget).
 - ~~Train-drawn SHAP background sensitivity check — verify top-10 rank stability~~ **Done in Path B Week 2B** (Kendall τ = 0.927 over top-10 union — BULLETPROOF; 19/19 per-class Jaccard ≥ 0.6; DDoS↔DoS cosine reproduces within fp32 noise floor).
 - **Profiling-feature-basis AE** — still open. Addresses layer-coupling concern (AE and XGBoost share the same 44 features). Phase 6's future-work item that Phase 6C did not address.

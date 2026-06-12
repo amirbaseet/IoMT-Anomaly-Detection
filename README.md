@@ -43,6 +43,8 @@
     - 19.2 [Paper 2: XAI Feature Selection (AIAI 2025)](#192-paper-2-xai-driven-feature-selection-for-improved-ids-aiai-2025)
     - 19.3 [Paper 3: Ensemble Strategies (Springer 2026)](#193-paper-3-ensemble-learning-strategies-for-anomaly-based-ids-springer-2026)
     - 19.4 [Research Gaps & Our Contribution](#194-research-gaps-left-by-yacoubi-et-al)
+    - 19.5 [Deep Dive: Uddin et al. — Closest Zero-Day Protocol Precedent](#195-deep-dive--uddin-chu--rafeh-2025-closest-zero-day-protocol-precedent)
+    - 19.6 [Deep Dive: Alfageer et al. — Closest Architectural Prior Art](#196-deep-dive--alfageer-ghaleb-aljoby--felemban-2026-closest-architectural-prior-art)
 20. [Research Design](#20-research-design)
 21. [Proposed Framework Architecture](#21-proposed-framework-architecture)
 22. [Corrections to Published Literature](#22-corrections-to-published-literature)
@@ -72,7 +74,7 @@ A dual-layer detection framework combining:
 - **Supervised Layer (Layer 1):** Random Forest + XGBoost — classifies known attack types with high accuracy
 - **Unsupervised Layer (Layer 2):** Autoencoder + Isolation Forest — detects deviations from learned benign behavior, enabling zero-day detection
 - **Fusion Layer (Layer 3):** 4-case decision logic combining outputs — provides confidence-stratified alerts to security analysts
-- **Explainability Layer (Layer 4):** Per-attack-class SHAP analysis + LIME local explanations — makes decisions interpretable
+- **Explainability Layer (Layer 4):** Per-attack-class SHAP analysis (TreeSHAP) — makes decisions interpretable
 
 ### Key Innovation: 4-Case Fusion Decision Logic
 
@@ -87,7 +89,7 @@ A dual-layer detection framework combining:
 
 ### Zero-Day Simulation Protocol
 
-Zero-day detection capability is evaluated using a **leave-one-attack-out protocol**: each of the 17 attack classes is sequentially withheld from training data, and the unsupervised layer is tested on its ability to flag the withheld class as anomalous. This measures real-world zero-day detection performance without requiring actual unknown attacks.
+Zero-day detection capability is evaluated using a **leave-one-attack-out protocol**: each of the 18 attack classes is sequentially withheld from training data, and the unsupervised layer is tested on its ability to flag the withheld class as anomalous. This measures real-world zero-day detection performance without requiring actual unknown attacks.
 
 ### Why This Project Matters
 
@@ -106,7 +108,7 @@ Connected medical devices — blood pressure monitors, insulin pumps, ECG monito
 | **Duplicate Rate** | Train: 36.95% / Test: 44.72% — **not reported in any prior paper** |
 | **Features** | 45 (no label column — labels derived from filenames) |
 | **Attack Types** | 18 (across 5 categories) |
-| **Classes** | 17 (16 attack types + 1 benign) in WiFi/MQTT subset |
+| **Classes** | 19 (18 attack types + 1 benign) in WiFi/MQTT subset |
 | **Devices** | 40 (25 real + 15 simulated) |
 | **Protocols** | Wi-Fi, MQTT, Bluetooth Low Energy (BLE) |
 | **Train CSV Files** | 51 files (attacks split into numbered capture files) |
@@ -447,7 +449,7 @@ WiFI_and_MQTT/attacks/CSV/test/
 
 ### Filename → Label Mapping
 
-| Filename Pattern | 17-Class Label | 6-Class Category |
+| Filename Pattern | 19-Class Label | 6-Class Category |
 |-----------------|----------------|-----------------|
 | `ARP_Spoofing_*` | ARP_Spoofing | Spoofing |
 | `Benign_*` | Benign | Benign |
@@ -473,7 +475,7 @@ WiFI_and_MQTT/attacks/CSV/test/
 
 ## 8. Class Distribution (VERIFIED — After Deduplication)
 
-### 17-Class Distribution (Train — 4,515,080 rows after dedup)
+### 19-Class Distribution (Train — 4,515,080 rows after dedup)
 
 | Class | Train Rows | % of Train | Imbalance Ratio |
 |-------|-----------|------------|----------------|
@@ -587,7 +589,7 @@ PCA needs 22 components for 95% variance and 28 for 99%. The 2D PCA projection s
 - **Feature drops:** ~17 features (Drate + 11 redundant + 5 noise) → ~28 retained features.
 - **SMOTETomek priority:** Ping_Sweep (689) → VulScan (2,032) → Malformed (5,130) → DoS_Connect (12,773) → ARP_Spoofing (16,010).
 - **Autoencoder data:** 192,732 benign rows — sufficient and well-clustered.
-- **Validation:** 5-fold stratified at 17-class level; leave-one-attack-out for zero-day simulation.
+- **Validation:** 5-fold stratified at 19-class level; leave-one-attack-out for zero-day simulation.
 
 ---
 
@@ -1244,7 +1246,7 @@ A hard reproduction check was inserted at `multi_seed_fusion.py:457-468`: applyi
 
 | Metric | Value |
 |---|---|
-| H2-strict rescue avg | **0.799 ± 0.022** (range [0.764, 0.827]) |
+| H2-strict rescue avg | **0.799 ± 0.023** (range [0.764, 0.827]) |
 | H2-binary recall avg | **0.951 ± 0.003** (range [0.949, 0.956]) |
 | Operational benign FPR | **0.2289 ± 0.0003** (range [0.2285, 0.2294]) |
 | H2-binary 5/5 PASS | **5 of 5 seeds** |
@@ -1301,7 +1303,7 @@ This confirms that the entropy-and-AE thresholds calibrated on the held-out beni
 
 The H2-strict 4/4 PASS verdict from §15C is bootstrap-robust over the test distribution **AND** consistent across training-randomness variation. The corrected multi-seed claim is:
 
-> Across 5 random seeds {1, 7, 42, 100, 1729}, H2-strict rescue recall is **0.799 ± 0.022** with the seed=42 baseline reproducing exactly. **No eligible (seed, target) cell falls below the 0.70 strict threshold across 19 evaluations.** H2-binary 5/5 PASS holds for all 5 seeds. Recon_Ping_Sweep is structurally excluded in 2 of 5 seeds because `n_loo_benign` drops below 30 samples — a property of CICIoMT2024's small test partition for this rare class (169 samples), not a recall failure.
+> Across 5 random seeds {1, 7, 42, 100, 1729}, H2-strict rescue recall is **0.799 ± 0.023** with the seed=42 baseline reproducing exactly. **No eligible (seed, target) cell falls below the 0.70 strict threshold across 19 evaluations.** H2-binary 5/5 PASS holds for all 5 seeds. Recon_Ping_Sweep is structurally excluded in 2 of 5 seeds because `n_loo_benign` drops below 30 samples — a property of CICIoMT2024's small test partition for this rare class (169 samples), not a recall failure.
 
 This is a **stronger and more honest claim** than a uniform "5/5 pass 4/4" would have been: it surfaces the eligibility-threshold sensitivity for tiny LOO targets and confirms recall stability for all eligible cells.
 
@@ -1495,7 +1497,7 @@ H1 (fusion macro-F1 vs E7) is unchanged from Phase 6 — fusion does not improve
 
   Reading: the val→test shift is **uniform across all 5 LOO folds** — no individual fold drives the aggregate. The aggregate (0.0645) is slightly larger than the maximum per-fold value (ARP_Spoofing, 0.0573) because pooling heterogeneous LOO models with E7 itself adds modest cross-distribution variance, not because any single fold has a structural break. Per-fold p-values are uninformative at this n; the KS *statistic* (effect size) is the comparable signal. ARP_Spoofing's lower absolute entropy levels (val mean 0.036, p95 0.223) reflect higher confidence on benign rows but the same shift magnitude (KS=0.0573, Δmean=+0.026) — confirming the calibration shift is a property of the val→test split, not of any single attack-class hold-out. _Footnote on dimensionality:_ per-fold KS values (0.054–0.057) are computed on the 18-class LOO-XGBoost entropy distribution (each fold withholds one attack class), while the AGGREGATE_E7 reference (0.0645) is computed on the 19-class main E7 entropy. The slight gap reflects the different output dimensionality of the two model families, not a contradiction; the uniformity across folds (range 0.003) is the load-bearing observation. Figure: `results/enhanced_fusion/ks_per_fold/ks_per_fold.png`. Future work: per-fold entropy threshold calibration on a benign-test slice or cross-validation-style threshold search would close this gap.
 - `MQTT_DoS_Connect_Flood` excluded from H2-strict (denominator = 4, not 5) — structural property of the LOO partition with 0 LOO→Benign samples.
-- ~~Single random seed (RANDOM_STATE = 42); per-fold variance not estimated.~~ **Addressed by §15B (Path B Week 1):** Multi-seed validation across {1, 7, 42, 100, 1729} yields H2-strict avg = 0.799 ± 0.022 with 0/19 eligible cells failing the 0.70 threshold; the seed=42 baseline reproduces exactly and sits at the 63rd percentile of the multi-seed distribution. Per-fold bootstrap CIs over the rescue subset remain an optional future extension.
+- ~~Single random seed (RANDOM_STATE = 42); per-fold variance not estimated.~~ **Addressed by §15B (Path B Week 1):** Multi-seed validation across {1, 7, 42, 100, 1729} yields H2-strict avg = 0.799 ± 0.023 with 0/19 eligible cells failing the 0.70 threshold; the seed=42 baseline reproduces exactly and sits at the 63rd percentile of the multi-seed distribution. Per-fold bootstrap CIs over the rescue subset remain an optional future extension.
 - Entropy thresholds calibrated on benign val (38,546 samples). The chosen p95 threshold (0.395) is in the operating range, but the p90 variant (which lifts strict avg to 0.91) sits just over the FPR budget at 0.278. Further sweep between p90 and p95 may yield a slightly better operating point.
 - Ensemble normalization uses a single basis (val-fitted MinMax). More principled options (rank-normalization, isotonic calibration) are deferred but unlikely to change the conclusion that IF dominates AE on this dataset's score scales.
 - All 11 variants reported; no per-target threshold cherry-picking. Best-variant selection uses a global rule, not a per-target one.
@@ -2013,32 +2015,78 @@ results/shap/                                   (~20 MB)
 
 - **Binary:** Benign vs Attack (anomaly detection)
 - **6-class:** Benign + 5 attack categories (DDoS, DoS, Recon, MQTT, Spoofing)
-- **17-class:** Benign + all 16 individual attack types (fine-grained classification)
+- **19-class:** Benign + all 18 individual attack types (fine-grained classification)
 
 ---
 
-## 18. Related Work — Summary Table
+## 18. Related Work — Summary Table (June 2026, 28 papers)
 
-| Paper | Approach | Key Result |
-|-------|----------|------------|
-| Dadkhah et al. (2024) | Dataset paper — LR, AdaBoost, RF, DNN | Established CICIoMT2024 benchmark |
-| Yacoubi et al. — COCIA 2025 | RF (bagging) vs CatBoost (boosting) + SHAP/LIME | Explainable classification on CICIoMT2024 |
-| Yacoubi et al. — AIAI 2025 | XAI-driven feature selection with SHAP/LIME | RF 99.87%, CatBoost improved +4% after feature selection |
-| Yacoubi et al. — Springer 2026 | RF + CatBoost + LightGBM + XGBoost + Stacking | Stacking ensemble 99.39%, CatBoost 99.36% |
-| Chandekar et al. (2025) | XGBoost + LSTM + CNN-LSTM + Autoencoder + Isolation Forest | Ensemble approach for multi-protocol detection |
-| Nature Scientific Reports (2025) | RF with SHAP-based feature selection | 99% accuracy with interpretable dimensionality reduction |
-| Springer Applied Sciences (2025) | Transformer + SHAP + SMOTETomek | 93.5% accuracy with attention-based detection |
+A systematic search of the CICIoMT2024 literature through June 2026 identified **28 obtainable studies** (29 listed; one paywalled, citable at abstract level only). The numbering matches Literature Review Chapter 2 §2.1.
 
-**Benchmarks from literature:**
-- Random Forest: ~99.87% accuracy (full features), ~99.41% (after XAI feature selection)
-- XGBoost: ~99.80% accuracy
-- LightGBM: ~99.74% (full), ~99.80% (after feature selection — improved!)
-- CatBoost: ~95.02% (full), ~99.20–99.36% (after feature selection/tuning)
-- Support Vector Machine: ~98% accuracy
-- Decision Tree: ~97% accuracy
-- Transformer: ~93.5% accuracy
-- Logistic Regression: ~92.8% accuracy
-- Stacking Ensemble (CatBoost + RF): ~99.39% accuracy
+| # | Paper | Approach | Key Result | Zero-Day? |
+|---|-------|----------|------------|-----------|
+| 1 | Dadkhah et al. (2024) | Dataset paper — LR, AdaBoost, RF, DNN | Established CICIoMT2024 benchmark; RF binary ~99%, **19-class 0.733 acc / 0.551 F1** | No |
+| 2 | Yacoubi, Moussaoui & Drocourt — COCIA 2025 | RF (gini) vs CatBoost + SHAP/LIME | **RF 99.92%** (binary, raw); first XAI study on CICIoMT2024 | No |
+| 3 | Yacoubi, Moussaoui & Drocourt — AIAI 2025 | RF, CatBoost, LightGBM, XGBoost + SHAP for feature selection | XGBoost 99.80% (6-class) at k=15; SHAP-driven FS | No |
+| 4 | Yacoubi, Moussaoui & Drocourt — Springer chapter 2026 | 5 ensemble models including Stacking (CatBoost+RF→LR) | **RF & Stacking tied at 99.39%** (19-class, raw); RF wins on F1 at 1.7% of training cost | No |
+| 5 | Chandekar, Mehta & Chandan (2025) | XGBoost + LSTM + CNN-LSTM + AE + IF + Stacking | First multi-paradigm; ~99%; inconsistent reporting | Partial (AE/IF, not evaluated as zero-day) |
+| 6 | **Lipsa, Dash & Ivković — Nature Sci. Reports (2025)** | RF + Shapley-value feature selection + **per-class SHAP waterfalls** | RF 99% (17-class); per-class SHAP per attack type | No |
+| 7 | Alsharaiah et al. — Discover Applied Sci. (2025) | Transformer (custom attention) + SHAP + SMOTETomek | **99.71%** (binary spoofing) | No |
+| 8 | Akar, Sahmoud, Onat, Çavuşoğlu & Malondo — IEEE Access (2025) | L2D2 (2 LSTM + 2 Dense) | **98% (19-class); 100% (binary)** | No |
+| 9 | Gheni & Al-Yaseen — Springer ICDAM (2025) | Feature-selection-based IDS† | Feature selection on CICIoMT2024 | No |
+| 10 | Ceran, Özdoğan & Uysal — SAUCIS (2025) | GNN + XGBoost late fusion | ~99% binary; first GNN approach | No |
+| 11 | Özdoğan et al. — Wiley IJIS (2025)‡ | Two-stage XGBoost + ANN + SHAP/LIME | ~99%; Cyber Kill Chain framing | No |
+| 12 | **Hafid, Rahouti & Aledhari — MDPI Mathematics (2025)** | XGBoost + LR (late fusion, τ=0.65) + global SHAP | Cost-aware binary IDS; first deployment-cost model | No |
+| 13 | Shaikh et al. — Frontiers in Medicine (2025) | HCLR-IDS: CNN + LSTM + RL (DQN+PPO) + MIFS | ~98%; first RL-based IDS on CICIoMT2024 | No |
+| 14 | Redjechta, Cherbal, Goudjil, Zerguine & Gawanmeh — ICCIKE (2025) | RF, DT, NB, LightGBM, XGBoost, CNN, MLP | ~99% (RF); ML/DL benchmark + deployment analysis | No |
+| 15 | Rehman et al. — SciTePress / SECRYPT (2025) | XGBoost, KNN, DT, RF + Fisher/MI/IG | 3–4 features sufficient for binary classification | No |
+| 16 | **Riyadi, Kurniabudi et al. — JIOS (2025)** | IG+PCA + Bayesian-XGBoost + SMOTEENN | **99.811% (XGBoost+SMOTEENN, 19-class)** — highest 19-class in corpus, on data with only 5,119 duplicates removed | No |
+| 17 | Kouassi, Ballo, Ayikpa, Mamadou & Coulibaly — Future Internet (2025) | XGBoost+LightGBM+RF voting (VcXLRF) | ~90.5% (RF, Top-10); ~75% feature reduction | No |
+| 18 | **Uddin, Chu & Rafeh — preprint (2025)** | **Hierarchical meta-learning (Reptile) + usfAD (OCC) + RF** | **99.77% (usfAD); 98.27% (meta-learning, <1% data); zero-day F1 ranges 26–91% across categories** | **Yes — LOO at 5-category level** |
+| 19 | Akkal, Cherbal, Kharoubi & Lakhlef — IEEE (2024) | ML + DL for blockchain-DDoS | ~99%; binary + 5-class DDoS focus; **removes 5,119 duplicate rows** | No |
+| 20 | Doménech, León, Siddiqui & Pegueroles — Elsevier IoT (2025) | RF + preprocessing optimization; CICIoT2023↔CICIoMT2024 cross-dataset | **99.85% accuracy; 66.87% F1 drop on cross-dataset transfer**; preprocessing critique | No |
+| 21 | **Alfageer, Ghaleb, Aljoby & Felemban — IEEE Access (2026)** | **AE gate + hierarchical RF/XGBoost/Lightweight-CNN; confidence threshold τ=0.65** | AE 99.63%; 2 attack classes held out (Recon-OS_Scan, MQTT-DDoS-Connect_Flood) | **Yes — max-probability rejection, 2-class held-out** |
+| 22 | **Abo-Haat & Zuhair — IJIES (2026)** | KAN (B-spline) + VAE + meta-learning ensemble | **86.5% F1-macro** under **device-disjoint** splitting (attack device IDs predicted) | Asserted (no LOO test) |
+| 23 | Manoj, Aswathi, Nandana & Sankaran — IEEE iSES (2025) | Federated XGBoost + Zero Trust + Flask/RBAC | 98%; first FL on CICIoMT2024; SHAP named as future work | No |
+| 24 | Jaiswal, Andersen, Cenkeramaddi, Jiao & Granmo — arXiv (2026) | Tsetlin Machine (TM) | 99.5% (binary); 90.7% (multi-class); rule-based intrinsic interpretability | No |
+| 25 | Saeed et al. — Nature Sci. Reports (2025) | C4.5 + DQN; Voting (RF+GB) | 99.20% binary; 14-class multiclass; 5-dataset eval | Claimed (DQN adaptivity, not LOO-measured) |
+| 26 | **Kharoubi, Cherbal & Akkal — IEEE (2025)** | XGBoost, DT, RF, CNN, LSTM | **99.83% (multi-class); 99.94% (binary)** — highest peer-reviewed; **removes 5,119 duplicate rows** | No |
+| 27 | Naeem, Alsirhani, Alserhani, Ullah & Krejcar — CMES (2024) | Transformer + DCNN + LSTM ensemble + RF on meta-features | **99.99% (RF on meta-features)**; BAT augmentation; reports duplicate-row handling‡ | No |
+| 28 | Incremental FL Study — ICISSP / arXiv (2026) | Incremental Federated Learning (LSTM, three strategies) | First concept-drift study on CICIoMT2024 | No |
+| 29 | Gueriani et al. — arXiv (2025/2026) | SE-attention Vision Transformer + BiLSTM | 96.10% raw / 99.33%+ after SMOTE; 6-class subset | No |
+
+† Paper #9 (Gheni & Al-Yaseen) is paywalled; feature-selection framing confirmed from abstract, but specific models and accuracy figures could not be verified against full text. Cited at abstract level only.
+‡ Paper #27 (Naeem) describes duplicate-row removal qualitatively but does not publish a specific row count. Earlier reviews estimate ~55%; this figure could not be confirmed against the published full text.
+
+### Key observations
+
+**Zero-day detection cluster (3 papers).** Of 28 studies, only three perform a leave-one-out style zero-day evaluation: Uddin et al. (category-level, 5 categories), Alfageer et al. (2 attack classes held out, max-probability threshold τ=0.65), and this thesis (per-attack-subtype across all eligible classes, softmax-entropy gate). Per-attack granularity is the finest of the three.
+
+**Deduplication landscape (3 papers, identical figures).** Three independent papers report deduplication: Riyadi et al. (#16), Akkal et al. (#19), and Kharoubi et al. (#26). **All three report exactly the same 5,119 figure** (~0.07% of the corpus). Two share authorship (Cherbal, Akkal). The convergence strongly suggests a shared pre-redistributed input dataset rather than independent counts of the raw 72-file distribution. This thesis's per-split rates (36.95% train / 44.72% test) on the raw distribution are approximately 500× larger — itself the leakage signal the literature has uniformly missed.
+
+**Per-class SHAP precedent (1 paper).** Lipsa, Dash & Ivković (#6) produce per-class SHAP waterfall plots for each attack type on a 17-class RF. This thesis's contribution is the **conjunction**: per-class SHAP on a *deduplicated* 19-class *XGBoost* classifier, *contrasted against global* attribution, and *cross-checked against an independent Cohen's-d ranking* — none of which Lipsa does. Lipsa is the only precedent in the corpus and is cited as such.
+
+**MCC reporting (zero papers).** Cross-corpus grep verification confirms **none of the 28 papers reports MCC** (Matthews Correlation Coefficient). This thesis's MCC = 0.9906 on deduplicated 19-class evaluation is unique in the reviewed literature.
+
+**Random Forest split criterion (literature uses gini).** Three of the four most closely related Yacoubi-cluster papers (#1 Dadkhah, #2 COCIA, #4 Springer chapter 2026) use `criterion='gini'`; only #3 AIAI uses entropy. Cross-paper RF accuracies span 73.3% (Dadkhah, gini) to 99.92% (COCIA, gini) to 99.39% (Yacoubi #4, gini) to 99.87% (AIAI, entropy) — the 26pp spread within the gini group alone is much larger than any plausible gap between gini and entropy. This thesis's controlled within-pipeline ablation found +0.47pp (within noise), refuting the "entropy is operationally meaningful" reading sometimes attributed to the Yacoubi corpus.
+
+### Benchmarks from literature (June 2026)
+
+| Model / Approach | Best reported on CICIoMT2024 | Source | Caveat |
+|---|---|---|---|
+| Random Forest | 99.92% binary (raw) | Yacoubi COCIA 2025 (#2) | Raw, no dedup, ROC-AUC = 100.00% (leakage-consistent) |
+| Random Forest (multi-class) | 99.83% (multi-class); 99.94% binary | Kharoubi et al. 2025 (#26) | Raw, 5,119 dedup only |
+| XGBoost | 99.811% (19-class) | Riyadi et al. 2025 (#16) | 5,119 dedup; SMOTEENN + Bayesian opt |
+| LSTM (L2D2) | 98% (19-class); 100% (binary) | Akar et al. 2025 (#8) | Raw |
+| AE + hierarchical hybrid | 99.63% (AE); 99.94% (binary best stage) | Alfageer et al. 2026 (#21) | Raw, packet-level merged |
+| Transformer | 99.71% (binary spoofing only) | Alsharaiah et al. 2025 (#7) | Subset, binary |
+| usfAD (OCC) | 99.77% (binary) | Uddin et al. 2025 (#18) | Raw, 10-fold CV on merged data |
+| Meta-learning (Reptile) | 98.27% with <1% of data | Uddin et al. 2025 (#18) | Data efficiency advantage |
+| Tsetlin Machine | 99.5% (binary); 90.7% (multi-class) | Jaiswal et al. 2026 (#24) | Bluetooth-only subset |
+| KAN + VAE | 86.5% F1-macro | Abo-Haat & Zuhair 2026 (#22) | Device-disjoint (attack labels predicted) |
+| **This thesis (XGBoost E7, 19-class)** | **99.27% acc / macro-F1 0.9076 / MCC 0.9906** | — | **Deduplicated** (37%/45% removed) |
+
+Cross-study metric comparisons are not like-for-like: this thesis reports on deduplicated data while almost all prior work uses raw data with documented duplicate leakage.
 
 ---
 
@@ -2090,7 +2138,7 @@ Yacoubi et al. published three interrelated papers on the CICIoMT2024 dataset, e
 | **#6** | `UDP` | Protocol indicator separates UDP floods from TCP-based attacks |
 | Near zero | `Telnet`, `SSH`, `IRC`, `SMTP` | Essentially noise for IoMT traffic — these protocols are rarely used by medical devices |
 
-**LIME Findings:** For a specific attack traffic instance, RF correctly identified it by relying heavily on `IAT` and `Rate`, while `Header-Length` and `UDP` had zero local influence. CatBoost used a slightly different feature combination for the same prediction, demonstrating that the two models reason differently even when they agree on the output class.
+**Yacoubi's LIME Findings:** For a specific attack traffic instance, RF correctly identified it by relying heavily on `IAT` and `Rate`, while `Header-Length` and `UDP` had zero local influence. CatBoost used a slightly different feature combination for the same prediction, demonstrating that the two models reason differently even when they agree on the output class.
 
 **Runtime Comparison:** SHAP on RF was faster than SHAP on CatBoost. LIME was fast for both models (since it only explains individual instances).
 
@@ -2157,6 +2205,163 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 ---
 
+
+## 19.5 Deep Dive — Uddin, Chu & Rafeh (2025): Closest Zero-Day Protocol Precedent
+
+> Uddin, M.A., Chu, N.H. & Rafeh, R. — Crown Institute of Higher Education, Australia
+> *"A Hierarchical IDS for Zero-Day Attack Detection in Internet of Medical Things Networks"* (2025, arXiv preprint, under review)
+
+Uddin et al. is the only other CICIoMT2024 work that explicitly targets zero-day attack detection with a leave-one-out evaluation protocol. They use category-level holdout (one of 5 categories withheld at a time); this thesis uses per-attack-subtype holdout (a single subtype withheld while related subtypes stay in training).
+
+### 19.5.1 Architecture comparison
+
+```
+UDDIN ET AL. (Sequential Filter)             THIS THESIS (Parallel Fusion)
+──────────────────────────────────           ──────────────────────────────────
+Near Edge: usfAD (OCC) or Reptile             Layer 1: XGBoost E7 (19-class supervised)
+   → Binary: Normal vs Attack                    → 19-class prediction + softmax entropy
+   → 99.77% accuracy                             → 99.27% acc, macro-F1 0.9076 (dedup)
+   → If attack → pass down                       ↓ (runs on EVERY flow)
+
+Far Edge: usfAD (OCC, known attacks only)     Layer 2: Autoencoder (reconstruction error)
+   → Binary: Known vs Unknown (zero-day)         → Anomaly score per flow
+   → LOO at 5-category level                     → AUC 0.9892
+   → Best per-category zero-day F1: 91% (DoS)    ↓ (runs on EVERY flow)
+   → Worst: 26% (Spoofing)
+   → If known → pass down                      Layer 3: 5-Case Fusion Engine
+                                                  → Combines: XGB prediction + confidence
+Cloud: Random Forest                                 + AE anomaly score + softmax entropy
+   → 6-class category → 19-class subtype         → Routes to: BLOCK / QUARANTINE /
+   → RF1 (benign+attacks): 99.89% subcategory          MONITOR / ALLOW / OPERATOR REVIEW
+   → No XAI                                      → Per-attack LOO across 4 eligible targets
+                                                  → H2-strict: 0/4 (Phase 6B) → 4/4 (Phase 6C)
+
+                                              Layer 4: Per-class TreeSHAP
+                                                  → 19 attack-specific signatures
+                                                  → DDoS↔DoS cosine = 0.991 (boundary diagnostic)
+```
+
+### 19.5.2 Head-to-head comparison
+
+| Dimension | Uddin et al. (2025) | This thesis |
+|---|---|---|
+| Architecture | 3-layer sequential filter (Near→Far→Cloud) | 4-layer parallel fusion (supervised + unsupervised on every flow) |
+| Supervised model | Random Forest (Cloud) | XGBoost E7 (19-class) |
+| Unsupervised model | usfAD (OCC) + LOF + Isolation Forest | Autoencoder + Isolation Forest |
+| Zero-day mechanism | OCC trained on known attacks | AE anomaly + **softmax entropy** + confidence fusion |
+| LOO granularity | **5 categories** | **18/19 subtypes** (finer-grained, harder) |
+| Best zero-day F1 | 91.03% (DoS category) | Phase 6C strict avg 0.804 at p95 (per-attack) |
+| Worst zero-day F1 | 26.29% (Spoofing category) | Recon_VulScan (stress case) |
+| Fusion logic | None — sequential filter | 5-case decision engine |
+| Imbalance handling | Stratified 10-fold CV only | SMOTETomek tested + rejected (boundary-blur mechanism documented) |
+| Explainability | None | Per-class TreeSHAP (19 classes) |
+| Deduplication | None — uses merged ~9.3M rows | **36.95% train / 44.72% test removed** |
+| Profiling data | Not used | Not used (future work for both) |
+| Deployment model | Distributed (Near/Far Edge/Cloud) | Centralized + Streamlit demo |
+| MCC reported | No | **Yes (0.9906)** |
+| Multi-seed validation | Not performed | **5 seeds, σ = 0.023 on H2-strict avg rescue recall** |
+| Layer-2 substitution check | Not performed | **AE ≈ β-VAE ≈ LSTM-AE** at the fusion level |
+| Peer review status | Preprint (under review) | M.Sc. thesis (defense Jan 2027) |
+| Code/reproducibility | Not available | GitHub repo + dashboard |
+
+### 19.5.3 What Uddin et al. validates about this work
+
+1. **LOO is a valid evaluation methodology** — independent adoption confirms zero-day evaluation by holdout is the right protocol.
+2. **usfAD outperforms Isolation Forest** — their IF: 82.34% vs usfAD: 99.77%; consistent with this thesis's Layer-2 design preferring reconstruction-error AE over IF for anomaly scoring.
+3. **Sequential filtering loses misclassified benign traffic** — they document ~831 benign instances lost at Layer 1; this thesis's parallel fusion avoids the problem entirely.
+4. **Some attack classes are universally hard** — their 26% Spoofing F1 and this thesis's Recon_VulScan stress case both indicate flow-level overlap with benign or sibling traffic.
+
+### 19.5.4 What this work adds beyond Uddin et al.
+
+- LOO at **subtype level** (18/19) rather than category level (5) — significantly harder because the model has seen closely related attacks
+- **Parallel fusion** rather than sequential filter — no information loss when supervised misclassifies
+- **Softmax entropy** as a complementary zero-day signal — empirically rescued strict per-attack recall from 0/4 to 4/4 at p95
+- **Per-class TreeSHAP** across 19 classes — actionable for SOC analyst tooling; absent in Uddin
+- **Deduplication** — 36.95%/44.72% removed before training; Uddin uses raw merged data
+- **MCC reported** — 0.9906; Uddin does not report MCC
+- **Multi-seed robustness** — σ = 0.023 on H2-strict avg rescue recall over 5 seeds; Uddin uses single-run 10-fold CV
+- **Layer-2 architectural robustness** — AE, β-VAE, and LSTM-AE shown to be interchangeable at the fusion level (entropy channel is ~17× more impactful than the Layer-2 model swap)
+
+---
+
+## 19.6 Deep Dive — Alfageer, Ghaleb, Aljoby & Felemban (2026): Closest Architectural Prior Art
+
+> Alfageer, R., Ghaleb, M., Aljoby, W. & Felemban, M. — KFUPM, Saudi Arabia + Kocaeli University, Türkiye
+> *"A Multi-Stage Learning Framework for Detecting Known and Novel Attacks in the Internet of Medical Things"*
+> IEEE Access, Vol. 14, 2026, pp. 48312–48326. DOI: 10.1109/ACCESS.2026.3677553
+
+Alfageer et al. is the **single most architecturally similar published work** to this thesis: an autoencoder-gated supervised hybrid with confidence-based zero-day rejection on CICIoMT2024. It is peer-reviewed (IEEE Access) and was published in March 2026, after the bulk of this thesis's design was finalized but before the defense.
+
+### 19.6.1 Their architecture
+
+```
+ALFAGEER ET AL. (Sequential Gate + Hierarchical Classifier)
+──────────────────────────────────────────────────────────
+Stage 0: Auto-Encoder gate (28K params, 109 KB)
+   → Trained on benign-only, Huber loss
+   → 95th-percentile threshold on benign reconstruction error
+   → 99.63% anomaly-detection accuracy
+   → AUC 0.9966
+
+Stage 1 (Binary): XGBoost
+   → Best F1 = 99.94%
+
+Stage 2 (Categorical, 5 categories): RF (150 trees)
+   → Best F1 = 99.95%
+
+Stage 3 (Multi-class, 19 attack subtypes): Lightweight CNN (77K params, ~0.46 MB)
+   → Three parallel conv branches (kernels {5, 7, 5}) + residual + SE block
+   → Best F1 = 99.84%
+   → Max-probability confidence threshold τ = 0.65
+   → If max(p) < τ → "Unknown" / zero-day reject
+
+Online Zero-Day Test: 2 attack classes held out
+   → MQTT-DDoS-Connect_Flood: 100% rejection
+   → Recon-OS_Scan: 32.34% rejection (67.66% mapped to known recon subtypes)
+```
+
+### 19.6.2 Head-to-head with this thesis
+
+| Dimension | Alfageer et al. (2026) | This thesis |
+|---|---|---|
+| Supervised core | RF/XGBoost/LWCNN hierarchical (binary → categorical → 19-class) | XGBoost E7 (19-class single-stage) + RF |
+| Unsupervised gate | AE (28K params, 95th-pct threshold) | AE (AUC 0.9892) + Isolation Forest |
+| **Zero-day signal** | **max-probability** (single threshold τ = 0.65) | **softmax entropy** of full prediction vector + AE fusion |
+| **Zero-day protocol** | **2 classes** held out (Recon-OS_Scan, MQTT-DDoS-Connect_Flood) | **per-attack LOO** across all eligible subtypes, retrained, multi-seed |
+| Data preprocessing | Raw, merged + shuffled, **no deduplication** | **Deduplicated** (36.95% train / 44.72% test removed) |
+| Explainability | **None** — named as future work in §VI | Per-class TreeSHAP (19 classes), contrasted vs global, cross-checked vs Cohen's-d |
+| Minority-aware metrics | Not the focus | macro-F1 0.9076, MCC 0.9906 |
+| Architectural robustness check | Not performed | AE ≈ β-VAE ≈ LSTM-AE at the fusion level |
+
+### 19.6.3 The decisive empirical rebuttal — max-probability vs softmax entropy
+
+The closest objection to this thesis is: *"Isn't this just Alfageer with entropy instead of max-probability?"* The answer is no, and the argument is empirical and internal to this thesis's own ablation.
+
+This thesis tested a max-probability confidence floor — Alfageer's mechanism — at τ = 0.6 and τ = 0.7 in its own ablation, with all other components held fixed. **The max-probability gate scored 0/4 strict zero-day rescues**, while the softmax-entropy gate scored 4/4. The softmax entropy of the full prediction vector is a strictly richer signal than max-probability, because max-probability ignores how the remaining probability mass is distributed across the other 18 classes.
+
+This is therefore not a cosmetic swap of one threshold for another. The mechanism that Alfageer uses **was tested in this pipeline and does not work** under the strict per-attack protocol; the mechanism this thesis uses does.
+
+### 19.6.4 What Alfageer et al. validates about this work
+
+1. **AE-gated supervised hybridization is a productive paradigm** — independent peer-reviewed adoption.
+2. **Confidence-based zero-day rejection is methodologically sound** — they validate the high-level approach.
+3. **Explainability is a recognized gap in the field** — their §VI names *"explainability to improve operator trust in clinical environments"* as future work; this thesis's Layer 4 fills that named gap.
+
+### 19.6.5 What this work adds beyond Alfageer et al.
+
+- **Per-attack LOO** across all eligible subtypes vs their 2-class holdout
+- **Softmax entropy** gate empirically beating max-probability (4/4 vs 0/4) in the same ablation
+- **5-case decision-fusion engine** with operator-facing alert tiers (BLOCK / QUARANTINE / MONITOR / ALLOW / OPERATOR REVIEW) rather than a single binary reject
+- **Deduplication** addressing the duplicate-row leakage Alfageer does not analyze
+- **Per-class TreeSHAP** — their explicitly-named future work
+- **macro-F1 and MCC reporting** on minority classes
+
+### 19.6.6 Risk framing for defense
+
+Alfageer is the highest-risk prior art for an examiner question framed as *"this is just an incremental variant."* The rebuttal is the empirical 0/4-vs-4/4 result from this thesis's own ablation, combined with the six concrete differentiators above. The system contribution — fusion engine + per-attack granularity + explainability + deduplicated evaluation — is at the level of an integrated framework rather than a single replaced component.
+
+---
+
 ## 20. Research Design
 
 ### 20.1 Research Questions
@@ -2167,7 +2372,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 **Sub-Research Questions:**
 
-- **Sub-RQ1 (Fusion Performance):** How does the 4-case fusion decision logic affect precision-recall trade-offs across the 17 attack classes compared to using the supervised classifier alone?
+- **Sub-RQ1 (Fusion Performance):** How does the 4-case fusion decision logic affect precision-recall trade-offs across the 18 attack classes compared to using the supervised classifier alone?
 
 - **Sub-RQ2 (Zero-Day Detection):** To what extent can unsupervised anomaly detection (Autoencoder, Isolation Forest) identify zero-day attacks simulated via the leave-one-attack-out protocol when the supervised layer has no training exposure to the withheld attack class?
 
@@ -2196,10 +2401,10 @@ These gaps represent opportunities for our project to make a novel contribution:
 
 | ID | Objective | Deliverable |
 |----|-----------|-------------|
-| **O1** | Construct and benchmark supervised baselines (RF, XGBoost) on binary, 6-class, and 17-class tasks. Evaluate with accuracy, precision, recall, F1 (macro + per-class), MCC, ROC-AUC. | Baseline performance table |
+| **O1** | Construct and benchmark supervised baselines (RF, XGBoost) on binary, 6-class, and 19-class tasks. Evaluate with accuracy, precision, recall, F1 (macro + per-class), MCC, ROC-AUC. | Baseline performance table |
 | **O2** | Develop unsupervised anomaly detectors (Autoencoder, Isolation Forest) trained on benign-only traffic. Optimize thresholds using validation data. | Anomaly detection ROC curves |
 | **O3** | Implement the 4-case fusion decision engine combining supervised predictions with unsupervised anomaly scores. Evaluate fusion performance across all classification granularities. | Fusion logic code + comparison table |
-| **O4** | Conduct zero-day attack simulation using leave-one-attack-out protocol for all 17 classes. Measure unsupervised detection recall per withheld class. | Zero-day detection rate matrix (17 × 2) |
+| **O4** | Conduct zero-day attack simulation using leave-one-attack-out protocol for all 18 attack classes. Measure unsupervised detection recall per withheld class. | Zero-day detection rate matrix (18 × 2) |
 | **O5** | Perform per-attack-class SHAP explainability analysis. Compare feature importance rankings before/after SMOTETomek. | SHAP visualizations + feature importance tables |
 
 ### 20.4 Expected Contributions
@@ -2219,7 +2424,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                  INPUT: CICIoMT2024 CSV                      │
-│       (45 features, 17 classes, pre-split train/test)        │
+│       (45 features, 19 classes, pre-split train/test)        │
 └───────────────────────┬─────────────────────────────────────┘
                         │
                         ▼
@@ -2229,7 +2434,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 │  • Drop 17 features (Drate + 11 redundant + 5 noise) → ~28  │
 │  • RobustScaler on heavy-tailed (IAT, Rate, Tot sum)         │
 │  • StandardScaler on flag-count features                     │
-│  • Label encoding (17 classes)                               │
+│  • Label encoding (19 classes)                               │
 │  • Train/validation split (stratified 80/20 on train set)    │
 │  • Two variants: original (imbalanced) + SMOTETomek          │
 └───────────────────────┬─────────────────────────────────────┘
@@ -2269,10 +2474,10 @@ These gaps represent opportunities for our project to make a novel contribution:
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────┐
-│           LAYER 4: EXPLAINABILITY (SHAP + LIME)              │
+│       LAYER 4: EXPLAINABILITY (Per-Class TreeSHAP)            │
 │                                                              │
-│  • Global SHAP (beeswarm plots per class)                    │
-│  • Local SHAP/LIME for Case 2 (zero-day warnings)            │
+│  • Per-class SHAP (beeswarm plots per class)                 │
+│  • Local SHAP for Case 2 (zero-day warnings)                 │
 │  • Feature importance comparison: pre vs post SMOTETomek     │
 └─────────────────────────────────────────────────────────────┘
                         │
@@ -2280,7 +2485,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 ┌─────────────────────────────────────────────────────────────┐
 │       EVALUATION: Zero-Day Simulation (Leave-One-Out)        │
 │                                                              │
-│  For each of 17 attack classes:                              │
+│  For each of 18 attack classes:                              │
 │    1. Remove class from training data                        │
 │    2. Retrain unsupervised models on remaining data          │
 │    3. Test detection rate on withheld class                  │
@@ -2297,8 +2502,7 @@ These gaps represent opportunities for our project to make a novel contribution:
 | 2 | Autoencoder | TensorFlow/Keras | Architecture: 44→32→16→8→16→32→44, optimizer=Adam, loss=MSE, StandardScaler on benign-train, AUC=0.9892 |
 | 2 | Isolation Forest | scikit-learn | n_estimators=200, contamination=0.05, max_samples='auto' |
 | 3 | Fusion Engine | Custom Python | Threshold-based decision logic (95th/99th percentile for anomaly threshold) |
-| 4 | SHAP | shap | TreeSHAP for RF/XGBoost, KernelExplainer for Autoencoder |
-| 4 | LIME | lime | LimeTabularExplainer, num_features=10 |
+| 4 | SHAP | shap | TreeSHAP for XGBoost (per-class, 19 classes × 5000 samples × 44 features) |
 | Preprocessing | SMOTETomek | imbalanced-learn | sampling_strategy='auto', random_state=42 |
 
 ---
@@ -2384,7 +2588,7 @@ DOI: 10.1016/J.IOT.2024.101351
 - **ML Libraries:** scikit-learn, XGBoost, TensorFlow/Keras
 - **Data Processing:** pandas 3.0+, numpy 2.4+
 - **Visualization:** matplotlib 3.10+, seaborn 0.13+
-- **Explainability:** SHAP, LIME
+- **Explainability:** SHAP (TreeSHAP)
 - **Imbalance Handling:** imbalanced-learn (SMOTETomek)
 - **Environment:** MacBook Air M4 (24GB RAM), Google Colab (GPU for deep learning)
 - **Version Control:** GitHub

@@ -38,7 +38,7 @@ Format key:
 | Features (raw) | 45 | README §2, §6 |
 | Features after Drate drop | 44 | README §11.2 |
 | Features after correlation/noise drop | 28 | README §10.3, §11.2 |
-| Number of classes | 19 (17 attacks + Benign + zero_day_unknown placeholder in fusion) — base set 18 attacks + 1 benign = 19 | README §2, §8 |
+| Number of classes | 19 (18 attacks + Benign; 20 with zero_day_unknown placeholder in fusion) — base set 18 attacks + 1 benign = 19 | README §2, §8 |
 | Max imbalance ratio | 2,374:1 (DDoS_UDP vs Recon_Ping_Sweep) | README §2, §8.1 |
 | Rarest class | Recon_Ping_Sweep (689 train rows) | README §8.1 |
 | Train rows (after split) | 3,612,064 | README §11.4 |

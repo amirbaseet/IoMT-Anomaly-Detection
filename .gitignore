@@ -49,3 +49,13 @@ results/fusion/run.log
 
 # Backup files
 *.bak
+
+
+# decisions/
+decisions/
+
+# Thesis literature review — local only, not for GitHub
+thesis/lit_review/
+
+# Archive of superseded staging files
+.archive/
