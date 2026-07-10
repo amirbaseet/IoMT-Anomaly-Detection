@@ -66,7 +66,14 @@ Reference (link, don't inline): `README.md` (§-indexed compendium) · `delivera
 - **New feature:** `/plan-feature` → house-format plan in `docs/plans/`.
 - **Fixed a rule-rooted bug?** add/upgrade a DN-/INV- rule here.
 
-## 4. CURRENT STATUS
+## 4. Skill config
+<!-- machine-read by skills (/brief, /senior-review, /red-team, /fact-check). Precedence: explicit args > this section > skill defaults. -->
+- oracles: deliverables/numbers_map.md (every reported number — DN-04), results/ artifacts, tripwire anchors in deliverables/scripts/_common.py:35; README.md §-index for prose claims
+- stack: Python 3.13.13 · xgboost 3.2.0 (manifest pins <3.0 — known drift, do not "correct") · tensorflow 2.21 · scikit-learn 1.8 · shap 0.51 · seeds [1,7,42,100,1729] / crossdataset (42,43,44)
+- default-flags: senior-review=--paper, red-team=evaluator,ops
+- languages: docs=English, figures=_en+_tr pairs, stakeholder=Turkish
+
+## 5. CURRENT STATUS
 ### Systems built
 | Layer | What | Where |
 |---|---|---|
