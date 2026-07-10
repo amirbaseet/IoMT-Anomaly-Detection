@@ -21,8 +21,8 @@ venv/bin/python -m thesis.crossdataset.src.run [flags]   # real argparse (1 of o
 ```
 
 ## Gotchas
-- **Stale absolute paths** — `src/config.py:17-21` hardcodes `/Users/amoorabaseet/IoMT-Project/...`
-  (the pre-`/code/`-move path). Fix before running on this machine.
+- **Paths** — repo-internal paths in `src/config.py` derive from `__file__` (repo-move-proof);
+  only `CICIOT2023_MERGED_DIR` (`~/Downloads/Iot/MERGED_CSV`) is absolute and machine-local.
 - **Honesty caveat** — a drop below the in-dataset baseline is the EXPECTED, honest
   generalization result, not a defect (`results_summary.md:9`). Report the full operating
   characteristic; do not cherry-pick τ.

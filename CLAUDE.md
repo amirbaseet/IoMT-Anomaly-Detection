@@ -90,9 +90,7 @@ No pytest / lint / CI in this repo. The gate is `run_all`'s bit-exact tripwires 
 
 ### Workflow next (work this queue, don't re-derive)
 1. Fold `results/tausweep/tau_sweep_summary.md` into the thesis generalization section.
-2. Fix the one live stale path — `thesis/crossdataset/src/config.py:17-21` hardcodes the
-   pre-move `/Users/amoorabaseet/IoMT-Project`.
-3. Decide xgboost pin: bump manifest to allow 3.2.0, or pin the env down.
-4. Cleanup: `venv/` and `venv_old/` are committed to the tree — decide whether to untrack.
+2. Decide xgboost pin: bump manifest to allow 3.2.0, or pin the env down.
+3. Cleanup: `venv/` and `venv_old/` are committed to the tree — decide whether to untrack.
 
 ❓ Pending decisions: keep vs archive `Project_Journey_Complete.md`; whether the venvs stay tracked.

@@ -13,12 +13,16 @@ from pathlib import Path
 
 # --------------------------------------------------------------------------- #
 # Paths (confirmed with the user before the run)
+# Repo-internal paths derive from this file's location so a repo move can
+# never go stale again; CICIoT2023 lives outside the repo and stays absolute.
 # --------------------------------------------------------------------------- #
-CICIOMT2024_TRAIN_DIR = Path("/Users/amoorabaseet/IoMT-Project/data/train")
-CICIOMT2024_TEST_DIR = Path("/Users/amoorabaseet/IoMT-Project/data/test")
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+
+CICIOMT2024_TRAIN_DIR = _REPO_ROOT / "data" / "train"
+CICIOMT2024_TEST_DIR = _REPO_ROOT / "data" / "test"
 CICIOT2023_MERGED_DIR = Path("/Users/amoorabaseet/Downloads/Iot/MERGED_CSV")
 
-OUT_DIR = Path("/Users/amoorabaseet/IoMT-Project/thesis/crossdataset")
+OUT_DIR = _REPO_ROOT / "thesis" / "crossdataset"
 ARTIFACT_DIR = OUT_DIR / "artifacts"          # models, scalers, cached counts
 
 # --------------------------------------------------------------------------- #

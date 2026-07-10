@@ -18,9 +18,10 @@ surprises you and would surprise the next cold session.
 - **Large parts of the tree are untracked WIP** — e.g. root `CLAUDE_CODE_BRIEF_*.md`,
   `Thesis_Generalization_Analysis_*.md`, and `results/tausweep/` are untracked at time of writing.
   A fresh clone will NOT have them; check `git status` before assuming a path exists.
-- **Stale path lives in 18 tracked files, 1 of them live source:** `thesis/crossdataset/src/config.py:17-21`
-  (`/Users/amoorabaseet/IoMT-Project`, pre-`/code/`-move). The rest are `.log`/`.ipynb`/`.json`
-  artifacts.
+- **Stale pre-`/code/`-move path (`/Users/amoorabaseet/IoMT-Project`) survives in 17 tracked
+  `.log`/`.ipynb`/`.json` artifacts** — harmless records of past runs; the compat symlink
+  `~/IoMT-Project` covers them. The one live source hit was fixed: `thesis/crossdataset/src/config.py`
+  now derives repo-internal paths from `__file__`.
 - **Two committed venvs** (`venv/`, `venv_old/`) inflate greps and the stale-path count — exclude
   them when searching.
 - **`.claude/` is gitignored** (`.gitignore:40`) — anything under it (agent config, hookify local
