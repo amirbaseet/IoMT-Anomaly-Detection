@@ -91,6 +91,7 @@ No pytest / lint / CI in this repo. The gate is `run_all`'s bit-exact tripwires 
 `scripts/verify_*.py` number audits. Say "tripwires reproduce", never "tests pass".
 
 ### Recently closed (newest first)
+- **Lit-review senior review + DR-6 resolution (320b5d7 · lit-review 55dfc58→33efead · pcap aaf8917)** — 3-agent adversarial review of `thesis/lit_review/Chapter2_Synthesis_and_Gap_Analysis.md` (verdict NO-GO: G2/G7 false as worded vs Alfageer #21/Akar #08; 27→29-paper frame; dedup roster 5/27→9/29) + 46 applied BLUE fixes: new gaps G8–G12, DR-9–DR-12, Büken/Hafid head-to-heads, every internal number `[Phase-log:]`-cited to `docs/phase*.md`. **DR-6 closed by recomputation** (`iomt-pcap-experiments/dr6_*.py`): 5,119 = float64-exact duplicates of the released train split (reproduced exactly; Akkal's subset truly has 672 — his 5,119 is pipeline-inherited); thesis 36.95%/44.72% reproduce at **float32** to 4 decimals (2,645,751/721,914). Wording "bit-identical at float32" applied in `docs/phase2_eda.md`; gate: `verify_duplicate_counts.py` passes (pooled 3,368,126 = DR-6 count). lit_review now versioned in **private** repo `iomt-lit-review` (canonical; parent repo gitignores the dir; Downloads copy secondary).
 - **Literature-figure restore (283a838)** — re-verified COCIA/Recon_VulScan/AIAI vs numbers_map.
 - **LIME cleanup + sigma fix (7d86720)** — removed LIME capability claims; sigma 0.022→0.023 ×7.
 - **Path B Tier-2 LSTM-AE (c3e3f34)** — Layer-2 substitution + 4-issue calibration audit.
@@ -99,5 +100,6 @@ No pytest / lint / CI in this repo. The gate is `run_all`'s bit-exact tripwires 
 1. Fold `results/tausweep/tau_sweep_summary.md` into the thesis generalization section.
 2. Decide xgboost pin: bump manifest to allow 3.2.0, or pin the env down.
 3. Cleanup: `venv/` and `venv_old/` are committed to the tree — decide whether to untrack.
+4. README duplicate-wording sweep (surfaced by DR-6, README has uncommitted edits — do when committing it): §547 "exact duplicates" needs the float32 qualifier; §2065's "shared pre-redistributed input dataset" inference is **superseded** — DR-6 shows 5,119 is the correct float64 count of the released train split (Riyadi/Kharoubi scopes = train dir; Akkal inherited). Optionally add the precision note to `numbers_map.md` rows 36–37 (DN-04: it's the oracle — same-value, qualifier only).
 
-❓ Pending decisions: keep vs archive `Project_Journey_Complete.md`; whether the venvs stay tracked.
+❓ Pending decisions: keep vs archive `Project_Journey_Complete.md`; whether the venvs stay tracked; push `chore/bootstrap-claude` (carries 320b5d7 + 2 earlier local commits).
