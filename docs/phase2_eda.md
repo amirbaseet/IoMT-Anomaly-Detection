@@ -7,7 +7,7 @@
 | | |
 |---|---|
 | **Goal** | Characterise the dataset before any modelling — establish an honest, deduplicated baseline plus the class-imbalance and feature-separation facts every later phase depends on. |
-| **Headline result** | First public duplicate analysis of CICIoMT2024: **36.95 %** train / **44.72 %** test bit-exact duplicates. Post-dedup max imbalance **2,374:1**, with **Recon_Ping_Sweep (689 train rows)** the true rarest class — not ARP_Spoofing as prior papers claimed. |
+| **Headline result** | First public duplicate analysis of CICIoMT2024: **36.95 %** train / **44.72 %** test duplicates, **bit-identical at float32** — the pipeline's typed precision (at the CSVs' printed float64 precision the exact-row counts are **5,119 train / 2,065 test**, reproducing the literature's 5,119 figure exactly; see the DR-6 reconciliation, `iomt-pcap-experiments/dr6_out/`). Post-dedup max imbalance **2,374:1**, with **Recon_Ping_Sweep (689 train rows)** the true rarest class — not ARP_Spoofing as prior papers claimed. |
 | **Key decision** | Deduplicate *before* any downstream computation — clean data is the only honest baseline. |
 | **Critical failure fixed** | No 🔴 in Phase 2. Published class counts disagreed with the raw files (Med) → recounted from the 72 raw CSVs and logged (§22). *(The RobustScaler heavy-tail choice made downstream was latent-critical but only surfaced in Phase 5 → C13.)* |
 | **Feeds thesis** | §4 (Data) · the 2,374:1 imbalance → SMOTETomek + macro-F1/MCC metric choice (Phase 3–4) · Benign forms a separable cluster → AE Layer-2 rationale (Phase 5) · Cohen's d vs SHAP zero-overlap → §8 four-way comparison |
@@ -15,7 +15,7 @@
 ## 1. What we did
 
 - Loaded all **72 CSV files** of the WiFi+MQTT subset (raw 7,160,831 train / 1,614,182 test rows) into a single typed DataFrame and ran a per-split quality report (missing %, near-constant columns, duplicate count).
-- Produced the **first publicly-disclosed duplicate analysis** of CICIoMT2024: dropped bit-exact duplicates, shrinking train 7,160,831 → **4,515,080** and test 1,614,182 → **892,268**.
+- Produced the **first publicly-disclosed duplicate analysis** of CICIoMT2024: dropped duplicates (bit-identical at float32, the typed precision every later phase consumes), shrinking train 7,160,831 → **4,515,080** and test 1,614,182 → **892,268**. (7,160,831 − 4,515,080 = 2,645,751 dropped = the float32 duplicate count independently reproduced in the DR-6 experiment.)
 - Recomputed the **19-class distribution** from the deduplicated data, finding the true rarest class (Recon_Ping_Sweep, 689 train rows) and a maximum imbalance ratio of **2,374:1** — almost 24× the "~100:1" the literature reports.
 - Computed **Cohen's d** for every feature against Benign (univariate separation), and ran **correlation analysis** + **PCA** on a 50,000-row stratified sample of scaled `X_train` to motivate the Reduced-28 feature variant and the benign-only Autoencoder.
 
@@ -23,8 +23,9 @@
 
 | Metric | Value | Source |
 |---|---|---|
-| Train duplicate rate | **36.95 %** | `numbers_map.md` (README §10.1) |
-| Test duplicate rate | **44.72 %** | `numbers_map.md` (README §10.1) |
+| Train duplicate rate | **36.95 %** (bit-identical at float32) | `numbers_map.md` (README §10.1) |
+| Test duplicate rate | **44.72 %** (bit-identical at float32) | `numbers_map.md` (README §10.1) |
+| Float64-exact duplicate counts | 5,119 train / 2,065 test (= the literature's 5,119, reproduced) | `iomt-pcap-experiments/dr6_out/` (DR-6, 2026-07-28) |
 | Deduplicated train rows | 4,515,080 | `numbers_map.md` (README §8) |
 | Deduplicated test rows | 892,268 | `numbers_map.md` (README §11.4) |
 | Max imbalance ratio | **2,374:1** (DDoS_UDP vs Recon_Ping_Sweep) | `numbers_map.md` (README §8.1) |
