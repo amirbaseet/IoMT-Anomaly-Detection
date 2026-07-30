@@ -63,3 +63,4 @@ thesis/lit_review/
 # C1 ablation intermediates (large, regenerable from the scripts in paper/P1_dedup_audit/experiments/)
 eda_output_raw/
 preprocessed_raw/
+results/c1_dedup_ablation/models/
