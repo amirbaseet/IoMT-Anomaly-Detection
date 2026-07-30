@@ -7,7 +7,7 @@
 | | |
 |---|---|
 | **Goal** | Stress-test the Phase 6C headline against a structured senior review and five robustness axes — does `entropy_benign_p95` survive seeds, a continuous threshold grid, distribution-shift, and Layer-2 architecture swaps? |
-| **Headline result** | **9 senior-review fixes** (none changed a number); multi-seed H2-strict **0.799 ± 0.022** with **0/19 eligible cells failing**; continuous sweep finds refined optimum **p93.0** (strict_avg 0.8590, +5.5 pp); SHAP background Kendall τ **0.927**; β-VAE Δ strict **−0.0001** (SHELVE); LSTM-AE c1 Δ strict **+0.0341** (RETAIN AE). |
+| **Headline result** | **9 senior-review fixes** (none changed a number); multi-seed H2-strict **0.799 ± 0.023** with **0/19 eligible cells failing**; continuous sweep finds refined optimum **p93.0** (strict_avg 0.8590, +5.5 pp); SHAP background Kendall τ **0.927**; β-VAE Δ strict **−0.0001** (SHELVE); LSTM-AE c1 Δ strict **+0.0341** (RETAIN AE). |
 | **Key decision** | SHELVE β-VAE and RETAIN the deterministic AE — Layer-2 distributional family is interchangeable; the entropy channel sets the ceiling. |
 | **Critical failure fixed** | No 🔴 — the two project-critical failures were upstream (Phase 5 C13, Phase 6C C8). Path B issues were routine schema/eligibility fixes. |
 | **Feeds thesis** | §9 (Senior Review + Hardening) · C15–C20 (Path B contributions) · defensibility **3.0 → 4.0 → 4.3** (evidence-backed). |
@@ -24,7 +24,7 @@
 | Axis | Result | Source |
 |---|---|---|
 | Senior-review fixes | 9 (under named commits) | `numbers_map.md §10` |
-| Multi-seed H2-strict avg | **0.799 ± 0.022**, range [0.764, 0.827], CV 2.82 % | `numbers_map.md` (Tier 1) |
+| Multi-seed H2-strict avg | **0.799 ± 0.023**, range [0.764, 0.827], CV 2.82 % | `numbers_map.md` (Tier 1) |
 | Cells failing 0.70 strict | **0 / 19 eligible** | `numbers_map.md` (Tier 1) |
 | Operational FPR across seeds | 0.2289 ± 0.0003 (CV 0.13 %) | `numbers_map.md` (Tier 1) |
 | Continuous sweep | 29 points p85–p99; refined optimum **p93.0** strict_avg **0.8590**, FPR 0.2473 (+5.5 pp / +1.8 pp vs p95) | `numbers_map.md` (Tier 1) |
@@ -96,7 +96,7 @@ Executed Tier 1 + Tier 2 outputs from the walkthrough notebook (`thesis_walkthro
 
 ```text
 === Tier 1 Week 1 — Multi-seed ===
-  H2-strict avg across 5 seeds: 0.799 ± 0.022  (range [0.764, 0.827])
+  H2-strict avg across 5 seeds: 0.799 ± 0.023  (range [0.764, 0.827])
   Cells failing strict        : 0/19 eligible
   Operational FPR             : 0.2289 ± 0.0003  (CV 0.13%)
   Tripwire diff (seed=42)     : 0.000e+00
