@@ -334,6 +334,23 @@ true redundancy.
 and diverge thereafter, which is exactly the signature of window-averaged features over near-stationary
 traffic.
 
+**The collapse is monotone until it is a cliff.** Sweeping the comparison precision from 1 to 8 significant
+digits (Figure 1) traces the rate down from **84.83%** of the training split at one digit, through **47.02%** at
+four, to **36.88%** at eight — after which comparing at the CSVs' full printed precision drops it to **0.07%**.
+Two properties of that curve matter. First, float32 lands where it should: the sweep's 7-significant-digit
+point (36.99% train / 44.74% test) reproduces the float32 measurement (36.95% / 44.72%) to within four
+hundredths of a percentage point, confirming from a third code path that float32 carries about seven
+significant digits on this data. Second, the duplicate mass therefore consists of rows that agree through at
+least eight significant digits and diverge only beyond — which is what window-averaged features over
+near-stationary traffic produce, and which no rounding-based deduplication at ordinary precision would miss.
+
+![Figure 1](figures/fig1_precision_collapse_en.png)
+
+**Figure 1.** Duplicate rows as a percentage of each split, measured at increasing comparison precision. The
+final point is the full precision printed in the released CSVs; the dashed segment spans 9–16 significant
+digits, which were not sampled. Shaded band marks where float32 falls.
+<!-- oracle: numbers_map.md §2 "Precision sweep" rows; figures/precision_sweep.json -->
+
 **Deduplication removes more than a third of the benchmark.** Dropping float32 duplicates takes the training
 split from 7,160,831 to **4,515,080** rows and the test split from 1,614,182 to **892,268**. Two thirds of the
 nominal size of the field's reference dataset survives; the remainder is copies.
@@ -419,6 +436,12 @@ count. "Share of train dup mass" is each class's fraction of the 2,645,751 dupli
 <!-- oracle: dr6_out/dr6b_perclass_f32.json — table generated directly from the artifact;
      headline cells also numbers_map.md §2 rows 38-40 -->
 
+![Figure 2](figures/fig2_per_class_structure_en.png)
+
+**Figure 2.** Per-class within-class duplicate rate (upper panel) and cumulative share of the 2,645,751
+duplicate training rows (lower panel), classes ordered by duplicate count. Both panels share one x-axis and one
+percentage scale.
+
 Four observations, in descending order of consequence.
 
 **Six classes carry 99.5% of it.** Six flood classes hold **2,632,779 of 2,645,751** duplicate training rows —
@@ -458,6 +481,11 @@ over 1,614,182 test rows is in fact computed over 892,268 distinct vectors, with
 the six flood classes of §6, which are correspondingly over-weighted in every prevalence-weighted statistic.
 No cross-split check detects M1, because nothing crosses the split.
 
+![Figure 4](figures/fig4_effective_sample_size_en.png)
+
+**Figure 4.** Released test rows against distinct feature vectors, per class, log scale. The gap is the
+redundancy a test metric is computed over.
+
 **M2 — cross-split identity (small).** At float32, **461** distinct feature vectors occur in both the training
 and the test split, carried by approximately **13,533 test rows — 0.84%** of the test split. At float64 the
 same figures are **195** vectors and approximately **357** rows (0.0221%).
@@ -485,6 +513,11 @@ scaled test matrix receives systematically mis-scaled inputs. We made exactly th
 ablation of §8, and it produced a plausible-looking result — an apparent collapse to 63% accuracy — that was
 an artifact of the scaling mismatch and nothing else. We report it because the failure mode is easy to reach
 and hard to notice: it produces numbers that are wrong in the direction that flatters the hypothesis.
+
+![Figure 3](figures/fig3_leakage_axes_en.png)
+
+**Figure 3.** The four leakage axes visible across the corpus and their correction status. Filled cells encode
+an ordinal status, not a measured quantity.
 
 **Four leakage axes across the corpus.** M1–M3 above are mechanisms of *duplicate-row* leakage, which is one
 axis of a broader problem. Taking the corpus as a whole, four axes are visible: (1) duplicate rows — corrected
@@ -655,6 +688,11 @@ adjacent classes rather than a compounding of two imbalance corrections. Publish
 disagree about resampling — one study reports the same negative direction across oversampling, class weighting
 and focal loss [17], while another reports oversampling helping [18] — so this measurement is offered as
 corroboration of the negative results on clean data, and the mechanism account is the part that generalises.
+
+![Figure 5](figures/fig5_smotetomek_delta_en.png)
+
+**Figure 5.** Change in 19-class macro-F1 from applying SMOTETomek, by configuration, on deduplicated data.
+The shaded band is this pipeline's across-seed σ from §8.1; two of the four deltas fall inside it.
 
 **Seed caveat.** These four deltas are single-seed (42), and §8.1 establishes that this pipeline's macro-F1
 carries an across-seed σ of roughly 0.024. The two Random Forest deltas (−0.0114, −0.0171) are smaller than

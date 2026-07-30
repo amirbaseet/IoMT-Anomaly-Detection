@@ -70,6 +70,21 @@ scaler space; cross-space scoring is invalid (see the scaler-shift rows).
 | Seed-42 reproduction gate | all four cells reproduce `run_c1_matrix.py` exactly (drift = none) | `c1_multiseed.json:seed42_reproduction_drift` |
 | Scaler statistics moved by deduplication | **37 of 104 fitted parameter values differ** between the arms (104 = the three scaler groups' parameter slots over 44 features): RobustScaler center 7/21, scale 16/21 (max relative difference **5.67×**); StandardScaler mean 7/7, scale 7/7; MinMax scale/min/max 0/16 each — unchanged | `c1_matrix.json:scaler_shift_raw_vs_dedup` |
 | C1 sweep runtime | 122.9 min (10 trainings: 2 arms × 5 seeds) | `c1_multiseed.json:runtime_min` |
+
+### Precision sweep (figure F1)
+
+Source: `paper/P1_dedup_audit/figures/precision_sweep.json`, produced by
+`paper/P1_dedup_audit/experiments/precision_sweep.py`. Same hashing convention as DR-6. The float64 and
+float32 passes reproduce the anchors below exactly (asserted in-script; run aborts otherwise).
+
+| Claim | Value | Source |
+|---|---|---|
+| Duplicate rate at 1 significant digit | 84.833 % train / 86.453 % test | `precision_sweep.json:points[sig1]` |
+| Duplicate rate at 4 significant digits | 47.020 % train / 48.584 % test | `precision_sweep.json:points[sig4]` |
+| Duplicate rate at 7 significant digits | 36.993 % train / 44.738 % test | `precision_sweep.json:points[sig7]` |
+| Duplicate rate at 8 significant digits | 36.878 % train / 44.663 % test | `precision_sweep.json:points[sig8]` |
+| float32 lands at ≈7 significant digits | float32 36.948 %/44.723 % vs sig7 36.993 %/44.738 % — independent confirmation that float32 ≈ 7 significant digits | `precision_sweep.json` |
+| Sweep anchors reproduce | float64 5,119/2,065 and float32 2,645,751/721,914 re-derived by a third code path | `precision_sweep.log` |
 | DDoS-ICMP within-class duplicate rate (train, float32) | 86.32 % (1,327,218 / 1,537,476) | `iomt-pcap-experiments/dr6_out/dr6b_perclass_f32.json` (DR-6b recomputation, 2026-07-30) |
 | DDoS-ICMP within-class duplicate rate (test, float32) | 94.37 % | `dr6b_perclass_f32.json` |
 | Flood-class (TCP_IP-*) share of train duplicate mass | 99.5 % (2,632,808 / 2,645,751 within-class) | `dr6b_perclass_f32.json` |
