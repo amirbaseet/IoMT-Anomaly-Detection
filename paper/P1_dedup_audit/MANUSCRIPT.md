@@ -299,12 +299,129 @@ resample-order axes remain open.
 
 ---
 
-## 8. Result 5 — measured consequences
+## 8. Result 5 — what the leakage actually costs, and what it does not
 
-*[TO DRAFT — the C1 ablation is complete and oracle-anchored (numbers_map.md §2, C1 block); OUTLINE.md §8.1
-carries the agreed framing: test-side inflation is separable, training-side is not, and the naive
-raw-vs-dedup pairing sits inside seed variance. §§8.2–8.5 (SMOTETomek, entropy criterion, Dadkhah chasm)
-unstarted.]*
+Sections 4–7 establish how much of the dataset is duplicated and where. This section asks the question the
+literature has assumed rather than measured: what does it do to reported performance? The answer is narrower
+than the field's rhetoric — and one part of it is a negative result that invalidates a comparison this paper's
+own authors previously published.
+
+### 8.1 A controlled ablation of duplicate leakage
+
+Published raw-versus-deduplicated comparisons on this dataset are cross-study: a deduplicated result from one
+team is set beside a raw-data result from another, and the difference is attributed to deduplication. Those
+comparisons differ in model, hyperparameters, resampling, feature engineering and metric averaging
+simultaneously, so they cannot isolate the effect. We therefore ran the comparison inside a single pipeline.
+
+**Design.** One classifier configuration (XGBoost, 44 features, no resampling — 200 trees, depth 8, learning
+rate 0.1, `subsample` and `colsample_bytree` 0.8) is trained twice: once on the raw training split and once on
+the deduplicated training split. Each model is then evaluated on both the raw and the deduplicated test split,
+giving a 2 × 2 matrix. Because deduplication shifts the fitted preprocessing statistics (§7, M3), each model
+is scored on test data transformed by **its own** scaler; the arms are not mutually scoreable. The entire
+matrix is repeated over five seeds, and we report mean ± σ.
+<!-- oracle: numbers_map.md §2 C1 block; results/c1_dedup_ablation/c1_multiseed.json -->
+
+| | tested on raw | tested on deduplicated |
+|---|---|---|
+| **trained on raw** | macro-F1 0.8995 ± 0.0106 · acc 0.99516 ± 0.00108 | macro-F1 0.8917 ± 0.0105 · acc 0.99165 ± 0.00193 |
+| **trained on deduplicated** | macro-F1 0.8989 ± 0.0168 · acc 0.99484 ± 0.00113 | macro-F1 0.8909 ± 0.0168 · acc 0.99082 ± 0.00205 |
+
+Each contrast varies exactly one factor:
+
+| Contrast | macro-F1 | Separable from seed variance? |
+|---|---|---|
+| Test set raw vs deduplicated, raw-trained | **+0.00784 ± 0.00077** | **yes** — same sign in all 5 seeds |
+| Test set raw vs deduplicated, dedup-trained | **+0.00798 ± 0.00025** | **yes** — same sign in all 5 seeds |
+| Training set raw vs deduplicated, on raw test | −0.00064 ± 0.02468 | no — sign flips across seeds |
+| Training set raw vs deduplicated, on dedup test | −0.00078 ± 0.02438 | no — sign flips across seeds |
+| Raw everywhere vs deduplicated everywhere | +0.00863 ± 0.02468 | no |
+
+**Finding 1 — a duplicated test set inflates reported metrics, by a small and stable amount.** Holding
+training fixed, evaluating on the raw rather than the deduplicated test split raises macro-F1 by
+**+0.0078 to +0.0080** and accuracy by **+0.35 to +0.40 percentage points**. The effect has the same sign in
+all five seeds and under both training conditions — eight independent measurements spanning +0.0076 to
++0.0085, with σ as low as 0.00025. This is the measurable cost of duplicate leakage on this benchmark, and it
+is a test-set property.
+
+**Finding 2 — duplicated training data has no separable effect.** Holding the test set fixed, training on raw
+rather than deduplicated data changes macro-F1 by **−0.0006 ± 0.0247**: a mean indistinguishable from zero
+beside a standard deviation roughly forty times larger, with the sign reversing between seeds (+0.032 at seed
+42, −0.030 at seed 1). We report this as a negative result rather than a null to be explained away.
+The mechanism is unsurprising in hindsight: an exact-duplicate row supplies no gradient information a
+boosted-tree ensemble does not already have from its original, so at this scale duplicates re-weight the
+objective rather than teach anything new.
+
+**Finding 3 — the comparison the literature makes lies inside its own noise.** Raw-everywhere versus
+deduplicated-everywhere — the pairing that produces published "deduplication costs *x* points" statements —
+gives **+0.00863 ± 0.02468**, not separable. It moves two factors at once, and the smaller separable
+test-side effect is swamped by the non-separable training-side variance. **We include our own prior work in
+this criticism: a "memorization premium" of 0.53 percentage points, computed by pairing this pipeline's
+deduplicated accuracy against another team's raw-data accuracy, does not survive a controlled test and is
+withdrawn.**
+<!-- oracle: the withdrawn pairing is numbers_map.md §4 'E7 minus Yacoubi-XGB on deduped data' = −0.53 pp -->
+
+**Consequence for like-for-like comparison.** A deduplicated evaluation of this pipeline reports accuracy
+roughly 0.4 points below what the same pipeline would report on the raw test split. Published accuracies on
+raw data are therefore not comparable with deduplicated ones at the precision at which this literature
+declares winners — margins in the corpus run as thin as 0.02 points — but the correction is a test-set
+adjustment of a few tenths of a point, not the multi-point "memorization" the framing implies.
+
+**A note on seed reporting.** Single-seed results on this task are not stable at the precision commonly
+reported. Across five seeds the deduplicated-everywhere cell spans macro-F1 0.8701–0.9076 (mean 0.8909 ±
+0.0168) — a 3.75-point range from seed choice alone, with the variance concentrated in three confusable
+minority classes. Any macro-F1 comparison on this dataset that rests on one run is uninterpretable, our own
+included: the 0.9076 figure this project has published elsewhere is the maximum of those five draws.
+<!-- oracle: c1_multiseed.json per_seed + cells_mean_sd.C1-d; per-class detail c1_per_class_f1.csv -->
+
+### 8.2 A resampling result that survives deduplication
+
+Class imbalance on this dataset (2,374:1 after deduplication) invites synthetic oversampling, and SMOTETomek
+is the corpus's most common choice. On deduplicated data it degrades macro-F1 in **all four**
+classifier × feature-set configurations:
+
+| Configuration | Original | SMOTETomek | Δ macro-F1 |
+|---|---|---|---|
+| Random Forest, 28 features | 0.8469 | 0.8356 | −0.0114 |
+| Random Forest, 44 features | 0.8551 | 0.8380 | −0.0171 |
+| XGBoost, 28 features | 0.8987 | 0.8538 | −0.0449 |
+| XGBoost, 44 features | 0.9076 | 0.8708 | −0.0368 |
+<!-- oracle: numbers_map.md §4 rows E1-E8 and the four SMOTE delta rows; README §12.4 -->
+
+Endpoint macro-F1 values are reported at four decimal places, so a delta recomputed from the two printed
+columns can differ from the tabulated delta by 1 × 10⁻⁴ (visible in the first row: 0.8469 − 0.8356 = 0.0113
+against a tabulated −0.0114). The tabulated deltas are the canonical values, computed at full precision.
+
+The direction is consistent and the magnitude is largest for the ungated XGBoost arms, which carry no class
+weighting for the synthetic samples to interact with — so the mechanism is boundary blur among already
+adjacent classes rather than a compounding of two imbalance corrections. Published results on this dataset
+disagree about resampling; this measurement is offered as corroboration of the negative ones, on clean data.
+
+### 8.3 A published effect that does not reproduce
+
+One study in the corpus attributes an accuracy improvement from 0.735 to 0.998 — roughly 26 percentage
+points — to switching a Random Forest's split criterion from Gini impurity to entropy. Re-tested under
+controlled conditions on deduplicated data, that switch is worth **+0.47 percentage points** of macro-F1
+(0.8551 with entropy versus 0.8504 with Gini), which is inside run-to-run variation and operationally
+irrelevant. A ~26-point effect attributed to a split criterion is far better explained by the un-deduplicated
+data and pipeline differences that accompany it.
+<!-- oracle: numbers_map.md §4 E5 (0.8551) and E5G (0.8504); gap doc §2.4 / DR-7 for the source claim -->
+
+### 8.4 The dataset paper's own baseline as a control
+
+The clearest evidence that this literature's headline numbers require explanation comes from the dataset paper
+itself: its untuned 19-class baseline scores **0.733** accuracy, while downstream studies on the same task
+family report 0.96–0.999. Better models account for part of that gap. The measurements above show that
+duplicate leakage accounts for a few tenths of a point of it — real, but an order of magnitude smaller than
+the chasm, which therefore remains substantially unexplained and is a standing question for the field rather
+than a settled one.
+<!-- oracle: Research_Gap_Report_v1.0.md §1.2 and Appendix A row 1 -->
+
+### 8.5 Relation to novelty detection
+
+Duplicate leakage also bears on zero-day and novelty evaluation on this dataset, where held-out attack types
+are scored against a model trained on the remainder; a companion paper treats that setting, and we note only
+that the duplicate mass of §6 sits almost entirely in the volumetric flood classes that such protocols most
+often hold out.
 
 ## 9. A reporting protocol for CICIoMT2024
 
