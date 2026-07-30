@@ -168,7 +168,10 @@ Closure tally: **4 closed / 1 reframed / 2 open by design** — matches task-spe
 | AE p95 threshold | 0.37264 | `thresholds.json` |
 | AE p99 threshold | 1.20253 | `thresholds.json` |
 | AE val FPR at p90 | 10.20 % | `thresholds.json:evaluation_on_val[p90].fpr` |
+| AE val FPR at p95 | 5.19 % | `thresholds.json:evaluation_on_val[p95].fpr` |
+| AE val recall at p95 | 98.33 % | `thresholds.json:evaluation_on_val[p95].recall` |
 | AE val FPR at p99 | 1.12 % | `thresholds.json` |
+| AE val recall at p99 | 84.25 % | `thresholds.json:evaluation_on_val[p99].recall` |
 | AE val recall at p90 | 98.62 % | `thresholds.json` |
 | Pre-fix AE val loss | 101,414 | README §13.6, PJ Phase 5 |
 | Pre-fix AE test AUC | 0.9728 | README §13.6 |
