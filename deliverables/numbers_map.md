@@ -68,7 +68,7 @@ scaler space; cross-space scoring is invalid (see the scaler-shift rows).
 | Naive raw-everywhere vs dedup-everywhere pairing (the comparison the literature makes) | macro-F1 +0.00863 ± 0.02468, accuracy +0.43 pp ± 0.27 — **not separable** (moves two factors at once) | `c1_multiseed.json:contrasts_mean_sd.naive_literature_pairing` |
 | Seed-42 draw vs the 5-seed mean (C1-d) | published E7 macro-F1 0.9076 is the **maximum** of the 5 draws, ≈1 σ above the mean 0.8909 | `c1_multiseed.json:per_seed` + `cells_mean_sd.C1-d` |
 | Seed-42 reproduction gate | all four cells reproduce `run_c1_matrix.py` exactly (drift = none) | `c1_multiseed.json:seed42_reproduction_drift` |
-| Scaler statistics moved by deduplication | **37 of 44 fitted parameters differ** between the arms: RobustScaler center 7/21, scale 16/21 (max relative difference **5.67×**); StandardScaler mean 7/7, scale 7/7; MinMax 0/16 unchanged | `c1_matrix.json:scaler_shift_raw_vs_dedup` |
+| Scaler statistics moved by deduplication | **37 of 104 fitted parameter values differ** between the arms (104 = the three scaler groups' parameter slots over 44 features): RobustScaler center 7/21, scale 16/21 (max relative difference **5.67×**); StandardScaler mean 7/7, scale 7/7; MinMax scale/min/max 0/16 each — unchanged | `c1_matrix.json:scaler_shift_raw_vs_dedup` |
 | C1 sweep runtime | 122.9 min (10 trainings: 2 arms × 5 seeds) | `c1_multiseed.json:runtime_min` |
 | DDoS-ICMP within-class duplicate rate (train, float32) | 86.32 % (1,327,218 / 1,537,476) | `iomt-pcap-experiments/dr6_out/dr6b_perclass_f32.json` (DR-6b recomputation, 2026-07-30) |
 | DDoS-ICMP within-class duplicate rate (test, float32) | 94.37 % | `dr6b_perclass_f32.json` |

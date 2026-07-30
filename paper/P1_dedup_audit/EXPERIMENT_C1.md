@@ -84,7 +84,7 @@ leakage costs metrics on the **test** side (+0.35–0.40 pp accuracy, +0.78–0.
 **no separable training-side effect**. The "memorization premium" framing — including this project's own
 0.53 pp figure — is retired: the raw-vs-dedup pairing is inside single-configuration seed variance.
 
-Side result: 37 of 44 fitted scaler parameters differ between the arms (RobustScaler scale up to 5.67×),
+Side result: 37 of 104 fitted scaler parameter values differ between the arms (RobustScaler scale up to 5.67×),
 so deduplication changes the feature space itself, not merely the row count.
 
 Design defects found and fixed during execution (all in the experiment code, not the pipeline): cross-space

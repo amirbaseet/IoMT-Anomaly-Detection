@@ -161,8 +161,8 @@ are now rows in `numbers_map.md` §2. No `[NO-ROW]` blocker remains.
     **retired**, not softened.
   - Consequence for INV-05: the ~0.5–1.4 pp gap between this thesis's headline numbers and published ones is
     consistent with **test-side inflation alone** (+0.35–0.40 pp accuracy), with no training-side component.
-  - **Also measured: deduplication moves the fitted preprocessing statistics.** 37 of 44 scaler parameters
-    differ between arms (RobustScaler scale up to **5.67×**; MinMax unchanged). Leakage is not only about rows
+  - **Also measured: deduplication moves the fitted preprocessing statistics.** 37 of 104 fitted scaler parameter
+    values differ between arms (RobustScaler scale up to **5.67×**; MinMax unchanged). Leakage is not only about rows
     seen twice — it distorts every statistic fitted on the training set, which is why cross-space scoring is
     invalid and why "dedup or not" changes the feature space, not just the row count.
   - **Honesty note the manuscript must carry:** the published E7 macro-F1 (0.9076) is the **maximum** of the
