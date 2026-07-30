@@ -58,7 +58,7 @@ Benchmark datasets decide what a field believes. When one dataset becomes the co
 area, its defects propagate into every result computed on it, and the defects that propagate furthest are the
 ones nobody measures because everybody assumes somebody else did.
 
-CICIoMT2024, released by the Canadian Institute for Cybersecurity in 2024, is that substrate for
+CICIoMT2024, released by the Canadian Institute for Cybersecurity in 2024 [1], is that substrate for
 Internet-of-Medical-Things intrusion detection. It is the largest and only genuinely multi-protocol real-testbed
 IoMT benchmark available — captured from a 40-device testbed (25 physical, 15 simulated) across Wi-Fi, MQTT
 and Bluetooth, with **8,775,013** flow records in the Wi-Fi and MQTT subset that this paper and effectively
@@ -68,7 +68,7 @@ intrusion detection within two years of release. Reported performance on it is u
 detection is saturated above 99%, and 19-class accuracies of 0.96–0.999 are routine.
 
 Against that consensus stands an uncomfortable control, supplied by the dataset's own authors: their untuned
-19-class baseline scores **0.733**. The gap between 0.733 and 0.999 on the same task family is large enough to
+19-class baseline scores **0.733** [1]. The gap between 0.733 and 0.999 on the same task family is large enough to
 demand an explanation, and better modelling is only part of one.
 
 This paper measures a specific contributor that none of the 31 studies we verified against full text
@@ -109,10 +109,10 @@ is cheap.
 That duplicated records inflate measured performance is not a new observation in machine learning generally.
 Leakage has been characterised as a principal driver of the reproducibility problem in machine-learning-based
 science, with a taxonomy separating contamination of the train/test boundary from illegitimate features and
-from sampling artifacts. Security-specific treatments have catalogued the same failure modes as recurring
-pitfalls in the design and evaluation of learning-based security systems, and duplicate-driven inflation has
-been documented concretely in adjacent domains — near-duplicate images across the splits of standard vision
-benchmarks, and train/test overlap in Android malware corpora.
+from sampling artifacts [19]. Security-specific treatments have catalogued the same failure modes as recurring
+pitfalls in the design and evaluation of learning-based security systems [20], and duplicate-driven inflation
+has been documented concretely in adjacent domains — near-duplicate images across the splits of standard vision
+benchmarks [21], and train/test overlap in Android malware corpora [22].
 <!-- CITATIONS TO ADD (identified 2026-07-30, each verified to exist by search; full bibliographic
      capture still owed): Kapoor & Narayanan, Patterns 2023 (leakage taxonomy / reproducibility crisis);
      Arp et al., USENIX Security 2022 (Dos and Don'ts of ML in Computer Security); a CIFAR
@@ -129,16 +129,16 @@ against full text (two are paywalled at abstract level and are excluded from eve
 31 touch deduplication in some form. Of those nine:
 
 - **three** report a single aggregate count — 5,119 rows — as one figure for their whole working set, with no
-  per-split rate; two of the three do describe the scope they worked on, which is what makes the reconciliation
-  of §5 possible;
-- **one** reports a ~55% row reduction that conflates deduplication with removal of missing values;
-- **three** describe deduplication as a pipeline step without quantifying it at all;
+  per-split rate [2,3,4]; two of the three do describe the scope they worked on, which is what makes the
+  reconciliation of §5 possible;
+- **one** reports a ~55% row reduction that conflates deduplication with removal of missing values [6];
+- **three** describe deduplication as a pipeline step without quantifying it at all [8,9,10];
 - **one** deduplicates both splits, reporting pre- and post-counts from which a drop can be inferred but no
-  duplicate rate;
-- **one** performs a cross-set hash check, but after undersampling, so its scope is not the released data.
+  duplicate rate [7];
+- **one** performs a cross-set hash check, but after undersampling, so its scope is not the released data [11].
 
-A tenth study deduplicates a *different* dataset used alongside CICIoMT2024 and not CICIoMT2024 itself; it is
-excluded from the nine.
+A tenth study deduplicates a *different* dataset used alongside CICIoMT2024 and not CICIoMT2024 itself [12]; it
+is excluded from the nine.
 
 **No study in the verified set reports a per-split duplicate rate, and none analyses the effect of duplication
 on its own reported metrics.** This is the gap the present paper fills.
@@ -169,7 +169,7 @@ is falsifiable by counter-example — which is the strongest form available to a
 
 ### 2.3 The one prior methodological critique of this dataset
 
-One study is a direct methodological predecessor and must be positioned precisely. Doménech et al. (2025), in
+One study is a direct methodological predecessor and must be positioned precisely. Doménech et al. [5], in
 this journal, train on a general-IoT benchmark and test on CICIoMT2024 to demonstrate a 66.87% F1 transfer
 drop, then critique four CICIoMT2024 design choices — inconsistent packet windowing, the absence of a proper
 train/validation/test split, temporal correlation between records, and class imbalance — and propose
@@ -185,9 +185,11 @@ performance; we make that claim over the verified set, with the completeness cav
 
 ### 2.4 Why substrate fragmentation makes this audit necessary
 
-The corpus does not share one substrate. Across studies, feature counts on the released schema span 5 to 46,
-with one 2026 study re-extracting 78 of 85 features; row counts span roughly 16,000 to 8.78 million; at least
-eight distinct label-space sizes coexist under one dataset name. A duplicate rate is therefore only meaningful
+The corpus does not share one substrate. Across studies, feature counts on the released schema span 5 to 46 —
+one study reports near-optimal binary detection from 3–4 features [24] — with one 2026 study re-extracting 78 of
+85 features from the raw captures [14]; row counts span roughly 16,000 to 8.78 million; at least eight distinct
+label-space sizes coexist under one dataset name, and one 2026 abstract describes the dataset in terms that
+conflict with the canonical release on every element [23]. A duplicate rate is therefore only meaningful
 relative to a stated scope — which is precisely the parameter the 5,119 cluster omits (§5), and one of the five
 the protocol of §9 requires.
 <!-- oracle: Research_Gap_Report_v1.0.md headline finding 2 / G9 -->
@@ -341,8 +343,8 @@ nominal size of the field's reference dataset survives; the remainder is copies.
 
 ## 5. Result 2 — the literature's "5,119 duplicates" is correct, and not comparable
 
-Three published studies using CICIoMT2024 report removing exactly **5,119** duplicate rows. Set against §4's
-float32 measurement this looks like a 500-fold contradiction in the literature. It is not a contradiction, and
+Three published studies using CICIoMT2024 report removing exactly **5,119** duplicate rows [2,3,4]. Set
+against §4's float32 measurement this looks like a 500-fold contradiction in the literature. It is not a contradiction, and
 the resolution is this paper's thesis in miniature.
 
 **The reconciliation.** At float64 the released training directory contains 7,155,712 distinct feature
@@ -351,8 +353,8 @@ the training directory. The published figure is the float64-exact duplicate coun
 reproduced here to the row.
 <!-- oracle: dr6_panel.json REP45/train; numbers_map.md §2 float64 rows -->
 
-**Scope, at two scales.** Two of the three studies describe operating on the training directory, and for that
-scope 5,119 is right. The third reports a working set of **4,971,919** rows, and that figure reconstructs
+**Scope, at two scales.** Two of the three studies [2,4] describe operating on the training directory, and for
+that scope 5,119 is right. The third [3] reports a working set of **4,971,919** rows, and that figure reconstructs
 exactly: the training split's TCP/IP-DDoS-plus-Benign subset holds 4,972,591 rows and contains **672**
 float64-exact duplicates, and 4,972,591 − 672 = **4,971,919**. Its scope is therefore recoverable and its
 deduplication was performed — but that subset's true duplicate count is 672, not the 5,119 the study quotes.
@@ -487,8 +489,8 @@ and hard to notice: it produces numbers that are wrong in the direction that fla
 **Four leakage axes across the corpus.** M1–M3 above are mechanisms of *duplicate-row* leakage, which is one
 axis of a broader problem. Taking the corpus as a whole, four axes are visible: (1) duplicate rows — corrected
 exactly by this work; (2) device-level overlap between splits — corrected approximately by one study, using
-predicted device labels; (3) destruction of the official file-level split by merge-and-re-split — two 2026
-studies apply partial correctives (session-disjoint and timestamp-based splits), both unquantified; and
+predicted device labels [11]; (3) destruction of the official file-level split by merge-and-re-split — two 2026
+studies apply partial correctives, session-disjoint [15] and timestamp-based [16] splits, both unquantified; and
 (4) resampling applied before splitting — uncorrected corpus-wide. This work corrects axis 1 and, by using the
 released split, is not exposed to axis 3, but it corrects neither axis 3 nor axis 4 for the field.
 <!-- oracle: Research_Gap_Report_v1.0.md §3 four-axes block, G11 -->
@@ -519,7 +521,7 @@ duplication in §§4–6 is measured over all 45 released columns, so the ablati
 of the same rows. Each model is then evaluated on both the raw and the deduplicated test split, giving a
 2 × 2 matrix. Because deduplication shifts the fitted preprocessing statistics (§7, M3), each model is scored
 on test data transformed by **its own** scaler; the arms are not mutually scoreable. The matrix is repeated
-over the five seeds [1, 7, 42, 100, 1729] and we report mean ± σ.
+over the five seeds {1, 7, 42, 100, 1729} and we report mean ± σ.
 <!-- oracle: c1_matrix.json:cells n_train_rows 5728664 / 3612064; numbers_map.md §2 rows 47-48
      (3,612,064 train + 903,016 val = 4,515,080); FEATURES_FULL drops Drate (numbers_map.md §2 row 42) -->
 <!-- oracle: numbers_map.md §2 C1 block; results/c1_dedup_ablation/c1_multiseed.json -->
@@ -650,7 +652,9 @@ against a tabulated −0.0114). The tabulated deltas are the canonical values, c
 The direction is consistent and the magnitude is largest for the ungated XGBoost arms, which carry no class
 weighting for the synthetic samples to interact with — so the mechanism is boundary blur among already
 adjacent classes rather than a compounding of two imbalance corrections. Published results on this dataset
-disagree about resampling; this measurement is offered as corroboration of the negative ones, on clean data.
+disagree about resampling — one study reports the same negative direction across oversampling, class weighting
+and focal loss [17], while another reports oversampling helping [18] — so this measurement is offered as
+corroboration of the negative results on clean data, and the mechanism account is the part that generalises.
 
 **Seed caveat.** These four deltas are single-seed (42), and §8.1 establishes that this pipeline's macro-F1
 carries an across-seed σ of roughly 0.024. The two Random Forest deltas (−0.0114, −0.0171) are smaller than
@@ -661,7 +665,7 @@ obvious extension.
 
 ### 8.3 A published effect that does not reproduce
 
-One study in the corpus attributes an accuracy improvement from 0.735 to 0.998 — roughly 26 percentage
+One study in the corpus [13] attributes an accuracy improvement from 0.735 to 0.998 — roughly 26 percentage
 points — to switching a Random Forest's split criterion from Gini impurity to entropy. Re-tested under
 controlled conditions on deduplicated data, that switch is worth **+0.47 percentage points** of macro-F1
 (0.8551 with entropy versus 0.8504 with Gini) at a single seed — an eighth of the across-seed σ established in
@@ -673,7 +677,7 @@ data and pipeline differences that accompany it.
 ### 8.4 The dataset paper's own baseline as a control
 
 The clearest evidence that this literature's headline numbers require explanation comes from the dataset paper
-itself: its untuned 19-class baseline scores **0.733** accuracy, while downstream studies on the same task
+itself [1]: its untuned 19-class baseline scores **0.733** accuracy, while downstream studies on the same task
 family report 0.96–0.999. Better models account for part of that gap. The measurements above show that
 duplicate leakage accounts for a few tenths of a point of it — real, but an order of magnitude smaller than
 the chasm, which therefore remains substantially unexplained and is a standing question for the field rather
@@ -826,5 +830,106 @@ code, all result artifacts, and a verifier that re-derives every number in this 
 
 ## References
 
-*[TO COMPILE — 45–60 targeted. Sources: Literature_Review_Chapter2_v6.6.md §2.6 (refs 1–47, clean) and
-Research_Gap_Report_v1.0.md Appendix A, plus the four external leakage citations owed in §2.1.]*
+<!-- STYLE: numbered/bracketed (Elsevier "numbered" style). The journal's required style is
+     GfA-UNVERIFIED (ScienceDirect 403) — confirm before submission; Elsevier applies the journal
+     style at proof stage, so content completeness matters more than format here.
+     Entries 1-18, 23-24 are transcribed from Literature_Review_Chapter2_v6.6.md §2.6, whose
+     bibliographic fields were CrossRef-verified during corpus construction.
+     Entries 19-22 were verified by direct source fetch on 2026-07-30 (see per-entry notes). -->
+
+[1] Dadkhah, S., Neto, E.C.P., Ferreira, R., Molokwu, R.C., Sadeghi, S. & Ghorbani, A.A. (2024). CICIoMT2024: A
+benchmark dataset for multi-protocol security assessment in IoMT. *Internet of Things*, 28, 101351.
+doi:10.1016/j.iot.2024.101351.
+
+[2] Riyadi, W., Kurniabudi, Jasmir, Novianto, Y., Kisbianty, D. & Sika, X. (2025). A hybrid IG-PCA and machine
+learning approach for accurate intrusion detection in IoMT with imbalanced data. *Journal of Information and
+Organizational Sciences*, 49(2), 345–359. doi:10.31341/jios.49.2.11.
+
+[3] Akkal, M., Cherbal, S., Kharoubi, K., Annane, B., Gawanmeh, A. & Lakhlef, H. (2024). An intrusion detection
+system for detecting DDoS attacks in blockchain-enabled IoMT networks. In *ICSPIS 2024*. IEEE.
+doi:10.1109/ICSPIS63676.2024.10812635.
+
+[4] Kharoubi, K., Cherbal, S. & Akkal, M. (2025). Enhanced IoMT security: evaluating machine learning and deep
+learning models with the CICIoMT2024 dataset. IEEE conference publication.
+
+[5] Doménech, J., León, O., Siddiqui, M.S. & Pegueroles, J. (2025). Evaluating and enhancing intrusion detection
+systems in IoMT: the importance of domain-specific datasets. *Internet of Things*.
+doi:10.1016/j.iot.2025.101631.
+
+[6] Naeem, H. et al. (2024). Augmenting IoMT security: deep ensemble integration and methodological fusion.
+*Computer Modeling in Engineering & Sciences*, 141(3).
+
+[7] Jaiswal, R., Andersen, P.-A., Cenkeramaddi, L.R., Jiao, L. & Granmo, O.-C. (2026). A Tsetlin
+machine-driven intrusion detection system for next-generation IoMT security. arXiv:2604.03205.
+
+[8] Saeed et al. (2025). A novel adaptive hybrid intrusion detection system with lightweight optimization for
+enhanced security in IoMT. *Scientific Reports*. doi:10.1038/s41598-025-31897-z.
+
+[9] Alsharaiah, M.A. et al. (2025). An explainable AI-driven transformer model for spoofing attack detection in
+IoMT networks. *Discover Applied Sciences*. doi:10.1007/s42452-025-07071-5.
+
+[10] Büken, A.B. (2025). *Anomaly detection in Internet of Medical Things using deep learning* [M.Sc. thesis].
+Sakarya University, Graduate School of Natural and Applied Sciences.
+
+[11] Abo-Haat, M. & Zuhair, H. (2026). Advanced multi-protocols framework for cyber attacks detection in IoMT.
+*International Journal of Intelligent Engineering & Systems*, 19(3), 338–352. doi:10.22266/ijies2026.0331.21.
+
+[12] Lipsa, S., Dash, R.K. & Ivković, N. (2025). An interpretable dimensional reduction technique with an
+explainable model for detecting attacks in Internet of Medical Things devices. *Scientific Reports*, 15, 8718.
+doi:10.1038/s41598-025-93404-8.
+
+[13] Yacoubi, M., Moussaoui, O. & Drocourt, C. (2025). Explainable AI-driven feature selection for improved
+intrusion detection systems in the Internet of Medical Things. In *AIAI 2025*, IFIP AICT vol. 757. Springer.
+doi:10.1007/978-3-031-96231-8_26.
+
+[14] Mahbub, M., Riasat, M.T., Hamid, T., Sutradhar, S.C. & Khan, M.S.A. (2026). A minimalistic yet effective
+domain adaptation strategy for IoMT network intrusion detection. *Discover Internet of Things*, 6, 28.
+doi:10.1007/s43926-026-00288-9.
+
+[15] Jodayree, M., Kavoosi Ghafi, A., Amiri, S. & Shaykholeslami, P. (2026). Explainable zero-day attack
+detection in IoMT using transformer-based time-series modeling. *Scientific Reports*, 16, 23252.
+doi:10.1038/s41598-026-50813-7.
+
+[16] Palaniappan, S. & Sengan, S. (2026). Hybrid feature selection for IoMT based intrusion detection system for
+integrating mutual information filtering with deep learning based accelerated metaheuristic optimization.
+*Scientific Reports*, 16, 16120. doi:10.1038/s41598-026-47264-5.
+
+[17] Akar, G., Sahmoud, S., Onat, M., Cavusoglu, Ü. & Malondo, E. (2025). L2D2: a novel LSTM model for
+multi-class intrusion detection systems in the era of IoMT. *IEEE Access*, 13.
+doi:10.1109/ACCESS.2025.3526883.
+
+[18] Gueriani et al. (2026). SE-enhanced ViT and BiLSTM-based intrusion detection for secure IIoT and IoMT
+environments. arXiv:2604.06254.
+
+[19] Kapoor, S. & Narayanan, A. (2023). Leakage and the reproducibility crisis in machine-learning-based
+science. *Patterns*, 4(9), 100804. doi:10.1016/j.patter.2023.100804. Preprint: arXiv:2207.07048.
+<!-- VERIFIED 2026-07-30: title/authors confirmed by fetching arXiv:2207.07048; journal (Patterns, 2023)
+     confirmed by search result cell.com/patterns/fulltext/S2666-3899(23)00159-9. The volume/issue/article
+     number and journal DOI are NOT fetch-verified (cell.com returns 403) — confirm before submission. -->
+
+[20] Arp, D., Quiring, E., Pendlebury, F., Warnecke, A., Pierazzi, F., Wressnegger, C., Cavallaro, L. & Rieck,
+K. (2022). Dos and don'ts of machine learning in computer security. In *31st USENIX Security Symposium*.
+Preprint: arXiv:2010.09470.
+<!-- VERIFIED 2026-07-30 by fetching arXiv:2010.09470 (title, all eight authors, "to appear at USENIX
+     Security Symposium 2022"). Page range NOT verified (usenix.org returns 403) — add before submission. -->
+
+[21] Barz, B. & Denzler, J. (2020). Do we train on test data? Purging CIFAR of near-duplicates. *Journal of
+Imaging*, 6(6), 41. doi:10.3390/jimaging6060041.
+<!-- VERIFIED 2026-07-30 by fetching arXiv:1902.00423: title, authors, journal, volume, article number, DOI. -->
+
+[22] Liu, G., Caragea, D., Ou, X. & Roy, S. (2024). The impact of train-test leakage on machine learning-based
+Android malware detection. arXiv:2410.19364.
+<!-- VERIFIED 2026-07-30 by fetching arXiv:2410.19364: title, all four authors, 2024, preprint (no venue). -->
+
+[23] Al-Hasani, A.R.T., Broumandnia, A. & Haj Seyyed Javadi, H. (2026). Enhancing IoMT edge security through
+federated small language models and knowledge-defined networks. *The Journal of Supercomputing*, 82, 528.
+doi:10.1007/s11227-026-08661-9. *(Paywalled; cited for its abstract-stated dataset description only.)*
+
+[24] Rehman et al. (2025). Comprehensive feature selection for machine learning-based intrusion detection in
+healthcare IoMT networks. In *ICISSP 2025*, SciTePress, pp. 248–259. doi:10.5220/0013313600003899.
+
+<!-- REFERENCE COUNT: 24. The brief targets 45-60. A measurement paper of this scope does not need the
+     thesis's full 47-entry roster, but §2.1 (external leakage precedent) is the section that would most
+     benefit from expansion, and §2.4's fragmentation claims currently cite three representative endpoints
+     where the underlying roster supports more. Decide before submission whether to broaden §2.1 or to
+     accept a leaner list and state the corpus roster as released material instead. -->
