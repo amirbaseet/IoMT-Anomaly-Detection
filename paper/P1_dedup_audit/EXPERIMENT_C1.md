@@ -55,3 +55,38 @@ one extra training run and separates the two mechanisms cleanly:
   volume. **This needs a go-ahead before anything is written.**
 - **Not a risk:** no existing artifact is overwritten. Every output path is new (`eda_output_raw/`,
   `preprocessed_raw/`, `results/c1_dedup_ablation/`); the frozen pipeline files are imported, never edited.
+
+---
+
+## RESULTS (2026-07-30) — status: COMPLETE
+
+5 seeds [1, 7, 42, 100, 1729], 10 trainings, 122.9 min. Seed 42 reproduced `run_c1_matrix.py` exactly
+(drift = none). Oracle rows live in `deliverables/numbers_map.md` §2; artifacts in
+`results/c1_dedup_ablation/`.
+
+| cell | trained | tested | macro-F1 (mean ± σ) | accuracy (mean ± σ) |
+|---|---|---|---|---|
+| C1-a | raw | raw | 0.8995 ± 0.0106 | 0.995158 ± 0.001077 |
+| C1-b | raw | dedup | 0.8917 ± 0.0105 | 0.991652 ± 0.001928 |
+| C1-c | dedup | raw | 0.8989 ± 0.0168 | 0.994840 ± 0.001128 |
+| C1-d | dedup | dedup | 0.8909 ± 0.0168 | 0.990819 ± 0.002054 |
+
+| contrast | macro-F1 | separable? |
+|---|---|---|
+| test-set effect, raw-trained | +0.00784 ± 0.00077 | **YES** — sign-consistent over 5 seeds |
+| test-set effect, dedup-trained | +0.00798 ± 0.00025 | **YES** |
+| training-set effect, on raw test | −0.00064 ± 0.02468 | no — sign flips between seeds |
+| training-set effect, on dedup test | −0.00078 ± 0.02438 | no |
+| naive raw-vs-dedup pairing | +0.00863 ± 0.02468 | no |
+
+**Verdict.** The amendment's purpose is served, and the answer is not the one the brief anticipated. Duplicate
+leakage costs metrics on the **test** side (+0.35–0.40 pp accuracy, +0.78–0.80 pp macro-F1, tight σ) and has
+**no separable training-side effect**. The "memorization premium" framing — including this project's own
+0.53 pp figure — is retired: the raw-vs-dedup pairing is inside single-configuration seed variance.
+
+Side result: 37 of 44 fitted scaler parameters differ between the arms (RobustScaler scale up to 5.67×),
+so deduplication changes the feature space itself, not merely the row count.
+
+Design defects found and fixed during execution (all in the experiment code, not the pipeline): cross-space
+scoring, inverted contrast labels, and an invalid σ borrowed from the fusion recall metric. See commit
+`7379ad0`.

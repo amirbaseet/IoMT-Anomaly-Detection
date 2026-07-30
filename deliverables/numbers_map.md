@@ -47,6 +47,29 @@ Format key:
 | Cross-split identity (float64): share of test rows | 0.0221 % (≈357 rows) | `dr6_float32_check.json:f64/test_rows_with_vector_in_train_pct = 0.000221` (fraction, see caveat above) |
 | Duplicate collapse is **entirely intra-class** (float32) | within-class duplicate sums = pooled per-split counts exactly (2,645,751 train / 721,914 test) → 0 cross-class duplicate collisions | computed over all 19 classes in `dr6_out/dr6b_perclass_f32.json` (DR-6b); corroborated at float64 by REP46 (features+label) yielding the same 5,119 as REP45 (`dr6_panel.json`) |
 | Per-class within-class duplicate rates + duplicate-mass shares (19 classes × train/test/full) | see artifact | `dr6_out/dr6b_perclass_f32.json` is the oracle for the full per-class table; the three headline cells are the rows below |
+
+### C1 controlled raw-vs-deduplicated ablation (E7, FULL-44, no resampling; 5 seeds [1,7,42,100,1729])
+
+Source for every row: `results/c1_dedup_ablation/c1_multiseed.json` (per-seed cells + aggregates) and
+`results/c1_dedup_ablation/c1_matrix.json` (seed-42 detail, per-class CSV, scaler shift). Produced by
+`paper/P1_dedup_audit/experiments/run_c1_{matrix,multiseed}.py`. Every cell is scored in its own arm's
+scaler space; cross-space scoring is invalid (see the scaler-shift rows).
+
+| Claim | Value | Source |
+|---|---|---|
+| C1-a — trained raw, tested raw: macro-F1 | 0.8995 ± 0.0106 (range 0.8842–0.9138) | `c1_multiseed.json:cells_mean_sd.C1-a` |
+| C1-b — trained raw, tested dedup: macro-F1 | 0.8917 ± 0.0105 | `c1_multiseed.json:cells_mean_sd.C1-b` |
+| C1-c — trained dedup, tested raw: macro-F1 | 0.8989 ± 0.0168 | `c1_multiseed.json:cells_mean_sd.C1-c` |
+| C1-d — trained dedup, tested dedup: macro-F1 | 0.8909 ± 0.0168 (range 0.8701–0.9076) | `c1_multiseed.json:cells_mean_sd.C1-d` |
+| C1-d accuracy | 0.990819 ± 0.002054 | `c1_multiseed.json:cells_mean_sd.C1-d.accuracy` |
+| **Test-set duplicate inflation, macro-F1** (test set varied, training fixed) | **+0.00784 ± 0.00077** (raw-trained) / **+0.00798 ± 0.00025** (dedup-trained) — sign-consistent across all 5 seeds, separable | `c1_multiseed.json:contrasts_mean_sd` + `separability` |
+| **Test-set duplicate inflation, accuracy** | **+0.35 pp ± 0.09** (raw-trained) / **+0.40 pp ± 0.09** (dedup-trained) — separable | `c1_multiseed.json:contrasts_mean_sd` |
+| **Training-set duplicate effect, macro-F1** (training varied, test fixed) | **−0.00064 ± 0.02468** (raw test) / **−0.00078 ± 0.02438** (dedup test) — sign-INCONSISTENT, **not separable from seed noise** | `c1_multiseed.json:separability` |
+| Naive raw-everywhere vs dedup-everywhere pairing (the comparison the literature makes) | macro-F1 +0.00863 ± 0.02468, accuracy +0.43 pp ± 0.27 — **not separable** (moves two factors at once) | `c1_multiseed.json:contrasts_mean_sd.naive_literature_pairing` |
+| Seed-42 draw vs the 5-seed mean (C1-d) | published E7 macro-F1 0.9076 is the **maximum** of the 5 draws, ≈1 σ above the mean 0.8909 | `c1_multiseed.json:per_seed` + `cells_mean_sd.C1-d` |
+| Seed-42 reproduction gate | all four cells reproduce `run_c1_matrix.py` exactly (drift = none) | `c1_multiseed.json:seed42_reproduction_drift` |
+| Scaler statistics moved by deduplication | **37 of 44 fitted parameters differ** between the arms: RobustScaler center 7/21, scale 16/21 (max relative difference **5.67×**); StandardScaler mean 7/7, scale 7/7; MinMax 0/16 unchanged | `c1_matrix.json:scaler_shift_raw_vs_dedup` |
+| C1 sweep runtime | 122.9 min (10 trainings: 2 arms × 5 seeds) | `c1_multiseed.json:runtime_min` |
 | DDoS-ICMP within-class duplicate rate (train, float32) | 86.32 % (1,327,218 / 1,537,476) | `iomt-pcap-experiments/dr6_out/dr6b_perclass_f32.json` (DR-6b recomputation, 2026-07-30) |
 | DDoS-ICMP within-class duplicate rate (test, float32) | 94.37 % | `dr6b_perclass_f32.json` |
 | Flood-class (TCP_IP-*) share of train duplicate mass | 99.5 % (2,632,808 / 2,645,751 within-class) | `dr6b_perclass_f32.json` |

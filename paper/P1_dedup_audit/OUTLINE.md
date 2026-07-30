@@ -23,13 +23,17 @@ are now rows in `numbers_map.md` §2. No `[NO-ROW]` blocker remains.
    **entirely intra-class**, and it is **not volume-driven** (1.64M-row UDP flood has zero duplicates). (dr6b)
 4. Two *distinct* leakage mechanisms must be separated: **within-split redundancy** (large) and
    **cross-split identity** (small). Conflating them is why the field's dedup discussion is confused. (dr6)
-5. The measured consequences are visible as **negative results**: a published +26pp effect that does not
-   reproduce, a resampling method that degrades macro-F1 in 4/4 configs, and a 0.733→0.999 baseline chasm.
+5. The consequences are **mostly negative results**, measured not inferred: a duplicated *test set* inflates
+   metrics by a small separable amount (+0.35–0.40 pp accuracy, 5 seeds), duplicated *training data* has no
+   separable effect, and the raw-vs-dedup comparison the field makes sits inside its own seed variance —
+   alongside a published +26pp effect that does not reproduce, a resampling method that degrades macro-F1 in
+   4/4 configs, and a 0.733→0.999 baseline chasm.
 6. Therefore: a **reporting protocol** (precision, scope, stage, split, per-class) without which
    cross-paper accuracy comparison on this dataset is uninterpretable.
 
 ★── Paper's one-sentence claim: *duplicate leakage in CICIoMT2024 is a precision-and-scope artifact,
-    it is 500× larger than the literature reports, it is concentrated in six flood classes, and the
+    it is 500× larger than the literature reports, it is concentrated in six flood classes, its
+    measurable cost is test-side metric inflation rather than training-side memorization, and the
     field cannot compare results until it states the five parameters that determine it.* ──★
 
 ---
@@ -138,11 +142,32 @@ are now rows in `numbers_map.md` §2. No `[NO-ROW]` blocker remains.
 - Four leakage axes, two corrected corpus-wide; axes 3–4 open. (GR §3 four-axes block / G11)
 
 ### 8. Result 5 — measured consequences (the negative results)  (~1,300 words)
-- 8.1 **Memorization premium.** Same model family, raw vs deduplicated: **99.80% → 99.27%**, Δ = **−0.53pp**
-  (NM rows 96/98, README §12.7); the gap doc's DR-5 pairing states it as **99.811% → 99.27% ≈ 0.54pp**
-  (Riyadi). ⚠ **Both pairings are cross-paper, not a controlled arm** — the gap doc says so explicitly
-  ("no packet-level control arm exists in either paper"). Provenance must be stated exactly as the gap doc
-  does (brief line 14). → **§9 item C is the paper's single biggest exposure.**
+- 8.1 **What duplicate leakage actually costs — measured, not inferred (C1, 5 seeds).** The controlled 2×2
+  ablation (identical E7 pipeline, raw vs deduplicated data, INV-04 seed set) replaces the cross-paper
+  premium entirely. Three results, in order of strength:
+  - **POSITIVE, separable: a duplicated test set inflates reported metrics.** macro-F1 **+0.00784 ± 0.00077**
+    (raw-trained) and **+0.00798 ± 0.00025** (dedup-trained); accuracy **+0.35 pp ± 0.09** and
+    **+0.40 pp ± 0.09**. Sign-consistent across all five seeds *and* both training arms — eight independent
+    measurements inside +0.0076…+0.0085. This is the paper's measured leakage cost.
+  - **NEGATIVE, not separable: duplicated *training* data has no measurable effect.** macro-F1
+    **−0.00064 ± 0.02468** (raw test) / **−0.00078 ± 0.02438** (dedup test): a near-zero mean with a σ ~40×
+    larger, and the sign flips between seeds (+0.032 at seed 42, −0.030 at seed 1). Gradient-boosted trees on
+    millions of rows are indifferent to exact-duplicate rows — duplicates re-weight patterns already present.
+    State this plainly; it is a genuine negative result, not a failed experiment.
+  - **NEGATIVE, and the sharpest point in the paper: the comparison the literature makes is inside its own
+    noise.** Raw-everywhere vs deduplicated-everywhere gives macro-F1 **+0.00863 ± 0.02468** — not separable.
+    Every published raw-vs-deduplicated accuracy comparison on this dataset, *including this project's own
+    former "0.53 pp memorization premium"*, is within single-configuration seed variance. The premium claim is
+    **retired**, not softened.
+  - Consequence for INV-05: the ~0.5–1.4 pp gap between this thesis's headline numbers and published ones is
+    consistent with **test-side inflation alone** (+0.35–0.40 pp accuracy), with no training-side component.
+  - **Also measured: deduplication moves the fitted preprocessing statistics.** 37 of 44 scaler parameters
+    differ between arms (RobustScaler scale up to **5.67×**; MinMax unchanged). Leakage is not only about rows
+    seen twice — it distorts every statistic fitted on the training set, which is why cross-space scoring is
+    invalid and why "dedup or not" changes the feature space, not just the row count.
+  - **Honesty note the manuscript must carry:** the published E7 macro-F1 (0.9076) is the **maximum** of the
+    five seed draws, ≈1 σ above the 5-seed mean 0.8909 ± 0.0168. P1 reports mean ± σ; the thesis's own
+    single-seed headline should be re-stated the same way (DN-05).
 - 8.2 **Resampling.** SMOTETomek degrades macro-F1 in **4/4** configs: −0.0114 RF/reduced, −0.0171 RF/full,
   −0.0449 XGB/reduced, −0.0368 XGB/full (NM rows 90–93), on deduplicated data. → **F5**, **T6**
   ⚠ NM row 75 says "macro-F1 degrades in **0/4** configs" — contradicted by its own rows 90–93 (all negative)
