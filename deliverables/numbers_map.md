@@ -247,7 +247,7 @@ All 11 ablation rows come from `results/enhanced_fusion/metrics/ablation_table.c
 |---|---|---|
 | Multi-seed seeds | {1, 7, 42, 100, 1729} | README §15B.2 |
 | Tripwire (canonical seed=42) | 0.8035264623662012 | README §15B.2 |
-| H2-strict rescue avg across seeds | 0.799 ± 0.022 | README §15B.3 |
+| H2-strict rescue avg across seeds | 0.799 ± 0.023 | README §15B.3 |
 | H2-strict range | [0.764, 0.827] | README §15B.3 |
 | Coefficient of variation (strict avg) | 2.82 % | README §15B.3 |
 | seed=42 z-score | +0.20 σ (63rd percentile) | README §15B.3 |
