@@ -5,36 +5,35 @@
 > **COMPLETE DRAFT, PRE-SUBMISSION** · target venue: *Internet of Things* (Elsevier) · drafted 2026-07-30,
 > revised the same day after senior review.
 > Governing spec: `.claude/plans/2026-07-30-p1-dedup-paper-brief.md` (FROZEN, incl. Amendment 1) + `OUTLINE.md`.
-> All eleven sections are drafted. Outstanding before submission: in-text citations and the reference list,
-> figures F1–F5, the §2.2 roster triage, and the declarations. Every number carries an oracle reference in an
-> HTML comment; those comments are stripped at submission and must survive `/fact-check` first.
+> All eleven sections are drafted, with 24 references, seven tables and five figures in place. Outstanding
+> before submission: the author list and declarations, the §2.2 roster triage, and the Guide-for-Authors
+> conformance pass. Every number carries an oracle reference in an HTML comment; those comments are stripped
+> at submission and must survive `/fact-check` first.
 
 ## Abstract
 
-CICIoMT2024 has become the reference benchmark for Internet-of-Medical-Things intrusion detection, used by
-more than thirty studies within two years of release, with reported accuracies clustering above 99%. We show
-that a third of the benchmark is duplicated content, that the size of that duplication depends entirely on the
-numeric precision at which rows are compared, and that its measurable effect on reported performance is
-narrower and differently located than the field assumes. Measured over the released artifact, duplicate rows constitute 0.07% of the
-training split at the float64 precision the CSVs are printed in, and **36.95% of the training split and 44.72%
-of the test split at the float32 precision models actually compute in** — a factor of 517 on identical rows.
-Three published studies report removing exactly 5,119 duplicates; we reproduce that figure to the row and show
-it is the float64-exact count of one split, so those reports are correct and mutually incomparable. The
-redundancy is structured rather than diffuse: six volumetric TCP/IP flood classes carry 99.51% of the duplicate
-mass, the single largest class in the training split contains none at all, and the benign class is entirely
-free of it. Separating leakage mechanisms, within-split redundancy dominates while cross-split identity —
-the mechanism a train/test contamination check would find — accounts for only 0.84% of test rows. A controlled
-five-seed ablation on one pipeline shows that evaluating on the duplicated rather than the deduplicated test
-split raises accuracy by 0.35–0.40 percentage points — separable from seed variance, but reflecting a change of
-estimand rather than train-to-test contamination — while duplicated **training** data has no separable effect
-and the raw-versus-deduplicated comparison the literature makes cannot be resolved at five seeds. We therefore
-withdraw two previously published "memorization premium" figures of our own. We conclude with a
-five-parameter reporting protocol — precision, scope, stage, split and granularity — without which accuracy
-comparisons on this dataset are not interpretable, and release a reproduction package containing all analysis
-code and results.
+CICIoMT2024 has become the reference benchmark for Internet-of-Medical-Things intrusion detection, used by more
+than thirty studies within two years of release, with reported accuracies clustering above 99%. We show that a
+third of the benchmark is duplicated content, that the size of that duplication depends entirely on the numeric
+precision at which rows are compared, and that its measurable effect on reported performance is narrower and
+differently located than the field assumes. Duplicate rows are 0.07% of the training split at the float64
+precision the CSVs are printed in, and **36.95% of training rows and 44.72% of test rows at the float32
+precision models compute in** — a factor of 517 on identical rows. Three published studies report removing
+exactly 5,119 duplicates; we reproduce that figure to the row, show it is the float64-exact count of one split,
+and reconstruct a fourth study's working set exactly, so those reports are correct and mutually incomparable.
+The redundancy is structured: six volumetric flood classes carry 99.51% of it, the largest class in the
+training split carries none, and the benign class is free of it entirely. Within-split redundancy dominates,
+while cross-split identity — the only mechanism a contamination check would find — touches 0.84% of test rows.
+A controlled five-seed ablation shows that scoring on the duplicated rather than the deduplicated test split
+raises accuracy by 0.35–0.40 percentage points, reflecting a change of estimand rather than contamination;
+that duplicated training data has no separable effect; and that the raw-versus-deduplicated comparison the
+literature makes cannot be resolved at five seeds. We withdraw two such figures of our own, and propose a
+five-parameter reporting protocol without which accuracy comparisons on this dataset are not interpretable.
+
 <!-- WORD COUNT: 330 (comments stripped, recounted 2026-07-30). Elsevier IoT abstract limit UNVERIFIED
-     (ScienceDirect 403s automated fetch) — 330 words LIKELY EXCEEDS a typical 250-word cap; trim once the
-     GfA is available. Body: 8,639 words, inside the brief's 8-12k target. -->
+     (ScienceDirect 403s automated fetch). Trimmed 330 -> 281 words on 2026-07-30; if the journal caps at 250
+     it needs ~30 more cut, so recheck against the real limit before submission. Body sections 1-11, comments
+     stripped: 8,671 words including table rows (7,789 excluding them) — inside the brief's 8-12k target. -->
 
 ## Highlights
 
@@ -43,9 +42,8 @@ code and results.
 - Six flood classes hold 99.51% of duplicate mass; the largest class holds none
 - A duplicated test split raises accuracy 0.35-0.40 pp; duplicated training does not
 - Raw-vs-deduplicated comparisons on this dataset lie inside seed variance
-<!-- Character counts recomputed 2026-07-30: 80 / 87 / 78 / 83 / 73. Bullet 2 is 87 and needs two characters
-     cut IF the <=85 rule applies. Elsevier convention is 3-5 bullets at <=85 chars, but that rule is
-     UNVERIFIED for this journal (GfA unreachable) — confirm, then trim bullet 2. -->
+<!-- Character counts recomputed 2026-07-30 after revision: 79 / 84 / 77 / 82 / 72 — all within the
+     conventional <=85. That rule is UNVERIFIED for this journal (GfA unreachable); confirm before submission. -->
 
 **Keywords:** intrusion detection; Internet of Medical Things; benchmark datasets; data leakage;
 deduplication; reproducibility; evaluation methodology
@@ -88,8 +86,9 @@ location and consequence are all measurable. Our contributions:
    classes hold 99.51% of the duplicate mass, four `Recon` sub-types show meaningful rates but negligible mass,
    and `Benign`, all five MQTT classes and the single largest flood class contain none. Duplication on this
    dataset is protocol-structural, not volume-driven.
-4. **A three-mechanism decomposition of the leakage** (§7). Within-split redundancy dominates; cross-split
-   identity — the only mechanism a conventional contamination check detects — touches 0.84% of test rows; and
+4. **A three-mechanism decomposition** (§7), separating within-split redundancy from leakage proper.
+   Within-split redundancy dominates; cross-split identity — the only mechanism a conventional contamination
+   check detects, and the only one that is leakage in the strict sense — touches 0.84% of test rows; and
    the duplicate mass additionally distorts every preprocessing statistic fitted on the training split.
 5. **A controlled measurement of the consequence, including two negative results** (§8). In one pipeline over
    five seeds, a duplicated test set inflates accuracy by 0.35–0.40 percentage points; duplicated training data
@@ -113,10 +112,8 @@ from sampling artifacts [19]. Security-specific treatments have catalogued the s
 pitfalls in the design and evaluation of learning-based security systems [20], and duplicate-driven inflation
 has been documented concretely in adjacent domains — near-duplicate images across the splits of standard vision
 benchmarks [21], and train/test overlap in Android malware corpora [22].
-<!-- CITATIONS TO ADD (identified 2026-07-30, each verified to exist by search; full bibliographic
-     capture still owed): Kapoor & Narayanan, Patterns 2023 (leakage taxonomy / reproducibility crisis);
-     Arp et al., USENIX Security 2022 (Dos and Don'ts of ML in Computer Security); a CIFAR
-     near-duplicate study; arXiv 2410.19364 (train-test leakage in Android malware detection). -->
+<!-- All four external references [19]-[22] were added and source-verified on 2026-07-30; per-entry
+     verification notes are in the reference list. -->
 
 What distinguishes the present case is not the phenomenon but its invisibility in a literature that is
 otherwise methodologically attentive. The duplication documented here is large, it is measurable with three
@@ -125,7 +122,8 @@ lines of code, and it sits in the field's single most used benchmark.
 ### 2.2 Deduplication practice in the CICIoMT2024 literature
 
 Our corpus of CICIoMT2024 intrusion-detection studies comprises 33 identified works, 31 of which we verified
-against full text (two are paywalled at abstract level and are excluded from every claim below). Nine of the
+against full text (two are paywalled at abstract level and are excluded from every **absence** claim below, though one is cited
+in §2.4 for its own abstract-stated dataset description). Nine of the
 31 touch deduplication in some form. Of those nine:
 
 - **three** report a single aggregate count — 5,119 rows — as one figure for their whole working set, with no
@@ -153,9 +151,10 @@ reported without its precision cannot be reproduced by a reader, whether or not 
 on a documented systematic search across IEEE Xplore, Springer, ScienceDirect, Nature, arXiv, MDPI and
 regional indices, snapshotted 2026-07-29 and re-swept before submission; the search strategy is released with
 the reproduction package. A re-sweep conducted while this paper was being drafted surfaced at least one further
-study using CICIoMT2024 that our roster had missed (a 2024 conference paper reporting 99% across binary,
-categorical and multiclass tasks, with no deduplication mentioned), which is evidence that the roster is a
-documented lower bound rather than a census. We therefore state the absence claim over the verified set and
+study using CICIoMT2024 that our roster had missed [25] — a 2024 conference paper reporting 99% across binary,
+categorical and multiclass tasks, with no deduplication mentioned — which is evidence that the roster is a
+documented lower bound rather than a census. We cite it explicitly so that the counter-example on which this
+caveat rests is checkable rather than anecdotal. We therefore state the absence claim over the verified set and
 make no completeness claim over the literature as a whole. Every study we did examine is listed, so the claim
 is falsifiable by counter-example — which is the strongest form available to a single-team review.
 <!-- ROSTER TRIAGE OWED before submission: candidates surfaced 2026-07-30 and not yet in the roster —
@@ -330,17 +329,15 @@ low-order digits while describing the same behaviour. Any exact-match rate at an
 true redundancy.
 
 **The collapse is not gradual.** Between the two precisions the count rises by a factor of **517**
-(2,645,751 / 5,119) — consistent with a duplicate mass whose rows agree to roughly seven significant digits
-and diverge thereafter, which is exactly the signature of window-averaged features over near-stationary
-traffic.
+(2,645,751 / 5,119). The sweep below localises where that divergence happens.
 
 **The collapse is monotone until it is a cliff.** Sweeping the comparison precision from 1 to 8 significant
 digits (Figure 1) traces the rate down from **84.83%** of the training split at one digit, through **47.02%** at
 four, to **36.88%** at eight — after which comparing at the CSVs' full printed precision drops it to **0.07%**.
 Two properties of that curve matter. First, float32 lands where it should: the sweep's 7-significant-digit
-point (36.99% train / 44.74% test) reproduces the float32 measurement (36.95% / 44.72%) to within four
-hundredths of a percentage point, confirming from a third code path that float32 carries about seven
-significant digits on this data. Second, the duplicate mass therefore consists of rows that agree through at
+point (36.99% train / 44.74% test) reproduces the float32 measurement (36.95% / 44.72%) to within five
+hundredths of a percentage point, confirming from a fourth independent code path that float32 carries about
+seven significant digits on this data. Second, the duplicate mass therefore consists of rows that agree through at
 least eight significant digits and diverge only beyond — which is what window-averaged features over
 near-stationary traffic produce, and which no rounding-based deduplication at ordinary precision would miss.
 
@@ -438,9 +435,9 @@ count. "Share of train dup mass" is each class's fraction of the 2,645,751 dupli
 
 ![Figure 2](figures/fig2_per_class_structure_en.png)
 
-**Figure 2.** Per-class within-class duplicate rate (upper panel) and cumulative share of the 2,645,751
-duplicate training rows (lower panel), classes ordered by duplicate count. Both panels share one x-axis and one
-percentage scale.
+**Figure 2.** Per-class within-class duplicate rate for the **training split** (upper panel) and the cumulative
+share of its 2,645,751 duplicate rows (lower panel), classes ordered by duplicate count. Both panels share one
+x-axis and one percentage scale. Test-split rates, which run higher in every flood class, are in Table 3.
 
 Four observations, in descending order of consequence.
 
@@ -469,7 +466,13 @@ Class-rarity claims on this dataset are themselves deduplication-dependent.
 
 ---
 
-## 7. Result 4 — three leakage mechanisms, and the field looks for the smallest one
+## 7. Result 4 — three redundancy mechanisms, and the field looks for the smallest one
+
+**A note on terminology.** We use *leakage* in its strict sense — information crossing the train/test boundary —
+and *redundancy* for repetition within a split. Of the three mechanisms below only M2 is leakage under that
+definition; M1 and M3 are redundancy effects, and §8.1 shows that the consequence of M1 is a change of estimand
+rather than contamination. The literature tends to call all of it leakage, which is precisely why the
+mechanisms need separating: the corrective for one does nothing for the others.
 
 "Leakage" in this literature is discussed, where it is discussed at all, as train-to-test contamination. That
 framing does not describe what is present here. Three mechanisms must be separated; the first two differ in
@@ -480,11 +483,6 @@ another row *in the same split*. On the test side this collapses the effective s
 over 1,614,182 test rows is in fact computed over 892,268 distinct vectors, with the surplus concentrated in
 the six flood classes of §6, which are correspondingly over-weighted in every prevalence-weighted statistic.
 No cross-split check detects M1, because nothing crosses the split.
-
-![Figure 4](figures/fig4_effective_sample_size_en.png)
-
-**Figure 4.** Released test rows against distinct feature vectors, per class, log scale. The gap is the
-redundancy a test metric is computed over.
 
 **M2 — cross-split identity (small).** At float32, **461** distinct feature vectors occur in both the training
 and the test split, carried by approximately **13,533 test rows — 0.84%** of the test split. At float64 the
@@ -519,8 +517,13 @@ and hard to notice: it produces numbers that are wrong in the direction that fla
 **Figure 3.** The four leakage axes visible across the corpus and their correction status. Filled cells encode
 an ordinal status, not a measured quantity.
 
-**Four leakage axes across the corpus.** M1–M3 above are mechanisms of *duplicate-row* leakage, which is one
-axis of a broader problem. Taking the corpus as a whole, four axes are visible: (1) duplicate rows — corrected
+![Figure 4](figures/fig4_effective_sample_size_en.png)
+
+**Figure 4.** Released test rows against distinct feature vectors, per class, log scale. The gap is the
+redundancy a test metric is computed over.
+
+**Four leakage axes across the corpus.** M1–M3 above concern duplicate rows specifically; taking *leakage* in
+the strict sense again, the corpus exhibits four axes overall. Taking the corpus as a whole, four axes are visible: (1) duplicate rows — corrected
 exactly by this work; (2) device-level overlap between splits — corrected approximately by one study, using
 predicted device labels [11]; (3) destruction of the official file-level split by merge-and-re-split — two 2026
 studies apply partial correctives, session-disjoint [15] and timestamp-based [16] splits, both unquantified; and
@@ -530,7 +533,7 @@ released split, is not exposed to axis 3, but it corrects neither axis 3 nor axi
 
 ---
 
-## 8. Result 5 — what the leakage actually costs, and what it does not
+## 8. Result 5 — what the redundancy actually costs, and what it does not
 
 Sections 4–7 establish how much of the dataset is duplicated and where. This section asks the question the
 literature has assumed rather than measured: what does it do to reported performance? The answer is narrower
@@ -656,10 +659,9 @@ adjustment of a few tenths of a point, not the multi-point "memorization" the fr
 
 **A note on seed reporting.** Single-seed results on this task are not stable at the precision commonly
 reported. Across five seeds the deduplicated-everywhere cell spans macro-F1 0.8701–0.9076 (mean 0.8909 ±
-0.0168) — a 3.75-point range from seed choice alone. Inspection of the per-class scores at one seed suggests
-the variance is carried by a few small, mutually confusable classes rather than spread across the label space,
-but we did not retain per-class scores at every seed and therefore report that as an observation rather than a
-result. Any macro-F1 comparison on this dataset that rests on one run is uninterpretable, our own included: the 0.9076 figure this project has published elsewhere is the maximum of those five draws.
+0.0168) — a 3.75-point range from seed choice alone. We did not retain per-class scores at every seed, so we
+make no claim about which classes carry that variance; identifying them would need a per-seed per-class record
+that this study did not keep. Any macro-F1 comparison on this dataset that rests on one run is uninterpretable, our own included: the 0.9076 figure this project has published elsewhere is the maximum of those five draws.
 <!-- oracle: c1_multiseed.json per_seed + cells_mean_sd.C1-d; per-class detail c1_per_class_f1.csv -->
 
 ### 8.2 A resampling result that survives deduplication
@@ -694,21 +696,28 @@ corroboration of the negative results on clean data, and the mechanism account i
 **Figure 5.** Change in 19-class macro-F1 from applying SMOTETomek, by configuration, on deduplicated data.
 The shaded band is this pipeline's across-seed σ from §8.1; two of the four deltas fall inside it.
 
-**Seed caveat.** These four deltas are single-seed (42), and §8.1 establishes that this pipeline's macro-F1
-carries an across-seed σ of roughly 0.024. The two Random Forest deltas (−0.0114, −0.0171) are smaller than
-that σ and must not be read as individually established; what the four rows support is the **consistent
-negative direction across four independent configurations**, which is a weaker but genuine claim, plus the two
-XGBoost deltas (−0.0449, −0.0368) that exceed it. A five-seed replication of this table is owed and is the
-obvious extension.
+**Seed caveat, stated precisely.** These four deltas are single-seed (42) paired differences, and their
+across-seed variance was never measured — §8.1's seed sweep varied deduplication, not resampling. We therefore
+decline to declare any individual delta separable under the criterion of §8.1, and we do not draw a noise band
+on Figure 5, because the two variances that *are* measured differ by two orders of magnitude depending on which
+factor is varied (σ = 0.0002 for the test-set contrast, σ = 0.0247 for the training-set contrast) and neither
+describes a resampling delta. For scale only: one configuration's macro-F1 varies across seeds with σ = 0.0168,
+which both XGBoost deltas (0.0449, 0.0368) exceed comfortably, while the Random Forest deltas sit on either
+side of it (0.0114 below, 0.0171 marginally above) — but a level variance is not the variance of a paired
+difference, and this comparison is offered as scale, not as a test. **What these four rows support is
+the consistent negative direction across four independent configurations**, which is a weaker claim than a
+per-configuration effect and is the one we make. A five-seed replication of this table is owed.
 
 ### 8.3 A published effect that does not reproduce
 
 One study in the corpus [13] attributes an accuracy improvement from 0.735 to 0.998 — roughly 26 percentage
 points — to switching a Random Forest's split criterion from Gini impurity to entropy. Re-tested under
-controlled conditions on deduplicated data, that switch is worth **+0.47 percentage points** of macro-F1
-(0.8551 with entropy versus 0.8504 with Gini) at a single seed — an eighth of the across-seed σ established in
-§8.1, so not distinguishable from run-to-run variation at all, and two orders of magnitude below the published
-claim. A ~26-point effect attributed to a split criterion is far better explained by the un-deduplicated
+controlled conditions on deduplicated data, and compared on **the same metric as the claim**, that switch is
+worth **+0.04 percentage points of accuracy** (98.52% with entropy versus 98.48% with Gini): three orders of
+magnitude smaller than the effect attributed to it. On macro-F1 the same pair differs by +0.47 percentage
+points (0.8551 versus 0.8504), about a quarter of the across-seed level variation of a single configuration
+(σ = 0.0168), so it is not distinguishable from run-to-run variation there either. Both figures are
+single-seed. A ~26-point effect attributed to a split criterion is far better explained by the un-deduplicated
 data and pipeline differences that accompany it.
 <!-- oracle: numbers_map.md §4 E5 (0.8551) and E5G (0.8504); gap doc §2.4 / DR-7 for the source claim -->
 
@@ -822,7 +831,7 @@ one dataset. Finding 2 — that duplicated training data has no separable effect
 boosted trees at this scale, not a general claim; a nearest-neighbour or deep-sequence model could plausibly
 behave differently, and we would expect a model with far higher capacity relative to the data to be more
 duplicate-sensitive, not less. The seed set is five, which bounds resolution differently per contrast: the
-paired test-set contrasts carry σ of 0.0008 and 0.0002 and so resolve effects of roughly ±0.001 macro-F1,
+paired test-set contrasts carry σ of 0.00077 and 0.00025 and so resolve effects of roughly ±0.001 macro-F1,
 whereas the training-set contrasts carry σ ≈ 0.025, giving a standard error of 0.011 and a t-based 95% interval
 of about ±0.031. Finding 2 is therefore a statement that no training-side effect **larger than roughly 0.03
 macro-F1** exists, not that the effect is zero.
@@ -966,7 +975,19 @@ doi:10.1007/s11227-026-08661-9. *(Paywalled; cited for its abstract-stated datas
 [24] Rehman et al. (2025). Comprehensive feature selection for machine learning-based intrusion detection in
 healthcare IoMT networks. In *ICISSP 2025*, SciTePress, pp. 248–259. doi:10.5220/0013313600003899.
 
-<!-- REFERENCE COUNT: 24. The brief targets 45-60. A measurement paper of this scope does not need the
+[25] Mohamadi, A., Ghahramani, H., Asghari, S.A. & Aminian, M. (2024). Securing healthcare with deep learning:
+a CNN-based model for medical IoT threat detection. In *19th Iranian Conference on Intelligent Systems (ICIS)*,
+Sirjan, Iran. Preprint: arXiv:2410.23306.
+<!-- VERIFIED 2026-07-30 by fetching arXiv:2410.23306: title, all four authors, venue (ICIS 2024), use of
+     CICIoMT2024, 99% across binary/categorical/multiclass, and no deduplication mentioned. Surfaced by the
+     2026-07-30 re-sweep as a roster miss; cited here as the counter-example of §2.2. -->
+
+<!-- REFERENCE COUNT: 25. The 45-60 target is OUTLINE.md:199, not the frozen brief, which sets no
+     reference-count requirement.
+     COMPLETENESS OWED before submission: entry [4] has no venue detail, pages or DOI; entries [6], [8], [9],
+     [18] and [24] carry "et al." inside the entry itself, which numbered Elsevier style does not permit. Both
+     require the full author lists and bibliographic fields, which must be taken from the sources rather than
+     reconstructed. A measurement paper of this scope does not need the
      thesis's full 47-entry roster, but §2.1 (external leakage precedent) is the section that would most
      benefit from expansion, and §2.4's fragmentation claims currently cite three representative endpoints
      where the underlying roster supports more. Decide before submission whether to broaden §2.1 or to

@@ -11,8 +11,11 @@ sharing an x-axis rather than a rate/Pareto overlay on two scales); a legend
 whenever two series are present and none when there is one; thin marks; recessive
 grid and axes; direct labels used selectively rather than on every mark.
 
-Every number is read from an artifact — nothing is typed in by hand except the
-schematic text of F3, which is an authored diagram.
+Every plotted number is read from an artifact: per-class counts from
+dr6b_perclass_f32.json, the precision sweep from precision_sweep.json, and the
+E1-E8 macro-F1 values from results/supervised/metrics/E*_multiclass.json. The only
+hand-authored content is the text of F3, which is a schematic, and the axis and
+caption wording throughout.
 
 Outputs -> paper/P1_dedup_audit/figures/{fig1..fig5}_*_en.{png,pdf}
 """
@@ -143,7 +146,7 @@ def fig2() -> None:
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(7.2, 5.6), sharex=True,
                                    gridspec_kw={"height_ratios": [1, 1], "hspace": 0.12})
     ax1.bar(xs, df["train_rate"] * 100, color=BLUE, width=0.62)
-    ax1.set_ylabel("Within-class duplicate rate (%)")
+    ax1.set_ylabel("Within-class duplicate rate,\ntrain split (%)")
     ax1.set_title("Duplicate redundancy is concentrated, and not where volume predicts")
     ax1.set_ylim(0, 100)
     recessive(ax1)
@@ -163,9 +166,10 @@ def fig2() -> None:
     ax2.set_ylabel("Cumulative share of\nduplicate mass (%)")
     ax2.set_ylim(0, 104)
     recessive(ax2)
-    ax2.axhline(99.51, color=INK2, lw=0.7, ls="--")
-    ax2.annotate("six flood classes = 99.51% of all duplicate rows",
-                 xy=(5, 99.51), xytext=(6.4, 72), fontsize=8, color=INK,
+    six = df["cum_mass"].iloc[5] * 100          # computed, not asserted
+    ax2.axhline(six, color=INK2, lw=0.7, ls="--")
+    ax2.annotate(f"six flood classes = {six:.2f}% of all duplicate rows",
+                 xy=(5, six), xytext=(6.4, 72), fontsize=8, color=INK,
                  arrowprops=dict(arrowstyle="->", lw=0.7, color=INK2))
     ax2.set_xticks(xs)
     ax2.set_xticklabels(lbl, rotation=45, ha="right", fontsize=7)
@@ -214,8 +218,12 @@ def fig4() -> None:
     xs = np.arange(len(df)); w = 0.38
 
     fig, ax = plt.subplots(figsize=(7.2, 3.6))
-    ax.bar(xs - w / 2, df["test_rows"], width=w, color=BLUE, label="Released test rows")
-    ax.bar(xs + w / 2, df["distinct_test"], width=w, color=ORANGE, label="Distinct feature vectors")
+    # Dots, not bars: bar length is not proportional to value on a log axis and its
+    # baseline would be arbitrary. The segment shows the collapse per class.
+    ax.vlines(xs, df["distinct_test"], df["test_rows"], color=GRID, lw=2.0, zorder=1)
+    ax.scatter(xs, df["test_rows"], s=26, color=BLUE, zorder=3, label="Released test rows")
+    ax.scatter(xs, df["distinct_test"], s=26, color=ORANGE, marker="s", zorder=3,
+               label="Distinct feature vectors")
     ax.set_yscale("log")
     ax.set_ylabel("Test rows (log scale)")
     ax.set_xlabel("Released class, ordered by test-split size")
@@ -233,15 +241,26 @@ def fig4() -> None:
 
 # ---------------------------------------------------------------- F5
 def fig5() -> None:
-    cfg = ["Random Forest\n28 features", "Random Forest\n44 features",
-           "XGBoost\n28 features", "XGBoost\n44 features"]
-    delta = [-0.0114, -0.0171, -0.0449, -0.0368]     # numbers_map.md Section 4
-    sigma = 0.0247                                    # across-seed sigma, Section 8.1
+    """Deltas are computed from the E1-E8 experiment artifacts, not transcribed."""
+    met = REPO / "results" / "supervised" / "metrics"
+    pairs = [("E1", "E2", "Random Forest\n28 features"),
+             ("E5", "E6", "Random Forest\n44 features"),
+             ("E3", "E4", "XGBoost\n28 features"),
+             ("E7", "E8", "XGBoost\n44 features")]
 
-    fig, ax = plt.subplots(figsize=(5.4, 3.2))
-    ax.axhspan(-sigma, sigma, color=GRID, alpha=0.55, zorder=0)
-    ax.annotate("across-seed σ of this pipeline (±0.025)", xy=(3.45, sigma), xytext=(0, 3),
-                textcoords="offset points", ha="right", fontsize=7.5, color=INK2)
+    def f1(exp: str) -> float:
+        return json.loads((met / f"{exp}_multiclass.json").read_text())["test_f1_macro"]
+
+    delta, cfg = [], []
+    for base, smote, label in pairs:
+        delta.append(f1(smote) - f1(base))
+        cfg.append(label)
+    # cross-check against the canonical deltas in numbers_map.md Section 4
+    for got, want in zip(delta, (-0.0114, -0.0171, -0.0449, -0.0368)):
+        if abs(got - want) > 2e-4:
+            sys.exit(f"F5: computed delta {got:.5f} disagrees with numbers_map {want}")
+
+    fig, ax = plt.subplots(figsize=(5.6, 3.3))
     ax.bar(np.arange(4), delta, width=0.55, color=ORANGE, zorder=2)
     ax.axhline(0, color=INK2, lw=0.8)
     for i, v in enumerate(delta):
@@ -249,10 +268,15 @@ def fig5() -> None:
                     ha="center", fontsize=8, color=INK)
     ax.set_xticks(np.arange(4)); ax.set_xticklabels(cfg, fontsize=8)
     ax.set_ylabel("Δ macro-F1 (SMOTETomek − original)")
-    ax.set_title("SMOTETomek degrades macro-F1 in all four configurations\n"
-                 "(two of them within this pipeline's seed noise)", fontsize=9.5)
-    ax.set_ylim(-0.058, 0.036)
+    ax.set_title("SMOTETomek degrades macro-F1 in all four configurations")
+    ax.set_ylim(-0.058, 0.012)
     recessive(ax)
+    # No noise band: these are single-seed paired differences whose across-seed
+    # variance was never measured. Drawing a band from a differently-defined sigma
+    # would assert a test the design does not support.
+    fig.text(0.5, -0.10, "Single seed (42). The across-seed variance of these paired differences was not "
+             "measured;\nthe claim the figure supports is the consistent direction across four "
+             "configurations.", ha="center", fontsize=7, color=INK2)
     finish(fig, "fig5_smotetomek_delta")
 
 
