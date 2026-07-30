@@ -402,10 +402,10 @@ All 11 ablation rows come from `results/enhanced_fusion/metrics/ablation_table.c
 | Cross-dataset binary (Design A) ROC-AUC | 0.6904 ± 0.0003; balanced accuracy 0.4998; benign recall 0.0005 | `thesis/crossdataset/raw_results.json`; `Thesis_Generalization_Analysis_v0.1.md` §X.3.2 |
 | Cross-dataset AE inversion | ROC-AUC 0.2586 ± 0.0010 (below random; benign baseline does not travel) | same |
 | Cross-dataset family-level (Design B) macro-F1 | 0.9037 in-dataset → 0.1965 ± 0.0002 (78% relative decline); Flooding-merge recovery 0.2578 (Flooding F1 0.4530) | same |
-| Session-disjoint macro-F1 gap | 0.734 ± 0.010 (random pooled) → 0.475 ± 0.048; gap 0.259 ± 0.047, positive in 5/5 seeds; MCC 0.991 → 0.556 | same, §X.4.3 |
-| Session-disjoint AE robustness | AUC 0.908 → 0.831 (−0.076; ~5× more robust than supervised layer) | same |
-| NFStream independent dedup rate | 37.92% (7.36M → 4.57M flows); recon classes 97–99.9%; cross-class 0.14% | same, §X.6.2 |
-| Device-disjoint infeasibility | 5 class-specific victim devices; no class ≥3 — protocol unsupportable on this dataset | same, §X.4.1 |
+| Session-disjoint macro-F1 gap | 0.734 ± 0.010 (random pooled) → 0.475 ± 0.048; gap 0.259 ± 0.047, positive in 5/5 seeds; MCC 0.991 → 0.556 | `iomt-pcap-experiments/track_a_out/part3_results.json`; §X.4.3 |
+| Session-disjoint AE robustness | AUC 0.908 → 0.831 (−0.076); ~5× basis = MCC gaps (0.4353/0.0761) | `track_a_out/part3_results.json` |
+| NFStream independent dedup rate | 37.92% (7.36M → 4.57M flows); recon classes 97–99.9%; cross-class 0.14% | `track_a_out/dedup_report.json`; §X.6.2 |
+| Device-disjoint infeasibility | 5 class-specific victim devices; no class ≥3 — protocol unsupportable on this dataset | `track_a_out/feasibility.json`; §X.4.1 |
 | Tau-sweep @ thesis ent_p95 (0.134031 norm.) | defers 1.676% (14,951 flows), coverage 98.324%, retained accuracy 0.998588; deferred slice holds 81.1% of all E7 errors; deferred would-be error rate 0.3554 (~48× overall 0.0073) | `results/tausweep/tau_sweep_summary.md`, `tau_sweep_results.json` |
 | Tau-sweep light floor τ_c=0.5 | 763 deferrals /1M flows/day at 0.9931 retained accuracy | same |
 | Tau-sweep confidently-wrong share | 18.9% of errors pass the gate confidently wrong (rationale for the anomaly layers) | same; `Thesis_Generalization_Analysis_v0.1.md` §X.5.2 |
