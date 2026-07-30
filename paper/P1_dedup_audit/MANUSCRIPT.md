@@ -1,17 +1,21 @@
 # How much of CICIoMT2024 is a copy? A per-split, precision-stated audit of duplicate leakage in the reference IoMT intrusion-detection benchmark
 
-> **DRAFT — sections 3–7 only** · target venue: *Internet of Things* (Elsevier) · drafted 2026-07-30
-> Governing spec: `.claude/plans/2026-07-30-p1-dedup-paper-brief.md` (FROZEN) + `OUTLINE.md`.
-> Sections 1–2 and 8–11 are stubs. Every number carries an oracle reference in an HTML comment; those
-> comments are stripped at submission and must survive `/fact-check` before that happens.
+**Authors:** *[TO COMPLETE — authorship, order, affiliations and ORCIDs pending]*
+
+> **COMPLETE DRAFT, PRE-SUBMISSION** · target venue: *Internet of Things* (Elsevier) · drafted 2026-07-30,
+> revised the same day after senior review.
+> Governing spec: `.claude/plans/2026-07-30-p1-dedup-paper-brief.md` (FROZEN, incl. Amendment 1) + `OUTLINE.md`.
+> All eleven sections are drafted. Outstanding before submission: in-text citations and the reference list,
+> figures F1–F5, the §2.2 roster triage, and the declarations. Every number carries an oracle reference in an
+> HTML comment; those comments are stripped at submission and must survive `/fact-check` first.
 
 ## Abstract
 
 CICIoMT2024 has become the reference benchmark for Internet-of-Medical-Things intrusion detection, used by
 more than thirty studies within two years of release, with reported accuracies clustering above 99%. We show
-that a third of the benchmark is duplicated content, that the size of that duplication depends entirely on a
-parameter no study states, and that its measurable effect on reported performance is narrower and differently
-located than the field assumes. Measured over the released artifact, duplicate rows constitute 0.07% of the
+that a third of the benchmark is duplicated content, that the size of that duplication depends entirely on the
+numeric precision at which rows are compared, and that its measurable effect on reported performance is
+narrower and differently located than the field assumes. Measured over the released artifact, duplicate rows constitute 0.07% of the
 training split at the float64 precision the CSVs are printed in, and **36.95% of the training split and 44.72%
 of the test split at the float32 precision models actually compute in** — a factor of 517 on identical rows.
 Three published studies report removing exactly 5,119 duplicates; we reproduce that figure to the row and show
@@ -20,24 +24,28 @@ redundancy is structured rather than diffuse: six volumetric TCP/IP flood classe
 mass, the single largest class in the training split contains none at all, and the benign class is entirely
 free of it. Separating leakage mechanisms, within-split redundancy dominates while cross-split identity —
 the mechanism a train/test contamination check would find — accounts for only 0.84% of test rows. A controlled
-five-seed ablation on one pipeline shows that a duplicated **test** set inflates accuracy by 0.35–0.40
-percentage points (an effect separable from seed variance), that duplicated **training** data has no separable
-effect, and that the raw-versus-deduplicated comparison the literature makes lies inside its own seed
-variance. We therefore retract a previously published "memorization premium" of our own. We conclude with a
+five-seed ablation on one pipeline shows that evaluating on the duplicated rather than the deduplicated test
+split raises accuracy by 0.35–0.40 percentage points — separable from seed variance, but reflecting a change of
+estimand rather than train-to-test contamination — while duplicated **training** data has no separable effect
+and the raw-versus-deduplicated comparison the literature makes cannot be resolved at five seeds. We therefore
+withdraw two previously published "memorization premium" figures of our own. We conclude with a
 five-parameter reporting protocol — precision, scope, stage, split and granularity — without which accuracy
 comparisons on this dataset are not interpretable, and release a reproduction package containing all analysis
 code and results.
-<!-- WORD COUNT: ~270. Elsevier IoT abstract limit UNVERIFIED (ScienceDirect 403s automated fetch) -->
+<!-- WORD COUNT: 330 (comments stripped, recounted 2026-07-30). Elsevier IoT abstract limit UNVERIFIED
+     (ScienceDirect 403s automated fetch) — 330 words LIKELY EXCEEDS a typical 250-word cap; trim once the
+     GfA is available. Body: 8,639 words, inside the brief's 8-12k target. -->
 
 ## Highlights
 
-- CICIoMT2024 duplicate rows: 0.07% at float64, 36.95%/44.72% at float32 — a 517× gap
-- The literature's three "5,119 duplicates" reports are reproduced exactly and shown incomparable
-- Six flood classes carry 99.51% of duplicate mass; the largest class carries none
-- A duplicated test set inflates accuracy 0.35–0.40 pp; duplicated training data does not
+- CICIoMT2024 duplicates: 0.07% at float64, 36.95%/44.72% at float32 — a 517x gap
+- The three published "5,119 duplicates" reports are reproduced and shown incomparable
+- Six flood classes hold 99.51% of duplicate mass; the largest class holds none
+- A duplicated test split raises accuracy 0.35-0.40 pp; duplicated training does not
 - Raw-vs-deduplicated comparisons on this dataset lie inside seed variance
-<!-- Elsevier convention is 3-5 bullets, <=85 characters each. Each above is within 85 chars, but the
-     rule itself is UNVERIFIED for this journal — confirm against the Guide for Authors. -->
+<!-- Character counts recomputed 2026-07-30: 80 / 87 / 78 / 83 / 73. Bullet 2 is 87 and needs two characters
+     cut IF the <=85 rule applies. Elsevier convention is 3-5 bullets at <=85 chars, but that rule is
+     UNVERIFIED for this journal (GfA unreachable) — confirm, then trim bullet 2. -->
 
 **Keywords:** intrusion detection; Internet of Medical Things; benchmark datasets; data leakage;
 deduplication; reproducibility; evaluation methodology
@@ -63,7 +71,8 @@ Against that consensus stands an uncomfortable control, supplied by the dataset'
 19-class baseline scores **0.733**. The gap between 0.733 and 0.999 on the same task family is large enough to
 demand an explanation, and better modelling is only part of one.
 
-This paper measures a specific contributor that the literature has left unquantified. Duplicate records in
+This paper measures a specific contributor that none of the 31 studies we verified against full text
+quantifies. Duplicate records in
 CICIoMT2024 are not a marginal data-hygiene matter — a third of the benchmark is copies — and their size,
 location and consequence are all measurable. Our contributions:
 
@@ -71,9 +80,10 @@ location and consequence are all measurable. Our contributions:
    training split at float64 and 36.95% at float32, with the test split reaching 44.72%. Precision is not a
    reporting detail on this dataset; it is a factor of 517.
 2. **A reconciliation of the literature's one published duplicate figure** (§5). Three studies report removing
-   exactly 5,119 rows. We reproduce that number to the row, identify it as the float64-exact count of the
-   training directory, and show that a fourth reported subset count is pipeline-inherited rather than measured.
-   Nobody miscounted; the reports are incomparable because precision and scope go unstated.
+   exactly 5,119 rows. We reproduce that number to the row and identify it as the float64-exact count of the
+   training directory; we also reconstruct one study's stated working set exactly and show that its quoted
+   figure is pipeline-inherited rather than measured on that set. Nobody miscounted; the reports are not
+   comparable with one another because the precision and scope behind them differ.
 3. **The structure of the redundancy** (§6). It is concentrated, not diffuse: six volumetric TCP/IP flood
    classes hold 99.51% of the duplicate mass, four `Recon` sub-types show meaningful rates but negligible mass,
    and `Benign`, all five MQTT classes and the single largest flood class contain none. Duplication on this
@@ -118,10 +128,13 @@ Our corpus of CICIoMT2024 intrusion-detection studies comprises 33 identified wo
 against full text (two are paywalled at abstract level and are excluded from every claim below). Nine of the
 31 touch deduplication in some form. Of those nine:
 
-- **three** report a single aggregate count — 5,119 rows — with no precision, no scope, and no per-split rate;
+- **three** report a single aggregate count — 5,119 rows — as one figure for their whole working set, with no
+  per-split rate; two of the three do describe the scope they worked on, which is what makes the reconciliation
+  of §5 possible;
 - **one** reports a ~55% row reduction that conflates deduplication with removal of missing values;
 - **three** describe deduplication as a pipeline step without quantifying it at all;
-- **one** deduplicates both splits but reports no count;
+- **one** deduplicates both splits, reporting pre- and post-counts from which a drop can be inferred but no
+  duplicate rate;
 - **one** performs a cross-set hash check, but after undersampling, so its scope is not the released data.
 
 A tenth study deduplicates a *different* dataset used alongside CICIoMT2024 and not CICIoMT2024 itself; it is
@@ -129,6 +142,11 @@ excluded from the nine.
 
 **No study in the verified set reports a per-split duplicate rate, and none analyses the effect of duplication
 on its own reported metrics.** This is the gap the present paper fills.
+
+We deliberately do *not* claim that these studies fail to state the precision at which they counted. We found
+no stated precision in any of them, but establishing that as an absence would require a claim-by-claim audit of
+nine methods sections that we have not performed — and the argument of §4 does not need it: a duplicate count
+reported without its precision cannot be reproduced by a reader, whether or not the omission is universal.
 <!-- oracle: Research_Gap_Report_v1.0.md:15 and Appendix A rows; Literature_Review_Chapter2_v6.6.md §2.4.2(a) -->
 
 **On the completeness of that claim.** An absence claim is only as strong as the search behind it. Ours rests
@@ -160,8 +178,9 @@ preprocessing remedies, reaching 99.85% accuracy with their optimised pipeline.
 Their critique and ours are complementary and non-overlapping. Their windowing observation is in fact
 *upstream* of our result: window-averaged feature construction is exactly why exact-match duplicate counts are
 a lower bound (§4), so their finding strengthens ours. But they do not deduplicate, and they report no
-duplicate count, so the inflation documented here persists in their optimised figure as well. To our knowledge
-no prior work on this dataset quantifies duplication per split, at a stated precision, or measures its effect.
+duplicate count, so the redundancy documented here persists in their optimised figure as well. Across the 31
+studies we verified against full text, none quantifies duplication per split or measures its effect on reported
+performance; we make that claim over the verified set, with the completeness caveat of §2.2.
 <!-- oracle: Literature_Review_Chapter2_v6.6.md:151 and :75 (row 19) -->
 
 ### 2.4 Why substrate fragmentation makes this audit necessary
@@ -186,6 +205,8 @@ volumetric attack families are distributed across numbered files (`TCP_IP-DDoS-I
 that together constitute one class.
 <!-- oracle: numbers_map.md §2 rows 31-33 (row counts), row 41 (45 features), row 44 (19 classes);
      file counts from the data/{train,test} directory listings -->
+
+**Table 1 — CICIoMT2024 Wi-Fi + MQTT subset as released.**
 
 | Property | Train | Test | Total |
 |---|---|---|---|
@@ -273,15 +294,19 @@ third implementation, built for the ablation in §8, reproduced both split count
 All scripts, all result JSONs, and a verifier that re-asserts every number in this paper from those JSONs are
 released as `ciciomt2024-dedup-audit` *[URL on acceptance]*. The package contains **no CICIoMT2024 data**; the
 dataset must be obtained from the Canadian Institute for Cybersecurity directly. Environment: Python 3.13.13,
-pandas 2.3, NumPy 2.2, scikit-learn 1.8, XGBoost 3.2.0.
+pandas 2.3, NumPy 2.2, scikit-learn 1.8, XGBoost 3.2.0. We note one honest discrepancy for reproducers: the
+project's dependency manifest pins XGBoost below 3.0 while the installed and used version is 3.2.0, so the
+manifest should not be treated as the authority for the ablation of §8.
 <!-- oracle: CLAUDE.md stack line. NOTE: requirements.txt pins xgboost<3.0 while 3.2.0 is installed —
      known drift, to be stated honestly wherever pipeline versions are cited (brief line 23). -->
 
 ---
 
-## 4. Result 1 — duplication is precision-dependent, by a factor of 500
+## 4. Result 1 — duplication is precision-dependent, by a factor of 517
 
 Measured over the released artifact at the two precisions of §3.3:
+
+**Table 2 — Duplicate rows by numeric precision and scope. Percentages are of the rows in that scope.**
 
 | Precision | Meaning | Train duplicates | Test duplicates | Pooled merge |
 |---|---|---|---|---|
@@ -289,9 +314,10 @@ Measured over the released artifact at the two precisions of §3.3:
 | **float32 (as computed)** | identical at ~7 significant digits | **2,645,751 (36.9475%)** | **721,914 (44.7232%)** | 3,368,126 (38.3831%) |
 <!-- oracle: numbers_map.md §2 duplicate rows; all six cells from dr6_out/dr6_float32_check.json -->
 
-The same rows, the same comparison, the same dataset: **0.07% or 36.95%**, depending entirely on a parameter
-no study in this literature states. The float32 figure is the operationally relevant one, because it describes
-the data as the model actually receives it.
+The same rows, the same comparison, the same dataset: **0.07% or 36.95%**, depending entirely on the precision
+at which the comparison is performed. The float32 figure is the operationally relevant one, because it
+describes the data as the model actually receives it — and a count reported without its precision cannot be
+reproduced by a reader, which is why §9 makes precision the first mandatory reporting parameter.
 
 Three properties of this result deserve emphasis.
 
@@ -326,24 +352,28 @@ reproduced here to the row.
 <!-- oracle: dr6_panel.json REP45/train; numbers_map.md §2 float64 rows -->
 
 **Scope, at two scales.** Two of the three studies describe operating on the training directory, and for that
-scope 5,119 is right. The third reports a subset of 4,971,919 rows, which matches no scope of the released
-data we could construct; every DDoS-flavoured train-only subset we tested yields **672** float64 duplicates,
-never 5,119, so that study's figure is inherited from a shared pipeline rather than measured on its own
-subset. Those same six subsets evaluated over train **and** test yield **674** — two additional duplicates
-from widening the scope alone. Scope-sensitivity is visible even at the scale of single-digit counts.
+scope 5,119 is right. The third reports a working set of **4,971,919** rows, and that figure reconstructs
+exactly: the training split's TCP/IP-DDoS-plus-Benign subset holds 4,972,591 rows and contains **672**
+float64-exact duplicates, and 4,972,591 − 672 = **4,971,919**. Its scope is therefore recoverable and its
+deduplication was performed — but that subset's true duplicate count is 672, not the 5,119 the study quotes.
+The quoted figure is inherited from a shared pipeline rather than measured on the data used, which is a
+citation-chain artifact rather than an arithmetic error. Scope-sensitivity is visible even at single-digit
+scale: the same six candidate subsets evaluated over train **and** test yield **674** rather than 672 — two
+additional duplicates from widening the scope alone.
 <!-- oracle: dr6_float32_check.json akkal_train_only/* (672, train-only) vs
      dr6_panel.json REP45/akkal_* (674, train+test) — scope difference verified in both scripts -->
 
-**No study states the precision at which it counted, and none reports a per-split rate.** Of the 31
-full-text-verified studies in our corpus, nine touch deduplication in some form, and zero
-report train and test rates separately or analyse the consequence for their reported metrics.
-<!-- NOTE: an earlier draft also claimed 'zero state a precision'. That specific absence is NOT covered by
-     the verified corpus notes and must be checked paper-by-paper before it may be asserted. -->
+**None of the nine reports a per-split rate.** Of the 31 full-text-verified studies in our corpus, nine touch
+deduplication in some form; none reports train and test rates separately, and none analyses the consequence for
+its own reported metrics. What we do and do not claim about stated precisions is set out in §2.2.
 <!-- oracle: Research_Gap_Report_v1.0.md:15 (9 of the 31); corpus snapshot 2026-07-29 —
      RE-SWEEP REQUIRED BEFORE SUBMISSION -->
 
-**Nobody miscounted.** The counts differ by precision and by scope, and the precision-dependence itself —
-5,119 becoming 2,645,751 on identical rows — is the finding.
+**Nobody miscounted.** Every published figure is correct for the precision and scope behind it — including the
+inherited 5,119, which is correct for the training directory even though it was applied to a subset with 672.
+What is unavailable to a reader is the *comparison*: two duplicate counts on this dataset become commensurable
+only once both parameters are stated. The precision-dependence itself — 5,119 becoming 2,645,751 on identical
+rows — is the finding.
 
 **A byproduct: deduplication introduces no label ambiguity.** REP46 (features + label) returns the *same*
 5,119 duplicates as REP45 (features only) at float64, and at float32 the sum of within-class duplicate counts
@@ -358,6 +388,9 @@ unambiguous — a practical point for anyone implementing it, and not an obvious
 ## 6. Result 3 — the redundancy is structured, and not where volume would predict
 
 Duplication is not spread across CICIoMT2024. Measured within each class at float32:
+
+**Table 3 — Within-class duplicate counts and rates at float32, by released class, sorted by train duplicate
+count. "Share of train dup mass" is each class's fraction of the 2,645,751 duplicate training rows.**
 
 | Released class | Train rows | Train dup | Train rate | Test rows | Test dup | Test rate | Share of train dup mass |
 |---|---|---|---|---|---|---|---|
@@ -386,8 +419,9 @@ Duplication is not spread across CICIoMT2024. Measured within each class at floa
 
 Four observations, in descending order of consequence.
 
-**Six classes carry 99.5% of it.** The `TCP_IP-*` flood families account for **2,632,808 of 2,645,751**
-duplicate training rows — **99.51%**. `TCP_IP-DDoS-ICMP` alone carries **50.16%**, at a within-class rate of
+**Six classes carry 99.5% of it.** Six flood classes hold **2,632,779 of 2,645,751** duplicate training rows —
+**99.51%**; the `TCP_IP-*` family as a whole holds 2,632,808, the difference being the 29 duplicates in
+`TCP_IP-DoS-UDP` (its sibling `TCP_IP-DDoS-UDP` has none). `TCP_IP-DDoS-ICMP` alone carries **50.16%**, at a within-class rate of
 86.32% in train and 94.37% in test. On this dataset, "the duplicate problem" is the volumetric TCP/IP flood
 problem.
 
@@ -424,7 +458,7 @@ No cross-split check detects M1, because nothing crosses the split.
 
 **M2 — cross-split identity (small).** At float32, **461** distinct feature vectors occur in both the training
 and the test split, carried by approximately **13,533 test rows — 0.84%** of the test split. At float64 the
-same figures are **195** vectors and approximately **357** rows (0.02%).
+same figures are **195** vectors and approximately **357** rows (0.0221%).
 <!-- oracle: numbers_map.md §2 cross-split rows; 461 = f32/full − (f32/train + f32/test);
      row counts derived from stored 6-dp fractions, hence ±1 -->
 
@@ -450,11 +484,13 @@ ablation of §8, and it produced a plausible-looking result — an apparent coll
 an artifact of the scaling mismatch and nothing else. We report it because the failure mode is easy to reach
 and hard to notice: it produces numbers that are wrong in the direction that flatters the hypothesis.
 
-**Four leakage axes, two corrected corpus-wide.** Beyond M1–M3, the corpus exhibits two further axes that this
-work does not correct: destruction of the official file-level split by merge-and-re-split, and resampling
-applied before splitting. Across the four axes, the corpus corrects duplicate rows exactly (this work) and
-device-level overlap approximately (one study, using predicted device labels); the split-boundary and
-resample-order axes remain open.
+**Four leakage axes across the corpus.** M1–M3 above are mechanisms of *duplicate-row* leakage, which is one
+axis of a broader problem. Taking the corpus as a whole, four axes are visible: (1) duplicate rows — corrected
+exactly by this work; (2) device-level overlap between splits — corrected approximately by one study, using
+predicted device labels; (3) destruction of the official file-level split by merge-and-re-split — two 2026
+studies apply partial correctives (session-disjoint and timestamp-based splits), both unquantified; and
+(4) resampling applied before splitting — uncorrected corpus-wide. This work corrects axis 1 and, by using the
+released split, is not exposed to axis 3, but it corrects neither axis 3 nor axis 4 for the field.
 <!-- oracle: Research_Gap_Report_v1.0.md §3 four-axes block, G11 -->
 
 ---
@@ -473,52 +509,109 @@ team is set beside a raw-data result from another, and the difference is attribu
 comparisons differ in model, hyperparameters, resampling, feature engineering and metric averaging
 simultaneously, so they cannot isolate the effect. We therefore ran the comparison inside a single pipeline.
 
-**Design.** One classifier configuration (XGBoost, 44 features, no resampling — 200 trees, depth 8, learning
-rate 0.1, `subsample` and `colsample_bytree` 0.8) is trained twice: once on the raw training split and once on
-the deduplicated training split. Each model is then evaluated on both the raw and the deduplicated test split,
-giving a 2 × 2 matrix. Because deduplication shifts the fitted preprocessing statistics (§7, M3), each model
-is scored on test data transformed by **its own** scaler; the arms are not mutually scoreable. The entire
-matrix is repeated over five seeds, and we report mean ± σ.
+**Design.** One classifier configuration (XGBoost, no resampling — 200 trees, depth 8, learning rate 0.1,
+`subsample` and `colsample_bytree` 0.8) is trained twice: once on the raw training split and once on the
+deduplicated training split. Each arm trains on a stratified **80%** of its split, holding 20% as validation —
+**5,728,664** rows for the raw arm and **3,612,064** for the deduplicated arm — so the two arms differ in
+training-set size as well as in redundancy, which is intrinsic to the comparison and not a design choice we
+could avoid. The feature set is the 44 columns the pipeline retains after dropping one near-constant attribute;
+duplication in §§4–6 is measured over all 45 released columns, so the ablation runs on a 44-column projection
+of the same rows. Each model is then evaluated on both the raw and the deduplicated test split, giving a
+2 × 2 matrix. Because deduplication shifts the fitted preprocessing statistics (§7, M3), each model is scored
+on test data transformed by **its own** scaler; the arms are not mutually scoreable. The matrix is repeated
+over the five seeds [1, 7, 42, 100, 1729] and we report mean ± σ.
+<!-- oracle: c1_matrix.json:cells n_train_rows 5728664 / 3612064; numbers_map.md §2 rows 47-48
+     (3,612,064 train + 903,016 val = 4,515,080); FEATURES_FULL drops Drate (numbers_map.md §2 row 42) -->
 <!-- oracle: numbers_map.md §2 C1 block; results/c1_dedup_ablation/c1_multiseed.json -->
+
+**Table 4 — C1 ablation, 2 × 2 matrix, mean ± σ over five seeds. Cell labels (a)–(d) are used in Table 5.**
 
 | | tested on raw | tested on deduplicated |
 |---|---|---|
-| **trained on raw** | macro-F1 0.8995 ± 0.0106 · acc 0.99516 ± 0.00108 | macro-F1 0.8917 ± 0.0105 · acc 0.99165 ± 0.00193 |
-| **trained on deduplicated** | macro-F1 0.8989 ± 0.0168 · acc 0.99484 ± 0.00113 | macro-F1 0.8909 ± 0.0168 · acc 0.99082 ± 0.00205 |
+| **(a), (b) trained on raw** | macro-F1 0.8995 ± 0.0106 · acc 0.99516 ± 0.00108 | macro-F1 0.8917 ± 0.0105 · acc 0.99165 ± 0.00193 |
+| **(c), (d) trained on deduplicated** | macro-F1 0.8989 ± 0.0168 · acc 0.99484 ± 0.00113 | macro-F1 0.8909 ± 0.0168 · acc 0.99082 ± 0.00205 |
 
-Each contrast varies exactly one factor:
+Each contrast varies exactly one factor. We call a contrast **separable** when both conditions hold: its sign
+is the same in every one of the five seeds, **and** the absolute mean exceeds twice the across-seed standard
+deviation. Both conditions are pre-declared and applied to every metric; a contrast satisfying only the first
+is reported as sign-consistent but not separable.
 
-| Contrast | macro-F1 | Separable from seed variance? |
-|---|---|---|
-| Test set raw vs deduplicated, raw-trained | **+0.00784 ± 0.00077** | **yes** — same sign in all 5 seeds |
-| Test set raw vs deduplicated, dedup-trained | **+0.00798 ± 0.00025** | **yes** — same sign in all 5 seeds |
-| Training set raw vs deduplicated, on raw test | −0.00064 ± 0.02468 | no — sign flips across seeds |
-| Training set raw vs deduplicated, on dedup test | −0.00078 ± 0.02438 | no — sign flips across seeds |
-| Raw everywhere vs deduplicated everywhere | +0.00863 ± 0.02468 | no |
+**Table 5 — C1 contrasts, macro-F1, mean ± σ over five seeds.** Each row varies one factor; the sign convention
+is given by the subtraction shown.
 
-**Finding 1 — a duplicated test set inflates reported metrics, by a small and stable amount.** Holding
-training fixed, evaluating on the raw rather than the deduplicated test split raises macro-F1 by
+| Contrast | Subtraction | macro-F1 | Separable? |
+|---|---|---|---|
+| Test set: raw − deduplicated, raw-trained | (a) − (b) | **+0.00784 ± 0.00077** | **yes** (sign 5/5; mean > 2σ) |
+| Test set: raw − deduplicated, dedup-trained | (c) − (d) | **+0.00798 ± 0.00025** | **yes** (sign 5/5; mean > 2σ) |
+| Training set: deduplicated − raw, on raw test | (c) − (a) | −0.00064 ± 0.02468 | no — sign flips across seeds |
+| Training set: deduplicated − raw, on dedup test | (d) − (b) | −0.00078 ± 0.02438 | no — sign flips across seeds |
+| Raw everywhere − deduplicated everywhere | (a) − (d) | +0.00863 ± 0.02468 | no — mean < 2σ |
+
+where (a) = trained raw / tested raw, (b) = trained raw / tested deduplicated, (c) = trained deduplicated /
+tested raw, (d) = trained deduplicated / tested deduplicated, matching Table 4.
+
+**Finding 1 — evaluating on a duplicated test split raises reported metrics, by a small and stable amount.**
+Holding training fixed, scoring on the raw rather than the deduplicated test split raises macro-F1 by
 **+0.0078 to +0.0080** and accuracy by **+0.35 to +0.40 percentage points**. The effect has the same sign in
-all five seeds and under both training conditions — eight independent measurements spanning +0.0076 to
-+0.0085, with σ as low as 0.00025. This is the measurable cost of duplicate leakage on this benchmark, and it
-is a test-set property.
+all five seeds under both training conditions — **ten** paired measurements spanning **+0.0065 to +0.0085** —
+with σ as low as 0.00025.
 
-**Finding 2 — duplicated training data has no separable effect.** Holding the test set fixed, training on raw
-rather than deduplicated data changes macro-F1 by **−0.0006 ± 0.0247**: a mean indistinguishable from zero
-beside a standard deviation roughly forty times larger, with the sign reversing between seeds (+0.032 at seed
-42, −0.030 at seed 1). We report this as a negative result rather than a null to be explained away.
+**This is a change of estimand, not train-to-test contamination, and the distinction matters.** Training is
+held fixed in this contrast, and nothing crosses the split: the two numbers are the same model measured against
+two different test distributions, of 1,614,182 and 892,268 rows respectively. What the deduplicated test split
+estimates is performance per *distinct observed behaviour*; what the raw split estimates is performance per
+*released record*, in which a behaviour observed 10,000 times counts 10,000 times. Neither is wrong, but they
+are different questions, and the literature reports the second while discussing the first. Which one estimates
+deployment performance depends on whether the duplicate multiplicities reflect real traffic prevalence — and
+because 99.51% of the duplicate mass sits in six volumetric flood classes (§6), the raw split's implicit
+prevalence is a property of how long the testbed ran each flood, not of any hospital network. On that reading
+the deduplicated split is the more defensible estimand, which is why we adopt it, but the argument is one of
+construct validity rather than contamination.
+
+**Where the macro-F1 change actually comes from.** The decomposition does not follow the re-weighting intuition.
+At seed 42 the +0.00815 macro-F1 delta is dominated by three `Recon` classes — `Recon_OS_Scan` alone
+contributes 0.0035 of it (43%), with `Recon_Ping_Sweep` and `Recon_VulScan` adding 0.0015 and 0.0012 — while
+the three flood classes whose support collapses by 91–95% between the two splits (`DDoS_ICMP` 349,699 → 19,673;
+`DDoS_TCP` 182,598 → 8,735; `DoS_ICMP` 98,432 → 8,451) together contribute only 0.0020. Macro-F1 is unweighted,
+so removing flood duplicates barely moves classes already at F1 ≈ 0.999; the movement is in small classes whose
+per-class F1 is genuinely harder to achieve once their handful of repeated vectors is collapsed. The accuracy
+effect, by contrast, *is* prevalence-driven, since accuracy weights the floods by their multiplicity. The two
+metrics respond to the same edit through different mechanisms, and only the accuracy one is what the field's
+"inflated accuracy" intuition describes.
+<!-- oracle: c1_multiseed.json per_seed (10 paired contrasts, span 0.006497-0.008475);
+     c1_per_class_f1.csv (seed-42 per-class decomposition; contributions = delta/19) -->
+
+**Finding 2 — duplicated training data has no separable effect.** Holding the test set fixed, deduplicating
+the training data changes macro-F1 by **−0.0006 ± 0.0247** (deduplicated minus raw): a mean indistinguishable
+from zero beside a standard deviation roughly forty times larger, and the sign reverses between seeds — the
+deduplicated arm is ahead by 0.0316 at seed 42 and behind by 0.0296 at seed 1. With five seeds the standard
+error of that mean is 0.0110, so a t-based 95% interval spans roughly **±0.031**: the design establishes that
+no training-side effect larger than about 0.03 macro-F1 exists, not that the effect is zero. We report this as
+a bounded negative result rather than a null to be explained away.
 The mechanism is unsurprising in hindsight: an exact-duplicate row supplies no gradient information a
 boosted-tree ensemble does not already have from its original, so at this scale duplicates re-weight the
 objective rather than teach anything new.
 
-**Finding 3 — the comparison the literature makes lies inside its own noise.** Raw-everywhere versus
-deduplicated-everywhere — the pairing that produces published "deduplication costs *x* points" statements —
-gives **+0.00863 ± 0.02468**, not separable. It moves two factors at once, and the smaller separable
-test-side effect is swamped by the non-separable training-side variance. **We include our own prior work in
-this criticism: a "memorization premium" of 0.53 percentage points, computed by pairing this pipeline's
-deduplicated accuracy against another team's raw-data accuracy, does not survive a controlled test and is
-withdrawn.**
-<!-- oracle: the withdrawn pairing is numbers_map.md §4 'E7 minus Yacoubi-XGB on deduped data' = −0.53 pp -->
+**Finding 3 — the two-factor comparison the literature makes is not resolvable at five seeds.**
+Raw-everywhere versus deduplicated-everywhere — the pairing behind published "deduplication costs *x* points"
+statements — gives macro-F1 **+0.00863 ± 0.02468**, which is sign-inconsistent and far under 2σ, and accuracy
+**+0.43 ± 0.27 percentage points**, which is positive in all five seeds but still under 2σ (ratio 0.80) and so
+not separable by our criterion. The pairing moves both factors at once, so the small separable test-side effect
+is confounded with the non-separable training-side variance.
+
+**Two figures of our own are withdrawn on this basis.** Prior work from this project reported a "memorization
+premium" by pairing this pipeline's deduplicated accuracy against another team's raw-data accuracy: **99.80% →
+99.27%, a 0.53 pp gap** against one study's XGBoost, and **99.811% → 99.27%, ≈0.54 pp** against another's. Both
+are cross-study pairings that differ in model, tuning, resampling, feature engineering and metric averaging, and
+neither survives a matched test: the controlled equivalent is the +0.43 ± 0.27 pp above, whose central value is
+of the same order but which our own criterion declines to call an effect at five seeds. The honest statement is
+that a duplicated **test** split raises accuracy by 0.35–0.40 pp (separable, Finding 1) and that the
+raw-everywhere-versus-deduplicated-everywhere gap cannot be quantified at this seed count — not that
+deduplication costs half a point.
+<!-- oracle: withdrawn pairings are numbers_map.md §4 'Yacoubi XGB accuracy (raw) 99.80' with 'E7 minus
+     Yacoubi-XGB on deduped data = -0.53 pp', and Research_Gap_Report_v1.0.md:74 (99.811 -> 99.27, 0.54 pp,
+     the gap doc's DR-5 pairing). Controlled counterpart: c1_multiseed.json
+     contrasts_mean_sd.naive_literature_pairing.accuracy = +0.004339 +- 0.002728, abs_mean_over_2sd = 0.795. -->
 
 **Consequence for like-for-like comparison.** A deduplicated evaluation of this pipeline reports accuracy
 roughly 0.4 points below what the same pipeline would report on the raw test split. Published accuracies on
@@ -528,9 +621,10 @@ adjustment of a few tenths of a point, not the multi-point "memorization" the fr
 
 **A note on seed reporting.** Single-seed results on this task are not stable at the precision commonly
 reported. Across five seeds the deduplicated-everywhere cell spans macro-F1 0.8701–0.9076 (mean 0.8909 ±
-0.0168) — a 3.75-point range from seed choice alone, with the variance concentrated in three confusable
-minority classes. Any macro-F1 comparison on this dataset that rests on one run is uninterpretable, our own
-included: the 0.9076 figure this project has published elsewhere is the maximum of those five draws.
+0.0168) — a 3.75-point range from seed choice alone. Inspection of the per-class scores at one seed suggests
+the variance is carried by a few small, mutually confusable classes rather than spread across the label space,
+but we did not retain per-class scores at every seed and therefore report that as an observation rather than a
+result. Any macro-F1 comparison on this dataset that rests on one run is uninterpretable, our own included: the 0.9076 figure this project has published elsewhere is the maximum of those five draws.
 <!-- oracle: c1_multiseed.json per_seed + cells_mean_sd.C1-d; per-class detail c1_per_class_f1.csv -->
 
 ### 8.2 A resampling result that survives deduplication
@@ -538,6 +632,8 @@ included: the 0.9076 figure this project has published elsewhere is the maximum 
 Class imbalance on this dataset (2,374:1 after deduplication) invites synthetic oversampling, and SMOTETomek
 is the corpus's most common choice. On deduplicated data it degrades macro-F1 in **all four**
 classifier × feature-set configurations:
+
+**Table 6 — SMOTETomek effect on 19-class macro-F1, deduplicated data, seed 42.**
 
 | Configuration | Original | SMOTETomek | Δ macro-F1 |
 |---|---|---|---|
@@ -556,13 +652,21 @@ weighting for the synthetic samples to interact with — so the mechanism is bou
 adjacent classes rather than a compounding of two imbalance corrections. Published results on this dataset
 disagree about resampling; this measurement is offered as corroboration of the negative ones, on clean data.
 
+**Seed caveat.** These four deltas are single-seed (42), and §8.1 establishes that this pipeline's macro-F1
+carries an across-seed σ of roughly 0.024. The two Random Forest deltas (−0.0114, −0.0171) are smaller than
+that σ and must not be read as individually established; what the four rows support is the **consistent
+negative direction across four independent configurations**, which is a weaker but genuine claim, plus the two
+XGBoost deltas (−0.0449, −0.0368) that exceed it. A five-seed replication of this table is owed and is the
+obvious extension.
+
 ### 8.3 A published effect that does not reproduce
 
 One study in the corpus attributes an accuracy improvement from 0.735 to 0.998 — roughly 26 percentage
 points — to switching a Random Forest's split criterion from Gini impurity to entropy. Re-tested under
 controlled conditions on deduplicated data, that switch is worth **+0.47 percentage points** of macro-F1
-(0.8551 with entropy versus 0.8504 with Gini), which is inside run-to-run variation and operationally
-irrelevant. A ~26-point effect attributed to a split criterion is far better explained by the un-deduplicated
+(0.8551 with entropy versus 0.8504 with Gini) at a single seed — an eighth of the across-seed σ established in
+§8.1, so not distinguishable from run-to-run variation at all, and two orders of magnitude below the published
+claim. A ~26-point effect attributed to a split criterion is far better explained by the un-deduplicated
 data and pipeline differences that accompany it.
 <!-- oracle: numbers_map.md §4 E5 (0.8551) and E5G (0.8504); gap doc §2.4 / DR-7 for the source claim -->
 
@@ -595,9 +699,11 @@ unfalsifiable, and on this dataset the choice is worth a factor of 517 (§4). Re
 read.
 
 **P2 — Scope.** State exactly which files or directories were counted, and whether the count is per-file,
-per-split, or pooled across the released split boundary. Scope is worth a factor of 500 between "train
-directory" and nothing at all, and it is measurable even at single-digit scale: the same six subsets yield 672
-duplicates train-only and 674 including test (§5).
+per-split, or pooled across the released split boundary. Scope decides which rows a count refers to, and it is
+measurable at every scale: a study's 4,971,919-row working set reconstructs only once its subset is known, and
+the same six candidate subsets yield 672 duplicates train-only against 674 including test (§5). (The factor of
+517 belongs to P1, not here — precision and scope are independent parameters and conflating them is how the
+5,119 cluster became uninterpretable.)
 
 **P3 — Stage.** State where deduplication sits in the pipeline relative to splitting, resampling and scaler
 fitting. Deduplicating after a merge-and-re-split destroys the official split; deduplicating after resampling
@@ -620,17 +726,26 @@ Three reporting practices follow from the measurements rather than from the para
 deduplicated test split. The difference is small on this dataset (§8.1) but it is the only way a reader can
 compare against either convention, and it costs one extra evaluation pass.
 
-**Report macro-F1 and MCC alongside accuracy, with imbalance stated.** At 2,374:1 a trivial majority predictor
-exceeds 87% accuracy, so accuracy is dominated by the volumetric floods that also carry the duplicate mass —
-the two distortions compound in the same metric.
+**Report macro-F1 and MCC alongside accuracy, with imbalance stated.** At 2,374:1, accuracy is dominated by the
+volumetric floods that also carry the duplicate mass, so the two distortions compound in the same metric: a
+constant "attack" predictor already reaches **95.7%** accuracy on the deduplicated training distribution
+(benign is 4.3% of it), and the six flood classes that hold 99.51% of the duplicate mass are also the classes
+whose multiplicities inflate accuracy under Finding 1. Macro-F1 and MCC are the metrics on which minority
+behaviour is visible at all.
+<!-- CORRECTED after senior review: an earlier draft claimed "a trivial majority predictor exceeds 87%
+     accuracy". That is false - the largest single deduplicated train class is 36.23% (TCP_IP-DDoS-UDP,
+     1,635,956/4,515,080). The 87.54% figure is the DDoS+DoS SHARE of the split, not any single-class
+     baseline. UPSTREAM DEFECT: the same wrong claim appears in Literature_Review_Chapter2_v6.6.md:236
+     ("a trivial majority predictor exceeds ~87.5% accuracy, since DDoS and DoS together are 87.54% of
+     training rows") and must be corrected there as a citation-consistency fix. -->
 
 **Report seed variance.** On this dataset a single-seed macro-F1 is not stable at the precision at which the
 literature declares winners: five seeds of one fixed configuration span 3.75 macro-F1 points (§8.1), while
 published margins run as thin as 0.02 points. A single-run comparison at that resolution measures the seed.
 
-Table 1 restates the protocol as a checklist usable by authors and reviewers.
+Table 7 restates the protocol as a checklist usable by authors and reviewers.
 
-**Table 1 — Reporting checklist for duplicate handling on CICIoMT2024.**
+**Table 7 — Reporting checklist for duplicate handling on CICIoMT2024.**
 
 | # | Parameter | Report | Why it matters here |
 |---|---|---|---|
@@ -665,9 +780,10 @@ one dataset. Finding 2 — that duplicated training data has no separable effect
 boosted trees at this scale, not a general claim; a nearest-neighbour or deep-sequence model could plausibly
 behave differently, and we would expect a model with far higher capacity relative to the data to be more
 duplicate-sensitive, not less. The seed set is five, which bounds resolution differently per contrast: the
-paired test-set contrasts carry σ of 0.0008 and 0.0003 and so resolve effects of roughly ±0.001 macro-F1,
-whereas the training-set contrasts carry σ ≈ 0.024 and cannot resolve anything below roughly ±0.02. Finding 2
-is therefore a statement that no effect **larger than ~0.02 macro-F1** exists, not that the effect is zero.
+paired test-set contrasts carry σ of 0.0008 and 0.0002 and so resolve effects of roughly ±0.001 macro-F1,
+whereas the training-set contrasts carry σ ≈ 0.025, giving a standard error of 0.011 and a t-based 95% interval
+of about ±0.031. Finding 2 is therefore a statement that no training-side effect **larger than roughly 0.03
+macro-F1** exists, not that the effect is zero.
 
 **Preprocessing convention.** The audit scripts and the reference pipeline differ in ±inf handling (§3.5).
 They agree to four decimal places on the headline rates; a study using a third convention could differ in the
@@ -680,16 +796,18 @@ counter-example and should be read as such rather than as a census.
 ## 11. Conclusion
 
 A third of the reference benchmark for IoMT intrusion detection is duplicated content at the precision models
-compute in, and the field has not measured it. We quantified it per split and per class, reconciled the one
+compute in, and none of the 31 studies we verified against full text has measured it. We quantified it per split and per class, reconciled the one
 duplicate figure the literature does report, and located the redundancy: six volumetric flood classes carry
 99.51% of it, while the benign class and the largest attack class carry none.
 
 The consequence, measured under control rather than inferred across papers, is narrower than the framing the
-subject invites. A duplicated test set inflates accuracy by a few tenths of a point — real, reproducible, and
-enough to matter in a literature that declares winners by hundredths. Duplicated training data has no
-separable effect on a boosted-tree classifier at this scale. And the raw-versus-deduplicated comparison the
-field makes lies inside its own seed variance, which is why we withdraw a published figure of our own rather
-than defend it.
+subject invites — and differently located. Scoring on the duplicated rather than the deduplicated test split
+raises accuracy by a few tenths of a point: reproducible, enough to matter where winners are declared by
+hundredths, but a change of estimand rather than contamination, since nothing crosses the split. Duplicated
+training data has no separable effect on a boosted-tree classifier at this scale; the design bounds it at
+roughly ±0.03 macro-F1 rather than showing it to be zero. And the two-factor comparison the field actually
+makes is not resolvable at five seeds, which is why we withdraw two published figures of our own rather than
+defend them.
 
 The remedy is not a better detector or a new dataset. It is five sentences in a methods section — precision,
 scope, stage, split provenance, granularity — without which two accuracy figures on this benchmark are not
