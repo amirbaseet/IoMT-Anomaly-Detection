@@ -713,8 +713,10 @@ per-configuration effect and is the one we make. A five-seed replication of this
 One study in the corpus [13] attributes an accuracy improvement from 0.735 to 0.998 — roughly 26 percentage
 points — to switching a Random Forest's split criterion from Gini impurity to entropy. Re-tested under
 controlled conditions on deduplicated data, and compared on **the same metric as the claim**, that switch is
-worth **+0.04 percentage points of accuracy** (98.52% with entropy versus 98.48% with Gini): three orders of
-magnitude smaller than the effect attributed to it. On macro-F1 the same pair differs by +0.47 percentage
+worth **+0.034 percentage points of accuracy** (0.985165 with entropy versus 0.984825 with Gini, which print
+as 98.52% and 98.48%): nearly three orders of magnitude smaller than the effect attributed to it. We give the
+delta at full precision deliberately — differencing the two rounded percentages gives 0.04 pp, and this paper
+is about not letting rounding decide a reported number. On macro-F1 the same pair differs by +0.47 percentage
 points (0.8551 versus 0.8504), about a quarter of the across-seed level variation of a single configuration
 (σ = 0.0168), so it is not distinguishable from run-to-run variation there either. Both figures are
 single-seed. A ~26-point effect attributed to a split criterion is far better explained by the un-deduplicated

@@ -136,7 +136,7 @@ Closure tally: **4 closed / 1 reframed / 2 open by design** — matches task-spe
 | E5G RF-gini/Full/Original macro-F1 | 0.8504 | `E5G_multiclass.json` |
 | E5 RF-entropy/Full/Original accuracy | 98.52 % | `E5_multiclass.json`; `docs/phase4_supervised.md` table |
 | E5G RF-gini/Full/Original accuracy | 98.48 % | `E5G_multiclass.json`; `docs/phase4_supervised.md` table |
-| Gini→entropy split-criterion effect, **accuracy** (metric-matched to the published ~26 pp accuracy claim) | **+0.04 pp** (98.52 − 98.48) | derived from the two rows above |
+| Gini→entropy split-criterion effect, **accuracy** (metric-matched to the published ~26 pp accuracy claim) | **+0.034 pp** (0.985165 − 0.984825). ⚠ differencing the *rounded* endpoints gives 0.04 pp — cite the full-precision figure | derived from the two rows above |
 | E6 RF/Full/SMOTE macro-F1 | 0.8380 | `E6_multiclass.json` |
 | E7 XGB/Full/Original macro-F1 | 0.9076 | `E7_multiclass.json` |
 | E8 XGB/Full/SMOTE macro-F1 | 0.8708 | `E8_multiclass.json` |
