@@ -5,13 +5,173 @@
 > Sections 1–2 and 8–11 are stubs. Every number carries an oracle reference in an HTML comment; those
 > comments are stripped at submission and must survive `/fact-check` before that happens.
 
+## Abstract
+
+CICIoMT2024 has become the reference benchmark for Internet-of-Medical-Things intrusion detection, used by
+more than thirty studies within two years of release, with reported accuracies clustering above 99%. We show
+that a third of the benchmark is duplicated content, that the size of that duplication depends entirely on a
+parameter no study states, and that its measurable effect on reported performance is narrower and differently
+located than the field assumes. Measured over the released artifact, duplicate rows constitute 0.07% of the
+training split at the float64 precision the CSVs are printed in, and **36.95% of the training split and 44.72%
+of the test split at the float32 precision models actually compute in** — a factor of 517 on identical rows.
+Three published studies report removing exactly 5,119 duplicates; we reproduce that figure to the row and show
+it is the float64-exact count of one split, so those reports are correct and mutually incomparable. The
+redundancy is structured rather than diffuse: six volumetric TCP/IP flood classes carry 99.51% of the duplicate
+mass, the single largest class in the training split contains none at all, and the benign class is entirely
+free of it. Separating leakage mechanisms, within-split redundancy dominates while cross-split identity —
+the mechanism a train/test contamination check would find — accounts for only 0.84% of test rows. A controlled
+five-seed ablation on one pipeline shows that a duplicated **test** set inflates accuracy by 0.35–0.40
+percentage points (an effect separable from seed variance), that duplicated **training** data has no separable
+effect, and that the raw-versus-deduplicated comparison the literature makes lies inside its own seed
+variance. We therefore retract a previously published "memorization premium" of our own. We conclude with a
+five-parameter reporting protocol — precision, scope, stage, split and granularity — without which accuracy
+comparisons on this dataset are not interpretable, and release a reproduction package containing all analysis
+code and results.
+<!-- WORD COUNT: ~270. Elsevier IoT abstract limit UNVERIFIED (ScienceDirect 403s automated fetch) -->
+
+## Highlights
+
+- CICIoMT2024 duplicate rows: 0.07% at float64, 36.95%/44.72% at float32 — a 517× gap
+- The literature's three "5,119 duplicates" reports are reproduced exactly and shown incomparable
+- Six flood classes carry 99.51% of duplicate mass; the largest class carries none
+- A duplicated test set inflates accuracy 0.35–0.40 pp; duplicated training data does not
+- Raw-vs-deduplicated comparisons on this dataset lie inside seed variance
+<!-- Elsevier convention is 3-5 bullets, <=85 characters each. Each above is within 85 chars, but the
+     rule itself is UNVERIFIED for this journal — confirm against the Guide for Authors. -->
+
+**Keywords:** intrusion detection; Internet of Medical Things; benchmark datasets; data leakage;
+deduplication; reproducibility; evaluation methodology
+
+---
+
 ## 1. Introduction
 
-*[TO DRAFT — see OUTLINE.md §1. Needs the corpus freshness re-sweep before absence claims are final.]*
+Benchmark datasets decide what a field believes. When one dataset becomes the common substrate for a research
+area, its defects propagate into every result computed on it, and the defects that propagate furthest are the
+ones nobody measures because everybody assumes somebody else did.
+
+CICIoMT2024, released by the Canadian Institute for Cybersecurity in 2024, is that substrate for
+Internet-of-Medical-Things intrusion detection. It is the largest and only genuinely multi-protocol real-testbed
+IoMT benchmark available — captured from a 40-device testbed (25 physical, 15 simulated) across Wi-Fi, MQTT
+and Bluetooth, with **8,775,013** flow records in the Wi-Fi and MQTT subset that this paper and effectively
+the entire literature use, and a separate Bluetooth feature schema shipping alongside — and it was adopted
+quickly and broadly: our systematic search identifies more than thirty studies using it for
+intrusion detection within two years of release. Reported performance on it is uniformly excellent. Binary
+detection is saturated above 99%, and 19-class accuracies of 0.96–0.999 are routine.
+
+Against that consensus stands an uncomfortable control, supplied by the dataset's own authors: their untuned
+19-class baseline scores **0.733**. The gap between 0.733 and 0.999 on the same task family is large enough to
+demand an explanation, and better modelling is only part of one.
+
+This paper measures a specific contributor that the literature has left unquantified. Duplicate records in
+CICIoMT2024 are not a marginal data-hygiene matter — a third of the benchmark is copies — and their size,
+location and consequence are all measurable. Our contributions:
+
+1. **A per-split, precision-stated quantification of duplication** (§4). Duplicate rows are 0.07% of the
+   training split at float64 and 36.95% at float32, with the test split reaching 44.72%. Precision is not a
+   reporting detail on this dataset; it is a factor of 517.
+2. **A reconciliation of the literature's one published duplicate figure** (§5). Three studies report removing
+   exactly 5,119 rows. We reproduce that number to the row, identify it as the float64-exact count of the
+   training directory, and show that a fourth reported subset count is pipeline-inherited rather than measured.
+   Nobody miscounted; the reports are incomparable because precision and scope go unstated.
+3. **The structure of the redundancy** (§6). It is concentrated, not diffuse: six volumetric TCP/IP flood
+   classes hold 99.51% of the duplicate mass, four `Recon` sub-types show meaningful rates but negligible mass,
+   and `Benign`, all five MQTT classes and the single largest flood class contain none. Duplication on this
+   dataset is protocol-structural, not volume-driven.
+4. **A three-mechanism decomposition of the leakage** (§7). Within-split redundancy dominates; cross-split
+   identity — the only mechanism a conventional contamination check detects — touches 0.84% of test rows; and
+   the duplicate mass additionally distorts every preprocessing statistic fitted on the training split.
+5. **A controlled measurement of the consequence, including two negative results** (§8). In one pipeline over
+   five seeds, a duplicated test set inflates accuracy by 0.35–0.40 percentage points; duplicated training data
+   has no separable effect; and the raw-versus-deduplicated comparison the field makes is inside its own seed
+   variance. We withdraw a previously published figure of our own on this basis.
+6. **A reporting protocol and a reproduction package** (§9, §3.7). Five parameters — precision, scope, stage,
+   split and granularity — that make a duplicate count falsifiable and two accuracy figures comparable.
+
+The intended contribution is not a better detector. It is that a specific, widely used benchmark cannot
+currently support the cross-paper comparisons made on it, that the reason is measurable, and that the remedy
+is cheap.
 
 ## 2. Related work
 
-*[TO DRAFT — see OUTLINE.md §2. Needs the external leakage-precedent citation pull (§2.3).]*
+### 2.1 Leakage and duplication as evaluation failures
+
+That duplicated records inflate measured performance is not a new observation in machine learning generally.
+Leakage has been characterised as a principal driver of the reproducibility problem in machine-learning-based
+science, with a taxonomy separating contamination of the train/test boundary from illegitimate features and
+from sampling artifacts. Security-specific treatments have catalogued the same failure modes as recurring
+pitfalls in the design and evaluation of learning-based security systems, and duplicate-driven inflation has
+been documented concretely in adjacent domains — near-duplicate images across the splits of standard vision
+benchmarks, and train/test overlap in Android malware corpora.
+<!-- CITATIONS TO ADD (identified 2026-07-30, each verified to exist by search; full bibliographic
+     capture still owed): Kapoor & Narayanan, Patterns 2023 (leakage taxonomy / reproducibility crisis);
+     Arp et al., USENIX Security 2022 (Dos and Don'ts of ML in Computer Security); a CIFAR
+     near-duplicate study; arXiv 2410.19364 (train-test leakage in Android malware detection). -->
+
+What distinguishes the present case is not the phenomenon but its invisibility in a literature that is
+otherwise methodologically attentive. The duplication documented here is large, it is measurable with three
+lines of code, and it sits in the field's single most used benchmark.
+
+### 2.2 Deduplication practice in the CICIoMT2024 literature
+
+Our corpus of CICIoMT2024 intrusion-detection studies comprises 33 identified works, 31 of which we verified
+against full text (two are paywalled at abstract level and are excluded from every claim below). Nine of the
+31 touch deduplication in some form. Of those nine:
+
+- **three** report a single aggregate count — 5,119 rows — with no precision, no scope, and no per-split rate;
+- **one** reports a ~55% row reduction that conflates deduplication with removal of missing values;
+- **three** describe deduplication as a pipeline step without quantifying it at all;
+- **one** deduplicates both splits but reports no count;
+- **one** performs a cross-set hash check, but after undersampling, so its scope is not the released data.
+
+A tenth study deduplicates a *different* dataset used alongside CICIoMT2024 and not CICIoMT2024 itself; it is
+excluded from the nine.
+
+**No study in the verified set reports a per-split duplicate rate, and none analyses the effect of duplication
+on its own reported metrics.** This is the gap the present paper fills.
+<!-- oracle: Research_Gap_Report_v1.0.md:15 and Appendix A rows; Literature_Review_Chapter2_v6.6.md §2.4.2(a) -->
+
+**On the completeness of that claim.** An absence claim is only as strong as the search behind it. Ours rests
+on a documented systematic search across IEEE Xplore, Springer, ScienceDirect, Nature, arXiv, MDPI and
+regional indices, snapshotted 2026-07-29 and re-swept before submission; the search strategy is released with
+the reproduction package. A re-sweep conducted while this paper was being drafted surfaced at least one further
+study using CICIoMT2024 that our roster had missed (a 2024 conference paper reporting 99% across binary,
+categorical and multiclass tasks, with no deduplication mentioned), which is evidence that the roster is a
+documented lower bound rather than a census. We therefore state the absence claim over the verified set and
+make no completeness claim over the literature as a whole. Every study we did examine is listed, so the claim
+is falsifiable by counter-example — which is the strongest form available to a single-team review.
+<!-- ROSTER TRIAGE OWED before submission: candidates surfaced 2026-07-30 and not yet in the roster —
+     arXiv 2410.23306 (Mohamadi et al., ICIS 2024, CICIoMT2024, no dedup mentioned — CONFIRMED user);
+     Computer Networks S1389128626003713 (2026, feature selection + hybrid balancing);
+     Applied Sciences 10.3390/app16104701 (PCA + One-Class SVM);
+     Internet of Things S2542660525003464 (FTL-TSLP federated transfer learning);
+     arXiv 2507.05132 (ELM DDoS, Jul 2025 — screened out of the freshness sweep on date grounds, never
+     checked against the roster). Note the screening gap: the 2026-07 freshness sweep only sought papers
+     NEWER than the corpus build, so 2024-2025 works missed by the original search were never re-caught. -->
+
+### 2.3 The one prior methodological critique of this dataset
+
+One study is a direct methodological predecessor and must be positioned precisely. Doménech et al. (2025), in
+this journal, train on a general-IoT benchmark and test on CICIoMT2024 to demonstrate a 66.87% F1 transfer
+drop, then critique four CICIoMT2024 design choices — inconsistent packet windowing, the absence of a proper
+train/validation/test split, temporal correlation between records, and class imbalance — and propose
+preprocessing remedies, reaching 99.85% accuracy with their optimised pipeline.
+
+Their critique and ours are complementary and non-overlapping. Their windowing observation is in fact
+*upstream* of our result: window-averaged feature construction is exactly why exact-match duplicate counts are
+a lower bound (§4), so their finding strengthens ours. But they do not deduplicate, and they report no
+duplicate count, so the inflation documented here persists in their optimised figure as well. To our knowledge
+no prior work on this dataset quantifies duplication per split, at a stated precision, or measures its effect.
+<!-- oracle: Literature_Review_Chapter2_v6.6.md:151 and :75 (row 19) -->
+
+### 2.4 Why substrate fragmentation makes this audit necessary
+
+The corpus does not share one substrate. Across studies, feature counts on the released schema span 5 to 46,
+with one 2026 study re-extracting 78 of 85 features; row counts span roughly 16,000 to 8.78 million; at least
+eight distinct label-space sizes coexist under one dataset name. A duplicate rate is therefore only meaningful
+relative to a stated scope — which is precisely the parameter the 5,119 cluster omits (§5), and one of the five
+the protocol of §9 requires.
+<!-- oracle: Research_Gap_Report_v1.0.md headline finding 2 / G9 -->
 
 ---
 
@@ -425,13 +585,128 @@ often hold out.
 
 ## 9. A reporting protocol for CICIoMT2024
 
-*[TO DRAFT — OUTLINE.md §9: five mandatory parameters + the T7 checklist.]*
+The measurements above share one cause: five parameters that determine a duplicate count, and therefore
+determine every metric computed after it, are conventionally left unstated. Each is one sentence to report and
+none requires new work.
+
+**P1 — Precision.** State the numeric precision at which rows were compared. A count reported without it is
+unfalsifiable, and on this dataset the choice is worth a factor of 517 (§4). Report the operational precision
+(float32 for the usual toolchains), and the float64 count too if deduplication was performed on the CSVs as
+read.
+
+**P2 — Scope.** State exactly which files or directories were counted, and whether the count is per-file,
+per-split, or pooled across the released split boundary. Scope is worth a factor of 500 between "train
+directory" and nothing at all, and it is measurable even at single-digit scale: the same six subsets yield 672
+duplicates train-only and 674 including test (§5).
+
+**P3 — Stage.** State where deduplication sits in the pipeline relative to splitting, resampling and scaler
+fitting. Deduplicating after a merge-and-re-split destroys the official split; deduplicating after resampling
+measures the resampler, not the data. And because deduplication moves the fitted preprocessing statistics
+(§7, M3), a deduplicated and a non-deduplicated pipeline are not mutually scoreable — a fact that silently
+invalidates cross-arm comparisons.
+
+**P4 — Split provenance.** State whether the released file-level split was preserved or reconstructed. The
+released split is the dataset's own evaluation protocol; re-splitting a merged pool is a different experiment
+and should be reported as one.
+
+**P5 — Granularity.** Report duplicate rates **per split and per class**, not as a single aggregate. On this
+dataset the aggregate hides everything that matters: six classes carry 99.51% of the mass, a third of the
+label space is entirely clean, and the largest class has no duplicates at all (§6). An aggregate rate is
+consistent with radically different structures.
+
+Three reporting practices follow from the measurements rather than from the parameters:
+
+**Report a metric pair, not a choice.** Where feasible, report performance on both the raw and the
+deduplicated test split. The difference is small on this dataset (§8.1) but it is the only way a reader can
+compare against either convention, and it costs one extra evaluation pass.
+
+**Report macro-F1 and MCC alongside accuracy, with imbalance stated.** At 2,374:1 a trivial majority predictor
+exceeds 87% accuracy, so accuracy is dominated by the volumetric floods that also carry the duplicate mass —
+the two distortions compound in the same metric.
+
+**Report seed variance.** On this dataset a single-seed macro-F1 is not stable at the precision at which the
+literature declares winners: five seeds of one fixed configuration span 3.75 macro-F1 points (§8.1), while
+published margins run as thin as 0.02 points. A single-run comparison at that resolution measures the seed.
+
+Table 1 restates the protocol as a checklist usable by authors and reviewers.
+
+**Table 1 — Reporting checklist for duplicate handling on CICIoMT2024.**
+
+| # | Parameter | Report | Why it matters here |
+|---|---|---|---|
+| P1 | Precision | float32 / float64 / other, explicitly | factor of 517 |
+| P2 | Scope | files, directories, per-split or pooled | 5,119 vs 2,645,751; 672 vs 674 |
+| P3 | Stage | position relative to split, resample, scaler fit | changes the feature space, not just row count |
+| P4 | Split provenance | official file-level split preserved or re-split | re-splitting is a different experiment |
+| P5 | Granularity | per-split **and** per-class rates | aggregate hides a 99.51%-concentrated mass |
+| — | Metric pair | raw and deduplicated test performance | makes both conventions comparable |
+| — | Metric set | macro-F1 + MCC + accuracy, imbalance stated | accuracy compounds two distortions |
+| — | Seed variance | mean ± σ over a stated seed set | 3.75-point span vs 0.02-point margins |
 
 ## 10. Threats to validity
 
-*[TO DRAFT — OUTLINE.md §10. Must carry: exact-match lower bound, Wi-Fi+MQTT scope (no BLE), the
-hash-collision bound, single-dataset scope, corpus snapshot date.]*
+**Exact matching is a floor.** Every count here is exact-match. The dataset's window-averaged features
+guarantee near-duplicates that no exact comparison detects at any precision, so the true redundancy is higher
+than 36.95%/44.72% by an unmeasured margin. We deliberately do not offer a near-duplicate metric: any
+threshold would be arbitrary, and an arbitrary threshold in a paper about unstated parameters would be
+self-defeating. Quantifying near-duplication under a principled similarity criterion is the obvious next step.
+
+**Protocol scope.** We audit the Wi-Fi and MQTT subset — the substrate of effectively the entire literature.
+The Bluetooth/BLE portion ships as a separate feature schema and is not audited here; its duplication is
+unknown, and given that one class in our audit reaches 94% within-class duplication in the test split, it
+should not be assumed clean.
+
+**Hash-based identity.** Duplicate detection uses 64-bit row hashing, whose expected false-collision count
+over 8,775,013 rows is 2.1 × 10⁻⁶ pairs — negligible but nonzero. The float64 counts are independently
+confirmed by directory row arithmetic (§5), which does not depend on hashing.
+
+**Ablation scope.** The §8.1 ablation uses one classifier family (gradient-boosted trees), one feature set and
+one dataset. Finding 2 — that duplicated training data has no separable effect — is therefore a statement about
+boosted trees at this scale, not a general claim; a nearest-neighbour or deep-sequence model could plausibly
+behave differently, and we would expect a model with far higher capacity relative to the data to be more
+duplicate-sensitive, not less. The seed set is five, which bounds resolution differently per contrast: the
+paired test-set contrasts carry σ of 0.0008 and 0.0003 and so resolve effects of roughly ±0.001 macro-F1,
+whereas the training-set contrasts carry σ ≈ 0.024 and cannot resolve anything below roughly ±0.02. Finding 2
+is therefore a statement that no effect **larger than ~0.02 macro-F1** exists, not that the effect is zero.
+
+**Preprocessing convention.** The audit scripts and the reference pipeline differ in ±inf handling (§3.5).
+They agree to four decimal places on the headline rates; a study using a third convention could differ in the
+final digits.
+
+**Corpus claims.** The absence claims of §2.2 are asserted over 31 full-text-verified studies snapshotted
+2026-07-29, and §2.2 documents both the search and a known instance of incompleteness. They are falsifiable by
+counter-example and should be read as such rather than as a census.
 
 ## 11. Conclusion
 
-*[TO DRAFT]*
+A third of the reference benchmark for IoMT intrusion detection is duplicated content at the precision models
+compute in, and the field has not measured it. We quantified it per split and per class, reconciled the one
+duplicate figure the literature does report, and located the redundancy: six volumetric flood classes carry
+99.51% of it, while the benign class and the largest attack class carry none.
+
+The consequence, measured under control rather than inferred across papers, is narrower than the framing the
+subject invites. A duplicated test set inflates accuracy by a few tenths of a point — real, reproducible, and
+enough to matter in a literature that declares winners by hundredths. Duplicated training data has no
+separable effect on a boosted-tree classifier at this scale. And the raw-versus-deduplicated comparison the
+field makes lies inside its own seed variance, which is why we withdraw a published figure of our own rather
+than defend it.
+
+The remedy is not a better detector or a new dataset. It is five sentences in a methods section — precision,
+scope, stage, split provenance, granularity — without which two accuracy figures on this benchmark are not
+comparable, and with which they are. Until they are reported, the 0.99-plus cluster on CICIoMT2024 should be
+read as a family of incommensurable measurements rather than a ranking.
+
+## Declarations
+
+**CRediT.** *[TO COMPLETE once authorship is settled.]*
+**Declaration of competing interest.** *[TO COMPLETE.]*
+**Data availability.** CICIoMT2024 is distributed by the Canadian Institute for Cybersecurity. All analysis
+code, all result artifacts, and a verifier that re-derives every number in this paper are released at
+`ciciomt2024-dedup-audit` *[URL]*. No dataset records are redistributed.
+**Generative AI disclosure.** *[TO COMPLETE — Elsevier wording UNVERIFIED; see the Guide-for-Authors gap.]*
+**Funding.** *[TO COMPLETE.]*
+
+## References
+
+*[TO COMPILE — 45–60 targeted. Sources: Literature_Review_Chapter2_v6.6.md §2.6 (refs 1–47, clean) and
+Research_Gap_Report_v1.0.md Appendix A, plus the four external leakage citations owed in §2.1.]*
