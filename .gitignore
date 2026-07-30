@@ -56,6 +56,7 @@ decisions/
 
 # Thesis literature review — local only, not for GitHub
 thesis/lit_review/
+thesis/manuscript/
 
 # Archive of superseded staging files
 .archive/
