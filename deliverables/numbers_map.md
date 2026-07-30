@@ -35,6 +35,9 @@ Format key:
 | Deduplicated test rows | 892,268 | README §2, §11.4 |
 | Train duplicate rate | 36.95 % | README §2, §10.1 |
 | Test duplicate rate | 44.72 % | README §2, §10.1 |
+| DDoS-ICMP within-class duplicate rate (train, float32) | 86.32 % (1,327,218 / 1,537,476) | `iomt-pcap-experiments/dr6_out/dr7_perclass_f32.json` (DR-7 recomputation, 2026-07-30) |
+| DDoS-ICMP within-class duplicate rate (test, float32) | 94.37 % | `dr7_perclass_f32.json` |
+| Flood-class (TCP_IP-*) share of train duplicate mass | 99.5 % (2,632,808 / 2,645,751 within-class) | `dr7_perclass_f32.json` |
 | Features (raw) | 45 | README §2, §6 |
 | Features after Drate drop | 44 | README §11.2 |
 | Features after correlation/noise drop | 28 | README §10.3, §11.2 |
