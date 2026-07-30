@@ -1043,7 +1043,7 @@ The contributions are grouped into four tiers by argumentative weight; Tier 1 ar
 
 ### Tier 4 — Path B robustness contributions (C15–C20)
 
-- **C15** — Multi-seed robustness under true LOO (5 seeds, σ strict = 0.022, 0/19 cells fail). Evidence: `results/enhanced_fusion/multi_seed_summary.csv`.
+- **C15** — Multi-seed robustness under true LOO (5 seeds, σ strict = 0.022, 0/18 cells fail). Evidence: `results/enhanced_fusion/multi_seed_summary.csv`.
 - **C16** — Continuous-frontier threshold methodology (29 thresholds, plateau structure, p93.0 refined optimum). Evidence: `results/enhanced_fusion/threshold_sweep/sweep_table.csv`.
 - **C17** — Empirical SHAP background sensitivity verification (Kendall τ_top10 = 0.927, passes the pre-registered 0.9 threshold). Evidence: `results/shap/sensitivity/`.
 - **C18** — β-VAE Layer 2 substitution robustness check (Δ strict = −0.0001 at β = 0.5; SHELVE). Evidence: `results/enhanced_fusion/vae_decision.csv`.

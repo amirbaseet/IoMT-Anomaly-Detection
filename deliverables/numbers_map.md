@@ -312,7 +312,7 @@ All 11 ablation rows come from `results/enhanced_fusion/metrics/ablation_table.c
 | seed=42 z-score | +0.20 σ (63rd percentile) | README §15B.3 |
 | Operational FPR across seeds | 0.2289 ± 0.0003 | README §15B.6 |
 | CV of FPR | 0.13 % | README §15B.6 |
-| Cells failing 0.70 strict | 0 / 19 eligible | README §15B.4 |
+| Cells failing 0.70 strict | 0 / 18 eligible (5+0+5+3+5 per-target n_seeds; corrected 2026-07-30 from 0/19 — AUDIT M6) | `results/enhanced_fusion/multi_seed_per_target_summary.csv` |
 | Recon_Ping_Sweep eligibility (seeds 1, 100) | n_loo_benign = {29, 27} < 30 → excluded | README §15B.5 |
 | Continuous sweep — 29 thresholds at p85.0–p99.0 (Δ=0.5pp) | 29 rows | README §15D.2 |
 | Refined optimum percentile | p93.0 | README §15D.3 |

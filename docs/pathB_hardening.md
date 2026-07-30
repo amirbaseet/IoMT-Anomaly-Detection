@@ -7,7 +7,7 @@
 | | |
 |---|---|
 | **Goal** | Stress-test the Phase 6C headline against a structured senior review and five robustness axes — does `entropy_benign_p95` survive seeds, a continuous threshold grid, distribution-shift, and Layer-2 architecture swaps? |
-| **Headline result** | **9 senior-review fixes** (none changed a number); multi-seed H2-strict **0.799 ± 0.023** with **0/19 eligible cells failing**; continuous sweep finds refined optimum **p93.0** (strict_avg 0.8590, +5.5 pp); SHAP background Kendall τ **0.927**; β-VAE Δ strict **−0.0001** (SHELVE); LSTM-AE c1 Δ strict **+0.0341** (RETAIN AE). |
+| **Headline result** | **9 senior-review fixes** (none changed a number); multi-seed H2-strict **0.799 ± 0.023** with **0/18 eligible cells failing**; continuous sweep finds refined optimum **p93.0** (strict_avg 0.8590, +5.5 pp); SHAP background Kendall τ **0.927**; β-VAE Δ strict **−0.0001** (SHELVE); LSTM-AE c1 Δ strict **+0.0341** (RETAIN AE). |
 | **Key decision** | SHELVE β-VAE and RETAIN the deterministic AE — Layer-2 distributional family is interchangeable; the entropy channel sets the ceiling. |
 | **Critical failure fixed** | No 🔴 — the two project-critical failures were upstream (Phase 5 C13, Phase 6C C8). Path B issues were routine schema/eligibility fixes. |
 | **Feeds thesis** | §9 (Senior Review + Hardening) · C15–C20 (Path B contributions) · defensibility **3.0 → 4.0 → 4.3** (evidence-backed). |
@@ -25,7 +25,7 @@
 |---|---|---|
 | Senior-review fixes | 9 (under named commits) | `numbers_map.md §10` |
 | Multi-seed H2-strict avg | **0.799 ± 0.023**, range [0.764, 0.827], CV 2.82 % | `numbers_map.md` (Tier 1) |
-| Cells failing 0.70 strict | **0 / 19 eligible** | `numbers_map.md` (Tier 1) |
+| Cells failing 0.70 strict | **0 / 18 eligible** | `multi_seed_per_target_summary.csv` (corrected 2026-07-30) |
 | Operational FPR across seeds | 0.2289 ± 0.0003 (CV 0.13 %) | `numbers_map.md` (Tier 1) |
 | Continuous sweep | 29 points p85–p99; refined optimum **p93.0** strict_avg **0.8590**, FPR 0.2473 (+5.5 pp / +1.8 pp vs p95) | `numbers_map.md` (Tier 1) |
 | Per-fold KS | aggregate 0.0645; per-fold [0.0543, 0.0573] | `numbers_map.md §8` |
@@ -34,13 +34,13 @@
 | LSTM-AE | 3/6 pass Gate-1 (c1, c4, c6); c1 strict_avg **0.8930** (Δ +0.0341), c4 0.8685, c6 0.8907; c4 highest L2 AUC 0.9919 | `numbers_map.md` (Tier 2) |
 | Defensibility | 3.0 → 4.0 (post-review) → 4.3 (post Tier 1) | `numbers_map.md §10` |
 
-> Note: `full_report §9` says "0/18 eligible cells fail" (25 − 5 − 2 = 18); `numbers_map.md` and the executed notebook both say **0/19**. Per the report-wins rule, used **0/19** (logged in the verification report).
+> Note — RESOLVED 2026-07-30: the artifact (`multi_seed_per_target_summary.csv`, per-target n_seeds = 5+0+5+3+5) confirms **18** eligible cells, matching full_report §9's 25 − 5 − 2 arithmetic. The earlier 0/19 (numbers_map + executed notebook printout) under-counted the Recon_Ping_Sweep exclusions (2, not 1). numbers_map corrected; the claim is **0/18**.
 
 ## 3. Decisions made
 
 | Decision | Alternatives considered | Why this won | Trade-off accepted |
 |---|---|---|---|
-| Multi-seed: 5 seeds {1, 7, 42, 100, 1729}, seed=42 hardlinked | 3 seeds (cheaper); 10 seeds; bootstrap-only | 5 × 20 new LOO trains = 85 min fits a single night; "0/19 cells fail" is stronger than bootstrap-only | Recon_Ping_Sweep eligibility shifts in 2/5 seeds → needs the n ≥ 30 floor explanation |
+| Multi-seed: 5 seeds {1, 7, 42, 100, 1729}, seed=42 hardlinked | 3 seeds (cheaper); 10 seeds; bootstrap-only | 5 × 20 new LOO trains = 85 min fits a single night; "0/18 cells fail" is stronger than bootstrap-only | Recon_Ping_Sweep eligibility shifts in 2/5 seeds → needs the n ≥ 30 floor explanation |
 | Continuous sweep: 29 points at Δ=0.5 pp | Coarser (Δ=1 pp); finer (Δ=0.1 pp); FPR binary-search | 0.5 pp reveals the 95.0→95.5 plateau-lip transition any coarser grid would miss; finer is sub-fp32 | p93.0 refined optimum vs published p95 — must show both ("p95 valid but not optimal") |
 | β-VAE: **SHELVE**, retain deterministic AE | ADOPT β=0.5 VAE; rebuild fusion around VAE log-likelihood | Δ strict = −0.0001 is inside the float/sampling-noise floor; SHELVE strengthens §15D by showing it doesn't depend on Layer-2 family | Reader could mis-read SHELVE as "VAE failed"; "substitution-equivalent" framing essential |
 | LSTM-AE: **RETAIN AE** | ADOPT c1 (Δ strict +0.0341); ADOPT c4 (lowest val_loss) | AE ~5K params / 8 s vs c4 ~234K / 3,709 s — 48× / 450× cost for Δ below the sampling-noise floor (σ_strict = 0.022) | c1's +3.4 pp looks like an improvement on paper; mitigated by the noise-floor argument |
