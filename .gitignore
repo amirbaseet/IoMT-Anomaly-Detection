@@ -59,3 +59,7 @@ thesis/lit_review/
 
 # Archive of superseded staging files
 .archive/
+
+# C1 ablation intermediates (large, regenerable from the scripts in paper/P1_dedup_audit/experiments/)
+eda_output_raw/
+preprocessed_raw/
