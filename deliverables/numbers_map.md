@@ -35,6 +35,18 @@ Format key:
 | Deduplicated test rows | 892,268 | README §2, §11.4 |
 | Train duplicate rate | 36.95 % | README §2, §10.1 |
 | Test duplicate rate | 44.72 % | README §2, §10.1 |
+| Train duplicates (float32, count / rate) | 2,645,751 / 36.9475 % | `iomt-pcap-experiments/dr6_out/dr6_float32_check.json:f32/train` (DR-6, 2026-07-28) |
+| Test duplicates (float32, count / rate) | 721,914 / 44.7232 % | `dr6_float32_check.json:f32/test` |
+| Pooled-merge duplicates (float32, count / rate) | 3,368,126 / 38.3831 % | `dr6_float32_check.json:f32/full` — cross-checks `scripts/verify_duplicate_counts.py`'s features-only pooled count |
+| Train duplicates (float64 as printed, count / rate) | 5,119 / 0.0715 % | `dr6_float32_check.json:f64/train` — the count three published papers report |
+| Test duplicates (float64 as printed, count / rate) | 2,065 / 0.1279 % | `dr6_float32_check.json:f64/test` |
+| Pooled-merge duplicates (float64, count / rate) | 7,379 / 0.0841 % | `dr6_float32_check.json:f64/full` |
+| Cross-split identity (float32): unique vectors present in **both** train and test | 461 | derived from `dr6_float32_check.json`: f32/full 3,368,126 − (f32/train 2,645,751 + f32/test 721,914) |
+| Cross-split identity (float32): share of test rows carrying such a vector | 0.8384 % (≈13,533 of 1,614,182 rows) | `dr6_float32_check.json:f32/test_rows_with_vector_in_train_pct = 0.008384` — ⚠ key is named `_pct` but stores a **fraction**; stored at 6 dp, so the row count is ±1 |
+| Cross-split identity (float64): unique vectors in both splits | 195 | `dr6_out/dr6_panel.json:overlap/unique_vectors_in_both_train_and_test`; also = f64/full 7,379 − (5,119 + 2,065) |
+| Cross-split identity (float64): share of test rows | 0.0221 % (≈357 rows) | `dr6_float32_check.json:f64/test_rows_with_vector_in_train_pct = 0.000221` (fraction, see caveat above) |
+| Duplicate collapse is **entirely intra-class** (float32) | within-class duplicate sums = pooled per-split counts exactly (2,645,751 train / 721,914 test) → 0 cross-class duplicate collisions | computed over all 19 classes in `dr6_out/dr6b_perclass_f32.json` (DR-6b); corroborated at float64 by REP46 (features+label) yielding the same 5,119 as REP45 (`dr6_panel.json`) |
+| Per-class within-class duplicate rates + duplicate-mass shares (19 classes × train/test/full) | see artifact | `dr6_out/dr6b_perclass_f32.json` is the oracle for the full per-class table; the three headline cells are the rows below |
 | DDoS-ICMP within-class duplicate rate (train, float32) | 86.32 % (1,327,218 / 1,537,476) | `iomt-pcap-experiments/dr6_out/dr6b_perclass_f32.json` (DR-6b recomputation, 2026-07-30) |
 | DDoS-ICMP within-class duplicate rate (test, float32) | 94.37 % | `dr6b_perclass_f32.json` |
 | Flood-class (TCP_IP-*) share of train duplicate mass | 99.5 % (2,632,808 / 2,645,751 within-class) | `dr6b_perclass_f32.json` |
@@ -72,7 +84,7 @@ Closure tally: **4 closed / 1 reframed / 2 open by design** — matches task-spe
 | H1 | "The hybrid fusion framework produces statistically significant improvements in macro-F1 compared to the best standalone supervised classifier (p ≤ 0.05, paired bootstrap)." | **Reframed.** Δ = −0.014 pp at p99; 95% CI [−0.0166, −0.0117] excludes zero but operational magnitude ~125 of 892,268 rows. | README §20.2 H1, §14.4 |
 | H2-strict (AE-only Phase 6/6B) | "Unsupervised layer achieves recall > 0.70 on at least 50 % of withheld attack classes." | 0/5 → 0/5 → **4/4** (Phase 6C entropy + AE) | README §20.2 H2 |
 | H2-binary (any-alert across cases) | implicit operational variant; "system raises an alert on ≥70 % of novel attack samples" | **5/5** at p90 (consistent across all phases) | README §15.4 |
-| H3 | "SMOTETomek improves macro-F1 AND improves per-class F1 for at least 3 of the 5 most under-represented attack classes." | **FAIL** on both: macro-F1 degrades in 0/4 configs; minority improves in 2/5 only (RF/reduced) | README §20.2 H3, §12.4 |
+| H3 | "SMOTETomek improves macro-F1 AND improves per-class F1 for at least 3 of the 5 most under-represented attack classes." | **FAIL** on both: macro-F1 **improves in 0/4 configs — it degrades in all 4** (deltas: §4 rows RF/reduced −0.0114, RF/full −0.0171, XGB/reduced −0.0449, XGB/full −0.0368); minority improves in 2/5 only (RF/reduced) | README §20.2 H3 ("degrades macro-F1 across all 4 configurations", README:2398), §12.4 |
 
 ## Section 4 — Phase 4 supervised
 
