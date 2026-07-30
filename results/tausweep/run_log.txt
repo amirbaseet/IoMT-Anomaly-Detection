@@ -1,0 +1,75 @@
+=== tau-sweep :: frozen E7 operating-characteristic analysis ===
+loaded frozen E7 test predictions: 892,268 flows x 19 classes
+saved softprob arrays exist -> NO inference run (frozen model untouched)
+overall accuracy (all flows auto-decided) = 0.992656
+confidence range [0.1773, 1.0000]  norm-entropy range [0.0000, 0.8492]
+Phase-6C thesis threshold: ent_p95 raw=0.394647  norm=0.134031  (P95 of 38,546 benign-val flows)
+
+--- Sweep 1: confidence floor tau_c ---
+  tau_c=0.5    cov=0.9992 acc=0.993058 f1=0.9116 mcc=0.9911 deferred=681
+  tau_c=0.55   cov=0.9976 acc=0.993827 f1=0.9169 mcc=0.9921 deferred=2,161
+  tau_c=0.6    cov=0.9958 acc=0.994724 f1=0.9234 mcc=0.9932 deferred=3,764
+  tau_c=0.65   cov=0.9939 acc=0.995531 f1=0.9286 mcc=0.9943 deferred=5,442
+  tau_c=0.7    cov=0.9920 acc=0.996361 f1=0.9341 mcc=0.9953 deferred=7,178
+  tau_c=0.75   cov=0.9894 acc=0.997669 f1=0.9465 mcc=0.9970 deferred=9,476
+  tau_c=0.8    cov=0.9877 acc=0.998002 f1=0.9509 mcc=0.9974 deferred=11,015
+  tau_c=0.85   cov=0.9857 acc=0.998317 f1=0.9573 mcc=0.9978 deferred=12,760
+  tau_c=0.9    cov=0.9814 acc=0.998647 f1=0.9619 mcc=0.9983 deferred=16,596
+  tau_c=0.95   cov=0.9774 acc=0.999031 f1=0.9688 mcc=0.9987 deferred=20,178
+  tau_c=0.96   cov=0.9764 acc=0.999101 f1=0.9703 mcc=0.9988 deferred=21,067
+  tau_c=0.97   cov=0.9751 acc=0.999191 f1=0.9710 mcc=0.9990 deferred=22,219
+  tau_c=0.98   cov=0.9733 acc=0.999290 f1=0.9721 mcc=0.9991 deferred=23,827
+  tau_c=0.99   cov=0.9706 acc=0.999418 f1=0.9735 mcc=0.9992 deferred=26,249
+  tau_c=0.995  cov=0.9688 acc=0.999542 f1=0.9752 mcc=0.9994 deferred=27,863
+  tau_c=0.999  cov=0.9615 acc=0.999752 f1=0.9785 mcc=0.9997 deferred=34,356
+
+--- Sweep 2: entropy ceiling tau_H (normalized H/ln19) ---
+  tau_H=0.05     cov=0.9749 acc=0.999203 f1=0.9711 mcc=0.9990 deferred=22,393
+  tau_H=0.084    cov=0.9779 acc=0.998980 f1=0.9680 mcc=0.9987 deferred=19,750
+  tau_H=0.094    cov=0.9785 acc=0.998910 f1=0.9668 mcc=0.9986 deferred=19,150
+  tau_H=0.1      cov=0.9789 acc=0.998862 f1=0.9658 mcc=0.9985 deferred=18,795
+  tau_H=0.104    cov=0.9792 acc=0.998836 f1=0.9657 mcc=0.9985 deferred=18,584
+  tau_H=0.114    cov=0.9810 acc=0.998761 f1=0.9645 mcc=0.9984 deferred=16,915
+  tau_H=0.124    cov=0.9825 acc=0.998668 f1=0.9634 mcc=0.9983 deferred=15,638
+  tau_H=0.134    cov=0.9832 acc=0.998589 f1=0.9619 mcc=0.9982 deferred=14,954
+  tau_H=0.134031 cov=0.9832 acc=0.998588 f1=0.9619 mcc=0.9982 deferred=14,951
+  tau_H=0.144    cov=0.9841 acc=0.998498 f1=0.9605 mcc=0.9981 deferred=14,191
+  tau_H=0.15     cov=0.9845 acc=0.998450 f1=0.9597 mcc=0.9980 deferred=13,810
+  tau_H=0.154    cov=0.9847 acc=0.998416 f1=0.9592 mcc=0.9980 deferred=13,625
+  tau_H=0.164    cov=0.9854 acc=0.998336 f1=0.9577 mcc=0.9979 deferred=12,989
+  tau_H=0.174    cov=0.9861 acc=0.998260 f1=0.9565 mcc=0.9978 deferred=12,440
+  tau_H=0.184    cov=0.9867 acc=0.998168 f1=0.9552 mcc=0.9976 deferred=11,874
+  tau_H=0.2      cov=0.9878 acc=0.997835 f1=0.9495 mcc=0.9972 deferred=10,849
+  tau_H=0.25     cov=0.9939 acc=0.995280 f1=0.9280 mcc=0.9939 deferred=5,443
+  tau_H=0.3      cov=0.9979 acc=0.993609 f1=0.9189 mcc=0.9918 deferred=1,911
+  tau_H=0.35     cov=0.9989 acc=0.993183 f1=0.9143 mcc=0.9913 deferred=1,006
+  tau_H=0.4      cov=0.9995 acc=0.992896 f1=0.9112 mcc=0.9909 deferred=489
+  tau_H=0.45     cov=0.9997 acc=0.992776 f1=0.9094 mcc=0.9908 deferred=260
+  tau_H=0.5      cov=0.9998 acc=0.992704 f1=0.9084 mcc=0.9907 deferred=138
+  tau_H=0.55     cov=0.9999 acc=0.992677 f1=0.9083 mcc=0.9906 deferred=92
+  tau_H=0.6      cov=0.9999 acc=0.992674 f1=0.9082 mcc=0.9906 deferred=75
+  tau_H=0.65     cov=0.9999 acc=0.992669 f1=0.9081 mcc=0.9906 deferred=59
+  tau_H=0.7      cov=1.0000 acc=0.992661 f1=0.9079 mcc=0.9906 deferred=36
+  tau_H=0.75     cov=1.0000 acc=0.992658 f1=0.9076 mcc=0.9906 deferred=11
+  tau_H=0.8      cov=1.0000 acc=0.992658 f1=0.9076 mcc=0.9906 deferred=3
+  tau_H=0.85     cov=1.0000 acc=0.992656 f1=0.9076 mcc=0.9906 deferred=0
+  tau_H=0.9      cov=1.0000 acc=0.992656 f1=0.9076 mcc=0.9906 deferred=0
+
+--- Sanity: monotonicity ---
+  Sweep 1 non-monotone steps: 0
+  Sweep 2 non-monotone steps: 1
+  Sweep 2 step 0.8->0.75: Δacc=-6.58e-08, band=8 flows (0 errors), degenerate-bin artifact=True
+
+--- Sanity: Phase-6C rescue reproduction @ thesis threshold ---
+  ARP_Spoofing             errors=506    of which deferred=350    (0.692)
+  MQTT_DoS_Connect_Flood   errors=3      of which deferred=0      (0.000)
+  MQTT_Malformed_Data      errors=300    of which deferred=270    (0.900)
+  Recon_Ping_Sweep         errors=49     of which deferred=43     (0.878)
+  Recon_VulScan            errors=650    of which deferred=340    (0.523)
+  overall: 0.8109 of all E7 errors land in the deferred (REVIEW) set at the thesis threshold
+
+wrote /Users/amoorabaseet/IoMT-Project/results/tausweep/tau_sweep_results.json
+wrote /Users/amoorabaseet/IoMT-Project/results/tausweep/tau_sweep_curve.csv  (46 rows)
+wrote /Users/amoorabaseet/IoMT-Project/results/tausweep/tau_sweep_summary.md
+
+=== DONE — stop point reached (interpretation happens in planning chat) ===
