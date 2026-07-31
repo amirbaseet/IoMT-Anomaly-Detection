@@ -933,21 +933,24 @@ doi:10.1109/AFROS62115.2024.11037067.
 systems in IoMT: the importance of domain-specific datasets. *Internet of Things*.
 doi:10.1016/j.iot.2025.101631.
 
-[6] Naeem, H. et al. (2024). Augmenting IoMT security: deep ensemble integration and methodological fusion.
-*Computer Modeling in Engineering & Sciences*, 141(3).
+[6] Naeem, H., Alsirhani, A., Alserhani, F.M., Ullah, F. & Krejcar, O. (2024). Augmenting IoMT security: deep
+ensemble integration and methodological fusion. *Computer Modeling in Engineering & Sciences*, 141(3),
+2185–2223. doi:10.32604/cmes.2024.056308.
 
 [7] Jaiswal, R., Andersen, P.-A., Cenkeramaddi, L.R., Jiao, L. & Granmo, O.-C. (2026). A Tsetlin
 machine-driven intrusion detection system for next-generation IoMT security. arXiv:2604.03205.
 
-[8] Saeed et al. (2026). A novel adaptive hybrid intrusion detection system with lightweight optimization for
-enhanced security in IoMT. *Scientific Reports*, 16, 2097. doi:10.1038/s41598-025-31897-z.
+[8] Saeed, H., Naseer, M., Rasool, A., Alsirhani, A., Alserhani, F., Alwakid, G.N., Ullah, F., Naeem, H. &
+Zhao, Y. (2026). A novel adaptive hybrid intrusion detection system with lightweight optimization for enhanced
+security in IoMT. *Scientific Reports*, 16, 2097. doi:10.1038/s41598-025-31897-z.
 <!-- YEAR/VOLUME CORRECTED 2026-07-31: the entry read 2025 with no volume, following v6.6:80. The per-paper
      oracle 25_Saeed_SciRep_summary.md:6 gives "Scientific Reports (2026) 16:2097". v6.6:80 still carries 2025
      and should be reconciled. The DOI's embedded year (s41598-025-) is the acceptance year, not the issue
      year. -->
 
-[9] Alsharaiah, M.A. et al. (2025). An explainable AI-driven transformer model for spoofing attack detection in
-IoMT networks. *Discover Applied Sciences*. doi:10.1007/s42452-025-07071-5.
+[9] Alsharaiah, M.A., Almaiah, M.A., Shehab, R., Obeidat, M., El-Qirem, F.A. & Aldhyani, T. (2025). An
+explainable AI-driven transformer model for spoofing attack detection in IoMT networks. *Discover Applied
+Sciences*, 7, 488. doi:10.1007/s42452-025-07071-5.
 
 [10] Büken, A.B. (2025). *Anomaly detection in Internet of Medical Things using deep learning* [M.Sc. thesis].
 Sakarya University, Graduate School of Natural and Applied Sciences.
@@ -979,8 +982,9 @@ integrating mutual information filtering with deep learning based accelerated me
 multi-class intrusion detection systems in the era of IoMT. *IEEE Access*, 13.
 doi:10.1109/ACCESS.2025.3526883.
 
-[18] Gueriani et al. (2026). SE-enhanced ViT and BiLSTM-based intrusion detection for secure IIoT and IoMT
-environments. arXiv:2604.06254.
+[18] Gueriani, A., Kheddar, H., Mazari, A.C., Sagiroglu, S. & Ceran, O. (2026). SE-enhanced ViT and
+BiLSTM-based intrusion detection for secure IIoT and IoMT environments. arXiv:2604.06254 [cs.CR]. Preprint;
+no conference venue named.
 
 [19] Kapoor, S. & Narayanan, A. (2023). Leakage and the reproducibility crisis in machine-learning-based
 science. *Patterns*, 4(9), 100804. doi:10.1016/j.patter.2023.100804. Preprint: arXiv:2207.07048.
@@ -1006,8 +1010,12 @@ Android malware detection. arXiv:2410.19364.
 federated small language models and knowledge-defined networks. *The Journal of Supercomputing*, 82, 528.
 doi:10.1007/s11227-026-08661-9. *(Paywalled; cited for its abstract-stated dataset description only.)*
 
-[24] Rehman et al. (2025). Comprehensive feature selection for machine learning-based intrusion detection in
-healthcare IoMT networks. In *ICISSP 2025*, SciTePress, pp. 248–259. doi:10.5220/0013313600003899.
+[24] Rehman, M.U., Kalakoti, R. & Bahşi, H. (2025). Comprehensive feature selection for machine learning-based
+intrusion detection in healthcare IoMT networks. In *Proceedings of the 11th International Conference on
+Information Systems Security and Privacy (ICISSP 2025) — Volume 2*, SciTePress, pp. 248–259.
+doi:10.5220/0013313600003899.
+<!-- Venue note: some catalogues label this SECRYPT 2025; the paper itself states ICISSP 2025
+     (15_Rehman_ICISSP_summary.md:6, and v6.6 ref 14 carries the same correction). -->
 
 [25] Mohamadi, A., Ghahramani, H., Asghari, S.A. & Aminian, M. (2024). Securing healthcare with deep learning:
 a CNN-based model for medical IoT threat detection. In *19th Iranian Conference on Intelligent Systems (ICIS)*,
@@ -1018,10 +1026,10 @@ Sirjan, Iran. Preprint: arXiv:2410.23306.
 
 <!-- REFERENCE COUNT: 25. The 45-60 target is OUTLINE.md:199, not the frozen brief, which sets no
      reference-count requirement.
-     COMPLETENESS OWED before submission: entry [4] has no venue detail, pages or DOI; entries [6], [8], [9],
-     [18] and [24] carry "et al." inside the entry itself, which numbered Elsevier style does not permit. Both
-     require the full author lists and bibliographic fields, which must be taken from the sources rather than
-     reconstructed. A measurement paper of this scope does not need the
+     COMPLETENESS: closed 2026-07-31. Entries [4], [6], [8], [9], [18] and [24] previously carried "et al."
+     inside the entry or lacked venue/pages/DOI. All six were completed from the corpus's own per-paper
+     summaries (CrossRef-verified at corpus construction), not reconstructed. Remaining known gaps are the two
+     external ones already flagged per-entry: [19]'s volume/article number and [20]'s page range. A measurement paper of this scope does not need the
      thesis's full 47-entry roster, but §2.1 (external leakage precedent) is the section that would most
      benefit from expansion, and §2.4's fragmentation claims currently cite three representative endpoints
      where the underlying roster supports more. Decide before submission whether to broaden §2.1 or to
