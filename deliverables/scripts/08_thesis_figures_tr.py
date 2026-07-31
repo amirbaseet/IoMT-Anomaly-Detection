@@ -84,50 +84,60 @@ def fig_dedup_perclass() -> None:
 
 
 def fig_imbalance() -> None:
-    """Sekil 3.2 - class imbalance (log scale), 2,374:1."""
+    """Sekil 3.2 - class imbalance, train + test after dedup (log scale), 2,374:1."""
     rows = list(csv.DictReader(open(ROOT / "eda_output/imbalance_table.csv")))
     rows = sorted(rows, key=lambda r: -int(r["train"]))
     names = [r["class"].replace("_", " ") for r in rows]
-    counts = [int(r["train"]) for r in rows]
-    colors = [C_MAIN if c == max(counts) or c == min(counts) else C_MUTED for c in counts]
+    tr = [int(r["train"]) for r in rows]
+    te = [int(r["test"]) for r in rows]
+    x = np.arange(len(names))
+    w = 0.4
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    ax.bar(range(len(names)), counts, color=colors, width=0.72)
+    fig, ax = plt.subplots(figsize=(9, 5.2))
+    ax.bar(x - w / 2, tr, width=w, color=C_MAIN, label="Eğitim (tekilleştirme sonrası)")
+    ax.bar(x + w / 2, te, width=w, color=C_ALT, label="Test (tekilleştirme sonrası)")
     ax.set_yscale("log")
-    ax.set_xticks(range(len(names)))
+    ax.set_xticks(x)
     ax.set_xticklabels(names, rotation=70, ha="right", fontsize=7.5)
-    ax.set_ylabel("Eğitim kaydı sayısı (log ölçek)")
-    ax.set_title("Şekil 3.2  Sınıf dengesizliği — en büyük/en küçük oranı 2.374:1")
+    ax.set_ylabel("Kayıt sayısı (log ölçek)")
+    ax.set_title("Şekil 3.2  Sınıf dağılımı ve dengesizlik — en büyük/en küçük oranı 2.374:1")
     ax.grid(axis="x", visible=False)
-    ax.annotate(f"{counts[0]:,}".replace(",", "."), (0, counts[0]), textcoords="offset points",
+    ax.legend(frameon=False, fontsize=9)
+    ax.annotate(f"{tr[0]:,}".replace(",", "."), (x[0] - w / 2, tr[0]), textcoords="offset points",
                 xytext=(0, 5), ha="center", fontsize=8, color=C_MAIN)
-    ax.annotate(f"{counts[-1]:,}".replace(",", "."), (len(counts) - 1, counts[-1]),
-                textcoords="offset points", xytext=(0, 5), ha="center", fontsize=8, color=C_MAIN)
+    ax.annotate(f"{tr[-1]:,}".replace(",", "."), (x[-1] - w / 2, tr[-1]),
+                textcoords="offset points", xytext=(-4, 5), ha="center", fontsize=8, color=C_MAIN)
     save(fig, "sekil_3_2_sinif_dengesizligi")
 
 
 def fig_ablation() -> None:
-    """Sekil 4.3 - 11-variant ablation, strict rescue average."""
+    """Sekil 4.3 - 11-variant ablation: strict, binary and flag rate per variant."""
     rows = list(csv.DictReader(open(ROOT / "results/enhanced_fusion/metrics/ablation_table.csv")))
     rows = sorted(rows, key=lambda r: float(r["h2_strict_avg"]))
     names = [r["variant"].replace("_", " ") for r in rows]
-    vals = [float(r["h2_strict_avg"]) for r in rows]
+    strict = [float(r["h2_strict_avg"]) for r in rows]
+    binary = [float(r["h2_binary_avg"]) for r in rows]
+    flag = [float(r["avg_flag_rate"]) for r in rows]
     passes = [r["h2_strict_pass"] for r in rows]
-    colors = [C_MAIN if p.startswith("4/") else (C_ALT if p.startswith(("2/", "3/")) else C_MUTED)
-              for p in passes]
+    y = np.arange(len(names))
+    h = 0.26
 
-    fig, ax = plt.subplots(figsize=(8, 5.5))
-    ax.barh(range(len(names)), vals, color=colors, height=0.7)
+    fig, ax = plt.subplots(figsize=(9, 6.4))
+    ax.barh(y + h, strict, height=h, color=C_MAIN, label="H2-katı ortalaması (kurtarma)")
+    ax.barh(y, binary, height=h, color=C_ALT, label="H2-ikili ortalaması (herhangi bir alarm)")
+    ax.barh(y - h, flag, height=h, color=C_MUTED, label="Ortalama işaretleme oranı (işlemsel)")
     ax.axvline(0.70, color=C_WARN, linewidth=1.6, linestyle="--")
-    ax.text(0.705, -0.6, "H2-katı eşiği 0,70", color=C_WARN, fontsize=8)
-    ax.set_yticks(range(len(names)))
+    ax.text(0.712, len(names) - 0.35, "H2-katı eşiği 0,70", color=C_WARN, fontsize=8)
+    ax.set_yticks(y)
     ax.set_yticklabels(names, fontsize=8)
-    ax.set_xlabel("Katı kurtarma ortalaması (strict rescue avg)")
+    ax.set_xlabel("Değer")
     ax.set_title("Şekil 4.3  On bir varyantlı ablasyon — entropi kapısı belirleyicidir")
+    ax.set_xlim(0, 1.12)
     ax.grid(axis="y", visible=False)
     tr_ticks(ax, "x")
-    for i, (v, p) in enumerate(zip(vals, passes)):
-        ax.text(v + 0.012, i, p, va="center", fontsize=7.5, color="#1C2422")
+    for i, (v, pss) in enumerate(zip(strict, passes)):
+        ax.text(v + 0.012, i + h, pss, va="center", fontsize=7.5, color="#1C2422")
+    ax.legend(frameon=False, fontsize=8.5, loc="upper center", bbox_to_anchor=(0.5, -0.09), ncol=3)
     save(fig, "sekil_4_3_ablasyon")
 
 
