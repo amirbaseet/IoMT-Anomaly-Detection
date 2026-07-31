@@ -13,24 +13,24 @@
 ## Abstract
 
 CICIoMT2024 has become the reference benchmark for Internet-of-Medical-Things intrusion detection, used by more
-than thirty studies within two years of release, with reported accuracies clustering above 99%. We show that a
-third of the benchmark is duplicated content, that the size of that duplication depends entirely on the numeric
-precision at which rows are compared, and that its measurable effect on reported performance is narrower and
-differently located than the field assumes. Duplicate rows are 0.07% of the training split at the float64
-precision the CSVs are printed in, and **36.95% of training rows and 44.72% of test rows at the float32
-precision models compute in** — a factor of 517 on identical rows. Three published studies report removing
-exactly 5,119 duplicates; we reproduce that figure to the row, show it is the float64-exact count of one split,
-and reconstruct the working set of a third exactly, so those reports are correct and mutually incomparable.
-The redundancy is structured: six volumetric flood classes carry 99.51% of it, the largest class in the
-training split carries none, and the benign class is free of it entirely. Within-split redundancy dominates,
-while cross-split identity — the only mechanism a contamination check would find — touches 0.84% of test rows.
-A controlled five-seed ablation shows that scoring on the duplicated rather than the deduplicated test split
-raises accuracy by 0.35–0.40 percentage points, reflecting a change of estimand rather than contamination;
-that duplicated training data has no separable effect; and that the raw-versus-deduplicated comparison the
-literature makes cannot be resolved at five seeds. We withdraw two such figures of our own, and propose a
-five-parameter reporting protocol without which accuracy comparisons on this dataset are not interpretable.
+than thirty studies within two years, with reported accuracies clustering above 99%. We show that a third of it
+is duplicated content, that the size of that duplication depends entirely on the numeric precision at which
+rows are compared, and that its effect on reported performance is narrower and differently located than the
+field assumes. Duplicate rows are 0.07% of the training split at the float64 precision the CSVs are printed in,
+and **36.95% of training rows and 44.72% of test rows at the float32 precision models compute in** — a factor
+of 517 on identical rows. Three studies report removing exactly 5,119 duplicates; we reproduce that figure to
+the row, show it is the float64-exact count of one split, and reconstruct a third study's working set exactly,
+so those reports are correct and mutually incomparable. The redundancy is structured: six flood classes carry
+99.51% of it, while the largest training class and the benign class carry none. Within-split redundancy
+dominates; cross-split identity — the only mechanism a contamination check would find — touches 0.84% of test
+rows. A five-seed ablation shows that scoring on the duplicated test split raises
+accuracy by 0.35–0.40 percentage points — a change of estimand rather than contamination — that duplicated
+training data has no separable effect, and that the raw-versus-deduplicated comparison the literature makes
+cannot be resolved at five seeds. We withdraw two such figures of our own and propose a five-parameter
+reporting protocol without which accuracy comparisons on this dataset are not interpretable.
 
-<!-- WORD COUNT: 281 (comments stripped, recounted 2026-07-31). Elsevier IoT abstract limit UNVERIFIED
+<!-- WORD COUNT: recounted after the 2026-07-31 trim; target is <=250, the common Elsevier submission-form
+     cap. The journal's own figure remains UNVERIFIED
      (ScienceDirect 403s automated fetch). Trimmed 330 -> 281 words on 2026-07-30; if the journal caps at 250
      it needs ~30 more cut, so recheck against the real limit before submission. Body sections 1-11, comments
      stripped: 8,671 words including table rows (7,789 excluding them) — inside the brief's 8-12k target. -->
@@ -896,7 +896,14 @@ read as a family of incommensurable measurements rather than a ranking.
 **Data availability.** CICIoMT2024 is distributed by the Canadian Institute for Cybersecurity. The audit
 code, the result artifacts, and a verifier that re-derives the reported figures from them are released at
 `ciciomt2024-dedup-audit` *[URL]*. No dataset records are redistributed.
-**Generative AI disclosure.** *[TO COMPLETE — Elsevier wording UNVERIFIED; see the Guide-for-Authors gap.]*
+**Declaration of generative AI and AI-assisted technologies in the manuscript preparation process.**
+*[TO COMPLETE BY THE AUTHORS — the content of this statement is an authorship matter and must reflect what was
+actually used. Elsevier's required template, confirmed 2026-07-31 from its generative-AI policy page, is:*
+"During the preparation of this work, the author(s) used [NAME OF TOOL / SERVICE] in order to [REASON]. After
+using this tool/service, the author(s) reviewed and edited the content as needed and take(s) full
+responsibility for the content of the published article." *Elsevier requires this as a separate section at the
+end of the manuscript, immediately before the references — where it now sits. Basic spelling, grammar and
+punctuation checks do not require disclosure.]*
 **Funding.** *[TO COMPLETE.]*
 
 ## References
