@@ -988,15 +988,17 @@ no conference venue named.
 
 [19] Kapoor, S. & Narayanan, A. (2023). Leakage and the reproducibility crisis in machine-learning-based
 science. *Patterns*, 4(9), 100804. doi:10.1016/j.patter.2023.100804. Preprint: arXiv:2207.07048.
-<!-- VERIFIED 2026-07-30: title/authors confirmed by fetching arXiv:2207.07048; journal (Patterns, 2023)
-     confirmed by search result cell.com/patterns/fulltext/S2666-3899(23)00159-9. The volume/issue/article
-     number and journal DOI are NOT fetch-verified (cell.com returns 403) — confirm before submission. -->
+<!-- FULLY VERIFIED 2026-07-31. Title/authors from arXiv:2207.07048; journal, volume 4, issue 9, article
+     number 100804, year 2023 and DOI 10.1016/j.patter.2023.100804 confirmed against the Crossref REST API
+     (api.crossref.org/works?query.bibliographic=...), which returns publisher-deposited metadata and is not
+     behind the cell.com 403. No gaps remain in this entry. -->
 
 [20] Arp, D., Quiring, E., Pendlebury, F., Warnecke, A., Pierazzi, F., Wressnegger, C., Cavallaro, L. & Rieck,
-K. (2022). Dos and don'ts of machine learning in computer security. In *31st USENIX Security Symposium*.
-Preprint: arXiv:2010.09470.
-<!-- VERIFIED 2026-07-30 by fetching arXiv:2010.09470 (title, all eight authors, "to appear at USENIX
-     Security Symposium 2022"). Page range NOT verified (usenix.org returns 403) — add before submission. -->
+K. (2022). Dos and don'ts of machine learning in computer security. In *31st USENIX Security Symposium*,
+pp. 3971–3988. Preprint: arXiv:2010.09470.
+<!-- FULLY VERIFIED 2026-07-31. Title and all eight authors from arXiv:2010.09470; page range 3971-3988 and
+     the USENIX Security Symposium 2022 venue confirmed against the DBLP publication API
+     (dblp.org/search/publ/api), which is not behind the usenix.org 403. No gaps remain in this entry. -->
 
 [21] Barz, B. & Denzler, J. (2020). Do we train on test data? Purging CIFAR of near-duplicates. *Journal of
 Imaging*, 6(6), 41. doi:10.3390/jimaging6060041.
@@ -1029,7 +1031,8 @@ Sirjan, Iran. Preprint: arXiv:2410.23306.
      COMPLETENESS: closed 2026-07-31. Entries [4], [6], [8], [9], [18] and [24] previously carried "et al."
      inside the entry or lacked venue/pages/DOI. All six were completed from the corpus's own per-paper
      summaries (CrossRef-verified at corpus construction), not reconstructed. Remaining known gaps are the two
-     external ones already flagged per-entry: [19]'s volume/article number and [20]'s page range. A measurement paper of this scope does not need the
+     external ones, both closed 2026-07-31 via Crossref and DBLP respectively. The reference list is now
+     bibliographically complete; only the citation STYLE remains unconfirmed against the Guide for Authors. A measurement paper of this scope does not need the
      thesis's full 47-entry roster, but §2.1 (external leakage precedent) is the section that would most
      benefit from expansion, and §2.4's fragmentation claims currently cite three representative endpoints
      where the underlying roster supports more. Decide before submission whether to broaden §2.1 or to
