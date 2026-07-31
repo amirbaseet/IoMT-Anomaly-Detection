@@ -15,19 +15,18 @@
 CICIoMT2024 has become the reference benchmark for Internet-of-Medical-Things intrusion detection, used by more
 than thirty studies within two years, with reported accuracies clustering above 99%. We show that a third of it
 is duplicated content, that the size of that duplication depends entirely on the numeric precision at which
-rows are compared, and that its effect on reported performance is narrower and differently located than the
-field assumes. Duplicate rows are 0.07% of the training split at the float64 precision the CSVs are printed in,
+rows are compared, and that its effect on reported performance is narrower than the field assumes. Duplicate rows are 0.07% of the training split at the float64 precision the CSVs print,
 and **36.95% of training rows and 44.72% of test rows at the float32 precision models compute in** — a factor
 of 517 on identical rows. Three studies report removing exactly 5,119 duplicates; we reproduce that figure to
-the row, show it is the float64-exact count of one split, and reconstruct a third study's working set exactly,
-so those reports are correct and mutually incomparable. The redundancy is structured: six flood classes carry
+the row and show it is the float64-exact count of one split, so those reports are correct and mutually
+incomparable. The redundancy is structured: six flood classes carry
 99.51% of it, while the largest training class and the benign class carry none. Within-split redundancy
 dominates; cross-split identity — the only mechanism a contamination check would find — touches 0.84% of test
-rows. A five-seed ablation shows that scoring on the duplicated test split raises
-accuracy by 0.35–0.40 percentage points — a change of estimand rather than contamination — that duplicated
+rows. A five-seed ablation shows that scoring on the duplicated test split raises accuracy
+by 0.35–0.40 points — a change of estimand rather than contamination — that duplicated
 training data has no separable effect, and that the raw-versus-deduplicated comparison the literature makes
-cannot be resolved at five seeds. We withdraw two such figures of our own and propose a five-parameter
-reporting protocol without which accuracy comparisons on this dataset are not interpretable.
+cannot be resolved at five seeds. We withdraw two such figures of our own and propose a five-parameter reporting
+protocol without which accuracy comparisons on this dataset are not interpretable.
 
 <!-- WORD COUNT: recounted after the 2026-07-31 trim; target is <=250, the common Elsevier submission-form
      cap. The journal's own figure remains UNVERIFIED
@@ -1038,7 +1037,9 @@ Sirjan, Iran. Preprint: arXiv:2410.23306.
      COMPLETENESS: closed 2026-07-31. Entries [4], [6], [8], [9], [18] and [24] previously carried "et al."
      inside the entry or lacked venue/pages/DOI. All six were completed from the corpus's own per-paper
      summaries (CrossRef-verified at corpus construction), not reconstructed. Remaining known gaps are the two
-     external ones, both closed 2026-07-31 via Crossref and DBLP respectively. The reference list is now
+     external ones, both closed 2026-07-31 via Crossref and DBLP respectively. STYLE is no longer a blocker:
+     Elsevier's "Your Paper Your Way" policy allows any consistent style at first submission and applies the
+     journal's own style at proof stage. The reference list is now
      bibliographically complete; only the citation STYLE remains unconfirmed against the Guide for Authors. A measurement paper of this scope does not need the
      thesis's full 47-entry roster, but §2.1 (external leakage precedent) is the section that would most
      benefit from expansion, and §2.4's fragmentation claims currently cite three representative endpoints
