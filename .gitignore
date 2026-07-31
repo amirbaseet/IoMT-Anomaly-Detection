@@ -65,3 +65,6 @@ thesis/manuscript/
 eda_output_raw/
 preprocessed_raw/
 results/c1_dedup_ablation/models/
+
+# C1 experiment run logs (regenerable)
+paper/P1_dedup_audit/experiments/*.log

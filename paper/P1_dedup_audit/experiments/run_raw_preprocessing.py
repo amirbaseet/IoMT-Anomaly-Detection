@@ -29,7 +29,54 @@ import numpy as np
 REPO = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO))
 
-import notebooks.preprocessing_pipeline as pp  # noqa: E402  (path set above)
+
+def _stub_imblearn() -> bool:
+    """
+    preprocessing_pipeline.py imports SMOTETomek at module level, but imblearn is
+    not installed in venv/ (the canonical interpreter per CLAUDE.md: xgboost 3.2.0,
+    sklearn 1.8, pandas 2.3, numpy 2.2). venv_old/ has imblearn but carries newer
+    pandas/numpy, so it is NOT the documented stack.
+
+    Installing imblearn into venv/ would risk resolver-driven upgrades of sklearn or
+    numpy, which the bit-exact tripwires (INV-02) depend on. C1 never resamples, so
+    instead we satisfy the import with a stub and make any actual use fail loudly.
+    """
+    import types
+    if "imblearn" in sys.modules:
+        return False
+    try:
+        import imblearn  # noqa: F401
+        return False
+    except ModuleNotFoundError:
+        pass
+
+    def _forbidden(*_a, **_k):
+        raise RuntimeError(
+            "SMOTETomek was called, but C1 is a no-resampling ablation running "
+            "against a stubbed imblearn. This result would be invalid — aborting."
+        )
+
+    for name in ("imblearn", "imblearn.combine", "imblearn.over_sampling",
+                 "imblearn.under_sampling"):
+        sys.modules.setdefault(name, types.ModuleType(name))
+    for name, attr in (("imblearn.combine", "SMOTETomek"),
+                       ("imblearn.over_sampling", "SMOTE"),
+                       ("imblearn.under_sampling", "TomekLinks")):
+        setattr(sys.modules[name], attr, _forbidden)
+    return True
+
+
+_STUBBED = _stub_imblearn()
+
+import notebooks.preprocessing_pipeline as pp  # noqa: E402  (path + stub set above)
+
+if _STUBBED:
+    # Belt and braces: the resampling entry point itself must fail if ever reached.
+    def _no_smote(*_a, **_k):
+        raise RuntimeError("apply_smote_tomek called during C1 — ablation is "
+                           "no-resampling by design. Aborting.")
+
+    pp.apply_smote_tomek = _no_smote
 
 RAW_IN = REPO / "eda_output_raw"
 RAW_OUT = REPO / "preprocessed_raw"
@@ -84,6 +131,9 @@ def main() -> None:
     print("=" * 70)
     print("C1 step 2 — preprocessing the raw arm through the frozen pipeline")
     print("=" * 70)
+    if _STUBBED:
+        print("  imblearn stubbed (absent from venv/); resampling entry points now "
+              "raise if called — C1 is a no-resampling ablation.")
     repoint_pipeline()
 
     train, test = pp.load_data()
