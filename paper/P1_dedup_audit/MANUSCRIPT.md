@@ -903,10 +903,26 @@ read as a family of incommensurable measurements rather than a ranking.
 
 ## Declarations
 
-**CRediT author statement.** *[TO COMPLETE — needs both authors' agreement on role assignment. The Elsevier
-taxonomy terms to allocate are: Conceptualization, Methodology, Software, Validation, Formal analysis,
-Investigation, Resources, Data curation, Writing – original draft, Writing – review & editing, Visualization,
-Supervision, Project administration, Funding acquisition.]*
+**CRediT author statement.** **Amro Baseet:** Software, Conceptualization, Methodology, Validation, Formal
+analysis, Investigation, Data curation, Writing – original draft, Visualization. **İsmail Bütün:** Supervision,
+Project administration, Funding acquisition.
+<!-- CONFIRMED BY THE AUTHOR 2026-07-31: Baseet = Software; Bütün = Supervision. Those two are stated, not
+     inferred.
+
+     THE REST IS A PROPOSAL AWAITING CONFIRMATION, derived from the project record rather than assumed:
+     the experiments, pipeline, analysis and manuscript in this repository are Baseet's work, which is what
+     Conceptualization / Methodology / Validation / Formal analysis / Investigation / Data curation /
+     Writing - original draft / Visualization describe.
+
+     TWO ROLES DELIBERATELY WITHHELD, because assigning them now would be false:
+     (1) "Writing - review & editing" is NOT credited to Bütün. He has not yet reviewed the manuscript - the
+         message asking him to has not been sent. Add it once he has actually reviewed, not before.
+     (2) "Funding acquisition" IS credited to Bütün on the inference that TÜBİTAK-BİDEB 2232/A (No. 121C083)
+         is his fellowship, since 2232/A is an incoming-researcher programme. If the grant is held otherwise,
+         this line must move. Confirm with him.
+
+     CRediT is a research-integrity statement; every role here should be one both authors would defend. -->
+
 **Declaration of competing interest.** *[TO COMPLETE — both authors must confirm. If none: "The authors
 declare that they have no known competing financial interests or personal relationships that could have
 appeared to influence the work reported in this paper."]*
