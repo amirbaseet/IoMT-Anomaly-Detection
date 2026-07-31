@@ -190,14 +190,14 @@ def fig_case_dist():
     ax.set_yscale("log"); ax.set_ylim(.1, 200)
     ax.set_xticks(range(4)); ax.set_xticklabels(labs, fontsize=8.5)
     ax.set_ylabel("test kümesindeki pay (%, log ölçek)")
-    ax.set_title("Şekil 4.7  Füzyon durum dağılımı (AE p90, n = 892.268)")
+    ax.set_title("Şekil 4.6  Füzyon durum dağılımı (AE p90, n = 892.268)")
     ax.grid(axis="x", visible=False)
     for i, (p, c) in enumerate(zip(pct, n)):
         ax.text(i, p * 1.25, f"%{p:.2f}".replace(".", ",") + f"\n{c:,}".replace(",", "."),
                 ha="center", fontsize=8)
     ax.text(.5, .04, "Sıfır-gün adayları Durum 2'dedir: trafiğin binde 7'si — yönetilebilir bir inceleme kuyruğu",
             transform=ax.transAxes, ha="center", fontsize=8, color=C_MUTED, style="italic")
-    save(fig, "sekil_4_7_durum_dagilimi")
+    save(fig, "sekil_4_6_durum_dagilimi")
 
 def fig_per_target():
     """Per-target rescue: baseline vs entropy gate."""
@@ -268,7 +268,7 @@ def fig_shap_methods():
     ax.set_xticks(range(4)); ax.set_xticklabels([tr[m] for m in meths], fontsize=8.5)
     ax.set_yticks(range(4)); ax.set_yticklabels([tr[m] for m in meths], fontsize=8.5)
     ax.grid(visible=False)
-    ax.set_title("Şekil 4.10  Öznitelik-önem yöntemleri arası\nilk-10 Jaccard benzerliği", fontsize=11.5)
+    ax.set_title("Şekil 4.11  Öznitelik-önem yöntemleri arası\nilk-10 Jaccard benzerliği", fontsize=11.5)
     for i in range(4):
         for j in range(4):
             v = M[i, j]
@@ -277,7 +277,7 @@ def fig_shap_methods():
                     fontweight="bold" if (i, j) in [(0, 1), (1, 0)] else "normal")
     ax.text(.5, -.16, "Bu tezin SHAP sıralaması ile Cohen's d arasında ilk-10'da tek bir ortak öznitelik yoktur (0,000).",
             transform=ax.transAxes, ha="center", fontsize=8, color=C_WARN, style="italic")
-    save(fig, "sekil_4_10_yontem_karsilastirmasi")
+    save(fig, "sekil_4_11_yontem_karsilastirmasi")
 
 def fig_session_gap():
     """Session-disjoint vs random-pooled split gap."""
@@ -297,11 +297,11 @@ def fig_session_gap():
                 color=C_WARN, bbox=dict(fc="white", ec="none", pad=1.5))
     ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=9)
     ax.set_ylim(0, 1.12); ax.set_ylabel("değer")
-    ax.set_title("Şekil 4.12  Oturum-ayrık değerlendirmenin bedeli (5 tohum)")
+    ax.set_title("Şekil 4.13  Oturum-ayrık değerlendirmenin bedeli (5 tohum)")
     ax.grid(axis="x", visible=False)
     from matplotlib.ticker import FuncFormatter
     ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:g}".replace(".", ",")))
     ax.legend(frameon=False, fontsize=8.5, loc="upper right")
     ax.text(.5, .035, "Denetimsiz katman oturum kaymasına belirgin biçimde daha dayanıklıdır — hibrit mimarinin ölçülmüş gerekçesi.",
             transform=ax.transAxes, ha="center", fontsize=8, color=C_MUTED, style="italic")
-    save(fig, "sekil_4_12_oturum_ayrik")
+    save(fig, "sekil_4_13_oturum_ayrik")

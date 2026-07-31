@@ -133,14 +133,14 @@ def fig_ablation() -> None:
     ax.set_yticks(y)
     ax.set_yticklabels(names, fontsize=8)
     ax.set_xlabel("Değer")
-    ax.set_title("Şekil 4.6  On bir varyantlı ablasyon — entropi kapısı belirleyicidir")
+    ax.set_title("Şekil 4.7  On bir varyantlı ablasyon — entropi kapısı belirleyicidir")
     ax.set_xlim(0, 1.12)
     ax.grid(axis="y", visible=False)
     tr_ticks(ax, "x")
     for i, (v, pss) in enumerate(zip(strict, passes)):
         ax.text(v + 0.012, i + 1.5 * h, pss, va="center", fontsize=7.5, color="#1C2422")
     ax.legend(frameon=False, fontsize=8, loc="upper center", bbox_to_anchor=(0.5, -0.09), ncol=2)
-    save(fig, "sekil_4_6_ablasyon")
+    save(fig, "sekil_4_7_ablasyon")
 
 
 def fig_confusion() -> None:
@@ -234,11 +234,11 @@ def fig_tau_curve() -> None:
     ax.text(99.9, 99.285, "kapısız doğruluk %99,27", fontsize=8, color=C_MUTED, ha="right")
     ax.set_xlabel("Otomatik karara bağlanan akış oranı — kapsama (%)")
     ax.set_ylabel("Tutulan doğruluk (%)")
-    ax.set_title("Şekil 4.11  Entropi kapısının işletim karakteristiği")
+    ax.set_title("Şekil 4.10  Entropi kapısının işletim karakteristiği")
     ax.set_xlim(90, 100.4)
     tr_ticks(ax, "x"); tr_ticks(ax, "y")
     ax.legend(frameon=False, loc="lower left", fontsize=9, bbox_to_anchor=(0.0, 0.06))
-    save(fig, "sekil_4_11_tau_isletim_karakteristigi")
+    save(fig, "sekil_4_10_tau_isletim_karakteristigi")
 
 
 def fig_transfer() -> None:
@@ -263,13 +263,13 @@ def fig_transfer() -> None:
     ax.set_xticks(range(len(order)))
     ax.set_xticklabels([labels.get(f, f) for f in order], fontsize=9)
     ax.set_ylabel("F1 (CICIoT2023 üzerinde)")
-    ax.set_title("Şekil 4.13  Aile düzeyinde çapraz veri kümesi aktarımı (üç tohum)")
+    ax.set_title("Şekil 4.12  Aile düzeyinde çapraz veri kümesi aktarımı (üç tohum)")
     ax.set_ylim(0, 1.0)
     ax.grid(axis="x", visible=False)
     tr_ticks(ax, "y")
     for i, v in enumerate(vals):
         ax.text(i, v + 0.03, f"{v:.2f}".replace(".", ","), ha="center", fontsize=8.5)
-    save(fig, "sekil_4_13_capraz_veri_kumesi_aktarimi")
+    save(fig, "sekil_4_12_capraz_veri_kumesi_aktarimi")
 
 
 if __name__ == "__main__":
