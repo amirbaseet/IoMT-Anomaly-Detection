@@ -13,19 +13,19 @@
 ## Abstract
 
 CICIoMT2024 has become the reference benchmark for Internet-of-Medical-Things intrusion detection, used by more
-than thirty studies within two years, with reported accuracies clustering above 99%. We show that a third of it
+than thirty studies in two years, with accuracies clustering above 99%. We show that a third of it
 is duplicated content, that the size of that duplication depends entirely on the numeric precision at which
 rows are compared, and that its effect on reported performance is narrower than the field assumes. Duplicate rows are 0.07% of the training split at the float64 precision the CSVs print,
 and **36.95% of training rows and 44.72% of test rows at the float32 precision models compute in** — a factor
 of 517 on identical rows. Three studies report removing exactly 5,119 duplicates; we reproduce that figure to
 the row and show it is the float64-exact count of one split, so those reports are correct and mutually
-incomparable. The redundancy is structured: six flood classes carry
-99.51% of it, while the largest training class and the benign class carry none. Within-split redundancy
+incomparable. The redundancy is structured: six flood classes carry 99.51%
+of it, while the largest training class and the benign class carry none. Within-split redundancy
 dominates; cross-split identity — the only mechanism a contamination check would find — touches 0.84% of test
 rows. A five-seed ablation shows that scoring on the duplicated test split raises accuracy
-by 0.35–0.40 points — a change of estimand rather than contamination — that duplicated
-training data has no separable effect, and that the raw-versus-deduplicated comparison the literature makes
-cannot be resolved at five seeds. We withdraw two such figures of our own and propose a five-parameter reporting
+by 0.35–0.40 points — a change of estimand rather than contamination — that duplicated training
+data has no separable effect, and that the raw-versus-deduplicated comparison the literature makes cannot be
+resolved at five seeds. We withdraw two such figures of our own and propose a five-parameter reporting
 protocol without which accuracy comparisons on this dataset are not interpretable.
 
 <!-- WORD COUNT: recounted after the 2026-07-31 trim; target is <=250, the common Elsevier submission-form
