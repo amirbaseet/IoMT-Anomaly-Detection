@@ -118,14 +118,16 @@ def fig_ablation() -> None:
     strict = [float(r["h2_strict_avg"]) for r in rows]
     binary = [float(r["h2_binary_avg"]) for r in rows]
     flag = [float(r["avg_flag_rate"]) for r in rows]
+    fpr = [float(r["avg_false_alert_rate"]) for r in rows]
     passes = [r["h2_strict_pass"] for r in rows]
     y = np.arange(len(names))
-    h = 0.26
+    h = 0.2
 
-    fig, ax = plt.subplots(figsize=(9, 6.4))
-    ax.barh(y + h, strict, height=h, color=C_MAIN, label="H2-katı ortalaması (kurtarma)")
-    ax.barh(y, binary, height=h, color=C_ALT, label="H2-ikili ortalaması (herhangi bir alarm)")
-    ax.barh(y - h, flag, height=h, color=C_MUTED, label="Ortalama işaretleme oranı (işlemsel)")
+    fig, ax = plt.subplots(figsize=(9, 7))
+    ax.barh(y + 1.5 * h, strict, height=h, color=C_MAIN, label="H2-katı ortalaması (kurtarma)")
+    ax.barh(y + 0.5 * h, binary, height=h, color=C_ALT, label="H2-ikili ortalaması (herhangi bir alarm)")
+    ax.barh(y - 0.5 * h, flag, height=h, color=C_MUTED, label="Ortalama işaretleme oranı")
+    ax.barh(y - 1.5 * h, fpr, height=h, color=C_WARN, label="Benign yanlış alarm oranı (maliyet)")
     ax.axvline(0.70, color=C_WARN, linewidth=1.6, linestyle="--")
     ax.text(0.712, len(names) - 0.35, "H2-katı eşiği 0,70", color=C_WARN, fontsize=8)
     ax.set_yticks(y)
@@ -136,9 +138,76 @@ def fig_ablation() -> None:
     ax.grid(axis="y", visible=False)
     tr_ticks(ax, "x")
     for i, (v, pss) in enumerate(zip(strict, passes)):
-        ax.text(v + 0.012, i + h, pss, va="center", fontsize=7.5, color="#1C2422")
-    ax.legend(frameon=False, fontsize=8.5, loc="upper center", bbox_to_anchor=(0.5, -0.09), ncol=3)
+        ax.text(v + 0.012, i + 1.5 * h, pss, va="center", fontsize=7.5, color="#1C2422")
+    ax.legend(frameon=False, fontsize=8, loc="upper center", bbox_to_anchor=(0.5, -0.09), ncol=2)
     save(fig, "sekil_4_3_ablasyon")
+
+
+def fig_confusion() -> None:
+    """Sekil 4.1 - E7 19-class confusion matrix, row-normalised (recall per class)."""
+    import json as _json
+    cm = np.load(ROOT / "results/supervised/metrics/E7_cm_19class_test.npy").astype(float)
+    rep = _json.load(open(ROOT / "results/supervised/metrics/E7_classification_report_test.json"))
+    labels = [k for k in rep if k not in ("accuracy", "macro avg", "weighted avg")]
+    assert len(labels) == cm.shape[0], (len(labels), cm.shape)
+    norm = cm / cm.sum(axis=1, keepdims=True)
+    names = [l.replace("_", " ") for l in labels]
+
+    fig, ax = plt.subplots(figsize=(8.6, 7.4))
+    im = ax.imshow(norm, cmap="BuGn", vmin=0, vmax=1)
+    ax.set_xticks(range(len(names))); ax.set_yticks(range(len(names)))
+    ax.set_xticklabels(names, rotation=70, ha="right", fontsize=7)
+    ax.set_yticklabels(names, fontsize=7)
+    ax.set_xlabel("Tahmin edilen sınıf"); ax.set_ylabel("Gerçek sınıf")
+    ax.set_title("Şekil 4.1  E7 karışıklık matrisi (19 sınıf, satır normalize)")
+    ax.grid(visible=False)
+    for i in range(len(names)):
+        for j in range(len(names)):
+            v = norm[i, j]
+            if v >= 0.005:
+                ax.text(j, i, f"{v:.2f}".replace("0.", ",").replace(".", ","),
+                        ha="center", va="center", fontsize=6,
+                        color="white" if v > 0.55 else "#1C2422")
+    cb = fig.colorbar(im, ax=ax, fraction=0.045, pad=0.03)
+    cb.set_label("Satır oranı (duyarlılık)", fontsize=9)
+    cb.ax.tick_params(labelsize=8)
+    save(fig, "sekil_4_1_e7_karisiklik_matrisi")
+
+
+def fig_ae_if_roc() -> None:
+    """Sekil 4.2 - AE vs Isolation Forest ROC on the deduplicated test set."""
+    import pandas as pd
+    from sklearn.metrics import roc_curve, roc_auc_score
+
+    y = pd.read_csv(ROOT / "preprocessed/full_features/y_test.csv").iloc[:, 0].to_numpy()
+    benign_code = None
+    import json as _json
+    le = _json.load(open(ROOT / "preprocessed/label_encoders.json"))["multiclass"]
+    mapping = le if isinstance(le, dict) else {}
+    for k, v in (mapping.items() if isinstance(mapping, dict) else []):
+        if str(k).lower() == "benign" or str(v).lower() == "benign":
+            benign_code = v if str(k).lower() == "benign" else k
+    y_anom = (y != benign_code).astype(int) if benign_code is not None else None
+    if y_anom is None:
+        raise SystemExit("benign code not resolved")
+
+    ae = np.load(ROOT / "results/unsupervised/scores/ae_test_mse.npy")
+    iff = np.load(ROOT / "results/unsupervised/scores/if_test_scores.npy")
+    fig, ax = plt.subplots(figsize=(6.4, 6))
+    for scores, color, name in ((ae, C_MAIN, "Otokodlayıcı (AE)"),
+                                (iff, C_ALT, "Isolation Forest")):
+        sc = scores if roc_auc_score(y_anom, scores) >= 0.5 else -scores
+        fpr, tpr, _ = roc_curve(y_anom, sc)
+        auc = roc_auc_score(y_anom, sc)
+        step = max(1, len(fpr) // 4000)
+        ax.plot(fpr[::step], tpr[::step], color=color, linewidth=2,
+                label=f"{name} — AUC {auc:.4f}".replace(".", ","))
+    ax.plot([0, 1], [0, 1], color=C_MUTED, linewidth=1, linestyle=":", label="Rastgele")
+    ax.set_xlabel("Yanlış alarm oranı (FPR)"); ax.set_ylabel("Yakalama oranı (TPR)")
+    ax.set_title("Şekil 4.2  Denetimsiz katman ROC eğrileri (test kümesi)")
+    ax.legend(frameon=False, fontsize=9, loc="lower right")
+    tr_ticks(ax, "x"); tr_ticks(ax, "y")
+    save(fig, "sekil_4_2_ae_if_roc")
 
 
 def fig_tau_curve() -> None:
@@ -207,6 +276,8 @@ if __name__ == "__main__":
     print("Turkish thesis figures ->", OUT)
     fig_dedup_perclass()
     fig_imbalance()
+    fig_confusion()
+    fig_ae_if_roc()
     fig_ablation()
     fig_tau_curve()
     fig_transfer()
