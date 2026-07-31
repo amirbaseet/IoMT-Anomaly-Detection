@@ -5,7 +5,7 @@
 > **COMPLETE DRAFT, PRE-SUBMISSION** · target venue: *Internet of Things* (Elsevier) · drafted 2026-07-30,
 > revised the same day after senior review.
 > Governing spec: `.claude/plans/2026-07-30-p1-dedup-paper-brief.md` (FROZEN, incl. Amendment 1) + `OUTLINE.md`.
-> All eleven sections are drafted, with 24 references, seven tables and five figures in place. Outstanding
+> All eleven sections are drafted, with 25 references, seven tables and five figures in place. Outstanding
 > before submission: the author list and declarations, the §2.2 roster triage, and the Guide-for-Authors
 > conformance pass. Every number carries an oracle reference in an HTML comment; those comments are stripped
 > at submission and must survive `/fact-check` first.
@@ -20,7 +20,7 @@ differently located than the field assumes. Duplicate rows are 0.07% of the trai
 precision the CSVs are printed in, and **36.95% of training rows and 44.72% of test rows at the float32
 precision models compute in** — a factor of 517 on identical rows. Three published studies report removing
 exactly 5,119 duplicates; we reproduce that figure to the row, show it is the float64-exact count of one split,
-and reconstruct a fourth study's working set exactly, so those reports are correct and mutually incomparable.
+and reconstruct the working set of a third exactly, so those reports are correct and mutually incomparable.
 The redundancy is structured: six volumetric flood classes carry 99.51% of it, the largest class in the
 training split carries none, and the benign class is free of it entirely. Within-split redundancy dominates,
 while cross-split identity — the only mechanism a contamination check would find — touches 0.84% of test rows.
@@ -30,7 +30,7 @@ that duplicated training data has no separable effect; and that the raw-versus-d
 literature makes cannot be resolved at five seeds. We withdraw two such figures of our own, and propose a
 five-parameter reporting protocol without which accuracy comparisons on this dataset are not interpretable.
 
-<!-- WORD COUNT: 330 (comments stripped, recounted 2026-07-30). Elsevier IoT abstract limit UNVERIFIED
+<!-- WORD COUNT: 281 (comments stripped, recounted 2026-07-31). Elsevier IoT abstract limit UNVERIFIED
      (ScienceDirect 403s automated fetch). Trimmed 330 -> 281 words on 2026-07-30; if the journal caps at 250
      it needs ~30 more cut, so recheck against the real limit before submission. Body sections 1-11, comments
      stripped: 8,671 words including table rows (7,789 excluding them) — inside the brief's 8-12k target. -->
@@ -127,12 +127,13 @@ in §2.4 for its own abstract-stated dataset description). Nine of the
 31 touch deduplication in some form. Of those nine:
 
 - **three** report a single aggregate count — 5,119 rows — as one figure for their whole working set, with no
-  per-split rate [2,3,4]; two of the three do describe the scope they worked on, which is what makes the
-  reconciliation of §5 possible;
+  per-split rate [2,3,4]; the scope of two of them is nevertheless recoverable from their own arithmetic, which
+  is what makes the reconciliation of §5 possible;
 - **one** reports a ~55% row reduction that conflates deduplication with removal of missing values [6];
 - **three** describe deduplication as a pipeline step without quantifying it at all [8,9,10];
-- **one** deduplicates both splits, reporting pre- and post-counts from which a drop can be inferred but no
-  duplicate rate [7];
+- **one** removes missing values and duplicate records together from both splits, reporting pre- and
+  post-counts from which only a combined drop can be inferred [7] — the same conflation as the study above, at
+  a different scale;
 - **one** performs a cross-set hash check, but after undersampling, so its scope is not the released data [11].
 
 A tenth study deduplicates a *different* dataset used alongside CICIoMT2024 and not CICIoMT2024 itself [12]; it
@@ -206,6 +207,8 @@ volumetric attack families are distributed across numbered files (`TCP_IP-DDoS-I
 that together constitute one class.
 <!-- oracle: numbers_map.md §2 rows 31-33 (row counts), row 41 (45 features), row 44 (19 classes);
      file counts from the data/{train,test} directory listings -->
+
+Table 1 summarises the artifact as distributed.
 
 **Table 1 — CICIoMT2024 Wi-Fi + MQTT subset as released.**
 
@@ -292,8 +295,12 @@ third implementation, built for the ablation in §8, reproduced both split count
 
 ### 3.7 Reproduction package
 
-All scripts, all result JSONs, and a verifier that re-asserts every number in this paper from those JSONs are
-released as `ciciomt2024-dedup-audit` *[URL on acceptance]*. The package contains **no CICIoMT2024 data**; the
+The four audit scripts behind §§4–6, the result JSONs they produce, and a verifier that re-derives the
+reported figures from those JSONs are released as `ciciomt2024-dedup-audit` *[URL on acceptance]*. The
+verifier runs 91 checks covering the duplicate counts and rates, the per-class table, the reconciliation
+arithmetic, the cross-split figures and the ablation cells and contrasts; it does not re-derive every
+incidental number in the prose, and the package README states which sections are reproducible from it and
+which are not (§8's ablation needs a training pipeline outside the package's scope). The package contains **no CICIoMT2024 data**; the
 dataset must be obtained from the Canadian Institute for Cybersecurity directly. Environment: Python 3.13.13,
 pandas 2.3, NumPy 2.2, scikit-learn 1.8, XGBoost 3.2.0. We note one honest discrepancy for reproducers: the
 project's dependency manifest pins XGBoost below 3.0 while the installed and used version is 3.2.0, so the
@@ -305,7 +312,7 @@ manifest should not be treated as the authority for the ablation of §8.
 
 ## 4. Result 1 — duplication is precision-dependent, by a factor of 517
 
-Measured over the released artifact at the two precisions of §3.3:
+Measured over the released artifact at the two precisions of §3.3, Table 2 gives the counts and rates:
 
 **Table 2 — Duplicate rows by numeric precision and scope. Percentages are of the rows in that scope.**
 
@@ -367,8 +374,10 @@ the training directory. The published figure is the float64-exact duplicate coun
 reproduced here to the row.
 <!-- oracle: dr6_panel.json REP45/train; numbers_map.md §2 float64 rows -->
 
-**Scope, at two scales.** Two of the three studies [2,4] describe operating on the training directory, and for
-that scope 5,119 is right. The third [3] reports a working set of **4,971,919** rows, and that figure reconstructs
+**Scope, at two scales.** Two of the three studies [2,4] can be placed on the training directory by their own
+arithmetic rather than by statement — one reports 7,155,712 unique records after removing 5,119, which sums to
+that directory's exact row count, and the other describes working on approximately 80% of the records, which
+is that directory (81.6% of all rows). For that scope 5,119 is right. The third [3] reports a working set of **4,971,919** rows, and that figure reconstructs
 exactly: the training split's TCP/IP-DDoS-plus-Benign subset holds 4,972,591 rows and contains **672**
 float64-exact duplicates, and 4,972,591 − 672 = **4,971,919**. Its scope is therefore recoverable and its
 deduplication was performed — but that subset's true duplicate count is 672, not the 5,119 the study quotes.
@@ -403,7 +412,8 @@ unambiguous — a practical point for anyone implementing it, and not an obvious
 
 ## 6. Result 3 — the redundancy is structured, and not where volume would predict
 
-Duplication is not spread across CICIoMT2024. Measured within each class at float32:
+Duplication is not spread across CICIoMT2024. Table 3 gives the within-class counts at float32, and Figure 2
+plots them against the cumulative share of the duplicate mass:
 
 **Table 3 — Within-class duplicate counts and rates at float32, by released class, sorted by train duplicate
 count. "Share of train dup mass" is each class's fraction of the 2,645,751 duplicate training rows.**
@@ -437,7 +447,8 @@ count. "Share of train dup mass" is each class's fraction of the 2,645,751 dupli
 
 **Figure 2.** Per-class within-class duplicate rate for the **training split** (upper panel) and the cumulative
 share of its 2,645,751 duplicate rows (lower panel), classes ordered by duplicate count. Both panels share one
-x-axis and one percentage scale. Test-split rates, which run higher in every flood class, are in Table 3.
+x-axis and one percentage scale. Test-split rates are in Table 3; they run higher in five of the six flood classes and sharply lower in the
+sixth (`TCP_IP-DoS-SYN`, 21.47% train against 1.07% test).
 
 Four observations, in descending order of consequence.
 
@@ -467,6 +478,9 @@ Class-rarity claims on this dataset are themselves deduplication-dependent.
 ---
 
 ## 7. Result 4 — three redundancy mechanisms, and the field looks for the smallest one
+
+Figure 3 places the mechanisms below within the four leakage axes the corpus exhibits, and Figure 4 shows what
+a test-set metric is computed over once the repetition is removed.
 
 **A note on terminology.** We use *leakage* in its strict sense — information crossing the train/test boundary —
 and *redundancy* for repetition within a split. Of the three mechanisms below only M2 is leakage under that
@@ -508,8 +522,9 @@ Deduplication is therefore not a row-count operation — it changes the feature 
 trained. That has a methodological consequence beyond this dataset: a deduplicated and a non-deduplicated arm
 of the same pipeline are **not** mutually scoreable. A model from one arm evaluated against the other arm's
 scaled test matrix receives systematically mis-scaled inputs. We made exactly this error while building the
-ablation of §8, and it produced a plausible-looking result — an apparent collapse to 63% accuracy — that was
-an artifact of the scaling mismatch and nothing else. We report it because the failure mode is easy to reach
+ablation of §8, and it produced a plausible-looking result — an apparent collapse of accuracy by more than
+thirty points — that was an artifact of the scaling mismatch and nothing else. The discarded run was not
+retained as an artifact, so we report the failure mode rather than its numbers. We report it because the failure mode is easy to reach
 and hard to notice: it produces numbers that are wrong in the direction that flatters the hypothesis.
 
 ![Figure 3](figures/fig3_leakage_axes_en.png)
@@ -523,7 +538,7 @@ an ordinal status, not a measured quantity.
 redundancy a test metric is computed over.
 
 **Four leakage axes across the corpus.** M1–M3 above concern duplicate rows specifically; taking *leakage* in
-the strict sense again, the corpus exhibits four axes overall. Taking the corpus as a whole, four axes are visible: (1) duplicate rows — corrected
+the strict sense again, the corpus exhibits four axes overall: (1) duplicate rows — corrected
 exactly by this work; (2) device-level overlap between splits — corrected approximately by one study, using
 predicted device labels [11]; (3) destruction of the official file-level split by merge-and-re-split — two 2026
 studies apply partial correctives, session-disjoint [15] and timestamp-based [16] splits, both unquantified; and
@@ -571,8 +586,11 @@ over the five seeds {1, 7, 42, 100, 1729} and we report mean ± σ.
 
 Each contrast varies exactly one factor. We call a contrast **separable** when both conditions hold: its sign
 is the same in every one of the five seeds, **and** the absolute mean exceeds twice the across-seed standard
-deviation. Both conditions are pre-declared and applied to every metric; a contrast satisfying only the first
-is reported as sign-consistent but not separable.
+deviation. The criterion is applied uniformly to every contrast and every metric reported here, including the
+ones it rules against. It was fixed before the five-seed sweep was run but **after** a single-seed matrix
+existed, so it is not a pre-registration and we do not present it as one; a reader who prefers a different
+threshold can recompute every verdict from the released per-seed values. A contrast satisfying only the first
+condition is reported as sign-consistent but not separable.
 
 **Table 5 — C1 contrasts, macro-F1, mean ± σ over five seeds.** Each row varies one factor; the sign convention
 is given by the subtraction shown.
@@ -583,7 +601,7 @@ is given by the subtraction shown.
 | Test set: raw − deduplicated, dedup-trained | (c) − (d) | **+0.00798 ± 0.00025** | **yes** (sign 5/5; mean > 2σ) |
 | Training set: deduplicated − raw, on raw test | (c) − (a) | −0.00064 ± 0.02468 | no — sign flips across seeds |
 | Training set: deduplicated − raw, on dedup test | (d) − (b) | −0.00078 ± 0.02438 | no — sign flips across seeds |
-| Raw everywhere − deduplicated everywhere | (a) − (d) | +0.00863 ± 0.02468 | no — mean < 2σ |
+| Raw everywhere − deduplicated everywhere | (a) − (d) | +0.00863 ± 0.02468 | no — sign flips, and mean < 2σ |
 
 where (a) = trained raw / tested raw, (b) = trained raw / tested deduplicated, (c) = trained deduplicated /
 tested raw, (d) = trained deduplicated / tested deduplicated, matching Table 4.
@@ -608,7 +626,8 @@ construct validity rather than contamination.
 
 **Where the macro-F1 change actually comes from.** The decomposition does not follow the re-weighting intuition.
 At seed 42 the +0.00815 macro-F1 delta is dominated by three `Recon` classes — `Recon_OS_Scan` alone
-contributes 0.0035 of it (43%), with `Recon_Ping_Sweep` and `Recon_VulScan` adding 0.0015 and 0.0012 — while
+contributes 0.0035 of it (42% at full precision), with `Recon_Ping_Sweep` and `Recon_VulScan` adding 0.0015
+and 0.0012 — while
 the three flood classes whose support collapses by 91–95% between the two splits (`DDoS_ICMP` 349,699 → 19,673;
 `DDoS_TCP` 182,598 → 8,735; `DoS_ICMP` 98,432 → 8,451) together contribute only 0.0020. Macro-F1 is unweighted,
 so removing flood duplicates barely moves classes already at F1 ≈ 0.999; the movement is in small classes whose
@@ -666,9 +685,10 @@ that this study did not keep. Any macro-F1 comparison on this dataset that rests
 
 ### 8.2 A resampling result that survives deduplication
 
-Class imbalance on this dataset (2,374:1 after deduplication) invites synthetic oversampling, and SMOTETomek
-is the corpus's most common choice. On deduplicated data it degrades macro-F1 in **all four**
-classifier × feature-set configurations:
+Class imbalance on this dataset (2,374:1 after deduplication) invites synthetic oversampling. SMOTETomek is
+one of the methods the corpus reaches for — plain SMOTE and random oversampling are more common, and roughly a
+third of the studies resample not at all — and it is the method this pipeline tested. On deduplicated data it degrades macro-F1 in **all four**
+classifier × feature-set configurations (Table 6, plotted in Figure 5):
 
 **Table 6 — SMOTETomek effect on 19-class macro-F1, deduplicated data, seed 42.**
 
@@ -693,8 +713,10 @@ corroboration of the negative results on clean data, and the mechanism account i
 
 ![Figure 5](figures/fig5_smotetomek_delta_en.png)
 
-**Figure 5.** Change in 19-class macro-F1 from applying SMOTETomek, by configuration, on deduplicated data.
-The shaded band is this pipeline's across-seed σ from §8.1; two of the four deltas fall inside it.
+**Figure 5.** Change in 19-class macro-F1 from applying SMOTETomek, by configuration, on deduplicated data,
+at seed 42. No noise band is drawn: the across-seed variance of these paired differences was never measured
+(§8.1's sweep varied deduplication, not resampling), so the figure supports the consistent direction across
+four configurations rather than any individual delta.
 
 **Seed caveat, stated precisely.** These four deltas are single-seed (42) paired differences, and their
 across-seed variance was never measured — §8.1's seed sweep varied deduplication, not resampling. We therefore
@@ -789,8 +811,8 @@ behaviour is visible at all.
      accuracy". That is false - the largest single deduplicated train class is 36.23% (TCP_IP-DDoS-UDP,
      1,635,956/4,515,080). The 87.54% figure is the DDoS+DoS SHARE of the split, not any single-class
      baseline. UPSTREAM DEFECT: the same wrong claim appears in Literature_Review_Chapter2_v6.6.md:236
-     ("a trivial majority predictor exceeds ~87.5% accuracy, since DDoS and DoS together are 87.54% of
-     training rows") and must be corrected there as a citation-consistency fix. -->
+     and has been corrected there. The same wrong claim SURVIVES at v6.6:328 ("a majority-class predictor
+     already exceeds ~87.5% accuracy (DDoS + DoS = 87.54% of training rows)") — fix that line too. -->
 
 **Report seed variance.** On this dataset a single-seed macro-F1 is not stable at the precision at which the
 literature declares winners: five seeds of one fixed configuration span 3.75 macro-F1 points (§8.1), while
@@ -803,7 +825,7 @@ Table 7 restates the protocol as a checklist usable by authors and reviewers.
 | # | Parameter | Report | Why it matters here |
 |---|---|---|---|
 | P1 | Precision | float32 / float64 / other, explicitly | factor of 517 |
-| P2 | Scope | files, directories, per-split or pooled | 5,119 vs 2,645,751; 672 vs 674 |
+| P2 | Scope | files, directories, per-split or pooled | 672 vs 674; the 4,971,919 subset |
 | P3 | Stage | position relative to split, resample, scaler fit | changes the feature space, not just row count |
 | P4 | Split provenance | official file-level split preserved or re-split | re-splitting is a different experiment |
 | P5 | Granularity | per-split **and** per-class rates | aggregate hides a 99.51%-concentrated mass |
@@ -871,8 +893,8 @@ read as a family of incommensurable measurements rather than a ranking.
 
 **CRediT.** *[TO COMPLETE once authorship is settled.]*
 **Declaration of competing interest.** *[TO COMPLETE.]*
-**Data availability.** CICIoMT2024 is distributed by the Canadian Institute for Cybersecurity. All analysis
-code, all result artifacts, and a verifier that re-derives every number in this paper are released at
+**Data availability.** CICIoMT2024 is distributed by the Canadian Institute for Cybersecurity. The audit
+code, the result artifacts, and a verifier that re-derives the reported figures from them are released at
 `ciciomt2024-dedup-audit` *[URL]*. No dataset records are redistributed.
 **Generative AI disclosure.** *[TO COMPLETE — Elsevier wording UNVERIFIED; see the Guide-for-Authors gap.]*
 **Funding.** *[TO COMPLETE.]*
@@ -898,8 +920,14 @@ Organizational Sciences*, 49(2), 345–359. doi:10.31341/jios.49.2.11.
 system for detecting DDoS attacks in blockchain-enabled IoMT networks. In *ICSPIS 2024*. IEEE.
 doi:10.1109/ICSPIS63676.2024.10812635.
 
-[4] Kharoubi, K., Cherbal, S. & Akkal, M. (2025). Enhanced IoMT security: evaluating machine learning and deep
-learning models with the CICIoMT2024 dataset. IEEE conference publication.
+[4] Kharoubi, K., Cherbal, S. & Akkal, M. (2024). Enhanced Internet of Medical Things security: evaluating
+machine learning and deep learning models with the CICIoMT2024 dataset. In *2024 International Conference of
+the African Federation of Operational Research Societies (AFROS)*. IEEE.
+doi:10.1109/AFROS62115.2024.11037067.
+<!-- YEAR CORRECTED 2026-07-31: the entry read 2025, following v6.6:81. The per-paper oracle
+     26_Kharoubi_AFROS_summary.md:6 is more granular: "Year as printed: 2024 ((c)2024 IEEE; conference name
+     and DOI both carry 2024)... the project label '2025' is likely the IEEE Xplore indexing year." Venue and
+     DOI added from the same source. v6.6:81 still carries 2025 and should be reconciled. -->
 
 [5] Doménech, J., León, O., Siddiqui, M.S. & Pegueroles, J. (2025). Evaluating and enhancing intrusion detection
 systems in IoMT: the importance of domain-specific datasets. *Internet of Things*.
@@ -911,8 +939,12 @@ doi:10.1016/j.iot.2025.101631.
 [7] Jaiswal, R., Andersen, P.-A., Cenkeramaddi, L.R., Jiao, L. & Granmo, O.-C. (2026). A Tsetlin
 machine-driven intrusion detection system for next-generation IoMT security. arXiv:2604.03205.
 
-[8] Saeed et al. (2025). A novel adaptive hybrid intrusion detection system with lightweight optimization for
-enhanced security in IoMT. *Scientific Reports*. doi:10.1038/s41598-025-31897-z.
+[8] Saeed et al. (2026). A novel adaptive hybrid intrusion detection system with lightweight optimization for
+enhanced security in IoMT. *Scientific Reports*, 16, 2097. doi:10.1038/s41598-025-31897-z.
+<!-- YEAR/VOLUME CORRECTED 2026-07-31: the entry read 2025 with no volume, following v6.6:80. The per-paper
+     oracle 25_Saeed_SciRep_summary.md:6 gives "Scientific Reports (2026) 16:2097". v6.6:80 still carries 2025
+     and should be reconciled. The DOI's embedded year (s41598-025-) is the acceptance year, not the issue
+     year. -->
 
 [9] Alsharaiah, M.A. et al. (2025). An explainable AI-driven transformer model for spoofing attack detection in
 IoMT networks. *Discover Applied Sciences*. doi:10.1007/s42452-025-07071-5.
