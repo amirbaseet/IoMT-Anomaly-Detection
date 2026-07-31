@@ -17,9 +17,10 @@ Sakarya University, Sakarya 54050, Türkiye
 > **COMPLETE DRAFT, PRE-SUBMISSION** · target venue: *Internet of Things* (Elsevier) · drafted 2026-07-30,
 > revised the same day after senior review.
 > Governing spec: `.claude/plans/2026-07-30-p1-dedup-paper-brief.md` (FROZEN, incl. Amendment 1) + `OUTLINE.md`.
-> All eleven sections are drafted, with 25 references, seven tables and five figures in place. Outstanding
-> before submission: the author list and declarations, the §2.2 roster triage, and the Guide-for-Authors
-> conformance pass. Every number carries an oracle reference in an HTML comment; those comments are stripped
+> All eleven sections are drafted, with 25 references, seven tables and five figures in place. The author
+> block, affiliations, ORCIDs and the funding declaration are complete. Outstanding before submission: the
+> CRediT role split and the competing-interest statement (both need only the authors' confirmation), the §2.2
+> roster triage, the corpus freshness re-sweep, and the journal's own abstract-length limit. Every number carries an oracle reference in an HTML comment; those comments are stripped
 > at submission and must survive `/fact-check` first.
 
 ## Abstract
