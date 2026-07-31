@@ -1,6 +1,18 @@
 # How much of CICIoMT2024 is a copy? A per-split, precision-stated audit of duplicate leakage in the reference IoMT intrusion-detection benchmark
 
-**Authors:** *[TO COMPLETE — authorship, order, affiliations and ORCIDs pending]*
+**Amro Baseet**ᵃ (ORCID 0009-0004-5532-8182) · **İsmail Bütün**ᵇ (ORCID 0000-0002-1723-5741)
+
+ᵃ Department of Computer Engineering, Sakarya University, Sakarya, Türkiye
+ᵇ Department of Software Engineering and the Research, Development and Application Center (SARGEM),
+Sakarya University, Sakarya 54050, Türkiye
+
+*Corresponding author:* Amro Baseet — mousa.baseet@org.sakarya.edu.tr
+<!-- Supplied by the author 2026-07-31 from an IEEEtran author block. The INFORMATION transfers; the markup
+     does not — \orcidlink, \IEEEmembership and \thanks are IEEEtran macros with no elsarticle equivalent.
+     For elsarticle this becomes \author[a]{...} + \ead{} + \affiliation[a]{organization=...}, and IEEE
+     membership is not carried in Elsevier author blocks at all, so it is dropped here.
+     STILL OPEN: co-author confirmation for THIS paper specifically (the hoca batch's question 4 is unsent),
+     and whether Baseet is the intended corresponding author — assumed, since his is the only e-mail given. -->
 
 > **COMPLETE DRAFT, PRE-SUBMISSION** · target venue: *Internet of Things* (Elsevier) · drafted 2026-07-30,
 > revised the same day after senior review.
@@ -890,8 +902,13 @@ read as a family of incommensurable measurements rather than a ranking.
 
 ## Declarations
 
-**CRediT.** *[TO COMPLETE once authorship is settled.]*
-**Declaration of competing interest.** *[TO COMPLETE.]*
+**CRediT author statement.** *[TO COMPLETE — needs both authors' agreement on role assignment. The Elsevier
+taxonomy terms to allocate are: Conceptualization, Methodology, Software, Validation, Formal analysis,
+Investigation, Resources, Data curation, Writing – original draft, Writing – review & editing, Visualization,
+Supervision, Project administration, Funding acquisition.]*
+**Declaration of competing interest.** *[TO COMPLETE — both authors must confirm. If none: "The authors
+declare that they have no known competing financial interests or personal relationships that could have
+appeared to influence the work reported in this paper."]*
 **Data availability.** CICIoMT2024 is distributed by the Canadian Institute for Cybersecurity. The audit
 code, the result artifacts, and a verifier that re-derives the reported figures from them are released at
 `ciciomt2024-dedup-audit` *[URL]*. No dataset records are redistributed.
@@ -903,7 +920,8 @@ using this tool/service, the author(s) reviewed and edited the content as needed
 responsibility for the content of the published article." *Elsevier requires this as a separate section at the
 end of the manuscript, immediately before the references — where it now sits. Basic spelling, grammar and
 punctuation checks do not require disclosure.]*
-**Funding.** *[TO COMPLETE.]*
+**Funding.** This study was funded by the Scientific and Technological Research Council of Türkiye
+(TÜBİTAK-BİDEB 2232/A), Grant No. 121C083.
 
 ## References
 
