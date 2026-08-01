@@ -11,8 +11,8 @@ Sakarya University, Sakarya 54050, Türkiye
      does not — \orcidlink, \IEEEmembership and \thanks are IEEEtran macros with no elsarticle equivalent.
      For elsarticle this becomes \author[a]{...} + \ead{} + \affiliation[a]{organization=...}, and IEEE
      membership is not carried in Elsevier author blocks at all, so it is dropped here.
-     STILL OPEN: co-author confirmation for THIS paper specifically (the hoca batch's question 4 is unsent),
-     and whether Baseet is the intended corresponding author — assumed, since his is the only e-mail given. -->
+     CORRESPONDING AUTHOR CONFIRMED 2026-08-01: Amro Baseet.
+     STILL OPEN: co-author confirmation for THIS paper specifically (the hoca batch's question 4 is unsent). -->
 
 > **COMPLETE DRAFT, PRE-SUBMISSION** · target venue: *Internet of Things* (Elsevier) · drafted 2026-07-30,
 > revised the same day after senior review.
@@ -914,12 +914,12 @@ Project administration, Funding acquisition.
      Conceptualization / Methodology / Validation / Formal analysis / Investigation / Data curation /
      Writing - original draft / Visualization describe.
 
-     TWO ROLES DELIBERATELY WITHHELD, because assigning them now would be false:
-     (1) "Writing - review & editing" is NOT credited to Bütün. He has not yet reviewed the manuscript - the
-         message asking him to has not been sent. Add it once he has actually reviewed, not before.
-     (2) "Funding acquisition" IS credited to Bütün on the inference that TÜBİTAK-BİDEB 2232/A (No. 121C083)
-         is his fellowship, since 2232/A is an incoming-researcher programme. If the grant is held otherwise,
-         this line must move. Confirm with him.
+     "Funding acquisition" -> Bütün is CONFIRMED 2026-08-01: the author states the TÜBİTAK-BİDEB 2232/A
+     grant (No. 121C083) is Bütün's. No longer an inference.
+
+     ONE ROLE DELIBERATELY WITHHELD, because assigning it now would be false:
+     "Writing - review & editing" is NOT credited to Bütün. He has not yet reviewed the manuscript - the
+     message asking him to has not been sent. Add it once he has actually reviewed, not before.
 
      CRediT is a research-integrity statement; every role here should be one both authors would defend. -->
 
