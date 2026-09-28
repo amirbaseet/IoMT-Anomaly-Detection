@@ -89,3 +89,52 @@ Per-family F1 (4-family):
 For reference, the 5-family macro-F1 was 0.1965 ± 0.0002; merging DoS+DDoS moves it to 0.2578 ± 0.0001 — the delta quantifies how much of the Design-B degradation was DoS↔DDoS confusion versus genuine non-transfer.
 
 <!-- ADDENDUM:END -->
+
+## Addendum 3 — Inverse direction: train CICIoT2023 → test CICIoMT2024, FULL data (Measured 2026-09-28)
+
+Source: `inverse_full_results.json` (written by `src/inverse_full_run.py`). This section sits outside the ADDENDUM markers because `src/addendum.py` rewrites the text between them. Note: a full re-run of `src/run.py` (via `report.write_summary`) overwrites this whole file, including this section.
+
+**Result: the inverse direction collapses to chance on the full data** — ROC-AUC **0.4797**, balanced accuracy **0.5002**. The model flags almost every CICIoMT2024 row as attack (benign recall 0.0003, attack recall 1.0000). The forward direction is at chance on balanced accuracy (0.4998) but keeps some ranking signal (ROC-AUC 0.6904).
+
+### Protocol
+
+- **Train:** the 62 CICIoT2023 merged CSVs other than `Merged63.csv` (62 of the 63 in `MERGED_CSV.zip`), streamed from the zip → **44,591,073 rows** (1,041,192 benign = 2.33%). 9 empty-label rows dropped. The row counts reconcile with `artifacts/label_counts.json`: 44,591,073 + 428,161 holdout = 45,019,243 − 9.
+- **Test:** all rows of CICIoMT2024 `data/test` (21 files) → **1,614,182 rows** (37,607 benign), selected by name to the same 38 shared features (`ciciomt_data.load_split` raises if one is missing).
+- **Model:** `config.XGB_PARAMS_BASE` (the forward run's frozen params) via `xgb.train` + `QuantileDMatrix`, unweighted, threshold 0.5. NaN cells are filled with medians fit on the training data only (2,309 train cells, 22 holdout cells, 0 test cells). **One model seed (42), so no σ is reported.** Sampling-seed σ does not exist when all the data is used. With subsample/colsample 0.8, the model-seed σ is not zero, but it is not measured here.
+- **Known-positive control:** `Merged63.csv` (428,161 rows) was held out and scored as a within-CICIoT2023 **script sanity cell** → ROC-AUC **0.9981**, bal-acc 0.9301. This is a sanity check. It does not replace the B2 control's 0.974.
+
+**What the control does and does not show.** The holdout shows the CICIoT2023 zip reader and the model are sound. The CICIoMT2024 test loader (`ciciomt_data.load_split`) is a different code path; it is the one that scored 0.9999 in-dataset in the forward run. An AUC this close to 0.5 is chance under either label polarity. Together this points to a dataset shift (testbed and feature extraction) rather than a script bug. It does **not** rule out that features with the same name are computed differently in the two datasets.
+
+### 2×2 generalization table (binary, XGBoost; ROC-AUC / balanced accuracy)
+
+| train ↓ · test → | CICIoMT2024 | CICIoT2023 |
+|---|---|---|
+| **CICIoMT2024** | 0.9999 / 0.9821 (in-dataset, shared-feat) | 0.6904 ± 0.0003 / 0.4998 ± 0.0000 (forward, 3 seeds) |
+| **CICIoT2023** | **0.4797 / 0.5002** (inverse, full data, 1 seed) | 0.9981 / 0.9301 (full-run holdout `Merged63`) · 0.974 / 0.7962 (B2 control, `scripts/b2_control.py` in the audit repo; 578k sample, random 75/25 split, 100 trees depth 6) |
+
+### Preliminary → full
+
+| Run | Train data | XGB params | MT test rows | ROC-AUC | bal-acc |
+|---|---|---|---|---|---|
+| Preliminary (`src/inverse_run.py`, run 2026-09-22, logged 2026-09-23) | 578,659-row class-capped seed-42 sample (`sampled_test_set.parquet`) | 100 trees, depth 6 | first 200k rows/file, then a 20k/file sample (288,597 rows) | 0.5155 | 0.5001 |
+| **Full (`src/inverse_full_run.py`)** | 44,591,073 rows (62 of 63 files) | `XGB_PARAMS_BASE` (200 trees, depth 8, …) | all 1,614,182 | **0.4797** | **0.5002** |
+
+At least six things changed at once, so the 0.036 AUC shift cannot be pinned on any one of them:
+1. training data and its class mix
+2. XGB params
+3. test coverage
+4. the holdout file
+5. NaN handling (XGBoost's native missing-value routing vs train-median imputation)
+6. the training API (`XGBClassifier` vs `xgb.train` + `QuantileDMatrix`)
+
+Both runs sit at chance, so the conclusion does not depend on the shift.
+
+### Reading
+
+- **Each model separates its own dataset well, and transfer fails in both directions.** The CICIoMT2024 model scores 0.9999 in-dataset. The full CICIoT2023 model scores 0.9981 on the held-out `Merged63`, and the preliminary-protocol B2 control scores 0.974. Across datasets, the forward direction keeps weak ranking (AUC 0.6904) and the inverse has none (AUC 0.4797). Both are at chance on balanced accuracy.
+- **The bal-acc near 0.5 is partly the base rate.** Both training sets are ~97–98% attack (CICIoT2023 train 97.67% by row count; CICIoMT2024 `data/train` 97.31% by `wc -l` minus headers), so at threshold 0.5 almost everything is called attack. ROC-AUC is the threshold-independent measure. In the inverse direction it is also at chance.
+- **Doménech et al. (2025) — partial replication, with an open divergence on ROC-AUC.** They ran the same direction (train CICIoT2023 → test CICIoMT2024) on 44 common features.
+  - 5-class: F1 falls from 0.86–0.94 (baseline) to 0.27–0.41 (their Table 5, different attacks) or 0.37–0.55 (Table 4, same attacks).
+  - 2-class, same attacks (Table 4): XGB F1 falls from 0.9762 to 0.5523, but **ROC-AUC stays 0.9825**. 71.22% of benign traffic is flagged as attack.
+  - We reproduce the threshold-level collapse (our benign recall 0.0003). We do **not** reproduce their retained ranking (our AUC 0.4797 vs their 0.9825).
+  - Features (our 38 shared vs their 44 common), preprocessing, attack scope and split all differ. The cause of the AUC gap is **not yet explained**. This is a replication/robustness result, not a novel one.
