@@ -21,6 +21,7 @@
 - **O1:** Does R1 also cover the thesis's **own** CICIoMT2024 measurement, which does not come from the paper? This is
   the finding that 0.9999 of 1,680,177 official-test flows share a source MAC with the same class's training captures
   (`iomt-pcap-experiments/track_a_out/device_overlap_train_test.json`).
+  - **O1 closed by the owner (2026-09-29):** no question sent. The measurement uses only thesis data (first measured 2026-09-29, pcap `763a996`) and is not a paper result. It stays in the thesis, and Hoca sees it with the next draft.
 - **O2:** Is the workshop double-blind? Should the public code repo `amirbaseet/iot-packet2-measurement` go private
   until the decision?
 
