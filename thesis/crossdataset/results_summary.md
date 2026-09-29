@@ -138,3 +138,55 @@ Both runs sit at chance, so the conclusion does not depend on the shift.
   - 2-class, same attacks (Table 4): XGB F1 falls from 0.9762 to 0.5523, but **ROC-AUC stays 0.9825**. 71.22% of benign traffic is flagged as attack.
   - We reproduce the threshold-level collapse (our benign recall 0.0003). We do **not** reproduce their retained ranking (our AUC 0.4797 vs their 0.9825).
   - Features (our 38 shared vs their 44 common), preprocessing, attack scope and split all differ. The cause of the AUC gap is **not yet explained**. This is a replication/robustness result, not a novel one.
+
+## Addendum 4 — Feature-definition mismatch control (Measured 2026-09-29)
+
+Sources: `feature_scale_check.csv` (per-feature medians and single-feature AUC per dataset), `inverse_full_drop_flipped.json`, `inverse_full_drop_scale.json`. Both JSONs were written by `src/inverse_full_run.py --drop …`. The protocol is otherwise identical to Addendum 3: the same 44,591,073 train rows, the same 1,614,182 test rows, `XGB_PARAMS_BASE`, 1 model seed.
+
+**Result: removing 7 scale-mismatched features lifts the inverse ROC-AUC from 0.4797 to 0.7067.** Removing the 3 most strongly direction-flipped features changes almost nothing (0.4898). This is evidence that part of the inverse collapse comes from same-named columns that sit on different scales in the two datasets.
+
+### The mismatch (`feature_scale_check.csv`)
+
+Basis:
+- **CICIoT2023:** `sampled_test_set.parquet` — 578,659 rows drawn from all 63 merged CSVs, seed-42 class-capped (40k benign, ≤20k per attack class).
+- **CICIoMT2024:** all 1,614,182 `data/test` rows.
+
+The within-CICIoT2023 single-feature AUCs therefore reflect the class-capped mix, not the 97.7%-attack training distribution.
+
+| Feature | CICIoT2023 benign median | CICIoMT2024 benign median |
+|---|---|---|
+| `IAT` | 0.006511 | 1.695e+08 |
+| `Header_Length` | 29.6 | 1.921e+05 |
+| `Variance` | 1.616e+05 | 0.9 |
+| `rst_count` | 0 | 1372 |
+
+- **Scale gaps:** 6 features have nonzero benign medians ≥10× apart: `IAT`, `Header_Length`, `Variance`, `Rate`, `Std`, `Max`. The next-largest gap is `psh_flag_number` at 5×.
+- **Zero on one side:** 4 more have a benign median of zero in one dataset only: `rst_count` (0 vs 1372), `ack_count` (9 vs 0), `HTTPS` (0.8 vs 0), `UDP` (0.1 vs 0).
+- **Direction flips:** 14 of 38 features have single-feature AUCs (benign vs attack, within each dataset) on opposite sides of 0.5. The other 11 are weak (each within 0.03 of 0.5 in at least one dataset). The 3 strongest flips are `Tot sum` (0.6555 vs 0.3063), `rst_count` (0.5860 vs 0.05758) and `Protocol Type` (0.5675 vs 0.4406).
+
+### Control runs (train CICIoT2023 → test CICIoMT2024)
+
+| Run | Features | Inverse ROC-AUC | Inverse bal-acc | Benign recall | Holdout `Merged63` ROC-AUC |
+|---|---|---|---|---|---|
+| All shared (Addendum 3) | 38 | 0.4797 | 0.5002 | 0.0003 | 0.9981 |
+| Drop the 3 strongest flips: `Tot sum`, `rst_count`, `Protocol Type` | 35 | 0.4898 | 0.5004 | 0.0008 | 0.9981 |
+| **Drop 7 scale-mismatched:** the 6 with ≥10× gaps + `rst_count` | 31 | **0.7067** | 0.5099 | 0.0200 | 0.9968 |
+
+### Reading
+
+- **Scale-mismatched features matter more than the flipped ones tested.** Dropping the 7 scale-mismatched features restores some ranking signal (+0.227 AUC). Dropping the 3 most strongly flipped features does not (+0.010). This does not separate scale from direction, because:
+  - the two sets overlap (`rst_count` is in both);
+  - they differ in size (3 vs 7), and no size-matched random-drop control was run;
+  - 11 weaker flips and 3 zero-on-one-side features (`ack_count`, `HTTPS`, `UDP`) stay in both runs.
+- **CICIoT2023 separation holds without these features.** The holdout ROC-AUC stays at 0.9981 and 0.9968 (both ≥0.996). With the 7 dropped, holdout bal-acc falls slightly, from 0.9301 to 0.9201.
+- **Ranking partly recovers, threshold decisions do not.** AUC 0.7067 is still far below the 0.9968 within-dataset holdout. At threshold 0.5 the model still calls almost everything attack: bal-acc 0.5099, benign recall 0.0200. Calibration itself was not measured.
+- **The inverse is now comparable to the forward direction.** 0.7067 is close to the forward MT→IoT2023 AUC of 0.6904, but the two differ in setup: the forward used 38 features and 3 sampling seeds; the inverse uses 31 features and 1 seed. The forward run was not re-run without these features.
+- **Doménech gap.** Dropping the mismatched features closes about 0.23 of the 0.50 AUC gap to Doménech's 0.9825. The rest is unexplained. Whether their data has the same mismatch was not tested.
+
+### Caveats
+
+- **Post-hoc selection.** Both drop sets were chosen with CICIoMT2024 test labels: benign-conditional medians for the 7, within-test single-feature AUCs for the 3. These runs diagnose *why* transfer fails. They are not a deployable model result.
+- **Imputation confound.** The drop-7 run also removes every NaN-bearing column (train NaN cells 2,309 → 0). The drop-3 run does not.
+- **One model seed.** Seed variance was not measured.
+- **Not isolated.** No per-feature ablation was run, so which of the 7 matter most is unknown.
+- **The cause of the scale difference is unproven.** The medians suggest different definitions: the CICIoT2023 `IAT` benign median, 0.0065, fits seconds between packets; CICIoMT2024's 1.69e8 does not, and its unit is unknown. The raw CICIoT2023 pcaps and the packet-level CSVs with timestamps (`archive.zip`) on the SSD could test the `IAT` definition from the CICIoT2023 side.

@@ -1,0 +1,73 @@
+{
+  "status": "Measured",
+  "direction": "train CICIoT2023 (full merged CSVs) -> test CICIoMT2024 (data/test, all rows)",
+  "smoke": false,
+  "source_zip": "/Volumes/PortableSSD/CICIOT23/csv/MERGED_CSV.zip",
+  "train_files": 62,
+  "holdout_file": "MERGED_CSV/Merged63.csv",
+  "n_shared_features": 35,
+  "dropped_features": [
+    "Tot sum",
+    "rst_count",
+    "Protocol Type"
+  ],
+  "train": {
+    "n_raw_rows": 44591082,
+    "n_unknown_label_dropped": 9,
+    "n": 44591073,
+    "n_benign": 1041192,
+    "n_attack": 43549881,
+    "n_nan_cells_imputed": 2309
+  },
+  "holdout_within_ciciot2023": {
+    "n": 428161,
+    "n_benign": 10181,
+    "n_attack": 417980,
+    "roc_auc": 0.9980854488680948,
+    "balanced_accuracy": 0.9315553213614759,
+    "accuracy": 0.9924724577904106,
+    "benign_recall": 0.867596503290443,
+    "attack_recall": 0.9955141394325088,
+    "n_nan_cells_imputed": 22
+  },
+  "inverse_test_ciciomt2024": {
+    "n": 1614182,
+    "n_benign": 37607,
+    "n_attack": 1576575,
+    "roc_auc": 0.4897753228583735,
+    "balanced_accuracy": 0.5003909087184617,
+    "accuracy": 0.9766798291642454,
+    "benign_recall": 0.0008243146222777674,
+    "attack_recall": 0.9999575028146457,
+    "n_nan_cells_imputed": 0,
+    "n_test_files": 21
+  },
+  "model": {
+    "xgb_params": {
+      "n_estimators": 200,
+      "max_depth": 8,
+      "learning_rate": 0.1,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "min_child_weight": 5,
+      "gamma": 0.1,
+      "tree_method": "hist",
+      "random_state": 42,
+      "n_jobs": -1,
+      "verbosity": 0
+    },
+    "api": "xgb.train + QuantileDMatrix",
+    "threshold": 0.5,
+    "class_weighting": null,
+    "imputation": "per-feature median, fit on TRAIN only",
+    "model_seed": 42,
+    "sigma": "not reported (single model seed)"
+  },
+  "wall_seconds": {
+    "read": 54,
+    "train": 128,
+    "total": 222
+  },
+  "peak_rss_gib": 6.48,
+  "xgboost_version": "3.2.0"
+}

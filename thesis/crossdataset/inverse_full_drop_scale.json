@@ -1,0 +1,77 @@
+{
+  "status": "Measured",
+  "direction": "train CICIoT2023 (full merged CSVs) -> test CICIoMT2024 (data/test, all rows)",
+  "smoke": false,
+  "source_zip": "/Volumes/PortableSSD/CICIOT23/csv/MERGED_CSV.zip",
+  "train_files": 62,
+  "holdout_file": "MERGED_CSV/Merged63.csv",
+  "n_shared_features": 31,
+  "dropped_features": [
+    "IAT",
+    "Header_Length",
+    "Variance",
+    "rst_count",
+    "Rate",
+    "Std",
+    "Max"
+  ],
+  "train": {
+    "n_raw_rows": 44591082,
+    "n_unknown_label_dropped": 9,
+    "n": 44591073,
+    "n_benign": 1041192,
+    "n_attack": 43549881,
+    "n_nan_cells_imputed": 0
+  },
+  "holdout_within_ciciot2023": {
+    "n": 428161,
+    "n_benign": 10181,
+    "n_attack": 417980,
+    "roc_auc": 0.9967957790678983,
+    "balanced_accuracy": 0.9201055746014131,
+    "accuracy": 0.9897631965545671,
+    "benign_recall": 0.8469698457911796,
+    "attack_recall": 0.9932413034116465,
+    "n_nan_cells_imputed": 0
+  },
+  "inverse_test_ciciomt2024": {
+    "n": 1614182,
+    "n_benign": 37607,
+    "n_attack": 1576575,
+    "roc_auc": 0.7066756511193526,
+    "balanced_accuracy": 0.5098529116867648,
+    "accuracy": 0.9769096669396635,
+    "benign_recall": 0.019969686494535593,
+    "attack_recall": 0.999736136878994,
+    "n_nan_cells_imputed": 0,
+    "n_test_files": 21
+  },
+  "model": {
+    "xgb_params": {
+      "n_estimators": 200,
+      "max_depth": 8,
+      "learning_rate": 0.1,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "min_child_weight": 5,
+      "gamma": 0.1,
+      "tree_method": "hist",
+      "random_state": 42,
+      "n_jobs": -1,
+      "verbosity": 0
+    },
+    "api": "xgb.train + QuantileDMatrix",
+    "threshold": 0.5,
+    "class_weighting": null,
+    "imputation": "per-feature median, fit on TRAIN only",
+    "model_seed": 42,
+    "sigma": "not reported (single model seed)"
+  },
+  "wall_seconds": {
+    "read": 50,
+    "train": 122,
+    "total": 192
+  },
+  "peak_rss_gib": 6.19,
+  "xgboost_version": "3.2.0"
+}
