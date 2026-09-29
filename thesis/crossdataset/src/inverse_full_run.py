@@ -145,11 +145,18 @@ def main() -> None:
     ap.add_argument("--max-files", type=int, default=None,
                     help="smoke run: only the first N training files (holdout always scored)")
     ap.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    ap.add_argument("--drop", default="",
+                    help="comma-separated shared features to exclude (feature-mismatch control)")
     args = ap.parse_args()
     t0 = time.time()
 
     shared = json.loads(SHARED_JSON.read_text())["shared_features"]
     assert len(shared) == N_SHARED, f"expected {N_SHARED} shared features, got {len(shared)}"
+    dropped = [f.strip() for f in args.drop.split(",") if f.strip()]
+    unknown = [f for f in dropped if f not in shared]
+    if unknown:
+        raise KeyError(f"--drop names not in the shared schema: {unknown}")
+    shared = [f for f in shared if f not in dropped]
 
     # ---- TRAIN + HOLDOUT: CICIoT2023, streamed from the zip ----
     zf = zipfile.ZipFile(args.zip)
@@ -216,6 +223,7 @@ def main() -> None:
         "train_files": len(train_members),
         "holdout_file": HOLDOUT_MEMBER,
         "n_shared_features": len(shared),
+        "dropped_features": dropped,
         "train": {"n_raw_rows": n_raw, "n_unknown_label_dropped": n_unknown,
                   "n": int(len(y_tr)), "n_benign": int((y_tr == 0).sum()),
                   "n_attack": int((y_tr == 1).sum()), "n_nan_cells_imputed": n_nan_train},
