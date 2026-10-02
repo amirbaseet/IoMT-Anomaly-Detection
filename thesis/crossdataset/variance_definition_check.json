@@ -1,0 +1,29 @@
+{
+  "status": "Measured",
+  "question": "is Variance computed the same way in both releases?",
+  "tolerance": {
+    "rtol": 0.001,
+    "atol": 1e-06
+  },
+  "ciciot2023_merged_sample": {
+    "source": "sampled_test_set.parquet",
+    "n_rows": 578659,
+    "n_finite_rows": 578639,
+    "share_variance_eq_std_squared": 1.0,
+    "share_variance_in_0_1": 0.37998130094929655,
+    "variance_min": 0.0,
+    "variance_median": 1708.54443359375,
+    "variance_max": 60064812.0
+  },
+  "ciciomt2024_test": {
+    "source": "data/test (all rows)",
+    "n_files": 21,
+    "n_rows": 1614182,
+    "n_finite_rows": 1614182,
+    "share_variance_eq_std_squared": 0.8121382842826893,
+    "share_variance_in_0_1": 1.0,
+    "variance_min": 0.0,
+    "variance_median": 0.0,
+    "variance_max": 1.0
+  }
+}
