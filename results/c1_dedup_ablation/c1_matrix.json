@@ -1,0 +1,174 @@
+{
+  "experiment": "C1 \u2014 controlled raw-vs-deduplicated ablation",
+  "authorized_by": "Amendment 1, .claude/plans/2026-07-30-p1-dedup-paper-brief.md",
+  "model": "E7 (XGBClassifier, FULL-44, no resampling)",
+  "xgb_params": {
+    "n_estimators": 200,
+    "max_depth": 8,
+    "learning_rate": 0.1,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "min_child_weight": 5,
+    "gamma": 0.1,
+    "tree_method": "hist",
+    "random_state": 42,
+    "n_jobs": 8,
+    "verbosity": 0
+  },
+  "seed": 42,
+  "seed_sigma_reference": null,
+  "cells": {
+    "C1-a": {
+      "cell": "C1-a",
+      "trained_on": "raw",
+      "tested_on": "raw",
+      "scaler_used": "raw-arm (in-space)",
+      "n_train_rows": 5728664,
+      "n_test_rows": 1614182,
+      "accuracy": 0.9937912825195672,
+      "f1_macro": 0.8841526510146798,
+      "f1_weighted": 0.9935596932882107,
+      "mcc": 0.992788124414759,
+      "precision_macro": 0.9097680495167358,
+      "precision_weighted": 0.9948707688115267,
+      "recall_macro": 0.8828304590100388,
+      "recall_weighted": 0.9937912825195672
+    },
+    "C1-b": {
+      "cell": "C1-b",
+      "trained_on": "raw",
+      "tested_on": "dedup",
+      "scaler_used": "raw-arm (in-space)",
+      "n_train_rows": 5728664,
+      "n_test_rows": 892268,
+      "accuracy": 0.9892207274047707,
+      "f1_macro": 0.8760047846802067,
+      "f1_weighted": 0.9887626303867737,
+      "mcc": 0.9862489802898601,
+      "precision_macro": 0.903988998436236,
+      "precision_weighted": 0.9911229597118764,
+      "recall_macro": 0.8738811888022954,
+      "recall_weighted": 0.9892207274047707
+    },
+    "C1-c": {
+      "cell": "C1-c",
+      "trained_on": "dedup",
+      "tested_on": "raw",
+      "scaler_used": "dedup-arm (in-space)",
+      "n_train_rows": 3612064,
+      "n_test_rows": 1614182,
+      "accuracy": 0.9958666370954452,
+      "f1_macro": 0.9157833424267757,
+      "f1_weighted": 0.9957012792907789,
+      "mcc": 0.9951947515169332,
+      "precision_macro": 0.9476116220190206,
+      "precision_weighted": 0.9959609466457079,
+      "recall_macro": 0.8967406049564793,
+      "recall_weighted": 0.9958666370954452
+    },
+    "C1-d": {
+      "cell": "C1-d",
+      "trained_on": "dedup",
+      "tested_on": "dedup",
+      "scaler_used": "dedup-arm (in-space)",
+      "n_train_rows": 3612064,
+      "n_test_rows": 892268,
+      "accuracy": 0.9926557939991124,
+      "f1_macro": 0.907626622882394,
+      "f1_weighted": 0.9923273509891104,
+      "mcc": 0.9906169668153739,
+      "precision_macro": 0.9421339151070364,
+      "precision_weighted": 0.9928179721220626,
+      "recall_macro": 0.8876352253197468,
+      "recall_weighted": 0.9926557939991124
+    }
+  },
+  "contrasts": {
+    "test_set_effect | raw-trained (C1-a - C1-b)": {
+      "accuracy": 0.004570555114796426,
+      "f1_macro": 0.008147866334473064,
+      "mcc": 0.006539144124898977
+    },
+    "test_set_effect | dedup-trained (C1-c - C1-d)": {
+      "accuracy": 0.003210843096332794,
+      "f1_macro": 0.008156719544381685,
+      "mcc": 0.004577784701559229
+    },
+    "training_set_effect | on raw test (C1-c - C1-a)": {
+      "accuracy": 0.002075354575878041,
+      "f1_macro": 0.03163069141209596,
+      "mcc": 0.002406627102174097
+    },
+    "training_set_effect | on dedup test (C1-d - C1-b)": {
+      "accuracy": 0.0034350665943416736,
+      "f1_macro": 0.031621838202187336,
+      "mcc": 0.004367986525513845
+    },
+    "naive_literature_pairing (C1-a - C1-d)": {
+      "accuracy": 0.0011354885204547527,
+      "f1_macro": -0.02347397186771427,
+      "mcc": 0.0021711575993851318
+    }
+  },
+  "scaler_shift_raw_vs_dedup": {
+    "robust.center_": {
+      "n_params": 21,
+      "n_differing": 7,
+      "max_rel_diff": 0.9909121851431911,
+      "median_rel_diff": 0.0015134758772284824
+    },
+    "robust.scale_": {
+      "n_params": 21,
+      "n_differing": 16,
+      "max_rel_diff": 5.666666401757145,
+      "median_rel_diff": 0.16098834570455767
+    },
+    "standard.scale_": {
+      "n_params": 7,
+      "n_differing": 7,
+      "max_rel_diff": 0.2059388517038107,
+      "median_rel_diff": 0.19326660874845744
+    },
+    "standard.mean_": {
+      "n_params": 7,
+      "n_differing": 7,
+      "max_rel_diff": 0.36947541423614105,
+      "median_rel_diff": 0.3694747068825095
+    },
+    "minmax.scale_": {
+      "n_params": 16,
+      "n_differing": 0,
+      "max_rel_diff": 0.0,
+      "median_rel_diff": 0.0
+    },
+    "minmax.data_min_": {
+      "n_params": 16,
+      "n_differing": 0,
+      "max_rel_diff": null,
+      "median_rel_diff": null
+    },
+    "minmax.data_max_": {
+      "n_params": 16,
+      "n_differing": 0,
+      "max_rel_diff": 0.0,
+      "median_rel_diff": 0.0
+    }
+  },
+  "c1d_vs_published_e7": {
+    "published": {
+      "f1_macro": 0.907626622882394,
+      "accuracy": 0.9926557939991124,
+      "mcc": 0.9906169668153739
+    },
+    "drift": {
+      "f1_macro": 0.0,
+      "accuracy": 0.0,
+      "mcc": 0.0
+    }
+  },
+  "notes": [
+    "SEED CAVEAT (DN-05): every cell is single-seed (42). The repo has NO multi-seed sigma for E7 macro-F1 \u2014 numbers_map.md's 0.023 is the H2-strict FUSION rescue recall sigma (README 15B.3), a different metric, so it must NOT be used as a noise band for these deltas. Before P1 cites any delta as an effect, run both arms over the INV-04 seed set [1, 7, 42, 100, 1729] and report mean +- sigma.",
+    "Deduplication moves the fitted preprocessing statistics themselves: 37 scaler parameters differ between the arms. Leakage is not only about rows seen twice \u2014 the duplicate mass distorts every statistic fitted on the training data. This is why each cell must be scored in its own space."
+  ],
+  "runtime_min": 0.48
+}

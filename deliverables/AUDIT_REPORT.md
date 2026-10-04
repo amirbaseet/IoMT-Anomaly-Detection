@@ -75,6 +75,7 @@ Two distinct issues:
 ### MAJOR (5 — B1 through B5 above, plus the four below)
 
 **M6 — Multi-seed "0/19 eligible cells fail" denominator does not match live count of the per-seed CSVs.**
+- **RESOLVED 2026-07-30:** artifact per-target n_seeds (5+0+5+3+5) = 18; all committed docs corrected to 0/18; README/PJ corrections queued with their pending user commits.
 - Quote, §1 line 14 + §9 line 828: "0/19 eligible cells fail strict".
 - Live arithmetic from `results/enhanced_fusion/multi_seed/seed_{1,7,42,100,1729}/metrics/per_target_results.csv`:
   - Total cells = 5 seeds × 5 targets = 25

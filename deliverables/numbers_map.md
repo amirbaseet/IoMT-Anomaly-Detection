@@ -35,6 +35,59 @@ Format key:
 | Deduplicated test rows | 892,268 | README §2, §11.4 |
 | Train duplicate rate | 36.95 % | README §2, §10.1 |
 | Test duplicate rate | 44.72 % | README §2, §10.1 |
+| Train duplicates (float32, count / rate) | 2,645,751 / 36.9475 % | `iomt-pcap-experiments/dr6_out/dr6_float32_check.json:f32/train` (DR-6, 2026-07-28) |
+| Test duplicates (float32, count / rate) | 721,914 / 44.7232 % | `dr6_float32_check.json:f32/test` |
+| Pooled-merge duplicates (float32, count / rate) | 3,368,126 / 38.3831 % | `dr6_float32_check.json:f32/full` — cross-checks `scripts/verify_duplicate_counts.py`'s features-only pooled count |
+| Train duplicates (float64 as printed, count / rate) | 5,119 / 0.0715 % | `dr6_float32_check.json:f64/train` — the count three published papers report |
+| Test duplicates (float64 as printed, count / rate) | 2,065 / 0.1279 % | `dr6_float32_check.json:f64/test` |
+| Pooled-merge duplicates (float64, count / rate) | 7,379 / 0.0841 % | `dr6_float32_check.json:f64/full` |
+| Cross-split identity (float32): unique vectors present in **both** train and test | 461 | derived from `dr6_float32_check.json`: f32/full 3,368,126 − (f32/train 2,645,751 + f32/test 721,914) |
+| Cross-split identity (float32): share of test rows carrying such a vector | 0.8384 % (≈13,533 of 1,614,182 rows) | `dr6_float32_check.json:f32/test_rows_with_vector_in_train_pct = 0.008384` — ⚠ key is named `_pct` but stores a **fraction**; stored at 6 dp, so the row count is ±1 |
+| Cross-split identity (float64): unique vectors in both splits | 195 | `dr6_out/dr6_panel.json:overlap/unique_vectors_in_both_train_and_test`; also = f64/full 7,379 − (5,119 + 2,065) |
+| Cross-split identity (float64): share of test rows | 0.0221 % (≈357 rows) | `dr6_float32_check.json:f64/test_rows_with_vector_in_train_pct = 0.000221` (fraction, see caveat above) |
+| Duplicate collapse is **entirely intra-class** (float32) | within-class duplicate sums = pooled per-split counts exactly (2,645,751 train / 721,914 test) → 0 cross-class duplicate collisions | computed over all 19 classes in `dr6_out/dr6b_perclass_f32.json` (DR-6b); corroborated at float64 by REP46 (features+label) yielding the same 5,119 as REP45 (`dr6_panel.json`) |
+| Per-class within-class duplicate rates + duplicate-mass shares (19 classes × train/test/full) | see artifact | `dr6_out/dr6b_perclass_f32.json` is the oracle for the full per-class table; the three headline cells are the rows below |
+
+### C1 controlled raw-vs-deduplicated ablation (E7, FULL-44, no resampling; 5 seeds [1,7,42,100,1729])
+
+Source for every row: `results/c1_dedup_ablation/c1_multiseed.json` (per-seed cells + aggregates) and
+`results/c1_dedup_ablation/c1_matrix.json` (seed-42 detail, per-class CSV, scaler shift). Produced by
+`paper/P1_dedup_audit/experiments/run_c1_{matrix,multiseed}.py`. Every cell is scored in its own arm's
+scaler space; cross-space scoring is invalid (see the scaler-shift rows).
+
+| Claim | Value | Source |
+|---|---|---|
+| C1-a — trained raw, tested raw: macro-F1 | 0.8995 ± 0.0106 (range 0.8842–0.9138) | `c1_multiseed.json:cells_mean_sd.C1-a` |
+| C1-b — trained raw, tested dedup: macro-F1 | 0.8917 ± 0.0105 | `c1_multiseed.json:cells_mean_sd.C1-b` |
+| C1-c — trained dedup, tested raw: macro-F1 | 0.8989 ± 0.0168 | `c1_multiseed.json:cells_mean_sd.C1-c` |
+| C1-d — trained dedup, tested dedup: macro-F1 | 0.8909 ± 0.0168 (range 0.8701–0.9076) | `c1_multiseed.json:cells_mean_sd.C1-d` |
+| C1-d accuracy | 0.990819 ± 0.002054 | `c1_multiseed.json:cells_mean_sd.C1-d.accuracy` |
+| **Test-set duplicate inflation, macro-F1** (test set varied, training fixed) | **+0.00784 ± 0.00077** (raw-trained) / **+0.00798 ± 0.00025** (dedup-trained) — sign-consistent across all 5 seeds, separable | `c1_multiseed.json:contrasts_mean_sd` + `separability` |
+| **Test-set duplicate inflation, accuracy** | **+0.35 pp ± 0.09** (raw-trained) / **+0.40 pp ± 0.09** (dedup-trained) — separable | `c1_multiseed.json:contrasts_mean_sd` |
+| **Training-set duplicate effect, macro-F1** (training varied, test fixed) | **−0.00064 ± 0.02468** (raw test) / **−0.00078 ± 0.02438** (dedup test) — sign-INCONSISTENT, **not separable from seed noise** | `c1_multiseed.json:separability` |
+| Naive raw-everywhere vs dedup-everywhere pairing (the comparison the literature makes) | macro-F1 +0.00863 ± 0.02468, accuracy +0.43 pp ± 0.27 — **not separable** (moves two factors at once) | `c1_multiseed.json:contrasts_mean_sd.naive_literature_pairing` |
+| Seed-42 draw vs the 5-seed mean (C1-d) | published E7 macro-F1 0.9076 is the **maximum** of the 5 draws, ≈1 σ above the mean 0.8909 | `c1_multiseed.json:per_seed` + `cells_mean_sd.C1-d` |
+| Seed-42 reproduction gate | all four cells reproduce `run_c1_matrix.py` exactly (drift = none) | `c1_multiseed.json:seed42_reproduction_drift` |
+| Scaler statistics moved by deduplication | **37 of 104 fitted parameter values differ** between the arms (104 = the three scaler groups' parameter slots over 44 features): RobustScaler center 7/21, scale 16/21 (max relative difference **5.67×**); StandardScaler mean 7/7, scale 7/7; MinMax scale/min/max 0/16 each — unchanged | `c1_matrix.json:scaler_shift_raw_vs_dedup` |
+| C1 sweep runtime | 122.9 min (10 trainings: 2 arms × 5 seeds) | `c1_multiseed.json:runtime_min` |
+
+### Precision sweep (figure F1)
+
+Source: `paper/P1_dedup_audit/figures/precision_sweep.json`, produced by
+`paper/P1_dedup_audit/experiments/precision_sweep.py`. Same hashing convention as DR-6. The float64 and
+float32 passes reproduce the anchors below exactly (asserted in-script; run aborts otherwise).
+
+| Claim | Value | Source |
+|---|---|---|
+| Duplicate rate at 1 significant digit | 84.833 % train / 86.453 % test | `precision_sweep.json:points[sig1]` |
+| Duplicate rate at 4 significant digits | 47.020 % train / 48.584 % test | `precision_sweep.json:points[sig4]` |
+| Duplicate rate at 7 significant digits | 36.993 % train / 44.738 % test | `precision_sweep.json:points[sig7]` |
+| Duplicate rate at 8 significant digits | 36.878 % train / 44.663 % test | `precision_sweep.json:points[sig8]` |
+| float32 lands at ≈7 significant digits | float32 36.948 %/44.723 % vs sig7 36.993 %/44.738 % — independent confirmation that float32 ≈ 7 significant digits | `precision_sweep.json` |
+| Sweep anchors reproduce | float64 5,119/2,065 and float32 2,645,751/721,914 re-derived by a third code path | `precision_sweep.log` |
+| DDoS-ICMP within-class duplicate rate (train, float32) | 86.32 % (1,327,218 / 1,537,476) | `iomt-pcap-experiments/dr6_out/dr6b_perclass_f32.json` (DR-6b recomputation, 2026-07-30) |
+| DDoS-ICMP within-class duplicate rate (test, float32) | 94.37 % | `dr6b_perclass_f32.json` |
+| Flood-class (TCP_IP-*) share of train duplicate mass | 99.5 % (2,632,808 / 2,645,751 within-class) | `dr6b_perclass_f32.json` |
 | Features (raw) | 45 | README §2, §6 |
 | Features after Drate drop | 44 | README §11.2 |
 | Features after correlation/noise drop | 28 | README §10.3, §11.2 |
@@ -69,7 +122,7 @@ Closure tally: **4 closed / 1 reframed / 2 open by design** — matches task-spe
 | H1 | "The hybrid fusion framework produces statistically significant improvements in macro-F1 compared to the best standalone supervised classifier (p ≤ 0.05, paired bootstrap)." | **Reframed.** Δ = −0.014 pp at p99; 95% CI [−0.0166, −0.0117] excludes zero but operational magnitude ~125 of 892,268 rows. | README §20.2 H1, §14.4 |
 | H2-strict (AE-only Phase 6/6B) | "Unsupervised layer achieves recall > 0.70 on at least 50 % of withheld attack classes." | 0/5 → 0/5 → **4/4** (Phase 6C entropy + AE) | README §20.2 H2 |
 | H2-binary (any-alert across cases) | implicit operational variant; "system raises an alert on ≥70 % of novel attack samples" | **5/5** at p90 (consistent across all phases) | README §15.4 |
-| H3 | "SMOTETomek improves macro-F1 AND improves per-class F1 for at least 3 of the 5 most under-represented attack classes." | **FAIL** on both: macro-F1 degrades in 0/4 configs; minority improves in 2/5 only (RF/reduced) | README §20.2 H3, §12.4 |
+| H3 | "SMOTETomek improves macro-F1 AND improves per-class F1 for at least 3 of the 5 most under-represented attack classes." | **FAIL** on both: macro-F1 **improves in 0/4 configs — it degrades in all 4** (deltas: §4 rows RF/reduced −0.0114, RF/full −0.0171, XGB/reduced −0.0449, XGB/full −0.0368); minority improves in 2/5 only (RF/reduced) | README §20.2 H3 ("degrades macro-F1 across all 4 configurations", README:2398), §12.4 |
 
 ## Section 4 — Phase 4 supervised
 
@@ -81,6 +134,9 @@ Closure tally: **4 closed / 1 reframed / 2 open by design** — matches task-spe
 | E4 XGB/Reduced/SMOTE macro-F1 | 0.8538 | `E4_multiclass.json` |
 | E5 RF/Full/Original macro-F1 | 0.8551 | `E5_multiclass.json` |
 | E5G RF-gini/Full/Original macro-F1 | 0.8504 | `E5G_multiclass.json` |
+| E5 RF-entropy/Full/Original accuracy | 98.52 % | `E5_multiclass.json`; `docs/phase4_supervised.md` table |
+| E5G RF-gini/Full/Original accuracy | 98.48 % | `E5G_multiclass.json`; `docs/phase4_supervised.md` table |
+| Gini→entropy split-criterion effect, **accuracy** (metric-matched to the published ~26 pp accuracy claim) | **+0.034 pp** (0.985165 − 0.984825). ⚠ differencing the *rounded* endpoints gives 0.04 pp — cite the full-precision figure | derived from the two rows above |
 | E6 RF/Full/SMOTE macro-F1 | 0.8380 | `E6_multiclass.json` |
 | E7 XGB/Full/Original macro-F1 | 0.9076 | `E7_multiclass.json` |
 | E8 XGB/Full/SMOTE macro-F1 | 0.8708 | `E8_multiclass.json` |
@@ -112,7 +168,10 @@ Closure tally: **4 closed / 1 reframed / 2 open by design** — matches task-spe
 | AE p95 threshold | 0.37264 | `thresholds.json` |
 | AE p99 threshold | 1.20253 | `thresholds.json` |
 | AE val FPR at p90 | 10.20 % | `thresholds.json:evaluation_on_val[p90].fpr` |
+| AE val FPR at p95 | 5.19 % | `thresholds.json:evaluation_on_val[p95].fpr` |
+| AE val recall at p95 | 98.33 % | `thresholds.json:evaluation_on_val[p95].recall` |
 | AE val FPR at p99 | 1.12 % | `thresholds.json` |
+| AE val recall at p99 | 84.25 % | `thresholds.json:evaluation_on_val[p99].recall` |
 | AE val recall at p90 | 98.62 % | `thresholds.json` |
 | Pre-fix AE val loss | 101,414 | README §13.6, PJ Phase 5 |
 | Pre-fix AE test AUC | 0.9728 | README §13.6 |
@@ -247,13 +306,13 @@ All 11 ablation rows come from `results/enhanced_fusion/metrics/ablation_table.c
 |---|---|---|
 | Multi-seed seeds | {1, 7, 42, 100, 1729} | README §15B.2 |
 | Tripwire (canonical seed=42) | 0.8035264623662012 | README §15B.2 |
-| H2-strict rescue avg across seeds | 0.799 ± 0.022 | README §15B.3 |
+| H2-strict rescue avg across seeds | 0.799 ± 0.023 | README §15B.3 |
 | H2-strict range | [0.764, 0.827] | README §15B.3 |
 | Coefficient of variation (strict avg) | 2.82 % | README §15B.3 |
 | seed=42 z-score | +0.20 σ (63rd percentile) | README §15B.3 |
 | Operational FPR across seeds | 0.2289 ± 0.0003 | README §15B.6 |
 | CV of FPR | 0.13 % | README §15B.6 |
-| Cells failing 0.70 strict | 0 / 19 eligible | README §15B.4 |
+| Cells failing 0.70 strict | 0 / 18 eligible (5+0+5+3+5 per-target n_seeds; corrected 2026-07-30 from 0/19 — AUDIT M6) | `results/enhanced_fusion/multi_seed_per_target_summary.csv` |
 | Recon_Ping_Sweep eligibility (seeds 1, 100) | n_loo_benign = {29, 27} < 30 → excluded | README §15B.5 |
 | Continuous sweep — 29 thresholds at p85.0–p99.0 (Δ=0.5pp) | 29 rows | README §15D.2 |
 | Refined optimum percentile | p93.0 | README §15D.3 |
@@ -335,3 +394,19 @@ All 11 ablation rows come from `results/enhanced_fusion/metrics/ablation_table.c
 1. README §1 closing line says "19 thesis contributions"; body of PJ enumerates **20** (C20 = LSTM-AE Extension). Used 20.
 2. Task spec mentions "Defensibility 3.0 → 4.5/5" — sources cite 3.0 → 4.0 (post senior-review) → 4.3 (post Tier 1). Used 4.3 as last evidence-backed value; "→ 4.5" framed as forward statement, not an empirical claim.
 3. Task spec lists "5 robustness axes" but README §15F.1 mentions "Five-axis robustness"; tally of robustness axes across Path B = (1) multi-seed, (2) continuous threshold, (3) per-fold KS, (4) SHAP background, (5) β-VAE, (6) LSTM-AE = **6**, not 5. Used 5 (matches both README and task spec; LSTM-AE counted as extension of β-VAE Tier 2 axis).
+
+## Section 13 — Tier-1 generalization (cross-dataset, session-disjoint, tau-sweep)
+
+| Claim | Value | Source |
+|---|---|---|
+| Cross-dataset binary (Design A) ROC-AUC | 0.6904 ± 0.0003; balanced accuracy 0.4998; benign recall 0.0005 | `thesis/crossdataset/raw_results.json`; `Thesis_Generalization_Analysis_v0.1.md` §X.3.2 |
+| Cross-dataset AE inversion | ROC-AUC 0.2586 ± 0.0010 (below random; benign baseline does not travel) | same |
+| Cross-dataset family-level (Design B) macro-F1 | 0.9037 in-dataset → 0.1965 ± 0.0002 (78% relative decline); Flooding-merge recovery 0.2578 (Flooding F1 0.4530) | same |
+| Session-disjoint macro-F1 gap | 0.734 ± 0.010 (random pooled) → 0.475 ± 0.048; gap 0.259 ± 0.047, positive in 5/5 seeds; MCC 0.991 → 0.556 | `iomt-pcap-experiments/track_a_out/part3_results.json`; §X.4.3 |
+| Session-disjoint AE robustness | AUC 0.908 → 0.831 (−0.076); ~5× basis = MCC gaps (0.4353/0.0761) | `track_a_out/part3_results.json` |
+| NFStream independent dedup rate | 37.92% (7.36M → 4.57M flows); recon classes 97–99.9%; cross-class 0.14% | `track_a_out/dedup_report.json`; §X.6.2 |
+| Device-disjoint infeasibility | 5 class-specific victim devices; no class ≥3 — protocol unsupportable on this dataset | `track_a_out/feasibility.json`; §X.4.1 |
+| Tau-sweep @ thesis ent_p95 (0.134031 norm.) | defers 1.676% (14,951 flows), coverage 98.324%, retained accuracy 0.998588; deferred slice holds 81.1% of all E7 errors; deferred would-be error rate 0.3554 (~48× overall 0.0073) | `results/tausweep/tau_sweep_summary.md`, `tau_sweep_results.json` |
+| Tau-sweep light floor τ_c=0.5 | 763 deferrals /1M flows/day at 0.9931 retained accuracy | same |
+| Tau-sweep confidently-wrong share | 18.9% of errors pass the gate confidently wrong (rationale for the anomaly layers) | same; `Thesis_Generalization_Analysis_v0.1.md` §X.5.2 |
+| Review-queue composition @ thesis threshold | MQTT_DDoS_Publish_Flood dominates: 5,620 of 14,951 deferrals (37.6%) | `tau_sweep_summary.md` |

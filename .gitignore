@@ -56,6 +56,15 @@ decisions/
 
 # Thesis literature review — local only, not for GitHub
 thesis/lit_review/
+thesis/manuscript/
 
 # Archive of superseded staging files
 .archive/
+
+# C1 ablation intermediates (large, regenerable from the scripts in paper/P1_dedup_audit/experiments/)
+eda_output_raw/
+preprocessed_raw/
+results/c1_dedup_ablation/models/
+
+# C1 experiment run logs (regenerable)
+paper/P1_dedup_audit/experiments/*.log

@@ -1,0 +1,4328 @@
+{
+  "meta": {
+    "analysis": "confidence-floor / entropy-ceiling operating characteristic",
+    "status": "MEASURED (post-hoc on test set; NOT model selection/tuning)",
+    "model": "frozen thesis E7 (XGBoost multi:softprob), 44-feature space",
+    "inference_run": false,
+    "note_no_inference": "saved E7_test_proba.npy used directly; frozen model untouched",
+    "n_flows": 892268,
+    "n_classes": 19,
+    "ln_K": 2.9444389791664403,
+    "overall_accuracy_all_auto": 0.9926557939991124,
+    "entropy_convention": "raw Shannon natural-log H=-sum(p ln p); normalized = H/ln(19) in [0,1]",
+    "thesis_phase6c_threshold": {
+      "ent_p93_raw": 0.2497143611311912,
+      "ent_p95_raw": 0.3946473151445389,
+      "ent_p93_norm": 0.08480880836657188,
+      "ent_p95_norm": 0.13403141241400834,
+      "n_benign_val": 38546
+    },
+    "rescue_classes": [
+      "ARP_Spoofing",
+      "MQTT_DoS_Connect_Flood",
+      "MQTT_Malformed_Data",
+      "Recon_Ping_Sweep",
+      "Recon_VulScan"
+    ]
+  },
+  "sweep1_confidence_floor": [
+    {
+      "coverage": 0.9992367763945361,
+      "n_retained": 891587,
+      "n_deferred": 681,
+      "retained_accuracy": 0.9930584452218347,
+      "retained_macro_f1": 0.9115998428810755,
+      "retained_mcc": 0.991128143787994,
+      "deferred_error_rate": 0.5345080763582967,
+      "deferred_mistakes_avoided": 364,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 133,
+          "share_of_deferred": 0.19530102790014683
+        },
+        "Benign": {
+          "n_deferred": 106,
+          "share_of_deferred": 0.15565345080763582
+        },
+        "DDoS_SYN": {
+          "n_deferred": 79,
+          "share_of_deferred": 0.11600587371512482
+        },
+        "Recon_VulScan": {
+          "n_deferred": 72,
+          "share_of_deferred": 0.10572687224669604
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 67,
+          "share_of_deferred": 0.09838472834067548
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 67,
+          "share_of_deferred": 0.09838472834067548
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 62,
+          "share_of_deferred": 0.09104258443465492
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 41,
+          "share_of_deferred": 0.06020558002936858
+        },
+        "DDoS_TCP": {
+          "n_deferred": 33,
+          "share_of_deferred": 0.048458149779735685
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 10,
+          "share_of_deferred": 0.014684287812041116
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 6,
+          "share_of_deferred": 0.00881057268722467
+        },
+        "DDoS_UDP": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.004405286343612335
+        },
+        "DoS_SYN": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.002936857562408223
+        }
+      },
+      "threshold": 0.5
+    },
+    {
+      "coverage": 0.9975780819215752,
+      "n_retained": 890107,
+      "n_deferred": 2161,
+      "retained_accuracy": 0.9938265848937262,
+      "retained_macro_f1": 0.9168697534985174,
+      "retained_mcc": 0.9921019249438762,
+      "deferred_error_rate": 0.4895881536325775,
+      "deferred_mistakes_avoided": 1058,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 1141,
+          "share_of_deferred": 0.5279962980101804
+        },
+        "Benign": {
+          "n_deferred": 195,
+          "share_of_deferred": 0.09023600185099491
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 130,
+          "share_of_deferred": 0.06015733456732994
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 123,
+          "share_of_deferred": 0.056918093475242945
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 119,
+          "share_of_deferred": 0.05506709856547894
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 115,
+          "share_of_deferred": 0.05321610365571495
+        },
+        "DDoS_SYN": {
+          "n_deferred": 109,
+          "share_of_deferred": 0.05043961129106895
+        },
+        "Recon_VulScan": {
+          "n_deferred": 105,
+          "share_of_deferred": 0.048588616381304954
+        },
+        "DDoS_TCP": {
+          "n_deferred": 43,
+          "share_of_deferred": 0.01989819527996298
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 23,
+          "share_of_deferred": 0.01064322073114299
+        },
+        "DDoS_UDP": {
+          "n_deferred": 20,
+          "share_of_deferred": 0.00925497454881999
+        },
+        "DoS_UDP": {
+          "n_deferred": 15,
+          "share_of_deferred": 0.006941230911614993
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 13,
+          "share_of_deferred": 0.006015733456732994
+        },
+        "DoS_ICMP": {
+          "n_deferred": 5,
+          "share_of_deferred": 0.0023137436372049976
+        },
+        "DoS_SYN": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.0013882461823229986
+        },
+        "DoS_TCP": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.0009254974548819991
+        }
+      },
+      "threshold": 0.55
+    },
+    {
+      "coverage": 0.9957815364890369,
+      "n_retained": 888504,
+      "n_deferred": 3764,
+      "retained_accuracy": 0.9947237153687547,
+      "retained_macro_f1": 0.923424389563626,
+      "retained_mcc": 0.9932426543057841,
+      "deferred_error_rate": 0.4954835281615303,
+      "deferred_mistakes_avoided": 1865,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 2050,
+          "share_of_deferred": 0.5446333687566419
+        },
+        "Benign": {
+          "n_deferred": 451,
+          "share_of_deferred": 0.11981934112646121
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 222,
+          "share_of_deferred": 0.0589798087141339
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 203,
+          "share_of_deferred": 0.05393198724760893
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 192,
+          "share_of_deferred": 0.05100956429330499
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 178,
+          "share_of_deferred": 0.04729011689691817
+        },
+        "DDoS_SYN": {
+          "n_deferred": 134,
+          "share_of_deferred": 0.035600425079702444
+        },
+        "Recon_VulScan": {
+          "n_deferred": 132,
+          "share_of_deferred": 0.03506907545164718
+        },
+        "DDoS_TCP": {
+          "n_deferred": 55,
+          "share_of_deferred": 0.01461211477151966
+        },
+        "DDoS_UDP": {
+          "n_deferred": 43,
+          "share_of_deferred": 0.011424017003188097
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 39,
+          "share_of_deferred": 0.010361317747077577
+        },
+        "DoS_UDP": {
+          "n_deferred": 25,
+          "share_of_deferred": 0.0066418703506907545
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 20,
+          "share_of_deferred": 0.005313496280552604
+        },
+        "DoS_TCP": {
+          "n_deferred": 8,
+          "share_of_deferred": 0.0021253985122210413
+        },
+        "DoS_ICMP": {
+          "n_deferred": 7,
+          "share_of_deferred": 0.0018597236981934113
+        },
+        "DoS_SYN": {
+          "n_deferred": 4,
+          "share_of_deferred": 0.0010626992561105207
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.00026567481402763017
+        }
+      },
+      "threshold": 0.6
+    },
+    {
+      "coverage": 0.9939009355933419,
+      "n_retained": 886826,
+      "n_deferred": 5442,
+      "retained_accuracy": 0.9955312541580874,
+      "retained_macro_f1": 0.9286206544217739,
+      "retained_mcc": 0.9942709070875526,
+      "deferred_error_rate": 0.4759279676589489,
+      "deferred_mistakes_avoided": 2590,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 2857,
+          "share_of_deferred": 0.5249908122013965
+        },
+        "Benign": {
+          "n_deferred": 883,
+          "share_of_deferred": 0.16225652333700846
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 308,
+          "share_of_deferred": 0.05659683939728041
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 300,
+          "share_of_deferred": 0.05512679162072767
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 244,
+          "share_of_deferred": 0.04483645718485851
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 235,
+          "share_of_deferred": 0.04318265343623668
+        },
+        "DDoS_SYN": {
+          "n_deferred": 170,
+          "share_of_deferred": 0.03123851525174568
+        },
+        "Recon_VulScan": {
+          "n_deferred": 170,
+          "share_of_deferred": 0.03123851525174568
+        },
+        "DDoS_UDP": {
+          "n_deferred": 64,
+          "share_of_deferred": 0.011760382212421904
+        },
+        "DDoS_TCP": {
+          "n_deferred": 59,
+          "share_of_deferred": 0.010841602352076443
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 45,
+          "share_of_deferred": 0.008269018743109152
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 38,
+          "share_of_deferred": 0.006982726938625505
+        },
+        "DoS_UDP": {
+          "n_deferred": 35,
+          "share_of_deferred": 0.006431459022418228
+        },
+        "DoS_ICMP": {
+          "n_deferred": 13,
+          "share_of_deferred": 0.002388827636898199
+        },
+        "DoS_TCP": {
+          "n_deferred": 13,
+          "share_of_deferred": 0.002388827636898199
+        },
+        "DoS_SYN": {
+          "n_deferred": 7,
+          "share_of_deferred": 0.0012862918044836457
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.00018375597206909226
+        }
+      },
+      "threshold": 0.65
+    },
+    {
+      "coverage": 0.9919553318061389,
+      "n_retained": 885090,
+      "n_deferred": 7178,
+      "retained_accuracy": 0.996360822063293,
+      "retained_macro_f1": 0.9340724612572489,
+      "retained_mcc": 0.9953295497779586,
+      "deferred_error_rate": 0.4641961549178044,
+      "deferred_mistakes_avoided": 3332,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 3457,
+          "share_of_deferred": 0.48161047645583727
+        },
+        "Benign": {
+          "n_deferred": 1407,
+          "share_of_deferred": 0.19601560323209807
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 471,
+          "share_of_deferred": 0.06561716355530789
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 443,
+          "share_of_deferred": 0.06171635553078852
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 305,
+          "share_of_deferred": 0.042490944552800225
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 302,
+          "share_of_deferred": 0.042073000835887435
+        },
+        "Recon_VulScan": {
+          "n_deferred": 230,
+          "share_of_deferred": 0.032042351629980495
+        },
+        "DDoS_SYN": {
+          "n_deferred": 220,
+          "share_of_deferred": 0.030649205906937867
+        },
+        "DDoS_UDP": {
+          "n_deferred": 80,
+          "share_of_deferred": 0.011145165784341042
+        },
+        "DDoS_TCP": {
+          "n_deferred": 61,
+          "share_of_deferred": 0.008498188910560044
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 57,
+          "share_of_deferred": 0.007940930621342993
+        },
+        "DoS_UDP": {
+          "n_deferred": 47,
+          "share_of_deferred": 0.006547784898300362
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 45,
+          "share_of_deferred": 0.006269155753691837
+        },
+        "DoS_ICMP": {
+          "n_deferred": 24,
+          "share_of_deferred": 0.0033435497353023124
+        },
+        "DoS_TCP": {
+          "n_deferred": 16,
+          "share_of_deferred": 0.0022290331568682086
+        },
+        "DoS_SYN": {
+          "n_deferred": 10,
+          "share_of_deferred": 0.0013931457230426303
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00027862914460852607
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.00013931457230426304
+        }
+      },
+      "threshold": 0.7
+    },
+    {
+      "coverage": 0.9893798724150143,
+      "n_retained": 882792,
+      "n_deferred": 9476,
+      "retained_accuracy": 0.9976687600250116,
+      "retained_macro_f1": 0.9465449102069957,
+      "retained_mcc": 0.9970035438985798,
+      "deferred_error_rate": 0.4743562684677079,
+      "deferred_mistakes_avoided": 4495,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 3969,
+          "share_of_deferred": 0.4188476150274377
+        },
+        "Benign": {
+          "n_deferred": 1976,
+          "share_of_deferred": 0.20852680455888561
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1116,
+          "share_of_deferred": 0.11777121148163783
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 710,
+          "share_of_deferred": 0.07492612916842549
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 379,
+          "share_of_deferred": 0.039995778809624315
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 357,
+          "share_of_deferred": 0.037674124102997045
+        },
+        "Recon_VulScan": {
+          "n_deferred": 278,
+          "share_of_deferred": 0.029337273111017307
+        },
+        "DDoS_SYN": {
+          "n_deferred": 274,
+          "share_of_deferred": 0.02891515407344871
+        },
+        "DDoS_UDP": {
+          "n_deferred": 102,
+          "share_of_deferred": 0.010764035457999156
+        },
+        "DDoS_TCP": {
+          "n_deferred": 66,
+          "share_of_deferred": 0.0069649641198818064
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 63,
+          "share_of_deferred": 0.006648374841705361
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 58,
+          "share_of_deferred": 0.006120726044744618
+        },
+        "DoS_UDP": {
+          "n_deferred": 58,
+          "share_of_deferred": 0.006120726044744618
+        },
+        "DoS_ICMP": {
+          "n_deferred": 33,
+          "share_of_deferred": 0.0034824820599409032
+        },
+        "DoS_TCP": {
+          "n_deferred": 18,
+          "share_of_deferred": 0.0018995356690586745
+        },
+        "DoS_SYN": {
+          "n_deferred": 16,
+          "share_of_deferred": 0.0016884761502743773
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00021105951878429716
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.00010552975939214858
+        }
+      },
+      "threshold": 0.75
+    },
+    {
+      "coverage": 0.9876550543110366,
+      "n_retained": 881253,
+      "n_deferred": 11015,
+      "retained_accuracy": 0.9980017089303526,
+      "retained_macro_f1": 0.9508561394864723,
+      "retained_mcc": 0.9974292399945304,
+      "deferred_error_rate": 0.4350431230140717,
+      "deferred_mistakes_avoided": 4792,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 4474,
+          "share_of_deferred": 0.4061733999092147
+        },
+        "Benign": {
+          "n_deferred": 2428,
+          "share_of_deferred": 0.22042669087607808
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1187,
+          "share_of_deferred": 0.10776214253290967
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 859,
+          "share_of_deferred": 0.07798456650022696
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 464,
+          "share_of_deferred": 0.04212437585111212
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 433,
+          "share_of_deferred": 0.039310031774852476
+        },
+        "DDoS_SYN": {
+          "n_deferred": 340,
+          "share_of_deferred": 0.030866999546073536
+        },
+        "Recon_VulScan": {
+          "n_deferred": 321,
+          "share_of_deferred": 0.02914207898320472
+        },
+        "DDoS_UDP": {
+          "n_deferred": 121,
+          "share_of_deferred": 0.010985020426690877
+        },
+        "DoS_UDP": {
+          "n_deferred": 92,
+          "share_of_deferred": 0.008352246935996368
+        },
+        "DDoS_TCP": {
+          "n_deferred": 74,
+          "share_of_deferred": 0.006718111665910123
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 70,
+          "share_of_deferred": 0.006354970494779845
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 65,
+          "share_of_deferred": 0.005901044030866999
+        },
+        "DoS_ICMP": {
+          "n_deferred": 43,
+          "share_of_deferred": 0.0039037675896504767
+        },
+        "DoS_TCP": {
+          "n_deferred": 21,
+          "share_of_deferred": 0.0019064911484339537
+        },
+        "DoS_SYN": {
+          "n_deferred": 19,
+          "share_of_deferred": 0.0017249205628688152
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00027235587834770767
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 9.078529278256922e-05
+        }
+      },
+      "threshold": 0.8
+    },
+    {
+      "coverage": 0.9856993638682549,
+      "n_retained": 879508,
+      "n_deferred": 12760,
+      "retained_accuracy": 0.9983172410029244,
+      "retained_macro_f1": 0.9572805595367907,
+      "retained_mcc": 0.9978330063957788,
+      "deferred_error_rate": 0.3975705329153605,
+      "deferred_mistakes_avoided": 5073,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 5048,
+          "share_of_deferred": 0.39561128526645767
+        },
+        "Benign": {
+          "n_deferred": 2852,
+          "share_of_deferred": 0.22351097178683385
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1260,
+          "share_of_deferred": 0.0987460815047022
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 1076,
+          "share_of_deferred": 0.08432601880877742
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 557,
+          "share_of_deferred": 0.04365203761755486
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 499,
+          "share_of_deferred": 0.03910658307210031
+        },
+        "DDoS_SYN": {
+          "n_deferred": 446,
+          "share_of_deferred": 0.03495297805642633
+        },
+        "Recon_VulScan": {
+          "n_deferred": 375,
+          "share_of_deferred": 0.02938871473354232
+        },
+        "DDoS_UDP": {
+          "n_deferred": 154,
+          "share_of_deferred": 0.01206896551724138
+        },
+        "DoS_UDP": {
+          "n_deferred": 120,
+          "share_of_deferred": 0.009404388714733543
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 86,
+          "share_of_deferred": 0.006739811912225706
+        },
+        "DDoS_TCP": {
+          "n_deferred": 80,
+          "share_of_deferred": 0.006269592476489028
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 75,
+          "share_of_deferred": 0.005877742946708464
+        },
+        "DoS_ICMP": {
+          "n_deferred": 72,
+          "share_of_deferred": 0.005642633228840125
+        },
+        "DoS_SYN": {
+          "n_deferred": 28,
+          "share_of_deferred": 0.00219435736677116
+        },
+        "DoS_TCP": {
+          "n_deferred": 28,
+          "share_of_deferred": 0.00219435736677116
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00023510971786833856
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 7.836990595611286e-05
+        }
+      },
+      "threshold": 0.85
+    },
+    {
+      "coverage": 0.9814002071126612,
+      "n_retained": 875672,
+      "n_deferred": 16596,
+      "retained_accuracy": 0.9986467535789656,
+      "retained_macro_f1": 0.9619497187539795,
+      "retained_mcc": 0.9982534244335614,
+      "deferred_error_rate": 0.3234514340805013,
+      "deferred_mistakes_avoided": 5368,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 5713,
+          "share_of_deferred": 0.3442395758013979
+        },
+        "Benign": {
+          "n_deferred": 3453,
+          "share_of_deferred": 0.20806218365871293
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 2834,
+          "share_of_deferred": 0.170764039527597
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1511,
+          "share_of_deferred": 0.09104603518920222
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 671,
+          "share_of_deferred": 0.040431429260062664
+        },
+        "DDoS_SYN": {
+          "n_deferred": 602,
+          "share_of_deferred": 0.03627380091588334
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 583,
+          "share_of_deferred": 0.03512894673415281
+        },
+        "Recon_VulScan": {
+          "n_deferred": 431,
+          "share_of_deferred": 0.02597011328030851
+        },
+        "DDoS_UDP": {
+          "n_deferred": 188,
+          "share_of_deferred": 0.011328030850807424
+        },
+        "DoS_UDP": {
+          "n_deferred": 146,
+          "share_of_deferred": 0.008797300554350447
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 114,
+          "share_of_deferred": 0.006869125090383225
+        },
+        "DoS_ICMP": {
+          "n_deferred": 95,
+          "share_of_deferred": 0.005724270908652687
+        },
+        "DDoS_TCP": {
+          "n_deferred": 93,
+          "share_of_deferred": 0.005603759942154736
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 83,
+          "share_of_deferred": 0.005001205109664979
+        },
+        "DoS_SYN": {
+          "n_deferred": 43,
+          "share_of_deferred": 0.002590985779705953
+        },
+        "DoS_TCP": {
+          "n_deferred": 31,
+          "share_of_deferred": 0.0018679199807182453
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00018076644974692697
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00012051096649795132
+        }
+      },
+      "threshold": 0.9
+    },
+    {
+      "coverage": 0.977385718192292,
+      "n_retained": 872090,
+      "n_deferred": 20178,
+      "retained_accuracy": 0.9990310633076861,
+      "retained_macro_f1": 0.968784349350761,
+      "retained_mcc": 0.9987468685921093,
+      "deferred_error_rate": 0.28288234711071464,
+      "deferred_mistakes_avoided": 5708,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 6466,
+          "share_of_deferred": 0.32044801268708495
+        },
+        "Benign": {
+          "n_deferred": 4473,
+          "share_of_deferred": 0.2216770740410348
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 3517,
+          "share_of_deferred": 0.17429874120329072
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1610,
+          "share_of_deferred": 0.07978987015561502
+        },
+        "DDoS_SYN": {
+          "n_deferred": 903,
+          "share_of_deferred": 0.04475170978293191
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 812,
+          "share_of_deferred": 0.04024184755674497
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 733,
+          "share_of_deferred": 0.03632669243730796
+        },
+        "Recon_VulScan": {
+          "n_deferred": 511,
+          "share_of_deferred": 0.025324610962434334
+        },
+        "DDoS_UDP": {
+          "n_deferred": 244,
+          "share_of_deferred": 0.012092377837248489
+        },
+        "DoS_ICMP": {
+          "n_deferred": 217,
+          "share_of_deferred": 0.010754286847061156
+        },
+        "DoS_UDP": {
+          "n_deferred": 188,
+          "share_of_deferred": 0.009317078005748835
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 163,
+          "share_of_deferred": 0.00807810486668649
+        },
+        "DDoS_TCP": {
+          "n_deferred": 131,
+          "share_of_deferred": 0.006492219248686689
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 96,
+          "share_of_deferred": 0.004757656853999405
+        },
+        "DoS_SYN": {
+          "n_deferred": 55,
+          "share_of_deferred": 0.0027257409059371594
+        },
+        "DoS_TCP": {
+          "n_deferred": 46,
+          "share_of_deferred": 0.002279710575874715
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 6,
+          "share_of_deferred": 0.0002973535533749628
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 5,
+          "share_of_deferred": 0.000247794627812469
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 9.911785112498761e-05
+        }
+      },
+      "threshold": 0.95
+    },
+    {
+      "coverage": 0.9763893807690066,
+      "n_retained": 871201,
+      "n_deferred": 21067,
+      "retained_accuracy": 0.9991012407010552,
+      "retained_macro_f1": 0.9702901368251721,
+      "retained_mcc": 0.9988370411018508,
+      "deferred_error_rate": 0.27388807139127547,
+      "deferred_mistakes_avoided": 5770,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 6635,
+          "share_of_deferred": 0.3149475482982864
+        },
+        "Benign": {
+          "n_deferred": 4840,
+          "share_of_deferred": 0.22974320026581857
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 3599,
+          "share_of_deferred": 0.17083590449518204
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1642,
+          "share_of_deferred": 0.07794180471827977
+        },
+        "DDoS_SYN": {
+          "n_deferred": 940,
+          "share_of_deferred": 0.04461954715906394
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 847,
+          "share_of_deferred": 0.04020506004651825
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 775,
+          "share_of_deferred": 0.03678739260454739
+        },
+        "Recon_VulScan": {
+          "n_deferred": 522,
+          "share_of_deferred": 0.024778088954288697
+        },
+        "DoS_ICMP": {
+          "n_deferred": 267,
+          "share_of_deferred": 0.012673850097308587
+        },
+        "DDoS_UDP": {
+          "n_deferred": 263,
+          "share_of_deferred": 0.012483979683865762
+        },
+        "DoS_UDP": {
+          "n_deferred": 197,
+          "share_of_deferred": 0.009351117862059145
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 182,
+          "share_of_deferred": 0.008639103811648549
+        },
+        "DDoS_TCP": {
+          "n_deferred": 139,
+          "share_of_deferred": 0.006597996867138178
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 97,
+          "share_of_deferred": 0.004604357525988513
+        },
+        "DoS_SYN": {
+          "n_deferred": 62,
+          "share_of_deferred": 0.002942991408363792
+        },
+        "DoS_TCP": {
+          "n_deferred": 46,
+          "share_of_deferred": 0.0021835097545924906
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 6,
+          "share_of_deferred": 0.0002848056201642379
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 5,
+          "share_of_deferred": 0.0002373380168035316
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00014240281008211895
+        }
+      },
+      "threshold": 0.96
+    },
+    {
+      "coverage": 0.975098288854918,
+      "n_retained": 870049,
+      "n_deferred": 22219,
+      "retained_accuracy": 0.9991908501705077,
+      "retained_macro_f1": 0.9709602803272269,
+      "retained_mcc": 0.9989522791980587,
+      "deferred_error_rate": 0.26324317025968763,
+      "deferred_mistakes_avoided": 5849,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 6827,
+          "share_of_deferred": 0.3072595526351321
+        },
+        "Benign": {
+          "n_deferred": 5341,
+          "share_of_deferred": 0.24037985507898646
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 3727,
+          "share_of_deferred": 0.16773932220171925
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1677,
+          "share_of_deferred": 0.07547594401188172
+        },
+        "DDoS_SYN": {
+          "n_deferred": 978,
+          "share_of_deferred": 0.04401638237544444
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 887,
+          "share_of_deferred": 0.03992078851433458
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 826,
+          "share_of_deferred": 0.03717539043161258
+        },
+        "Recon_VulScan": {
+          "n_deferred": 545,
+          "share_of_deferred": 0.024528556640712903
+        },
+        "DoS_ICMP": {
+          "n_deferred": 342,
+          "share_of_deferred": 0.015392231873621674
+        },
+        "DDoS_UDP": {
+          "n_deferred": 272,
+          "share_of_deferred": 0.01224177505738332
+        },
+        "DoS_UDP": {
+          "n_deferred": 212,
+          "share_of_deferred": 0.009541383500607589
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 197,
+          "share_of_deferred": 0.008866285611413656
+        },
+        "DDoS_TCP": {
+          "n_deferred": 149,
+          "share_of_deferred": 0.006705972365993069
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 104,
+          "share_of_deferred": 0.0046806786984112695
+        },
+        "DoS_SYN": {
+          "n_deferred": 69,
+          "share_of_deferred": 0.0031054502902920925
+        },
+        "DoS_TCP": {
+          "n_deferred": 51,
+          "share_of_deferred": 0.0022953328232593728
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 7,
+          "share_of_deferred": 0.00031504568162383546
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 5,
+          "share_of_deferred": 0.00022503262973131105
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00013501957783878662
+        }
+      },
+      "threshold": 0.97
+    },
+    {
+      "coverage": 0.9732961397248361,
+      "n_retained": 868441,
+      "n_deferred": 23827,
+      "retained_accuracy": 0.9992895314707619,
+      "retained_macro_f1": 0.9721017616854176,
+      "retained_mcc": 0.9990791586598452,
+      "deferred_error_rate": 0.24912913921181853,
+      "deferred_mistakes_avoided": 5936,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 7062,
+          "share_of_deferred": 0.29638645234397953
+        },
+        "Benign": {
+          "n_deferred": 5919,
+          "share_of_deferred": 0.2484156629034289
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 4131,
+          "share_of_deferred": 0.17337474293868302
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1711,
+          "share_of_deferred": 0.07180929197968691
+        },
+        "DDoS_SYN": {
+          "n_deferred": 1034,
+          "share_of_deferred": 0.043396147227934695
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 925,
+          "share_of_deferred": 0.03882150501531876
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 881,
+          "share_of_deferred": 0.03697486045242792
+        },
+        "Recon_VulScan": {
+          "n_deferred": 578,
+          "share_of_deferred": 0.02425819448524783
+        },
+        "DoS_ICMP": {
+          "n_deferred": 433,
+          "share_of_deferred": 0.018172661266630294
+        },
+        "DDoS_UDP": {
+          "n_deferred": 278,
+          "share_of_deferred": 0.011667436101901204
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 230,
+          "share_of_deferred": 0.009652914760565744
+        },
+        "DoS_UDP": {
+          "n_deferred": 216,
+          "share_of_deferred": 0.009065346036009569
+        },
+        "DDoS_TCP": {
+          "n_deferred": 168,
+          "share_of_deferred": 0.007050824694674109
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 110,
+          "share_of_deferred": 0.004616611407227095
+        },
+        "DoS_SYN": {
+          "n_deferred": 83,
+          "share_of_deferred": 0.0034834431527258993
+        },
+        "DoS_TCP": {
+          "n_deferred": 51,
+          "share_of_deferred": 0.002140428925168926
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 7,
+          "share_of_deferred": 0.0002937843622780879
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 5,
+          "share_of_deferred": 0.00020984597305577705
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 5,
+          "share_of_deferred": 0.00020984597305577705
+        }
+      },
+      "threshold": 0.98
+    },
+    {
+      "coverage": 0.9705817086346255,
+      "n_retained": 866019,
+      "n_deferred": 26249,
+      "retained_accuracy": 0.9994180266252819,
+      "retained_macro_f1": 0.973493464227645,
+      "retained_mcc": 0.9992445845463395,
+      "deferred_error_rate": 0.23044687416663492,
+      "deferred_mistakes_avoided": 6049,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 7306,
+          "share_of_deferred": 0.2783344127395329
+        },
+        "Benign": {
+          "n_deferred": 6674,
+          "share_of_deferred": 0.254257305040192
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 4844,
+          "share_of_deferred": 0.18454036344241687
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1790,
+          "share_of_deferred": 0.0681930740218675
+        },
+        "DDoS_SYN": {
+          "n_deferred": 1118,
+          "share_of_deferred": 0.04259209874661892
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 978,
+          "share_of_deferred": 0.03725856223094213
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 968,
+          "share_of_deferred": 0.03687759533696522
+        },
+        "DoS_ICMP": {
+          "n_deferred": 614,
+          "share_of_deferred": 0.023391367290182482
+        },
+        "Recon_VulScan": {
+          "n_deferred": 606,
+          "share_of_deferred": 0.02308659377500095
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 316,
+          "share_of_deferred": 0.012038553849670463
+        },
+        "DDoS_UDP": {
+          "n_deferred": 294,
+          "share_of_deferred": 0.011200426682921254
+        },
+        "DoS_UDP": {
+          "n_deferred": 227,
+          "share_of_deferred": 0.008647948493275935
+        },
+        "DDoS_TCP": {
+          "n_deferred": 210,
+          "share_of_deferred": 0.008000304773515182
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 116,
+          "share_of_deferred": 0.004419215970132196
+        },
+        "DoS_SYN": {
+          "n_deferred": 101,
+          "share_of_deferred": 0.0038477656291668254
+        },
+        "DoS_TCP": {
+          "n_deferred": 57,
+          "share_of_deferred": 0.0021715112956684065
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 11,
+          "share_of_deferred": 0.00041906358337460476
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 11,
+          "share_of_deferred": 0.00041906358337460476
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 8,
+          "share_of_deferred": 0.00030477351518153073
+        }
+      },
+      "threshold": 0.99
+    },
+    {
+      "coverage": 0.9687728350674909,
+      "n_retained": 864405,
+      "n_deferred": 27863,
+      "retained_accuracy": 0.9995418814097559,
+      "retained_macro_f1": 0.9751898888127174,
+      "retained_mcc": 0.9994047659249535,
+      "deferred_error_rate": 0.22097405160966155,
+      "deferred_mistakes_avoided": 6157,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 7418,
+          "share_of_deferred": 0.2662312026702078
+        },
+        "Benign": {
+          "n_deferred": 7310,
+          "share_of_deferred": 0.26235509456985967
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 5135,
+          "share_of_deferred": 0.18429458421562644
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1853,
+          "share_of_deferred": 0.06650396583282489
+        },
+        "DDoS_SYN": {
+          "n_deferred": 1178,
+          "share_of_deferred": 0.04227829020564907
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 1078,
+          "share_of_deferred": 0.03868930122384524
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 1041,
+          "share_of_deferred": 0.03736137530057783
+        },
+        "DoS_ICMP": {
+          "n_deferred": 715,
+          "share_of_deferred": 0.025661271219897353
+        },
+        "Recon_VulScan": {
+          "n_deferred": 624,
+          "share_of_deferred": 0.022395291246455874
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 358,
+          "share_of_deferred": 0.012848580554857696
+        },
+        "DDoS_UDP": {
+          "n_deferred": 309,
+          "share_of_deferred": 0.011089975953773822
+        },
+        "DDoS_TCP": {
+          "n_deferred": 257,
+          "share_of_deferred": 0.009223701683235833
+        },
+        "DoS_UDP": {
+          "n_deferred": 235,
+          "share_of_deferred": 0.008434124107238991
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 124,
+          "share_of_deferred": 0.004450346337436744
+        },
+        "DoS_SYN": {
+          "n_deferred": 122,
+          "share_of_deferred": 0.004378566557800667
+        },
+        "DoS_TCP": {
+          "n_deferred": 63,
+          "share_of_deferred": 0.0022610630585364103
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 16,
+          "share_of_deferred": 0.0005742382370886121
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 14,
+          "share_of_deferred": 0.0005024584574525356
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 13,
+          "share_of_deferred": 0.00046656856763449734
+        }
+      },
+      "threshold": 0.995
+    },
+    {
+      "coverage": 0.9614958734371287,
+      "n_retained": 857912,
+      "n_deferred": 34356,
+      "retained_accuracy": 0.9997517227874188,
+      "retained_macro_f1": 0.9784640746996603,
+      "retained_mcc": 0.9996761141406227,
+      "deferred_error_rate": 0.1845383630224706,
+      "deferred_mistakes_avoided": 6340,
+      "deferred_composition": {
+        "Recon_Port_Scan": {
+          "n_deferred": 8826,
+          "share_of_deferred": 0.256898358365351
+        },
+        "Benign": {
+          "n_deferred": 8487,
+          "share_of_deferred": 0.24703108627314005
+        },
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 7552,
+          "share_of_deferred": 0.21981604377692399
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1990,
+          "share_of_deferred": 0.05792292467109093
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 1313,
+          "share_of_deferred": 0.038217487483991154
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 1248,
+          "share_of_deferred": 0.036325532658050996
+        },
+        "DDoS_SYN": {
+          "n_deferred": 1239,
+          "share_of_deferred": 0.03606356968215159
+        },
+        "DoS_ICMP": {
+          "n_deferred": 928,
+          "share_of_deferred": 0.027011293514960996
+        },
+        "Recon_VulScan": {
+          "n_deferred": 716,
+          "share_of_deferred": 0.02084061008266387
+        },
+        "DDoS_UDP": {
+          "n_deferred": 477,
+          "share_of_deferred": 0.01388403772266853
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 425,
+          "share_of_deferred": 0.012370473861916404
+        },
+        "DDoS_TCP": {
+          "n_deferred": 365,
+          "share_of_deferred": 0.01062405402258703
+        },
+        "DoS_UDP": {
+          "n_deferred": 254,
+          "share_of_deferred": 0.007393177319827687
+        },
+        "DoS_SYN": {
+          "n_deferred": 145,
+          "share_of_deferred": 0.004220514611712656
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 143,
+          "share_of_deferred": 0.004162300617068343
+        },
+        "DoS_TCP": {
+          "n_deferred": 93,
+          "share_of_deferred": 0.002706950750960531
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 69,
+          "share_of_deferred": 0.002008382815228781
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 50,
+          "share_of_deferred": 0.0014553498661078123
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 36,
+          "share_of_deferred": 0.001047851903597625
+        }
+      },
+      "threshold": 0.999
+    }
+  ],
+  "sweep2_entropy_ceiling": [
+    {
+      "coverage": 0.9749032801803942,
+      "n_retained": 869875,
+      "n_deferred": 22393,
+      "retained_accuracy": 0.9992033338123294,
+      "retained_macro_f1": 0.9710932351333422,
+      "retained_mcc": 0.9989683341079146,
+      "deferred_error_rate": 0.2616889206448444,
+      "deferred_mistakes_avoided": 5860,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 6894,
+          "share_of_deferred": 0.3078640646630644
+        },
+        "Benign": {
+          "n_deferred": 5440,
+          "share_of_deferred": 0.2429330594382173
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 3705,
+          "share_of_deferred": 0.16545348992988881
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1679,
+          "share_of_deferred": 0.07497878801411155
+        },
+        "DDoS_SYN": {
+          "n_deferred": 1015,
+          "share_of_deferred": 0.045326664582682086
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 886,
+          "share_of_deferred": 0.03956593578350377
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 817,
+          "share_of_deferred": 0.036484615728129326
+        },
+        "Recon_VulScan": {
+          "n_deferred": 560,
+          "share_of_deferred": 0.02500781494216943
+        },
+        "DoS_ICMP": {
+          "n_deferred": 325,
+          "share_of_deferred": 0.014513464028937615
+        },
+        "DDoS_UDP": {
+          "n_deferred": 270,
+          "share_of_deferred": 0.012057339347117403
+        },
+        "DoS_UDP": {
+          "n_deferred": 211,
+          "share_of_deferred": 0.009422587415710266
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 201,
+          "share_of_deferred": 0.008976019291742956
+        },
+        "DDoS_TCP": {
+          "n_deferred": 153,
+          "share_of_deferred": 0.006832492296699862
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 104,
+          "share_of_deferred": 0.004644308489260037
+        },
+        "DoS_SYN": {
+          "n_deferred": 68,
+          "share_of_deferred": 0.0030366632429777163
+        },
+        "DoS_TCP": {
+          "n_deferred": 50,
+          "share_of_deferred": 0.002232840619836556
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 6,
+          "share_of_deferred": 0.0002679408743803867
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 5,
+          "share_of_deferred": 0.00022328406198365562
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 4,
+          "share_of_deferred": 0.00017862724958692447
+        }
+      },
+      "threshold": 0.05
+    },
+    {
+      "coverage": 0.9778653947020401,
+      "n_retained": 872518,
+      "n_deferred": 19750,
+      "retained_accuracy": 0.9989799637371378,
+      "retained_macro_f1": 0.9680099200291901,
+      "retained_mcc": 0.9986811073305326,
+      "deferred_error_rate": 0.2867341772151899,
+      "deferred_mistakes_avoided": 5663,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 6400,
+          "share_of_deferred": 0.3240506329113924
+        },
+        "Benign": {
+          "n_deferred": 4414,
+          "share_of_deferred": 0.22349367088607594
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 3418,
+          "share_of_deferred": 0.17306329113924052
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1591,
+          "share_of_deferred": 0.08055696202531645
+        },
+        "DDoS_SYN": {
+          "n_deferred": 921,
+          "share_of_deferred": 0.046632911392405066
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 776,
+          "share_of_deferred": 0.039291139240506326
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 692,
+          "share_of_deferred": 0.035037974683544304
+        },
+        "Recon_VulScan": {
+          "n_deferred": 505,
+          "share_of_deferred": 0.025569620253164557
+        },
+        "DDoS_UDP": {
+          "n_deferred": 229,
+          "share_of_deferred": 0.01159493670886076
+        },
+        "DoS_UDP": {
+          "n_deferred": 171,
+          "share_of_deferred": 0.008658227848101266
+        },
+        "DoS_ICMP": {
+          "n_deferred": 155,
+          "share_of_deferred": 0.007848101265822785
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 151,
+          "share_of_deferred": 0.007645569620253164
+        },
+        "DDoS_TCP": {
+          "n_deferred": 132,
+          "share_of_deferred": 0.0066835443037974685
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 95,
+          "share_of_deferred": 0.004810126582278481
+        },
+        "DoS_SYN": {
+          "n_deferred": 50,
+          "share_of_deferred": 0.002531645569620253
+        },
+        "DoS_TCP": {
+          "n_deferred": 38,
+          "share_of_deferred": 0.0019240506329113924
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 5,
+          "share_of_deferred": 0.00025316455696202533
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 5,
+          "share_of_deferred": 0.00025316455696202533
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00010126582278481013
+        }
+      },
+      "threshold": 0.084
+    },
+    {
+      "coverage": 0.9785378384072947,
+      "n_retained": 873118,
+      "n_deferred": 19150,
+      "retained_accuracy": 0.9989096548232885,
+      "retained_macro_f1": 0.9668078079051788,
+      "retained_mcc": 0.9985906863713484,
+      "deferred_error_rate": 0.2924804177545692,
+      "deferred_mistakes_avoided": 5601,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 6268,
+          "share_of_deferred": 0.32731070496083553
+        },
+        "Benign": {
+          "n_deferred": 4199,
+          "share_of_deferred": 0.21926892950391644
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 3349,
+          "share_of_deferred": 0.17488250652741513
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1572,
+          "share_of_deferred": 0.082088772845953
+        },
+        "DDoS_SYN": {
+          "n_deferred": 896,
+          "share_of_deferred": 0.046788511749347256
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 741,
+          "share_of_deferred": 0.038694516971279375
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 668,
+          "share_of_deferred": 0.03488250652741515
+        },
+        "Recon_VulScan": {
+          "n_deferred": 493,
+          "share_of_deferred": 0.025744125326370756
+        },
+        "DDoS_UDP": {
+          "n_deferred": 217,
+          "share_of_deferred": 0.01133159268929504
+        },
+        "DoS_UDP": {
+          "n_deferred": 164,
+          "share_of_deferred": 0.00856396866840731
+        },
+        "DoS_ICMP": {
+          "n_deferred": 138,
+          "share_of_deferred": 0.007206266318537859
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 133,
+          "share_of_deferred": 0.006945169712793734
+        },
+        "DDoS_TCP": {
+          "n_deferred": 126,
+          "share_of_deferred": 0.006579634464751958
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 90,
+          "share_of_deferred": 0.004699738903394256
+        },
+        "DoS_SYN": {
+          "n_deferred": 49,
+          "share_of_deferred": 0.0025587467362924283
+        },
+        "DoS_TCP": {
+          "n_deferred": 38,
+          "share_of_deferred": 0.0019843342036553525
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 4,
+          "share_of_deferred": 0.00020887728459530026
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.0001566579634464752
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00010443864229765013
+        }
+      },
+      "threshold": 0.094
+    },
+    {
+      "coverage": 0.9789357009329036,
+      "n_retained": 873473,
+      "n_deferred": 18795,
+      "retained_accuracy": 0.9988620140519512,
+      "retained_macro_f1": 0.9658358219979528,
+      "retained_mcc": 0.9985294040230329,
+      "deferred_error_rate": 0.2957701516360734,
+      "deferred_mistakes_avoided": 5559,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 6190,
+          "share_of_deferred": 0.32934291034849694
+        },
+        "Benign": {
+          "n_deferred": 4093,
+          "share_of_deferred": 0.2177706836924714
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 3309,
+          "share_of_deferred": 0.17605746209098164
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1564,
+          "share_of_deferred": 0.08321362064378825
+        },
+        "DDoS_SYN": {
+          "n_deferred": 867,
+          "share_of_deferred": 0.0461292897047087
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 724,
+          "share_of_deferred": 0.03852088321362064
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 648,
+          "share_of_deferred": 0.034477254588986435
+        },
+        "Recon_VulScan": {
+          "n_deferred": 481,
+          "share_of_deferred": 0.02559191274275073
+        },
+        "DDoS_UDP": {
+          "n_deferred": 207,
+          "share_of_deferred": 0.011013567438148443
+        },
+        "DoS_UDP": {
+          "n_deferred": 162,
+          "share_of_deferred": 0.008619313647246609
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 128,
+          "share_of_deferred": 0.006810321894120777
+        },
+        "DoS_ICMP": {
+          "n_deferred": 121,
+          "share_of_deferred": 0.006437882415536047
+        },
+        "DDoS_TCP": {
+          "n_deferred": 120,
+          "share_of_deferred": 0.006384676775738229
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 89,
+          "share_of_deferred": 0.004735301942005853
+        },
+        "DoS_SYN": {
+          "n_deferred": 46,
+          "share_of_deferred": 0.0024474594306996542
+        },
+        "DoS_TCP": {
+          "n_deferred": 38,
+          "share_of_deferred": 0.0020218143123171056
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 4,
+          "share_of_deferred": 0.00021282255919127428
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00010641127959563714
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00010641127959563714
+        }
+      },
+      "threshold": 0.1
+    },
+    {
+      "coverage": 0.9791721769692514,
+      "n_retained": 873684,
+      "n_deferred": 18584,
+      "retained_accuracy": 0.998835963574931,
+      "retained_macro_f1": 0.9656965119538602,
+      "retained_mcc": 0.9984959145195867,
+      "deferred_error_rate": 0.2978906586310805,
+      "deferred_mistakes_avoided": 5536,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 6143,
+          "share_of_deferred": 0.33055316401205337
+        },
+        "Benign": {
+          "n_deferred": 4039,
+          "share_of_deferred": 0.21733749461902713
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 3275,
+          "share_of_deferred": 0.17622686181661645
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1556,
+          "share_of_deferred": 0.08372793801119242
+        },
+        "DDoS_SYN": {
+          "n_deferred": 841,
+          "share_of_deferred": 0.04525398191993112
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 720,
+          "share_of_deferred": 0.03874300473525613
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 634,
+          "share_of_deferred": 0.03411536805854499
+        },
+        "Recon_VulScan": {
+          "n_deferred": 475,
+          "share_of_deferred": 0.025559621179509256
+        },
+        "DDoS_UDP": {
+          "n_deferred": 204,
+          "share_of_deferred": 0.010977184674989237
+        },
+        "DoS_UDP": {
+          "n_deferred": 157,
+          "share_of_deferred": 0.008448127421437796
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 127,
+          "share_of_deferred": 0.006833835557468791
+        },
+        "DDoS_TCP": {
+          "n_deferred": 118,
+          "share_of_deferred": 0.006349547998278088
+        },
+        "DoS_ICMP": {
+          "n_deferred": 116,
+          "share_of_deferred": 0.006241928540680155
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 89,
+          "share_of_deferred": 0.00478906586310805
+        },
+        "DoS_SYN": {
+          "n_deferred": 46,
+          "share_of_deferred": 0.0024752475247524753
+        },
+        "DoS_TCP": {
+          "n_deferred": 37,
+          "share_of_deferred": 0.0019909599655617734
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00016142918639690056
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00010761945759793371
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00010761945759793371
+        }
+      },
+      "threshold": 0.104
+    },
+    {
+      "coverage": 0.9810426912093676,
+      "n_retained": 875353,
+      "n_deferred": 16915,
+      "retained_accuracy": 0.9987605000496942,
+      "retained_macro_f1": 0.9645445746774811,
+      "retained_mcc": 0.9983999642368956,
+      "deferred_error_rate": 0.3232633757020396,
+      "deferred_mistakes_avoided": 5468,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 5971,
+          "share_of_deferred": 0.3530002955956252
+        },
+        "Benign": {
+          "n_deferred": 3872,
+          "share_of_deferred": 0.2289092521430683
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 2206,
+          "share_of_deferred": 0.1304167898315105
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1534,
+          "share_of_deferred": 0.09068873780668046
+        },
+        "DDoS_SYN": {
+          "n_deferred": 726,
+          "share_of_deferred": 0.0429204847768253
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 695,
+          "share_of_deferred": 0.04108779190067987
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 605,
+          "share_of_deferred": 0.03576707064735442
+        },
+        "Recon_VulScan": {
+          "n_deferred": 467,
+          "share_of_deferred": 0.027608631392255393
+        },
+        "DDoS_UDP": {
+          "n_deferred": 194,
+          "share_of_deferred": 0.011469110257168194
+        },
+        "DoS_UDP": {
+          "n_deferred": 145,
+          "share_of_deferred": 0.008572273130357671
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 118,
+          "share_of_deferred": 0.006976056754360036
+        },
+        "DDoS_TCP": {
+          "n_deferred": 108,
+          "share_of_deferred": 0.006384865503990541
+        },
+        "DoS_ICMP": {
+          "n_deferred": 103,
+          "share_of_deferred": 0.006089269878805793
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 86,
+          "share_of_deferred": 0.005084244753177653
+        },
+        "DoS_SYN": {
+          "n_deferred": 46,
+          "share_of_deferred": 0.0027194797516996746
+        },
+        "DoS_TCP": {
+          "n_deferred": 32,
+          "share_of_deferred": 0.0018918120011823824
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00017735737511084836
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.0001182382500738989
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.0001182382500738989
+        }
+      },
+      "threshold": 0.114
+    },
+    {
+      "coverage": 0.9824738755620509,
+      "n_retained": 876630,
+      "n_deferred": 15638,
+      "retained_accuracy": 0.9986676248816491,
+      "retained_macro_f1": 0.9633646228087679,
+      "retained_mcc": 0.9982813642242632,
+      "deferred_error_rate": 0.3443534978897557,
+      "deferred_mistakes_avoided": 5385,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 5810,
+          "share_of_deferred": 0.37153088630259623
+        },
+        "Benign": {
+          "n_deferred": 3713,
+          "share_of_deferred": 0.23743445453382786
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1510,
+          "share_of_deferred": 0.09655966236091572
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 1435,
+          "share_of_deferred": 0.09176365264100268
+        },
+        "DDoS_SYN": {
+          "n_deferred": 685,
+          "share_of_deferred": 0.04380355544187236
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 664,
+          "share_of_deferred": 0.042460672720296716
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 581,
+          "share_of_deferred": 0.03715308863025962
+        },
+        "Recon_VulScan": {
+          "n_deferred": 453,
+          "share_of_deferred": 0.028967898708274716
+        },
+        "DDoS_UDP": {
+          "n_deferred": 179,
+          "share_of_deferred": 0.01144647653152577
+        },
+        "DoS_UDP": {
+          "n_deferred": 142,
+          "share_of_deferred": 0.009080445069702008
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 106,
+          "share_of_deferred": 0.006778360404143752
+        },
+        "DDoS_TCP": {
+          "n_deferred": 101,
+          "share_of_deferred": 0.006458626422816217
+        },
+        "DoS_ICMP": {
+          "n_deferred": 97,
+          "share_of_deferred": 0.006202839237754189
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 85,
+          "share_of_deferred": 0.005435477682568103
+        },
+        "DoS_SYN": {
+          "n_deferred": 39,
+          "share_of_deferred": 0.002493925054354777
+        },
+        "DoS_TCP": {
+          "n_deferred": 31,
+          "share_of_deferred": 0.00198235068423072
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.0001918403887965213
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.0001278935925310142
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.0001278935925310142
+        }
+      },
+      "threshold": 0.124
+    },
+    {
+      "coverage": 0.9832404613860409,
+      "n_retained": 877314,
+      "n_deferred": 14954,
+      "retained_accuracy": 0.9985888746788493,
+      "retained_macro_f1": 0.9618606084960429,
+      "retained_mcc": 0.9981804999300181,
+      "deferred_error_rate": 0.3554232981142169,
+      "deferred_mistakes_avoided": 5315,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 5620,
+          "share_of_deferred": 0.37581917881503274
+        },
+        "Benign": {
+          "n_deferred": 3557,
+          "share_of_deferred": 0.2378627791895145
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1492,
+          "share_of_deferred": 0.09977263608399091
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 1269,
+          "share_of_deferred": 0.0848602380633944
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 644,
+          "share_of_deferred": 0.04306540056172262
+        },
+        "DDoS_SYN": {
+          "n_deferred": 640,
+          "share_of_deferred": 0.042797913601711916
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 557,
+          "share_of_deferred": 0.0372475591814899
+        },
+        "Recon_VulScan": {
+          "n_deferred": 440,
+          "share_of_deferred": 0.029423565601176944
+        },
+        "DDoS_UDP": {
+          "n_deferred": 170,
+          "share_of_deferred": 0.011368195800454728
+        },
+        "DoS_UDP": {
+          "n_deferred": 135,
+          "share_of_deferred": 0.009027684900361108
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 98,
+          "share_of_deferred": 0.006553430520262137
+        },
+        "DDoS_TCP": {
+          "n_deferred": 94,
+          "share_of_deferred": 0.006285943560251438
+        },
+        "DoS_ICMP": {
+          "n_deferred": 85,
+          "share_of_deferred": 0.005684097900227364
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 81,
+          "share_of_deferred": 0.005416610940216665
+        },
+        "DoS_SYN": {
+          "n_deferred": 36,
+          "share_of_deferred": 0.0024073826400962954
+        },
+        "DoS_TCP": {
+          "n_deferred": 30,
+          "share_of_deferred": 0.002006152200080246
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00020061522000802462
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00013374348000534973
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 6.687174000267486e-05
+        }
+      },
+      "threshold": 0.134
+    },
+    {
+      "coverage": 0.9832438236045672,
+      "n_retained": 877317,
+      "n_deferred": 14951,
+      "retained_accuracy": 0.9985877396653661,
+      "retained_macro_f1": 0.96185764487125,
+      "retained_mcc": 0.9981790393672966,
+      "deferred_error_rate": 0.35542773058658284,
+      "deferred_mistakes_avoided": 5314,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 5620,
+          "share_of_deferred": 0.37589458899070294
+        },
+        "Benign": {
+          "n_deferred": 3557,
+          "share_of_deferred": 0.23791050765835062
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1492,
+          "share_of_deferred": 0.09979265600963147
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 1269,
+          "share_of_deferred": 0.08487726573473346
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 644,
+          "share_of_deferred": 0.04307404187010902
+        },
+        "DDoS_SYN": {
+          "n_deferred": 639,
+          "share_of_deferred": 0.04273961607919203
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 556,
+          "share_of_deferred": 0.0371881479499699
+        },
+        "Recon_VulScan": {
+          "n_deferred": 440,
+          "share_of_deferred": 0.029429469600695604
+        },
+        "DDoS_UDP": {
+          "n_deferred": 170,
+          "share_of_deferred": 0.011370476891177848
+        },
+        "DoS_UDP": {
+          "n_deferred": 135,
+          "share_of_deferred": 0.009029496354758878
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 98,
+          "share_of_deferred": 0.006554745501973112
+        },
+        "DDoS_TCP": {
+          "n_deferred": 94,
+          "share_of_deferred": 0.006287204869239516
+        },
+        "DoS_ICMP": {
+          "n_deferred": 85,
+          "share_of_deferred": 0.005685238445588924
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 81,
+          "share_of_deferred": 0.005417697812855327
+        },
+        "DoS_SYN": {
+          "n_deferred": 36,
+          "share_of_deferred": 0.0024078656946023677
+        },
+        "DoS_TCP": {
+          "n_deferred": 29,
+          "share_of_deferred": 0.001939669587318574
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.0002006554745501973
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.0001337703163667982
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 6.68851581833991e-05
+        }
+      },
+      "threshold": 0.134031
+    },
+    {
+      "coverage": 0.9840955856312229,
+      "n_retained": 878077,
+      "n_deferred": 14191,
+      "retained_accuracy": 0.9984978538328643,
+      "retained_macro_f1": 0.9605341912365425,
+      "retained_mcc": 0.9980639890342864,
+      "deferred_error_rate": 0.368825311817349,
+      "deferred_mistakes_avoided": 5234,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 5445,
+          "share_of_deferred": 0.38369389049397506
+        },
+        "Benign": {
+          "n_deferred": 3416,
+          "share_of_deferred": 0.24071594672679866
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1296,
+          "share_of_deferred": 0.09132548798534282
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 1142,
+          "share_of_deferred": 0.0804735395673314
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 626,
+          "share_of_deferred": 0.04411246564724121
+        },
+        "DDoS_SYN": {
+          "n_deferred": 606,
+          "share_of_deferred": 0.042703121696850116
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 540,
+          "share_of_deferred": 0.03805228666055951
+        },
+        "Recon_VulScan": {
+          "n_deferred": 425,
+          "share_of_deferred": 0.029948558945810725
+        },
+        "DDoS_UDP": {
+          "n_deferred": 163,
+          "share_of_deferred": 0.011486153195687408
+        },
+        "DoS_UDP": {
+          "n_deferred": 121,
+          "share_of_deferred": 0.008526530899866113
+        },
+        "DDoS_TCP": {
+          "n_deferred": 93,
+          "share_of_deferred": 0.006553449369318582
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 90,
+          "share_of_deferred": 0.0063420477767599185
+        },
+        "DoS_ICMP": {
+          "n_deferred": 80,
+          "share_of_deferred": 0.005637375801564372
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 79,
+          "share_of_deferred": 0.005566908604044817
+        },
+        "DoS_SYN": {
+          "n_deferred": 34,
+          "share_of_deferred": 0.002395884715664858
+        },
+        "DoS_TCP": {
+          "n_deferred": 29,
+          "share_of_deferred": 0.002043548728067085
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00021140159255866395
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00014093439503910928
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 7.046719751955464e-05
+        }
+      },
+      "threshold": 0.144
+    },
+    {
+      "coverage": 0.9845225873840595,
+      "n_retained": 878458,
+      "n_deferred": 13810,
+      "retained_accuracy": 0.9984495559264074,
+      "retained_macro_f1": 0.9597250737273577,
+      "retained_mcc": 0.9980021589712225,
+      "deferred_error_rate": 0.375887038377987,
+      "deferred_mistakes_avoided": 5191,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 5305,
+          "share_of_deferred": 0.38414192614047793
+        },
+        "Benign": {
+          "n_deferred": 3324,
+          "share_of_deferred": 0.24069514844315712
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1287,
+          "share_of_deferred": 0.09319333816075308
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 1116,
+          "share_of_deferred": 0.08081100651701666
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 602,
+          "share_of_deferred": 0.043591600289645184
+        },
+        "DDoS_SYN": {
+          "n_deferred": 581,
+          "share_of_deferred": 0.042070963070238956
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 525,
+          "share_of_deferred": 0.03801593048515568
+        },
+        "Recon_VulScan": {
+          "n_deferred": 410,
+          "share_of_deferred": 0.029688631426502535
+        },
+        "DDoS_UDP": {
+          "n_deferred": 152,
+          "share_of_deferred": 0.011006517016654598
+        },
+        "DoS_UDP": {
+          "n_deferred": 109,
+          "share_of_deferred": 0.007892831281679943
+        },
+        "DDoS_TCP": {
+          "n_deferred": 90,
+          "share_of_deferred": 0.0065170166545981175
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 87,
+          "share_of_deferred": 0.006299782766111513
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 78,
+          "share_of_deferred": 0.0056480811006517015
+        },
+        "DoS_ICMP": {
+          "n_deferred": 78,
+          "share_of_deferred": 0.0056480811006517015
+        },
+        "DoS_SYN": {
+          "n_deferred": 31,
+          "share_of_deferred": 0.0022447501810282404
+        },
+        "DoS_TCP": {
+          "n_deferred": 29,
+          "share_of_deferred": 0.002099927588703838
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00021723388848660392
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.0001448225923244026
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 7.24112961622013e-05
+        }
+      },
+      "threshold": 0.15
+    },
+    {
+      "coverage": 0.9847299241931796,
+      "n_retained": 878643,
+      "n_deferred": 13625,
+      "retained_accuracy": 0.9984157388154233,
+      "retained_macro_f1": 0.9592285037793951,
+      "retained_mcc": 0.9979587955815126,
+      "deferred_error_rate": 0.37878899082568807,
+      "deferred_mistakes_avoided": 5161,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 5241,
+          "share_of_deferred": 0.3846605504587156
+        },
+        "Benign": {
+          "n_deferred": 3281,
+          "share_of_deferred": 0.24080733944954127
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1275,
+          "share_of_deferred": 0.09357798165137615
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 1108,
+          "share_of_deferred": 0.0813211009174312
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 593,
+          "share_of_deferred": 0.043522935779816516
+        },
+        "DDoS_SYN": {
+          "n_deferred": 566,
+          "share_of_deferred": 0.04154128440366973
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 523,
+          "share_of_deferred": 0.038385321100917434
+        },
+        "Recon_VulScan": {
+          "n_deferred": 401,
+          "share_of_deferred": 0.02943119266055046
+        },
+        "DDoS_UDP": {
+          "n_deferred": 148,
+          "share_of_deferred": 0.010862385321100917
+        },
+        "DoS_UDP": {
+          "n_deferred": 101,
+          "share_of_deferred": 0.007412844036697248
+        },
+        "DDoS_TCP": {
+          "n_deferred": 89,
+          "share_of_deferred": 0.006532110091743119
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 83,
+          "share_of_deferred": 0.006091743119266055
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 78,
+          "share_of_deferred": 0.005724770642201835
+        },
+        "DoS_ICMP": {
+          "n_deferred": 76,
+          "share_of_deferred": 0.005577981651376147
+        },
+        "DoS_SYN": {
+          "n_deferred": 29,
+          "share_of_deferred": 0.0021284403669724773
+        },
+        "DoS_TCP": {
+          "n_deferred": 27,
+          "share_of_deferred": 0.001981651376146789
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00022018348623853212
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00014678899082568806
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 7.339449541284403e-05
+        }
+      },
+      "threshold": 0.154
+    },
+    {
+      "coverage": 0.9854427145207494,
+      "n_retained": 879279,
+      "n_deferred": 12989,
+      "retained_accuracy": 0.9983361367666008,
+      "retained_macro_f1": 0.9576871862508913,
+      "retained_mcc": 0.9978569931639399,
+      "deferred_error_rate": 0.39187004388328583,
+      "deferred_mistakes_avoided": 5090,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 5043,
+          "share_of_deferred": 0.38825159750558164
+        },
+        "Benign": {
+          "n_deferred": 3154,
+          "share_of_deferred": 0.24282084841019325
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1258,
+          "share_of_deferred": 0.09685118176918932
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 968,
+          "share_of_deferred": 0.07452459773654631
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 562,
+          "share_of_deferred": 0.0432673800908461
+        },
+        "DDoS_SYN": {
+          "n_deferred": 520,
+          "share_of_deferred": 0.040033874817152974
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 500,
+          "share_of_deferred": 0.03849411040110863
+        },
+        "Recon_VulScan": {
+          "n_deferred": 388,
+          "share_of_deferred": 0.0298714296712603
+        },
+        "DDoS_UDP": {
+          "n_deferred": 132,
+          "share_of_deferred": 0.010162445145892679
+        },
+        "DoS_UDP": {
+          "n_deferred": 96,
+          "share_of_deferred": 0.007390869197012857
+        },
+        "DDoS_TCP": {
+          "n_deferred": 87,
+          "share_of_deferred": 0.006697975209792902
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 79,
+          "share_of_deferred": 0.006082069443375164
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 75,
+          "share_of_deferred": 0.005774116560166295
+        },
+        "DoS_ICMP": {
+          "n_deferred": 70,
+          "share_of_deferred": 0.005389175456155209
+        },
+        "DoS_SYN": {
+          "n_deferred": 26,
+          "share_of_deferred": 0.002001693740857649
+        },
+        "DoS_TCP": {
+          "n_deferred": 25,
+          "share_of_deferred": 0.0019247055200554315
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00023096466240665178
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00015397644160443453
+        },
+        "MQTT_DoS_Publish_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 7.698822080221726e-05
+        }
+      },
+      "threshold": 0.164
+    },
+    {
+      "coverage": 0.9860580005110572,
+      "n_retained": 879828,
+      "n_deferred": 12440,
+      "retained_accuracy": 0.998259887159763,
+      "retained_macro_f1": 0.9564971913214628,
+      "retained_mcc": 0.9977594845964574,
+      "deferred_error_rate": 0.4036977491961415,
+      "deferred_mistakes_avoided": 5022,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 4855,
+          "share_of_deferred": 0.3902733118971061
+        },
+        "Benign": {
+          "n_deferred": 3010,
+          "share_of_deferred": 0.24196141479099678
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1236,
+          "share_of_deferred": 0.09935691318327974
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 901,
+          "share_of_deferred": 0.07242765273311898
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 543,
+          "share_of_deferred": 0.04364951768488746
+        },
+        "DDoS_SYN": {
+          "n_deferred": 487,
+          "share_of_deferred": 0.03914790996784566
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 481,
+          "share_of_deferred": 0.03866559485530546
+        },
+        "Recon_VulScan": {
+          "n_deferred": 377,
+          "share_of_deferred": 0.03030546623794212
+        },
+        "DDoS_UDP": {
+          "n_deferred": 120,
+          "share_of_deferred": 0.00964630225080386
+        },
+        "DoS_UDP": {
+          "n_deferred": 91,
+          "share_of_deferred": 0.007315112540192926
+        },
+        "DDoS_TCP": {
+          "n_deferred": 84,
+          "share_of_deferred": 0.006752411575562701
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 73,
+          "share_of_deferred": 0.0058681672025723474
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 73,
+          "share_of_deferred": 0.0058681672025723474
+        },
+        "DoS_ICMP": {
+          "n_deferred": 59,
+          "share_of_deferred": 0.004742765273311897
+        },
+        "DoS_SYN": {
+          "n_deferred": 24,
+          "share_of_deferred": 0.0019292604501607716
+        },
+        "DoS_TCP": {
+          "n_deferred": 22,
+          "share_of_deferred": 0.0017684887459807075
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00024115755627009645
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 8.038585209003216e-05
+        }
+      },
+      "threshold": 0.174
+    },
+    {
+      "coverage": 0.9866923390730139,
+      "n_retained": 880394,
+      "n_deferred": 11874,
+      "retained_accuracy": 0.998167865751016,
+      "retained_macro_f1": 0.9551796158284506,
+      "retained_mcc": 0.997641771914833,
+      "deferred_error_rate": 0.4160350345292235,
+      "deferred_mistakes_avoided": 4940,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 4655,
+          "share_of_deferred": 0.3920330133063837
+        },
+        "Benign": {
+          "n_deferred": 2889,
+          "share_of_deferred": 0.2433046993431026
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1204,
+          "share_of_deferred": 0.10139801246420752
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 811,
+          "share_of_deferred": 0.0683004884621863
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 520,
+          "share_of_deferred": 0.04379316152939195
+        },
+        "DDoS_SYN": {
+          "n_deferred": 464,
+          "share_of_deferred": 0.039076974903149736
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 461,
+          "share_of_deferred": 0.038824322048172474
+        },
+        "Recon_VulScan": {
+          "n_deferred": 362,
+          "share_of_deferred": 0.030486777833922857
+        },
+        "DDoS_UDP": {
+          "n_deferred": 111,
+          "share_of_deferred": 0.009348155634158665
+        },
+        "DDoS_TCP": {
+          "n_deferred": 81,
+          "share_of_deferred": 0.006821627084386054
+        },
+        "DoS_UDP": {
+          "n_deferred": 73,
+          "share_of_deferred": 0.0061478861377800235
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 72,
+          "share_of_deferred": 0.00606366851945427
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 69,
+          "share_of_deferred": 0.005811015664477008
+        },
+        "DoS_ICMP": {
+          "n_deferred": 55,
+          "share_of_deferred": 0.004631969007916456
+        },
+        "DoS_TCP": {
+          "n_deferred": 22,
+          "share_of_deferred": 0.0018527876031665825
+        },
+        "DoS_SYN": {
+          "n_deferred": 21,
+          "share_of_deferred": 0.0017685699848408287
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.00025265285497726126
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 8.421761832575375e-05
+        }
+      },
+      "threshold": 0.184
+    },
+    {
+      "coverage": 0.9878410970694903,
+      "n_retained": 881419,
+      "n_deferred": 10849,
+      "retained_accuracy": 0.9978353087464645,
+      "retained_macro_f1": 0.94953753704494,
+      "retained_mcc": 0.9972154642661663,
+      "deferred_error_rate": 0.4281500599133561,
+      "deferred_mistakes_avoided": 4645,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 4324,
+          "share_of_deferred": 0.3985620794543276
+        },
+        "Benign": {
+          "n_deferred": 2683,
+          "share_of_deferred": 0.24730389897686422
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1009,
+          "share_of_deferred": 0.09300396349894
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 702,
+          "share_of_deferred": 0.06470642455525855
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 489,
+          "share_of_deferred": 0.045073278643192924
+        },
+        "DDoS_SYN": {
+          "n_deferred": 434,
+          "share_of_deferred": 0.04000368697575814
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 425,
+          "share_of_deferred": 0.039174117430177895
+        },
+        "Recon_VulScan": {
+          "n_deferred": 345,
+          "share_of_deferred": 0.03180016591390911
+        },
+        "DDoS_UDP": {
+          "n_deferred": 93,
+          "share_of_deferred": 0.008572218637662457
+        },
+        "DDoS_TCP": {
+          "n_deferred": 77,
+          "share_of_deferred": 0.0070974283344087015
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 67,
+          "share_of_deferred": 0.006175684394875104
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 57,
+          "share_of_deferred": 0.005253940455341506
+        },
+        "DoS_UDP": {
+          "n_deferred": 55,
+          "share_of_deferred": 0.005069591667434786
+        },
+        "DoS_ICMP": {
+          "n_deferred": 46,
+          "share_of_deferred": 0.0042400221218545486
+        },
+        "DoS_TCP": {
+          "n_deferred": 20,
+          "share_of_deferred": 0.0018434878790671951
+        },
+        "DoS_SYN": {
+          "n_deferred": 19,
+          "share_of_deferred": 0.0017513134851138354
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.0002765231818600793
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 9.217439395335975e-05
+        }
+      },
+      "threshold": 0.2
+    },
+    {
+      "coverage": 0.9938998148538332,
+      "n_retained": 886825,
+      "n_deferred": 5443,
+      "retained_accuracy": 0.9952797902630169,
+      "retained_macro_f1": 0.9280144765523696,
+      "retained_mcc": 0.9939492951784363,
+      "deferred_error_rate": 0.4348704758405291,
+      "deferred_mistakes_avoided": 2367,
+      "deferred_composition": {
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 2073,
+          "share_of_deferred": 0.3808561455079919
+        },
+        "Benign": {
+          "n_deferred": 1479,
+          "share_of_deferred": 0.2717251515708249
+        },
+        "DDoS_SYN": {
+          "n_deferred": 323,
+          "share_of_deferred": 0.05934227448098475
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 310,
+          "share_of_deferred": 0.056953885724784124
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 298,
+          "share_of_deferred": 0.05474921918059893
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 270,
+          "share_of_deferred": 0.04960499724416682
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 270,
+          "share_of_deferred": 0.04960499724416682
+        },
+        "Recon_VulScan": {
+          "n_deferred": 249,
+          "share_of_deferred": 0.04574683079184273
+        },
+        "DDoS_TCP": {
+          "n_deferred": 69,
+          "share_of_deferred": 0.012676832629064855
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 54,
+          "share_of_deferred": 0.009920999448833364
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 18,
+          "share_of_deferred": 0.003306999816277788
+        },
+        "DDoS_UDP": {
+          "n_deferred": 9,
+          "share_of_deferred": 0.001653499908138894
+        },
+        "DoS_SYN": {
+          "n_deferred": 9,
+          "share_of_deferred": 0.001653499908138894
+        },
+        "DoS_ICMP": {
+          "n_deferred": 5,
+          "share_of_deferred": 0.0009186110600771634
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.000551166636046298
+        },
+        "DoS_TCP": {
+          "n_deferred": 2,
+          "share_of_deferred": 0.00036744442403086535
+        },
+        "MQTT_DoS_Connect_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.00018372221201543268
+        },
+        "DoS_UDP": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.00018372221201543268
+        }
+      },
+      "threshold": 0.25
+    },
+    {
+      "coverage": 0.9978582667987645,
+      "n_retained": 890357,
+      "n_deferred": 1911,
+      "retained_accuracy": 0.9936093050315772,
+      "retained_macro_f1": 0.9188507027591603,
+      "retained_mcc": 0.9918276855092614,
+      "deferred_error_rate": 0.45159602302459445,
+      "deferred_mistakes_avoided": 863,
+      "deferred_composition": {
+        "Benign": {
+          "n_deferred": 502,
+          "share_of_deferred": 0.26268969126111985
+        },
+        "DDoS_SYN": {
+          "n_deferred": 274,
+          "share_of_deferred": 0.1433804290947148
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 213,
+          "share_of_deferred": 0.11145996860282574
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 211,
+          "share_of_deferred": 0.11041339612768185
+        },
+        "Recon_VulScan": {
+          "n_deferred": 191,
+          "share_of_deferred": 0.0999476713762428
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 175,
+          "share_of_deferred": 0.09157509157509157
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 154,
+          "share_of_deferred": 0.08058608058608059
+        },
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 71,
+          "share_of_deferred": 0.037153322867608585
+        },
+        "DDoS_TCP": {
+          "n_deferred": 60,
+          "share_of_deferred": 0.03139717425431711
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 30,
+          "share_of_deferred": 0.015698587127158554
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 15,
+          "share_of_deferred": 0.007849293563579277
+        },
+        "DDoS_UDP": {
+          "n_deferred": 8,
+          "share_of_deferred": 0.004186289900575615
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.0015698587127158557
+        },
+        "DoS_SYN": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.0015698587127158557
+        },
+        "DoS_ICMP": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.0005232862375719519
+        }
+      },
+      "threshold": 0.3
+    },
+    {
+      "coverage": 0.99887253605419,
+      "n_retained": 891262,
+      "n_deferred": 1006,
+      "retained_accuracy": 0.9931827004853792,
+      "retained_macro_f1": 0.9143425176045499,
+      "retained_mcc": 0.9912861668550382,
+      "deferred_error_rate": 0.474155069582505,
+      "deferred_mistakes_avoided": 477,
+      "deferred_composition": {
+        "DDoS_SYN": {
+          "n_deferred": 227,
+          "share_of_deferred": 0.22564612326043737
+        },
+        "Benign": {
+          "n_deferred": 190,
+          "share_of_deferred": 0.18886679920477137
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 122,
+          "share_of_deferred": 0.12127236580516898
+        },
+        "Recon_VulScan": {
+          "n_deferred": 103,
+          "share_of_deferred": 0.10238568588469185
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 98,
+          "share_of_deferred": 0.09741550695825049
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 92,
+          "share_of_deferred": 0.09145129224652088
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 70,
+          "share_of_deferred": 0.06958250497017893
+        },
+        "DDoS_TCP": {
+          "n_deferred": 54,
+          "share_of_deferred": 0.0536779324055666
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 21,
+          "share_of_deferred": 0.020874751491053677
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 13,
+          "share_of_deferred": 0.012922465208747515
+        },
+        "DDoS_UDP": {
+          "n_deferred": 7,
+          "share_of_deferred": 0.006958250497017893
+        },
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 5,
+          "share_of_deferred": 0.004970178926441352
+        },
+        "DoS_SYN": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.002982107355864811
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.0009940357852882703
+        }
+      },
+      "threshold": 0.35
+    },
+    {
+      "coverage": 0.9994519583802176,
+      "n_retained": 891779,
+      "n_deferred": 489,
+      "retained_accuracy": 0.992896222046045,
+      "retained_macro_f1": 0.91122828569333,
+      "retained_mcc": 0.9909223015014,
+      "deferred_error_rate": 0.4458077709611452,
+      "deferred_mistakes_avoided": 218,
+      "deferred_composition": {
+        "DDoS_SYN": {
+          "n_deferred": 193,
+          "share_of_deferred": 0.3946830265848671
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 52,
+          "share_of_deferred": 0.10633946830265849
+        },
+        "Benign": {
+          "n_deferred": 49,
+          "share_of_deferred": 0.10020449897750511
+        },
+        "DDoS_TCP": {
+          "n_deferred": 46,
+          "share_of_deferred": 0.09406952965235174
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 32,
+          "share_of_deferred": 0.065439672801636
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 31,
+          "share_of_deferred": 0.06339468302658487
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 30,
+          "share_of_deferred": 0.06134969325153374
+        },
+        "Recon_VulScan": {
+          "n_deferred": 26,
+          "share_of_deferred": 0.053169734151329244
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 11,
+          "share_of_deferred": 0.022494887525562373
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 10,
+          "share_of_deferred": 0.02044989775051125
+        },
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 4,
+          "share_of_deferred": 0.0081799591002045
+        },
+        "DDoS_UDP": {
+          "n_deferred": 4,
+          "share_of_deferred": 0.0081799591002045
+        },
+        "MQTT_DDoS_Connect_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.002044989775051125
+        }
+      },
+      "threshold": 0.4
+    },
+    {
+      "coverage": 0.9997086077277231,
+      "n_retained": 892008,
+      "n_deferred": 260,
+      "retained_accuracy": 0.9927758495439503,
+      "retained_macro_f1": 0.9093708921936999,
+      "retained_mcc": 0.9907694413786661,
+      "deferred_error_rate": 0.41923076923076924,
+      "deferred_mistakes_avoided": 109,
+      "deferred_composition": {
+        "DDoS_SYN": {
+          "n_deferred": 147,
+          "share_of_deferred": 0.5653846153846154
+        },
+        "DDoS_TCP": {
+          "n_deferred": 37,
+          "share_of_deferred": 0.1423076923076923
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 15,
+          "share_of_deferred": 0.057692307692307696
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 10,
+          "share_of_deferred": 0.038461538461538464
+        },
+        "Recon_VulScan": {
+          "n_deferred": 10,
+          "share_of_deferred": 0.038461538461538464
+        },
+        "Benign": {
+          "n_deferred": 9,
+          "share_of_deferred": 0.03461538461538462
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 8,
+          "share_of_deferred": 0.03076923076923077
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 7,
+          "share_of_deferred": 0.026923076923076925
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 7,
+          "share_of_deferred": 0.026923076923076925
+        },
+        "DDoS_UDP": {
+          "n_deferred": 4,
+          "share_of_deferred": 0.015384615384615385
+        },
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.011538461538461539
+        },
+        "Recon_Ping_Sweep": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.011538461538461539
+        }
+      },
+      "threshold": 0.45
+    },
+    {
+      "coverage": 0.9998453379477915,
+      "n_retained": 892130,
+      "n_deferred": 138,
+      "retained_accuracy": 0.9927039781197807,
+      "retained_macro_f1": 0.9084157023517085,
+      "retained_mcc": 0.9906780789935196,
+      "deferred_error_rate": 0.3188405797101449,
+      "deferred_mistakes_avoided": 44,
+      "deferred_composition": {
+        "DDoS_SYN": {
+          "n_deferred": 105,
+          "share_of_deferred": 0.7608695652173914
+        },
+        "DDoS_TCP": {
+          "n_deferred": 13,
+          "share_of_deferred": 0.09420289855072464
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 4,
+          "share_of_deferred": 0.028985507246376812
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 4,
+          "share_of_deferred": 0.028985507246376812
+        },
+        "DDoS_UDP": {
+          "n_deferred": 4,
+          "share_of_deferred": 0.028985507246376812
+        },
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.021739130434782608
+        },
+        "ARP_Spoofing": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.007246376811594203
+        },
+        "Benign": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.007246376811594203
+        },
+        "MQTT_Malformed_Data": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.007246376811594203
+        },
+        "Recon_Port_Scan": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.007246376811594203
+        },
+        "Recon_VulScan": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.007246376811594203
+        }
+      },
+      "threshold": 0.5
+    },
+    {
+      "coverage": 0.9998968919651943,
+      "n_retained": 892176,
+      "n_deferred": 92,
+      "retained_accuracy": 0.9926774537759366,
+      "retained_macro_f1": 0.9082799932032786,
+      "retained_mcc": 0.9906443530242807,
+      "deferred_error_rate": 0.21739130434782608,
+      "deferred_mistakes_avoided": 20,
+      "deferred_composition": {
+        "DDoS_SYN": {
+          "n_deferred": 83,
+          "share_of_deferred": 0.9021739130434783
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.03260869565217391
+        },
+        "DDoS_UDP": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.03260869565217391
+        },
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.010869565217391304
+        },
+        "Recon_OS_Scan": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.010869565217391304
+        },
+        "DDoS_TCP": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.010869565217391304
+        }
+      },
+      "threshold": 0.55
+    },
+    {
+      "coverage": 0.9999159445368432,
+      "n_retained": 892193,
+      "n_deferred": 75,
+      "retained_accuracy": 0.9926742307998382,
+      "retained_macro_f1": 0.908237888460254,
+      "retained_mcc": 0.9906402927227784,
+      "deferred_error_rate": 0.22666666666666666,
+      "deferred_mistakes_avoided": 17,
+      "deferred_composition": {
+        "DDoS_SYN": {
+          "n_deferred": 67,
+          "share_of_deferred": 0.8933333333333333
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.04
+        },
+        "DDoS_UDP": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.04
+        },
+        "MQTT_DDoS_Publish_Flood": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.013333333333333334
+        },
+        "DDoS_TCP": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.013333333333333334
+        }
+      },
+      "threshold": 0.6
+    },
+    {
+      "coverage": 0.9999338763689833,
+      "n_retained": 892209,
+      "n_deferred": 59,
+      "retained_accuracy": 0.9926687581048835,
+      "retained_macro_f1": 0.9080897498128365,
+      "retained_mcc": 0.990633357389166,
+      "deferred_error_rate": 0.2033898305084746,
+      "deferred_mistakes_avoided": 12,
+      "deferred_composition": {
+        "DDoS_SYN": {
+          "n_deferred": 54,
+          "share_of_deferred": 0.9152542372881356
+        },
+        "DDoS_UDP": {
+          "n_deferred": 3,
+          "share_of_deferred": 0.05084745762711865
+        },
+        "DDoS_ICMP": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.01694915254237288
+        },
+        "DDoS_TCP": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.01694915254237288
+        }
+      },
+      "threshold": 0.65
+    },
+    {
+      "coverage": 0.9999596533776848,
+      "n_retained": 892232,
+      "n_deferred": 36,
+      "retained_accuracy": 0.9926611015968941,
+      "retained_macro_f1": 0.9079017318287255,
+      "retained_mcc": 0.990623637969965,
+      "deferred_error_rate": 0.1388888888888889,
+      "deferred_mistakes_avoided": 5,
+      "deferred_composition": {
+        "DDoS_SYN": {
+          "n_deferred": 34,
+          "share_of_deferred": 0.9444444444444444
+        },
+        "DDoS_TCP": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.027777777777777776
+        },
+        "DDoS_UDP": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.027777777777777776
+        }
+      },
+      "threshold": 0.7
+    },
+    {
+      "coverage": 0.9999876718654037,
+      "n_retained": 892257,
+      "n_deferred": 11,
+      "retained_accuracy": 0.9926579449642872,
+      "retained_macro_f1": 0.9076316246585449,
+      "retained_mcc": 0.9906196837672125,
+      "deferred_error_rate": 0.18181818181818182,
+      "deferred_mistakes_avoided": 2,
+      "deferred_composition": {
+        "DDoS_SYN": {
+          "n_deferred": 9,
+          "share_of_deferred": 0.8181818181818182
+        },
+        "DDoS_TCP": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.09090909090909091
+        },
+        "DDoS_UDP": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.09090909090909091
+        }
+      },
+      "threshold": 0.75
+    },
+    {
+      "coverage": 0.9999966377814737,
+      "n_retained": 892265,
+      "n_deferred": 3,
+      "retained_accuracy": 0.9926580107927577,
+      "retained_macro_f1": 0.9076316312003221,
+      "retained_mcc": 0.9906197932359786,
+      "deferred_error_rate": 0.6666666666666666,
+      "deferred_mistakes_avoided": 2,
+      "deferred_composition": {
+        "DDoS_SYN": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.3333333333333333
+        },
+        "DDoS_TCP": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.3333333333333333
+        },
+        "DDoS_UDP": {
+          "n_deferred": 1,
+          "share_of_deferred": 0.3333333333333333
+        }
+      },
+      "threshold": 0.8
+    },
+    {
+      "coverage": 1.0,
+      "n_retained": 892268,
+      "n_deferred": 0,
+      "retained_accuracy": 0.9926557939991124,
+      "retained_macro_f1": 0.907626622882394,
+      "retained_mcc": 0.9906169668153739,
+      "deferred_error_rate": NaN,
+      "deferred_mistakes_avoided": 0,
+      "deferred_composition": {},
+      "threshold": 0.85
+    },
+    {
+      "coverage": 1.0,
+      "n_retained": 892268,
+      "n_deferred": 0,
+      "retained_accuracy": 0.9926557939991124,
+      "retained_macro_f1": 0.907626622882394,
+      "retained_mcc": 0.9906169668153739,
+      "deferred_error_rate": NaN,
+      "deferred_mistakes_avoided": 0,
+      "deferred_composition": {},
+      "threshold": 0.9
+    }
+  ],
+  "named_operating_points": {
+    "sweep1_confidence_floor": {
+      "acc_gt_0.99": {
+        "coverage": 0.9992367763945361,
+        "n_retained": 891587,
+        "n_deferred": 681,
+        "retained_accuracy": 0.9930584452218347,
+        "retained_macro_f1": 0.9115998428810755,
+        "retained_mcc": 0.991128143787994,
+        "deferred_error_rate": 0.5345080763582967,
+        "deferred_mistakes_avoided": 364,
+        "deferred_composition": {
+          "MQTT_DDoS_Publish_Flood": {
+            "n_deferred": 133,
+            "share_of_deferred": 0.19530102790014683
+          },
+          "Benign": {
+            "n_deferred": 106,
+            "share_of_deferred": 0.15565345080763582
+          },
+          "DDoS_SYN": {
+            "n_deferred": 79,
+            "share_of_deferred": 0.11600587371512482
+          },
+          "Recon_VulScan": {
+            "n_deferred": 72,
+            "share_of_deferred": 0.10572687224669604
+          },
+          "ARP_Spoofing": {
+            "n_deferred": 67,
+            "share_of_deferred": 0.09838472834067548
+          },
+          "Recon_Port_Scan": {
+            "n_deferred": 67,
+            "share_of_deferred": 0.09838472834067548
+          },
+          "MQTT_Malformed_Data": {
+            "n_deferred": 62,
+            "share_of_deferred": 0.09104258443465492
+          },
+          "Recon_OS_Scan": {
+            "n_deferred": 41,
+            "share_of_deferred": 0.06020558002936858
+          },
+          "DDoS_TCP": {
+            "n_deferred": 33,
+            "share_of_deferred": 0.048458149779735685
+          },
+          "Recon_Ping_Sweep": {
+            "n_deferred": 10,
+            "share_of_deferred": 0.014684287812041116
+          },
+          "DDoS_ICMP": {
+            "n_deferred": 6,
+            "share_of_deferred": 0.00881057268722467
+          },
+          "DDoS_UDP": {
+            "n_deferred": 3,
+            "share_of_deferred": 0.004405286343612335
+          },
+          "DoS_SYN": {
+            "n_deferred": 2,
+            "share_of_deferred": 0.002936857562408223
+          }
+        },
+        "threshold": 0.5,
+        "per_class_deferral": {
+          "ARP_Spoofing": {
+            "n_class": 1744,
+            "n_deferred": 67,
+            "deferral_rate": 0.03841743119266055
+          },
+          "Benign": {
+            "n_class": 37607,
+            "n_deferred": 106,
+            "deferral_rate": 0.002818624192304624
+          },
+          "DDoS_ICMP": {
+            "n_class": 19673,
+            "n_deferred": 6,
+            "deferral_rate": 0.0003049865297616022
+          },
+          "DDoS_SYN": {
+            "n_class": 88921,
+            "n_deferred": 79,
+            "deferral_rate": 0.0008884290550038799
+          },
+          "DDoS_TCP": {
+            "n_class": 8735,
+            "n_deferred": 33,
+            "deferral_rate": 0.0037779049799656554
+          },
+          "DDoS_UDP": {
+            "n_class": 362070,
+            "n_deferred": 3,
+            "deferral_rate": 8.285690612312537e-06
+          },
+          "DoS_ICMP": {
+            "n_class": 8451,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "DoS_SYN": {
+            "n_class": 97542,
+            "n_deferred": 2,
+            "deferral_rate": 2.0503988025670993e-05
+          },
+          "DoS_TCP": {
+            "n_class": 42583,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "DoS_UDP": {
+            "n_class": 137553,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "MQTT_DDoS_Connect_Flood": {
+            "n_class": 41916,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "MQTT_DDoS_Publish_Flood": {
+            "n_class": 8416,
+            "n_deferred": 133,
+            "deferral_rate": 0.015803231939163498
+          },
+          "MQTT_DoS_Connect_Flood": {
+            "n_class": 3131,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "MQTT_DoS_Publish_Flood": {
+            "n_class": 8505,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "MQTT_Malformed_Data": {
+            "n_class": 1747,
+            "n_deferred": 62,
+            "deferral_rate": 0.035489410417859184
+          },
+          "Recon_OS_Scan": {
+            "n_class": 2941,
+            "n_deferred": 41,
+            "deferral_rate": 0.01394083645018701
+          },
+          "Recon_Ping_Sweep": {
+            "n_class": 169,
+            "n_deferred": 10,
+            "deferral_rate": 0.05917159763313609
+          },
+          "Recon_Port_Scan": {
+            "n_class": 19591,
+            "n_deferred": 67,
+            "deferral_rate": 0.0034199377265070694
+          },
+          "Recon_VulScan": {
+            "n_class": 973,
+            "n_deferred": 72,
+            "deferral_rate": 0.07399794450154162
+          }
+        }
+      },
+      "acc_gt_0.999": {
+        "coverage": 0.977385718192292,
+        "n_retained": 872090,
+        "n_deferred": 20178,
+        "retained_accuracy": 0.9990310633076861,
+        "retained_macro_f1": 0.968784349350761,
+        "retained_mcc": 0.9987468685921093,
+        "deferred_error_rate": 0.28288234711071464,
+        "deferred_mistakes_avoided": 5708,
+        "deferred_composition": {
+          "MQTT_DDoS_Publish_Flood": {
+            "n_deferred": 6466,
+            "share_of_deferred": 0.32044801268708495
+          },
+          "Benign": {
+            "n_deferred": 4473,
+            "share_of_deferred": 0.2216770740410348
+          },
+          "Recon_Port_Scan": {
+            "n_deferred": 3517,
+            "share_of_deferred": 0.17429874120329072
+          },
+          "Recon_OS_Scan": {
+            "n_deferred": 1610,
+            "share_of_deferred": 0.07978987015561502
+          },
+          "DDoS_SYN": {
+            "n_deferred": 903,
+            "share_of_deferred": 0.04475170978293191
+          },
+          "ARP_Spoofing": {
+            "n_deferred": 812,
+            "share_of_deferred": 0.04024184755674497
+          },
+          "MQTT_Malformed_Data": {
+            "n_deferred": 733,
+            "share_of_deferred": 0.03632669243730796
+          },
+          "Recon_VulScan": {
+            "n_deferred": 511,
+            "share_of_deferred": 0.025324610962434334
+          },
+          "DDoS_UDP": {
+            "n_deferred": 244,
+            "share_of_deferred": 0.012092377837248489
+          },
+          "DoS_ICMP": {
+            "n_deferred": 217,
+            "share_of_deferred": 0.010754286847061156
+          },
+          "DoS_UDP": {
+            "n_deferred": 188,
+            "share_of_deferred": 0.009317078005748835
+          },
+          "DDoS_ICMP": {
+            "n_deferred": 163,
+            "share_of_deferred": 0.00807810486668649
+          },
+          "DDoS_TCP": {
+            "n_deferred": 131,
+            "share_of_deferred": 0.006492219248686689
+          },
+          "Recon_Ping_Sweep": {
+            "n_deferred": 96,
+            "share_of_deferred": 0.004757656853999405
+          },
+          "DoS_SYN": {
+            "n_deferred": 55,
+            "share_of_deferred": 0.0027257409059371594
+          },
+          "DoS_TCP": {
+            "n_deferred": 46,
+            "share_of_deferred": 0.002279710575874715
+          },
+          "MQTT_DoS_Connect_Flood": {
+            "n_deferred": 6,
+            "share_of_deferred": 0.0002973535533749628
+          },
+          "MQTT_DDoS_Connect_Flood": {
+            "n_deferred": 5,
+            "share_of_deferred": 0.000247794627812469
+          },
+          "MQTT_DoS_Publish_Flood": {
+            "n_deferred": 2,
+            "share_of_deferred": 9.911785112498761e-05
+          }
+        },
+        "threshold": 0.95,
+        "per_class_deferral": {
+          "ARP_Spoofing": {
+            "n_class": 1744,
+            "n_deferred": 812,
+            "deferral_rate": 0.46559633027522934
+          },
+          "Benign": {
+            "n_class": 37607,
+            "n_deferred": 4473,
+            "deferral_rate": 0.11894062275640173
+          },
+          "DDoS_ICMP": {
+            "n_class": 19673,
+            "n_deferred": 163,
+            "deferral_rate": 0.008285467391856859
+          },
+          "DDoS_SYN": {
+            "n_class": 88921,
+            "n_deferred": 903,
+            "deferral_rate": 0.0101550814768165
+          },
+          "DDoS_TCP": {
+            "n_class": 8735,
+            "n_deferred": 131,
+            "deferral_rate": 0.014997137950772753
+          },
+          "DDoS_UDP": {
+            "n_class": 362070,
+            "n_deferred": 244,
+            "deferral_rate": 0.0006739028364680863
+          },
+          "DoS_ICMP": {
+            "n_class": 8451,
+            "n_deferred": 217,
+            "deferral_rate": 0.025677434623121526
+          },
+          "DoS_SYN": {
+            "n_class": 97542,
+            "n_deferred": 55,
+            "deferral_rate": 0.0005638596707059523
+          },
+          "DoS_TCP": {
+            "n_class": 42583,
+            "n_deferred": 46,
+            "deferral_rate": 0.0010802432895756523
+          },
+          "DoS_UDP": {
+            "n_class": 137553,
+            "n_deferred": 188,
+            "deferral_rate": 0.0013667459088496797
+          },
+          "MQTT_DDoS_Connect_Flood": {
+            "n_class": 41916,
+            "n_deferred": 5,
+            "deferral_rate": 0.00011928619143048001
+          },
+          "MQTT_DDoS_Publish_Flood": {
+            "n_class": 8416,
+            "n_deferred": 6466,
+            "deferral_rate": 0.7682984790874525
+          },
+          "MQTT_DoS_Connect_Flood": {
+            "n_class": 3131,
+            "n_deferred": 6,
+            "deferral_rate": 0.0019163206643244969
+          },
+          "MQTT_DoS_Publish_Flood": {
+            "n_class": 8505,
+            "n_deferred": 2,
+            "deferral_rate": 0.00023515579071134627
+          },
+          "MQTT_Malformed_Data": {
+            "n_class": 1747,
+            "n_deferred": 733,
+            "deferral_rate": 0.41957641671436746
+          },
+          "Recon_OS_Scan": {
+            "n_class": 2941,
+            "n_deferred": 1610,
+            "deferral_rate": 0.5474328459707583
+          },
+          "Recon_Ping_Sweep": {
+            "n_class": 169,
+            "n_deferred": 96,
+            "deferral_rate": 0.5680473372781065
+          },
+          "Recon_Port_Scan": {
+            "n_class": 19591,
+            "n_deferred": 3517,
+            "deferral_rate": 0.179521208718289
+          },
+          "Recon_VulScan": {
+            "n_class": 973,
+            "n_deferred": 511,
+            "deferral_rate": 0.5251798561151079
+          }
+        }
+      }
+    },
+    "sweep2_entropy_ceiling": {
+      "acc_gt_0.99": {
+        "coverage": 1.0,
+        "n_retained": 892268,
+        "n_deferred": 0,
+        "retained_accuracy": 0.9926557939991124,
+        "retained_macro_f1": 0.907626622882394,
+        "retained_mcc": 0.9906169668153739,
+        "deferred_error_rate": NaN,
+        "deferred_mistakes_avoided": 0,
+        "deferred_composition": {},
+        "threshold": 0.9,
+        "per_class_deferral": {
+          "ARP_Spoofing": {
+            "n_class": 1744,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "Benign": {
+            "n_class": 37607,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "DDoS_ICMP": {
+            "n_class": 19673,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "DDoS_SYN": {
+            "n_class": 88921,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "DDoS_TCP": {
+            "n_class": 8735,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "DDoS_UDP": {
+            "n_class": 362070,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "DoS_ICMP": {
+            "n_class": 8451,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "DoS_SYN": {
+            "n_class": 97542,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "DoS_TCP": {
+            "n_class": 42583,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "DoS_UDP": {
+            "n_class": 137553,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "MQTT_DDoS_Connect_Flood": {
+            "n_class": 41916,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "MQTT_DDoS_Publish_Flood": {
+            "n_class": 8416,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "MQTT_DoS_Connect_Flood": {
+            "n_class": 3131,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "MQTT_DoS_Publish_Flood": {
+            "n_class": 8505,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "MQTT_Malformed_Data": {
+            "n_class": 1747,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "Recon_OS_Scan": {
+            "n_class": 2941,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "Recon_Ping_Sweep": {
+            "n_class": 169,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "Recon_Port_Scan": {
+            "n_class": 19591,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          },
+          "Recon_VulScan": {
+            "n_class": 973,
+            "n_deferred": 0,
+            "deferral_rate": 0.0
+          }
+        }
+      },
+      "acc_gt_0.999": {
+        "coverage": 0.9749032801803942,
+        "n_retained": 869875,
+        "n_deferred": 22393,
+        "retained_accuracy": 0.9992033338123294,
+        "retained_macro_f1": 0.9710932351333422,
+        "retained_mcc": 0.9989683341079146,
+        "deferred_error_rate": 0.2616889206448444,
+        "deferred_mistakes_avoided": 5860,
+        "deferred_composition": {
+          "MQTT_DDoS_Publish_Flood": {
+            "n_deferred": 6894,
+            "share_of_deferred": 0.3078640646630644
+          },
+          "Benign": {
+            "n_deferred": 5440,
+            "share_of_deferred": 0.2429330594382173
+          },
+          "Recon_Port_Scan": {
+            "n_deferred": 3705,
+            "share_of_deferred": 0.16545348992988881
+          },
+          "Recon_OS_Scan": {
+            "n_deferred": 1679,
+            "share_of_deferred": 0.07497878801411155
+          },
+          "DDoS_SYN": {
+            "n_deferred": 1015,
+            "share_of_deferred": 0.045326664582682086
+          },
+          "ARP_Spoofing": {
+            "n_deferred": 886,
+            "share_of_deferred": 0.03956593578350377
+          },
+          "MQTT_Malformed_Data": {
+            "n_deferred": 817,
+            "share_of_deferred": 0.036484615728129326
+          },
+          "Recon_VulScan": {
+            "n_deferred": 560,
+            "share_of_deferred": 0.02500781494216943
+          },
+          "DoS_ICMP": {
+            "n_deferred": 325,
+            "share_of_deferred": 0.014513464028937615
+          },
+          "DDoS_UDP": {
+            "n_deferred": 270,
+            "share_of_deferred": 0.012057339347117403
+          },
+          "DoS_UDP": {
+            "n_deferred": 211,
+            "share_of_deferred": 0.009422587415710266
+          },
+          "DDoS_ICMP": {
+            "n_deferred": 201,
+            "share_of_deferred": 0.008976019291742956
+          },
+          "DDoS_TCP": {
+            "n_deferred": 153,
+            "share_of_deferred": 0.006832492296699862
+          },
+          "Recon_Ping_Sweep": {
+            "n_deferred": 104,
+            "share_of_deferred": 0.004644308489260037
+          },
+          "DoS_SYN": {
+            "n_deferred": 68,
+            "share_of_deferred": 0.0030366632429777163
+          },
+          "DoS_TCP": {
+            "n_deferred": 50,
+            "share_of_deferred": 0.002232840619836556
+          },
+          "MQTT_DoS_Connect_Flood": {
+            "n_deferred": 6,
+            "share_of_deferred": 0.0002679408743803867
+          },
+          "MQTT_DDoS_Connect_Flood": {
+            "n_deferred": 5,
+            "share_of_deferred": 0.00022328406198365562
+          },
+          "MQTT_DoS_Publish_Flood": {
+            "n_deferred": 4,
+            "share_of_deferred": 0.00017862724958692447
+          }
+        },
+        "threshold": 0.05,
+        "per_class_deferral": {
+          "ARP_Spoofing": {
+            "n_class": 1744,
+            "n_deferred": 886,
+            "deferral_rate": 0.5080275229357798
+          },
+          "Benign": {
+            "n_class": 37607,
+            "n_deferred": 5440,
+            "deferral_rate": 0.14465392081261466
+          },
+          "DDoS_ICMP": {
+            "n_class": 19673,
+            "n_deferred": 201,
+            "deferral_rate": 0.010217048747013674
+          },
+          "DDoS_SYN": {
+            "n_class": 88921,
+            "n_deferred": 1015,
+            "deferral_rate": 0.01141462646618909
+          },
+          "DDoS_TCP": {
+            "n_class": 8735,
+            "n_deferred": 153,
+            "deferral_rate": 0.017515741270749858
+          },
+          "DDoS_UDP": {
+            "n_class": 362070,
+            "n_deferred": 270,
+            "deferral_rate": 0.0007457121551081282
+          },
+          "DoS_ICMP": {
+            "n_class": 8451,
+            "n_deferred": 325,
+            "deferral_rate": 0.03845698733877648
+          },
+          "DoS_SYN": {
+            "n_class": 97542,
+            "n_deferred": 68,
+            "deferral_rate": 0.0006971355928728138
+          },
+          "DoS_TCP": {
+            "n_class": 42583,
+            "n_deferred": 50,
+            "deferral_rate": 0.0011741774886691871
+          },
+          "DoS_UDP": {
+            "n_class": 137553,
+            "n_deferred": 211,
+            "deferral_rate": 0.0015339541849323534
+          },
+          "MQTT_DDoS_Connect_Flood": {
+            "n_class": 41916,
+            "n_deferred": 5,
+            "deferral_rate": 0.00011928619143048001
+          },
+          "MQTT_DDoS_Publish_Flood": {
+            "n_class": 8416,
+            "n_deferred": 6894,
+            "deferral_rate": 0.8191539923954373
+          },
+          "MQTT_DoS_Connect_Flood": {
+            "n_class": 3131,
+            "n_deferred": 6,
+            "deferral_rate": 0.0019163206643244969
+          },
+          "MQTT_DoS_Publish_Flood": {
+            "n_class": 8505,
+            "n_deferred": 4,
+            "deferral_rate": 0.00047031158142269255
+          },
+          "MQTT_Malformed_Data": {
+            "n_class": 1747,
+            "n_deferred": 817,
+            "deferral_rate": 0.4676588437321122
+          },
+          "Recon_OS_Scan": {
+            "n_class": 2941,
+            "n_deferred": 1679,
+            "deferral_rate": 0.5708942536552193
+          },
+          "Recon_Ping_Sweep": {
+            "n_class": 169,
+            "n_deferred": 104,
+            "deferral_rate": 0.6153846153846154
+          },
+          "Recon_Port_Scan": {
+            "n_class": 19591,
+            "n_deferred": 3705,
+            "deferral_rate": 0.18911745189117452
+          },
+          "Recon_VulScan": {
+            "n_class": 973,
+            "n_deferred": 560,
+            "deferral_rate": 0.5755395683453237
+          }
+        }
+      },
+      "thesis_phase6c": {
+        "coverage": 0.9832438236045672,
+        "n_retained": 877317,
+        "n_deferred": 14951,
+        "retained_accuracy": 0.9985877396653661,
+        "retained_macro_f1": 0.96185764487125,
+        "retained_mcc": 0.9981790393672966,
+        "deferred_error_rate": 0.35542773058658284,
+        "deferred_mistakes_avoided": 5314,
+        "deferred_composition": {
+          "MQTT_DDoS_Publish_Flood": {
+            "n_deferred": 5620,
+            "share_of_deferred": 0.37589458899070294
+          },
+          "Benign": {
+            "n_deferred": 3557,
+            "share_of_deferred": 0.23791050765835062
+          },
+          "Recon_OS_Scan": {
+            "n_deferred": 1492,
+            "share_of_deferred": 0.09979265600963147
+          },
+          "Recon_Port_Scan": {
+            "n_deferred": 1269,
+            "share_of_deferred": 0.08487726573473346
+          },
+          "ARP_Spoofing": {
+            "n_deferred": 644,
+            "share_of_deferred": 0.04307404187010902
+          },
+          "DDoS_SYN": {
+            "n_deferred": 639,
+            "share_of_deferred": 0.04273961607919203
+          },
+          "MQTT_Malformed_Data": {
+            "n_deferred": 556,
+            "share_of_deferred": 0.0371881479499699
+          },
+          "Recon_VulScan": {
+            "n_deferred": 440,
+            "share_of_deferred": 0.029429469600695604
+          },
+          "DDoS_UDP": {
+            "n_deferred": 170,
+            "share_of_deferred": 0.011370476891177848
+          },
+          "DoS_UDP": {
+            "n_deferred": 135,
+            "share_of_deferred": 0.009029496354758878
+          },
+          "DDoS_ICMP": {
+            "n_deferred": 98,
+            "share_of_deferred": 0.006554745501973112
+          },
+          "DDoS_TCP": {
+            "n_deferred": 94,
+            "share_of_deferred": 0.006287204869239516
+          },
+          "DoS_ICMP": {
+            "n_deferred": 85,
+            "share_of_deferred": 0.005685238445588924
+          },
+          "Recon_Ping_Sweep": {
+            "n_deferred": 81,
+            "share_of_deferred": 0.005417697812855327
+          },
+          "DoS_SYN": {
+            "n_deferred": 36,
+            "share_of_deferred": 0.0024078656946023677
+          },
+          "DoS_TCP": {
+            "n_deferred": 29,
+            "share_of_deferred": 0.001939669587318574
+          },
+          "MQTT_DDoS_Connect_Flood": {
+            "n_deferred": 3,
+            "share_of_deferred": 0.0002006554745501973
+          },
+          "MQTT_DoS_Connect_Flood": {
+            "n_deferred": 2,
+            "share_of_deferred": 0.0001337703163667982
+          },
+          "MQTT_DoS_Publish_Flood": {
+            "n_deferred": 1,
+            "share_of_deferred": 6.68851581833991e-05
+          }
+        },
+        "threshold": 0.134031,
+        "per_class_deferral": {
+          "ARP_Spoofing": {
+            "n_class": 1744,
+            "n_deferred": 644,
+            "deferral_rate": 0.36926605504587157
+          },
+          "Benign": {
+            "n_class": 37607,
+            "n_deferred": 3557,
+            "deferral_rate": 0.09458345520780706
+          },
+          "DDoS_ICMP": {
+            "n_class": 19673,
+            "n_deferred": 98,
+            "deferral_rate": 0.004981446652772836
+          },
+          "DDoS_SYN": {
+            "n_class": 88921,
+            "n_deferred": 639,
+            "deferral_rate": 0.007186154001866825
+          },
+          "DDoS_TCP": {
+            "n_class": 8735,
+            "n_deferred": 94,
+            "deferral_rate": 0.010761305094447624
+          },
+          "DDoS_UDP": {
+            "n_class": 362070,
+            "n_deferred": 170,
+            "deferral_rate": 0.0004695224680310437
+          },
+          "DoS_ICMP": {
+            "n_class": 8451,
+            "n_deferred": 85,
+            "deferral_rate": 0.010057981303987693
+          },
+          "DoS_SYN": {
+            "n_class": 97542,
+            "n_deferred": 36,
+            "deferral_rate": 0.0003690717844620779
+          },
+          "DoS_TCP": {
+            "n_class": 42583,
+            "n_deferred": 29,
+            "deferral_rate": 0.0006810229434281286
+          },
+          "DoS_UDP": {
+            "n_class": 137553,
+            "n_deferred": 135,
+            "deferral_rate": 0.0009814398813548233
+          },
+          "MQTT_DDoS_Connect_Flood": {
+            "n_class": 41916,
+            "n_deferred": 3,
+            "deferral_rate": 7.1571714858288e-05
+          },
+          "MQTT_DDoS_Publish_Flood": {
+            "n_class": 8416,
+            "n_deferred": 5620,
+            "deferral_rate": 0.6677756653992395
+          },
+          "MQTT_DoS_Connect_Flood": {
+            "n_class": 3131,
+            "n_deferred": 2,
+            "deferral_rate": 0.0006387735547748323
+          },
+          "MQTT_DoS_Publish_Flood": {
+            "n_class": 8505,
+            "n_deferred": 1,
+            "deferral_rate": 0.00011757789535567314
+          },
+          "MQTT_Malformed_Data": {
+            "n_class": 1747,
+            "n_deferred": 556,
+            "deferral_rate": 0.318259874069834
+          },
+          "Recon_OS_Scan": {
+            "n_class": 2941,
+            "n_deferred": 1492,
+            "deferral_rate": 0.5073104386263175
+          },
+          "Recon_Ping_Sweep": {
+            "n_class": 169,
+            "n_deferred": 81,
+            "deferral_rate": 0.47928994082840237
+          },
+          "Recon_Port_Scan": {
+            "n_class": 19591,
+            "n_deferred": 1269,
+            "deferral_rate": 0.06477464141697718
+          },
+          "Recon_VulScan": {
+            "n_class": 973,
+            "n_deferred": 440,
+            "deferral_rate": 0.4522096608427544
+          }
+        }
+      }
+    }
+  },
+  "analyst_budget": {
+    "sweep1_acc_gt_0.99": {
+      "pct_auto_decided": 99.9237,
+      "pct_deferred_to_review": 0.0763,
+      "deferrals_per_1M_flows_per_day": 763
+    },
+    "sweep1_acc_gt_0.999": {
+      "pct_auto_decided": 97.7386,
+      "pct_deferred_to_review": 2.2614,
+      "deferrals_per_1M_flows_per_day": 22614
+    },
+    "sweep2_acc_gt_0.99": {
+      "pct_auto_decided": 100.0,
+      "pct_deferred_to_review": 0.0,
+      "deferrals_per_1M_flows_per_day": 0
+    },
+    "sweep2_acc_gt_0.999": {
+      "pct_auto_decided": 97.4903,
+      "pct_deferred_to_review": 2.5097,
+      "deferrals_per_1M_flows_per_day": 25097
+    },
+    "sweep2_thesis_phase6c": {
+      "pct_auto_decided": 98.3244,
+      "pct_deferred_to_review": 1.6756,
+      "deferrals_per_1M_flows_per_day": 16756
+    }
+  },
+  "sanity_checks": {
+    "monotonicity_sweep1_violations": [],
+    "monotonicity_sweep2_violations": [
+      [
+        0.8,
+        0.75,
+        0.9926580107927577,
+        0.9926579449642872
+      ]
+    ],
+    "monotonicity_sweep2_diagnosis": [
+      {
+        "tau_looser": 0.8,
+        "tau_tighter": 0.75,
+        "acc_looser": 0.9926580107927577,
+        "acc_tighter": 0.9926579449642872,
+        "delta_acc": -6.582847056346708e-08,
+        "n_flows_in_band": 8,
+        "n_correct_in_band": 8,
+        "n_errors_in_band": 0,
+        "benign_degenerate_bin": true
+      }
+    ],
+    "phase6c_rescue_reproduction": {
+      "ARP_Spoofing": {
+        "n_class": 1744,
+        "n_misclassified": 506,
+        "n_misclassified_deferred": 350,
+        "misclassified_deferral_rate": 0.691699604743083,
+        "class_deferral_rate": 0.36926605504587157
+      },
+      "MQTT_DoS_Connect_Flood": {
+        "n_class": 3131,
+        "n_misclassified": 3,
+        "n_misclassified_deferred": 0,
+        "misclassified_deferral_rate": 0.0,
+        "class_deferral_rate": 0.0006387735547748323
+      },
+      "MQTT_Malformed_Data": {
+        "n_class": 1747,
+        "n_misclassified": 300,
+        "n_misclassified_deferred": 270,
+        "misclassified_deferral_rate": 0.9,
+        "class_deferral_rate": 0.318259874069834
+      },
+      "Recon_Ping_Sweep": {
+        "n_class": 169,
+        "n_misclassified": 49,
+        "n_misclassified_deferred": 43,
+        "misclassified_deferral_rate": 0.8775510204081632,
+        "class_deferral_rate": 0.47928994082840237
+      },
+      "Recon_VulScan": {
+        "n_class": 973,
+        "n_misclassified": 650,
+        "n_misclassified_deferred": 340,
+        "misclassified_deferral_rate": 0.5230769230769231,
+        "class_deferral_rate": 0.4522096608427544
+      }
+    },
+    "overall_error_deferred_share_at_thesis_tau": 0.8109262933007783
+  }
+}

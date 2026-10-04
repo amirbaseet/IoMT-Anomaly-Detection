@@ -41,7 +41,7 @@ flowchart TD
 | 2 | Entropy-gated fusion (6C) over true-LOO models — H2-strict 4/4 | **4/4**, strict_avg **0.8035264623662012** | [Phase 6](phase6_fusion.md) |
 | 3 | Per-class TreeSHAP attributions; DDoS↔DoS feature cosine | **4,180,000**; cosine **0.991** | [Phase 7](phase7_shap.md) |
 
-Supporting facts: first public duplicate analysis (36.95 % train / 44.72 % test); max imbalance 2,374:1; AE test AUC 0.9892; redundancy-through-misclassification 82.7 %/17.3 %; SHAP vs Cohen's d Jaccard 0.000 (ρ = −0.741); multi-seed H2-strict 0.799 ± 0.022; defensibility 3.0 → 4.3 / 5. Total compute ~15.5 h, MacBook Air M4, CPU only. *(All values from `numbers_map.md`.)*
+Supporting facts: first public duplicate analysis (36.95 % train / 44.72 % test); max imbalance 2,374:1; AE test AUC 0.9892; redundancy-through-misclassification 82.7 %/17.3 %; SHAP vs Cohen's d Jaccard 0.000 (ρ = −0.741); multi-seed H2-strict 0.799 ± 0.023; defensibility 3.0 → 4.3 / 5. Total compute ~15.5 h, MacBook Air M4, CPU only. *(All values from `numbers_map.md`.)*
 
 ## Pre-registered hypotheses
 
