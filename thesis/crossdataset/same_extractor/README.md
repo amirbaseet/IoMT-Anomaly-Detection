@@ -62,7 +62,7 @@ Result files are never overwritten: a second run refuses, it does not delete.
 
 ## Limits
 
-- **10 of 33 CICIoT2023 attack classes have no pcap** (owner's figure; checked 2026-10-11 outside this folder: 33 named attack labels in `thesis/crossdataset/artifacts/label_counts.json`, 23 of them in pcap filenames under `/Volumes/PortableSSD/CICIOT23/pcaps` and `pcaps_full`).
+- **10 of 33 CICIoT2023 attack classes have no pcap** (owner's figure; checked 2026-10-11 outside this folder: 33 named attack labels in `thesis/crossdataset/artifacts/label_counts.json` (untracked, local), 23 of them in pcap filenames under `/Volumes/PortableSSD/CICIOT23/pcaps` and `pcaps_full`).
   Only the classes in `src/_common.py::PAIRS` are on the CICIoT2023 side.
 - **`DDoS-ICMP_Flood` is a partial set** of the CICIoT2023 captures (the feature folder holds a subset of the
   numbered files; `results/03_family_counts.json` lists exactly which).
