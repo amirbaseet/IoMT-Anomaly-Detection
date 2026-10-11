@@ -1,0 +1,873 @@
+{
+  "meta": {
+    "run_utc": "2026-10-11T05:13:09+00:00",
+    "script": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/07_background_audit.py",
+      "sha256": "c73f13925beb8adca610cefa34763a1a71d2820c6b98a2987599e00ca254712f"
+    },
+    "helper": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/_common.py",
+      "sha256": "214309d4b5d15c40277d9a3a1ebd993be60e537b5d24c96e8f5bdfd69dda6abc"
+    },
+    "python_executable": "/Users/amoorabaseet/code/IoMT-Project/venv/bin/python",
+    "sys_prefix": "/Users/amoorabaseet/code/IoMT-Project/venv",
+    "libs": {
+      "python": "3.13.13",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "nfstream": null,
+      "sklearn": "1.8.0",
+      "pyarrow": "24.0.0"
+    },
+    "thesis_repo": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project",
+      "commit": "6aa9cc28de4358f3941ed4c640d3b8dddadd1f0f",
+      "branch": "chore/bootstrap-claude",
+      "tree_dirty": true,
+      "dirty_entries_excluding_same_extractor": [
+        " M Project_Journey_Complete.md",
+        " M README.md",
+        "?? thesis/crossdataset/artifacts/",
+        "?? thesis/crossdataset/sampled_test_set.parquet"
+      ]
+    },
+    "seeds": [],
+    "inputs_note": "step-03 NFStream feature CSVs (CICIoMT2024 nfstream version not recorded; CICIoT2023 6.6.0)",
+    "inputs": [
+      {
+        "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/results/03_family_counts.json",
+        "size_bytes": 103438,
+        "sha256": "4bedf2ea1d4324872aa41edea93176d25397cf8555b6daf9377be3f038fcdfdf"
+      }
+    ]
+  },
+  "settings": "README.md 'Changed after seeing arms 1-4', section B",
+  "datasets": {
+    "iomt": {
+      "control": {
+        "got": {
+          "SYN": 2228567,
+          "TCP": 2007522,
+          "UDP": 111373,
+          "ICMP": 3021,
+          "port_scan": 653,
+          "os_scan": 1215,
+          "ping_sweep": 107,
+          "vuln_scan": 281,
+          "arp": 877,
+          "Benign": 10540
+        },
+        "expected_step03": {
+          "SYN": 2228567,
+          "TCP": 2007522,
+          "UDP": 111373,
+          "ICMP": 3021,
+          "port_scan": 653,
+          "os_scan": 1215,
+          "ping_sweep": 107,
+          "vuln_scan": 281,
+          "arp": 877,
+          "Benign": 10540
+        },
+        "passed": true
+      },
+      "floods": {
+        "SYN": {
+          "attack_protocol": 6,
+          "n_survivors": 2228567,
+          "share_matching": 0.9991330752003418,
+          "protocol_counts": {
+            "1": 79,
+            "2": 14,
+            "6": 2226635,
+            "17": 1806,
+            "58": 33
+          },
+          "by_file": {
+            "TCP_IP-DDoS-SYN1_train.pcap.csv": {
+              "n_survivors": 328920,
+              "share_matching": 0.9997659005229235
+            },
+            "TCP_IP-DDoS-SYN2_train.pcap.csv": {
+              "n_survivors": 376150,
+              "share_matching": 0.9995347600691213
+            },
+            "TCP_IP-DDoS-SYN3_train.pcap.csv": {
+              "n_survivors": 233230,
+              "share_matching": 0.9994640483642756
+            },
+            "TCP_IP-DDoS-SYN4_train.pcap.csv": {
+              "n_survivors": 274959,
+              "share_matching": 0.9991453271214981
+            },
+            "TCP_IP-DDoS-SYN_test.pcap.csv": {
+              "n_survivors": 410084,
+              "share_matching": 0.998922172042801
+            },
+            "TCP_IP-DoS-SYN1_train.pcap.csv": {
+              "n_survivors": 65656,
+              "share_matching": 0.9990861459729499
+            },
+            "TCP_IP-DoS-SYN2_train.pcap.csv": {
+              "n_survivors": 123932,
+              "share_matching": 0.9991366233095569
+            },
+            "TCP_IP-DoS-SYN3_train.pcap.csv": {
+              "n_survivors": 183391,
+              "share_matching": 0.9989312452628537
+            },
+            "TCP_IP-DoS-SYN4_train.pcap.csv": {
+              "n_survivors": 166605,
+              "share_matching": 0.9971909606554425
+            },
+            "TCP_IP-DoS-SYN_test.pcap.csv": {
+              "n_survivors": 65640,
+              "share_matching": 0.9992839731870811
+            }
+          }
+        },
+        "TCP": {
+          "attack_protocol": 6,
+          "n_survivors": 2007522,
+          "share_matching": 0.9994316376109452,
+          "protocol_counts": {
+            "1": 49,
+            "2": 9,
+            "6": 2006381,
+            "17": 1070,
+            "58": 13
+          },
+          "by_file": {
+            "TCP_IP-DDoS-TCP1_train.pcap.csv": {
+              "n_survivors": 253031,
+              "share_matching": 0.9997549707348111
+            },
+            "TCP_IP-DDoS-TCP2_train.pcap.csv": {
+              "n_survivors": 352709,
+              "share_matching": 0.9994726530936268
+            },
+            "TCP_IP-DDoS-TCP3_train.pcap.csv": {
+              "n_survivors": 249480,
+              "share_matching": 0.9998476831810165
+            },
+            "TCP_IP-DDoS-TCP4_train.pcap.csv": {
+              "n_survivors": 204376,
+              "share_matching": 0.9987033702587388
+            },
+            "TCP_IP-DDoS-TCP_test.pcap.csv": {
+              "n_survivors": 373662,
+              "share_matching": 0.999619977412742
+            },
+            "TCP_IP-DoS-TCP1_train.pcap.csv": {
+              "n_survivors": 121841,
+              "share_matching": 0.999072561781338
+            },
+            "TCP_IP-DoS-TCP2_train.pcap.csv": {
+              "n_survivors": 132087,
+              "share_matching": 0.999348913973366
+            },
+            "TCP_IP-DoS-TCP3_train.pcap.csv": {
+              "n_survivors": 65498,
+              "share_matching": 0.9987785886591957
+            },
+            "TCP_IP-DoS-TCP4_train.pcap.csv": {
+              "n_survivors": 189303,
+              "share_matching": 0.9992498798222955
+            },
+            "TCP_IP-DoS-TCP_test.pcap.csv": {
+              "n_survivors": 65535,
+              "share_matching": 0.9995880064087892
+            }
+          }
+        },
+        "UDP": {
+          "attack_protocol": 17,
+          "n_survivors": 111373,
+          "share_matching": 0.9788907544916632,
+          "protocol_counts": {
+            "1": 181,
+            "2": 16,
+            "6": 2111,
+            "17": 109022,
+            "58": 43
+          },
+          "by_file": {
+            "TCP_IP-DDoS-UDP1_test.pcap.csv": {
+              "n_survivors": 13482,
+              "share_matching": 0.991395935321169
+            },
+            "TCP_IP-DDoS-UDP1_train.pcap.csv": {
+              "n_survivors": 10965,
+              "share_matching": 0.9941632466940264
+            },
+            "TCP_IP-DDoS-UDP2_test.pcap.csv": {
+              "n_survivors": 2938,
+              "share_matching": 0.9693669162695712
+            },
+            "TCP_IP-DDoS-UDP2_train.pcap.csv": {
+              "n_survivors": 9996,
+              "share_matching": 0.9901960784313726
+            },
+            "TCP_IP-DDoS-UDP3_train.pcap.csv": {
+              "n_survivors": 9059,
+              "share_matching": 0.9874158295617618
+            },
+            "TCP_IP-DDoS-UDP4_train.pcap.csv": {
+              "n_survivors": 8759,
+              "share_matching": 0.9810480648475853
+            },
+            "TCP_IP-DDoS-UDP5_train.pcap.csv": {
+              "n_survivors": 8494,
+              "share_matching": 0.9825759359547916
+            },
+            "TCP_IP-DDoS-UDP6_train.pcap.csv": {
+              "n_survivors": 12069,
+              "share_matching": 0.9948628718203663
+            },
+            "TCP_IP-DDoS-UDP7_train.pcap.csv": {
+              "n_survivors": 7163,
+              "share_matching": 0.9610498394527432
+            },
+            "TCP_IP-DDoS-UDP8_train.pcap.csv": {
+              "n_survivors": 8537,
+              "share_matching": 0.9925032212721097
+            },
+            "TCP_IP-DoS-UDP1_train.pcap.csv": {
+              "n_survivors": 5471,
+              "share_matching": 0.9513800036556388
+            },
+            "TCP_IP-DoS-UDP2_train.pcap.csv": {
+              "n_survivors": 3278,
+              "share_matching": 0.934411226357535
+            },
+            "TCP_IP-DoS-UDP3_train.pcap.csv": {
+              "n_survivors": 2006,
+              "share_matching": 0.9651046859421735
+            },
+            "TCP_IP-DoS-UDP4_train.pcap.csv": {
+              "n_survivors": 6228,
+              "share_matching": 0.9450867052023122
+            },
+            "TCP_IP-DoS-UDP_test.pcap.csv": {
+              "n_survivors": 2928,
+              "share_matching": 0.9122267759562842
+            }
+          }
+        },
+        "ICMP": {
+          "attack_protocol": 1,
+          "n_survivors": 3021,
+          "share_matching": 0.031777557100297914,
+          "protocol_counts": {
+            "1": 96,
+            "2": 12,
+            "6": 1715,
+            "17": 1181,
+            "58": 17
+          },
+          "by_file": {
+            "TCP_IP-DDoS-ICMP1_test.pcap.csv": {
+              "n_survivors": 278,
+              "share_matching": 0.046762589928057555
+            },
+            "TCP_IP-DDoS-ICMP1_train.pcap.csv": {
+              "n_survivors": 179,
+              "share_matching": 0.0446927374301676
+            },
+            "TCP_IP-DDoS-ICMP2_test.pcap.csv": {
+              "n_survivors": 145,
+              "share_matching": 0.05517241379310345
+            },
+            "TCP_IP-DDoS-ICMP2_train.pcap.csv": {
+              "n_survivors": 126,
+              "share_matching": 0.031746031746031744
+            },
+            "TCP_IP-DDoS-ICMP3_train.pcap.csv": {
+              "n_survivors": 130,
+              "share_matching": 0.06153846153846154
+            },
+            "TCP_IP-DDoS-ICMP4_train.pcap.csv": {
+              "n_survivors": 169,
+              "share_matching": 0.023668639053254437
+            },
+            "TCP_IP-DDoS-ICMP5_train.pcap.csv": {
+              "n_survivors": 101,
+              "share_matching": 0.039603960396039604
+            },
+            "TCP_IP-DDoS-ICMP6_train.pcap.csv": {
+              "n_survivors": 170,
+              "share_matching": 0.052941176470588235
+            },
+            "TCP_IP-DDoS-ICMP7_train.pcap.csv": {
+              "n_survivors": 377,
+              "share_matching": 0.04509283819628647
+            },
+            "TCP_IP-DDoS-ICMP8_train.pcap.csv": {
+              "n_survivors": 139,
+              "share_matching": 0.06474820143884892
+            },
+            "TCP_IP-DoS-ICMP1_train.pcap.csv": {
+              "n_survivors": 148,
+              "share_matching": 0.006756756756756757
+            },
+            "TCP_IP-DoS-ICMP2_train.pcap.csv": {
+              "n_survivors": 487,
+              "share_matching": 0.01026694045174538
+            },
+            "TCP_IP-DoS-ICMP3_train.pcap.csv": {
+              "n_survivors": 120,
+              "share_matching": 0.008333333333333333
+            },
+            "TCP_IP-DoS-ICMP4_train.pcap.csv": {
+              "n_survivors": 192,
+              "share_matching": 0.010416666666666666
+            },
+            "TCP_IP-DoS-ICMP_test.pcap.csv": {
+              "n_survivors": 260,
+              "share_matching": 0.011538461538461539
+            }
+          }
+        }
+      },
+      "scans_arp": {
+        "port_scan": {
+          "n_survivors": 653,
+          "pooled_share_src": 0.10566615620214395,
+          "pooled_share_dst": 0.0,
+          "pooled_share_either": 0.10566615620214395,
+          "by_file": {
+            "Recon-Port_Scan_test.pcap.csv": {
+              "dominant_raw_src_mac": "00:27:10:cb:17:60",
+              "dominant_share_of_raw_flows_as_src": 0.959418613329353,
+              "n_raw": 107192,
+              "n_survivors": 102,
+              "survivor_share_src": 0.27450980392156865,
+              "survivor_share_dst": 0.0,
+              "survivor_share_either": 0.27450980392156865,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            },
+            "Recon-Port_Scan_train.pcap.csv": {
+              "dominant_raw_src_mac": "00:27:10:cb:17:60",
+              "dominant_share_of_raw_flows_as_src": 0.4289421564855436,
+              "n_raw": 387269,
+              "n_survivors": 551,
+              "survivor_share_src": 0.07441016333938294,
+              "survivor_share_dst": 0.0,
+              "survivor_share_either": 0.07441016333938294,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            }
+          }
+        },
+        "os_scan": {
+          "n_survivors": 1215,
+          "pooled_share_src": 0.2139917695473251,
+          "pooled_share_dst": 0.05185185185185185,
+          "pooled_share_either": 0.26584362139917694,
+          "by_file": {
+            "Recon-OS_Scan_test.pcap.csv": {
+              "dominant_raw_src_mac": "00:27:10:cb:17:60",
+              "dominant_share_of_raw_flows_as_src": 0.865,
+              "n_raw": 16400,
+              "n_survivors": 438,
+              "survivor_share_src": 0.3904109589041096,
+              "survivor_share_dst": 0.07990867579908675,
+              "survivor_share_either": 0.4703196347031963,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            },
+            "Recon-OS_Scan_train.pcap.csv": {
+              "dominant_raw_src_mac": "f4:b1:9c:c9:79:ff",
+              "dominant_share_of_raw_flows_as_src": 0.26252187226596674,
+              "n_raw": 73152,
+              "n_survivors": 777,
+              "survivor_share_src": 0.11454311454311454,
+              "survivor_share_dst": 0.036036036036036036,
+              "survivor_share_either": 0.15057915057915058,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            }
+          }
+        },
+        "ping_sweep": {
+          "n_survivors": 107,
+          "pooled_share_src": 0.45794392523364486,
+          "pooled_share_dst": 0.0,
+          "pooled_share_either": 0.45794392523364486,
+          "by_file": {
+            "Recon-Ping_Sweep_test.pcap.csv": {
+              "dominant_raw_src_mac": "00:0c:29:b9:07:f6",
+              "dominant_share_of_raw_flows_as_src": 0.45454545454545453,
+              "n_raw": 44,
+              "n_survivors": 43,
+              "survivor_share_src": 0.4418604651162791,
+              "survivor_share_dst": 0.0,
+              "survivor_share_either": 0.4418604651162791,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            },
+            "Recon-Ping_Sweep_train.pcap.csv": {
+              "dominant_raw_src_mac": "00:0c:29:b9:07:f6",
+              "dominant_share_of_raw_flows_as_src": 0.43478260869565216,
+              "n_raw": 69,
+              "n_survivors": 64,
+              "survivor_share_src": 0.46875,
+              "survivor_share_dst": 0.0,
+              "survivor_share_either": 0.46875,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            }
+          }
+        },
+        "vuln_scan": {
+          "n_survivors": 281,
+          "pooled_share_src": 0.26334519572953735,
+          "pooled_share_dst": 0.0,
+          "pooled_share_either": 0.26334519572953735,
+          "by_file": {
+            "Recon-VulScan_test.pcap.csv": {
+              "dominant_raw_src_mac": "fc:67:1f:e1:9e:58",
+              "dominant_share_of_raw_flows_as_src": 0.4694244604316547,
+              "n_raw": 2224,
+              "n_survivors": 160,
+              "survivor_share_src": 0.23125,
+              "survivor_share_dst": 0.0,
+              "survivor_share_either": 0.23125,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            },
+            "Recon-VulScan_train.pcap.csv": {
+              "dominant_raw_src_mac": "fc:67:1f:e1:9e:58",
+              "dominant_share_of_raw_flows_as_src": 0.16096954630205096,
+              "n_raw": 6436,
+              "n_survivors": 121,
+              "survivor_share_src": 0.30578512396694213,
+              "survivor_share_dst": 0.0,
+              "survivor_share_either": 0.30578512396694213,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            }
+          }
+        },
+        "arp": {
+          "n_survivors": 877,
+          "pooled_share_src": 0.508551881413911,
+          "pooled_share_dst": 0.014823261117445839,
+          "pooled_share_either": 0.5233751425313569,
+          "by_file": {
+            "ARP_Spoofing_test.pcap.csv": {
+              "dominant_raw_src_mac": "8c:ae:4c:dd:1e:39",
+              "dominant_share_of_raw_flows_as_src": 0.40963855421686746,
+              "n_raw": 166,
+              "n_survivors": 130,
+              "survivor_share_src": 0.5230769230769231,
+              "survivor_share_dst": 0.007692307692307693,
+              "survivor_share_either": 0.5307692307692308,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            },
+            "ARP_Spoofing_train.pcap.csv": {
+              "dominant_raw_src_mac": "8c:ae:4c:dd:1e:39",
+              "dominant_share_of_raw_flows_as_src": 0.39361702127659576,
+              "n_raw": 1034,
+              "n_survivors": 747,
+              "survivor_share_src": 0.5060240963855421,
+              "survivor_share_dst": 0.01606425702811245,
+              "survivor_share_either": 0.5220883534136547,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            }
+          }
+        }
+      },
+      "benign_capture_macs": {
+        "n_distinct_src_mac": 26,
+        "n_distinct_dst_mac": 36
+      }
+    },
+    "iot": {
+      "control": {
+        "got": {
+          "SYN": 2288310,
+          "TCP": 2232777,
+          "UDP": 1524156,
+          "ICMP": 41653,
+          "port_scan": 17678,
+          "os_scan": 23803,
+          "ping_sweep": 716,
+          "vuln_scan": 73690,
+          "arp": 26800,
+          "Benign": 108841
+        },
+        "expected_step03": {
+          "SYN": 2288310,
+          "TCP": 2232777,
+          "UDP": 1524156,
+          "ICMP": 41653,
+          "port_scan": 17678,
+          "os_scan": 23803,
+          "ping_sweep": 716,
+          "vuln_scan": 73690,
+          "arp": 26800,
+          "Benign": 108841
+        },
+        "passed": true
+      },
+      "floods": {
+        "SYN": {
+          "attack_protocol": 6,
+          "n_survivors": 2288310,
+          "share_matching": 0.9854254886794185,
+          "protocol_counts": {
+            "1": 2373,
+            "2": 270,
+            "6": 2254959,
+            "17": 29904,
+            "58": 804
+          },
+          "by_file": {
+            "DoS-SYN_Flood.pcap.csv": {
+              "n_survivors": 203477,
+              "share_matching": 0.9851187112056891
+            },
+            "DoS-SYN_Flood1.pcap.csv": {
+              "n_survivors": 241904,
+              "share_matching": 0.9839027052053707
+            },
+            "DoS-SYN_Flood2.pcap.csv": {
+              "n_survivors": 293815,
+              "share_matching": 0.9834555757874853
+            },
+            "DoS-SYN_Flood3.pcap.csv": {
+              "n_survivors": 400356,
+              "share_matching": 0.9837494629779496
+            },
+            "DoS-SYN_Flood4.pcap.csv": {
+              "n_survivors": 404254,
+              "share_matching": 0.9862314287551885
+            },
+            "DoS-SYN_Flood5.pcap.csv": {
+              "n_survivors": 221579,
+              "share_matching": 0.9841004788359907
+            },
+            "DoS-SYN_Flood6.pcap.csv": {
+              "n_survivors": 282493,
+              "share_matching": 0.9870757859486784
+            },
+            "DoS-SYN_Flood7.pcap.csv": {
+              "n_survivors": 240432,
+              "share_matching": 0.9903423837093233
+            }
+          }
+        },
+        "TCP": {
+          "attack_protocol": 6,
+          "n_survivors": 2232777,
+          "share_matching": 0.9815292794578232,
+          "protocol_counts": {
+            "1": 2331,
+            "2": 258,
+            "6": 2191536,
+            "17": 37770,
+            "58": 882
+          },
+          "by_file": {
+            "DoS-TCP_Flood.pcap.csv": {
+              "n_survivors": 134714,
+              "share_matching": 0.9791632643971674
+            },
+            "DoS-TCP_Flood1.pcap.csv": {
+              "n_survivors": 292286,
+              "share_matching": 0.974514687668927
+            },
+            "DoS-TCP_Flood10.pcap.csv": {
+              "n_survivors": 66865,
+              "share_matching": 0.9853436027817244
+            },
+            "DoS-TCP_Flood2.pcap.csv": {
+              "n_survivors": 193716,
+              "share_matching": 0.9767597926862004
+            },
+            "DoS-TCP_Flood3.pcap.csv": {
+              "n_survivors": 198910,
+              "share_matching": 0.9762002915891609
+            },
+            "DoS-TCP_Flood4.pcap.csv": {
+              "n_survivors": 216250,
+              "share_matching": 0.9840832369942196
+            },
+            "DoS-TCP_Flood5.pcap.csv": {
+              "n_survivors": 199238,
+              "share_matching": 0.9822222668366476
+            },
+            "DoS-TCP_Flood6.pcap.csv": {
+              "n_survivors": 253577,
+              "share_matching": 0.988145612575273
+            },
+            "DoS-TCP_Flood7.pcap.csv": {
+              "n_survivors": 201176,
+              "share_matching": 0.9818715950212749
+            },
+            "DoS-TCP_Flood8.pcap.csv": {
+              "n_survivors": 273454,
+              "share_matching": 0.9834816824767603
+            },
+            "DoS-TCP_Flood9.pcap.csv": {
+              "n_survivors": 202591,
+              "share_matching": 0.9870922202861924
+            }
+          }
+        },
+        "UDP": {
+          "attack_protocol": 17,
+          "n_survivors": 1524156,
+          "share_matching": 0.95226997761384,
+          "protocol_counts": {
+            "1": 3406,
+            "2": 260,
+            "6": 67905,
+            "17": 1451408,
+            "58": 1177
+          },
+          "by_file": {
+            "DoS-UDP_Flood.pcap.csv": {
+              "n_survivors": 186130,
+              "share_matching": 0.9775855584806318
+            },
+            "DoS-UDP_Flood1.pcap.csv": {
+              "n_survivors": 147691,
+              "share_matching": 0.9807029541407398
+            },
+            "DoS-UDP_Flood10.pcap.csv": {
+              "n_survivors": 33080,
+              "share_matching": 0.828174123337364
+            },
+            "DoS-UDP_Flood11.pcap.csv": {
+              "n_survivors": 25039,
+              "share_matching": 0.8296657214744998
+            },
+            "DoS-UDP_Flood12.pcap.csv": {
+              "n_survivors": 29563,
+              "share_matching": 0.8536684368974732
+            },
+            "DoS-UDP_Flood13.pcap.csv": {
+              "n_survivors": 28543,
+              "share_matching": 0.8504712188627684
+            },
+            "DoS-UDP_Flood14.pcap.csv": {
+              "n_survivors": 30660,
+              "share_matching": 0.8154272667971298
+            },
+            "DoS-UDP_Flood15.pcap.csv": {
+              "n_survivors": 30524,
+              "share_matching": 0.8344908924125278
+            },
+            "DoS-UDP_Flood16.pcap.csv": {
+              "n_survivors": 19015,
+              "share_matching": 0.8077307388903497
+            },
+            "DoS-UDP_Flood2.pcap.csv": {
+              "n_survivors": 130875,
+              "share_matching": 0.9742502387774594
+            },
+            "DoS-UDP_Flood3.pcap.csv": {
+              "n_survivors": 174018,
+              "share_matching": 0.9807606109712789
+            },
+            "DoS-UDP_Flood4.pcap.csv": {
+              "n_survivors": 218186,
+              "share_matching": 0.9826615823196722
+            },
+            "DoS-UDP_Flood5.pcap.csv": {
+              "n_survivors": 171146,
+              "share_matching": 0.9822549168546154
+            },
+            "DoS-UDP_Flood6.pcap.csv": {
+              "n_survivors": 131548,
+              "share_matching": 0.9808358926019399
+            },
+            "DoS-UDP_Flood7.pcap.csv": {
+              "n_survivors": 105224,
+              "share_matching": 0.9577757925948452
+            },
+            "DoS-UDP_Flood8.pcap.csv": {
+              "n_survivors": 31923,
+              "share_matching": 0.80352723741503
+            },
+            "DoS-UDP_Flood9.pcap.csv": {
+              "n_survivors": 30991,
+              "share_matching": 0.8050401729534381
+            }
+          }
+        },
+        "ICMP": {
+          "attack_protocol": 1,
+          "n_survivors": 41653,
+          "share_matching": 0.04556694595827431,
+          "protocol_counts": {
+            "1": 1898,
+            "2": 156,
+            "6": 17027,
+            "17": 22116,
+            "58": 456
+          },
+          "by_file": {
+            "DDoS-ICMP_Flood.pcap.csv": {
+              "n_survivors": 4705,
+              "share_matching": 0.03549415515409139
+            },
+            "DDoS-ICMP_Flood1.pcap.csv": {
+              "n_survivors": 3820,
+              "share_matching": 0.02643979057591623
+            },
+            "DDoS-ICMP_Flood10.pcap.csv": {
+              "n_survivors": 4520,
+              "share_matching": 0.05774336283185841
+            },
+            "DDoS-ICMP_Flood11.pcap.csv": {
+              "n_survivors": 4772,
+              "share_matching": 0.04715004191114837
+            },
+            "DDoS-ICMP_Flood12.pcap.csv": {
+              "n_survivors": 4144,
+              "share_matching": 0.04946911196911197
+            },
+            "DDoS-ICMP_Flood13.pcap.csv": {
+              "n_survivors": 3212,
+              "share_matching": 0.040473225404732256
+            },
+            "DDoS-ICMP_Flood14.pcap.csv": {
+              "n_survivors": 3444,
+              "share_matching": 0.05371660859465738
+            },
+            "DDoS-ICMP_Flood15.pcap.csv": {
+              "n_survivors": 5672,
+              "share_matching": 0.05465444287729196
+            },
+            "DDoS-ICMP_Flood16.pcap.csv": {
+              "n_survivors": 4646,
+              "share_matching": 0.039388721480843734
+            },
+            "DDoS-ICMP_Flood17.pcap.csv": {
+              "n_survivors": 2718,
+              "share_matching": 0.0481972038263429
+            }
+          }
+        }
+      },
+      "scans_arp": {
+        "port_scan": {
+          "n_survivors": 17678,
+          "pooled_share_src": 0.0694083041067994,
+          "pooled_share_dst": 0.0026586717954519743,
+          "pooled_share_either": 0.07206697590225139,
+          "by_file": {
+            "Recon-PortScan.pcap.csv": {
+              "dominant_raw_src_mac": "dc:a6:32:dc:27:d5",
+              "dominant_share_of_raw_flows_as_src": 0.6321901247136676,
+              "n_raw": 188592,
+              "n_survivors": 17678,
+              "survivor_share_src": 0.0694083041067994,
+              "survivor_share_dst": 0.0026586717954519743,
+              "survivor_share_either": 0.07206697590225139,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            }
+          }
+        },
+        "os_scan": {
+          "n_survivors": 23803,
+          "pooled_share_src": 0.09809687854472125,
+          "pooled_share_dst": 0.014914086459689955,
+          "pooled_share_either": 0.11301096500441121,
+          "by_file": {
+            "Recon-OSScan.pcap.csv": {
+              "dominant_raw_src_mac": "dc:a6:32:dc:27:d5",
+              "dominant_share_of_raw_flows_as_src": 0.6094477148279321,
+              "n_raw": 165458,
+              "n_survivors": 23803,
+              "survivor_share_src": 0.09809687854472125,
+              "survivor_share_dst": 0.014914086459689955,
+              "survivor_share_either": 0.11301096500441121,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            }
+          }
+        },
+        "ping_sweep": {
+          "n_survivors": 716,
+          "pooled_share_src": 0.30726256983240224,
+          "pooled_share_dst": 0.3854748603351955,
+          "pooled_share_either": 0.6927374301675978,
+          "by_file": {
+            "Recon-PingSweep.pcap.csv": {
+              "dominant_raw_src_mac": "3c:18:a0:41:c3:a0",
+              "dominant_share_of_raw_flows_as_src": 0.4679715302491103,
+              "n_raw": 1686,
+              "n_survivors": 716,
+              "survivor_share_src": 0.30726256983240224,
+              "survivor_share_dst": 0.3854748603351955,
+              "survivor_share_either": 0.6927374301675978,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            }
+          }
+        },
+        "vuln_scan": {
+          "n_survivors": 73690,
+          "pooled_share_src": 0.43559506038811235,
+          "pooled_share_dst": 0.01323110327045732,
+          "pooled_share_either": 0.4488261636585697,
+          "by_file": {
+            "VulnerabilityScan.pcap.csv": {
+              "dominant_raw_src_mac": "ac:17:02:05:34:27",
+              "dominant_share_of_raw_flows_as_src": 0.2974577277733388,
+              "n_raw": 370456,
+              "n_survivors": 73690,
+              "survivor_share_src": 0.43559506038811235,
+              "survivor_share_dst": 0.01323110327045732,
+              "survivor_share_either": 0.4488261636585697,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            }
+          }
+        },
+        "arp": {
+          "n_survivors": 26800,
+          "pooled_share_src": 0.062276119402985074,
+          "pooled_share_dst": 0.6773880597014925,
+          "pooled_share_either": 0.7396641791044776,
+          "by_file": {
+            "MITM-ArpSpoofing.pcap.csv": {
+              "dominant_raw_src_mac": "3c:18:a0:41:c3:a0",
+              "dominant_share_of_raw_flows_as_src": 0.2951025260997736,
+              "n_raw": 61399,
+              "n_survivors": 23755,
+              "survivor_share_src": 0.0663439275941907,
+              "survivor_share_dst": 0.7640496737528941,
+              "survivor_share_either": 0.8303936013470848,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            },
+            "MITM-ArpSpoofing1.pcap.csv": {
+              "dominant_raw_src_mac": "9c:8e:cd:1d:ab:9f",
+              "dominant_share_of_raw_flows_as_src": 0.22257612434705057,
+              "n_raw": 7849,
+              "n_survivors": 3045,
+              "survivor_share_src": 0.030541871921182268,
+              "survivor_share_dst": 0.0013136288998357964,
+              "survivor_share_either": 0.03185550082101806,
+              "dominant_in_benign_as_src": true,
+              "dominant_in_benign_as_dst": true
+            }
+          }
+        }
+      },
+      "benign_capture_macs": {
+        "n_distinct_src_mac": 73,
+        "n_distinct_dst_mac": 102
+      }
+    }
+  }
+}

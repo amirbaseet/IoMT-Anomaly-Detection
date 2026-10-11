@@ -1,0 +1,4212 @@
+{
+  "meta": {
+    "run_utc": "2026-10-11T05:12:13+00:00",
+    "script": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/06_like_for_like.py",
+      "sha256": "e1d30d78ca7ab79d7d3442c465d66e3310d0d67e75c5afe7fd2c016f6f17abc8"
+    },
+    "helper": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/_common.py",
+      "sha256": "214309d4b5d15c40277d9a3a1ebd993be60e537b5d24c96e8f5bdfd69dda6abc"
+    },
+    "python_executable": "/Users/amoorabaseet/code/IoMT-Project/venv/bin/python",
+    "sys_prefix": "/Users/amoorabaseet/code/IoMT-Project/venv",
+    "libs": {
+      "python": "3.13.13",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "nfstream": null,
+      "sklearn": "1.8.0",
+      "pyarrow": "24.0.0"
+    },
+    "thesis_repo": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project",
+      "commit": "6aa9cc28de4358f3941ed4c640d3b8dddadd1f0f",
+      "branch": "chore/bootstrap-claude",
+      "tree_dirty": true,
+      "dirty_entries_excluding_same_extractor": [
+        " M Project_Journey_Complete.md",
+        " M README.md",
+        "?? thesis/crossdataset/artifacts/",
+        "?? thesis/crossdataset/sampled_test_set.parquet"
+      ]
+    },
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "inputs_note": "official CSVs: CICIoMT2024 data/train+data/test; CICIoT2023 /Volumes/PortableSSD/CICIOT23/csv/MERGED_CSV.zip (size 1702032816 bytes, not hashed)",
+    "inputs": [
+      {
+        "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/shared_features.json",
+        "size_bytes": 1150,
+        "sha256": "39e66d133669efcbb57301869afa8bff343aae0c027b9bfcd4ba6b98e5c00c97"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/inverse_full_drop_scale.json",
+        "size_bytes": 1965,
+        "sha256": "b0f312223123813db92bbb61b2ae929dab6307c7331d44a3d230fa8696c96ff1"
+      }
+    ]
+  },
+  "settings": "README.md 'Changed after seeing arms 1-4', section A",
+  "caps": {
+    "attack_per_family": 20000,
+    "benign": 40000
+  },
+  "feature_sets": {
+    "shared38": [
+      "Header_Length",
+      "Protocol Type",
+      "Rate",
+      "fin_flag_number",
+      "syn_flag_number",
+      "rst_flag_number",
+      "psh_flag_number",
+      "ack_flag_number",
+      "ece_flag_number",
+      "cwr_flag_number",
+      "ack_count",
+      "syn_count",
+      "fin_count",
+      "rst_count",
+      "HTTP",
+      "HTTPS",
+      "DNS",
+      "Telnet",
+      "SMTP",
+      "SSH",
+      "IRC",
+      "TCP",
+      "UDP",
+      "DHCP",
+      "ARP",
+      "ICMP",
+      "IGMP",
+      "IPv",
+      "LLC",
+      "Tot sum",
+      "Min",
+      "Max",
+      "AVG",
+      "Std",
+      "Tot size",
+      "IAT",
+      "Number",
+      "Variance"
+    ],
+    "shared31_drop7": [
+      "Protocol Type",
+      "fin_flag_number",
+      "syn_flag_number",
+      "rst_flag_number",
+      "psh_flag_number",
+      "ack_flag_number",
+      "ece_flag_number",
+      "cwr_flag_number",
+      "ack_count",
+      "syn_count",
+      "fin_count",
+      "HTTP",
+      "HTTPS",
+      "DNS",
+      "Telnet",
+      "SMTP",
+      "SSH",
+      "IRC",
+      "TCP",
+      "UDP",
+      "DHCP",
+      "ARP",
+      "ICMP",
+      "IGMP",
+      "IPv",
+      "LLC",
+      "Tot sum",
+      "Min",
+      "AVG",
+      "Tot size",
+      "Number"
+    ]
+  },
+  "dropped_features_source": "thesis/crossdataset/inverse_full_drop_scale.json -> dropped_features",
+  "dropped_features": [
+    "IAT",
+    "Header_Length",
+    "Variance",
+    "rst_count",
+    "Rate",
+    "Std",
+    "Max"
+  ],
+  "holdout_base_iot": {
+    "rule": "round(0.3 x 63) merged members held out, drawn with default_rng(seed); random split of merged files, NOT capture-disjoint"
+  },
+  "dedup": {
+    "iomt": {
+      "n_files": 72,
+      "rows_raw_all_files": 8775013,
+      "rows_raw_non_pair_files": 326653,
+      "raw_by_family": {
+        "SYN": 1514857,
+        "TCP": 1449543,
+        "UDP": 2702529,
+        "ICMP": 2401899,
+        "port_scan": 106603,
+        "os_scan": 20666,
+        "ping_sweep": 926,
+        "vuln_scan": 3207,
+        "arp": 17791,
+        "Benign": 230339
+      },
+      "dedup_by_family": {
+        "SYN": 1514841,
+        "TCP": 1449542,
+        "UDP": 2702529,
+        "ICMP": 2401242,
+        "port_scan": 100965,
+        "os_scan": 19653,
+        "ping_sweep": 926,
+        "vuln_scan": 3140,
+        "arp": 17791,
+        "Benign": 230339
+      },
+      "dedup_control_hash_vs_exact": {
+        "dup_hash": 7392,
+        "dup_exact": 7392,
+        "identical_masks": true
+      },
+      "n_nonfinite_cells_after_dedup": 0,
+      "rows_kept": 8440968
+    },
+    "iot": {
+      "rows_raw_all_members": 45019243,
+      "rows_raw_non_pair_labels": 28569943,
+      "raw_by_family": {
+        "SYN": 1942176,
+        "TCP": 2558256,
+        "UDP": 3177323,
+        "ICMP": 6893259,
+        "port_scan": 78730,
+        "os_scan": 93970,
+        "ping_sweep": 2161,
+        "vuln_scan": 357583,
+        "arp": 294469,
+        "Benign": 1051373
+      },
+      "dedup_by_family": {
+        "SYN": 1020163,
+        "TCP": 1019694,
+        "UDP": 1768428,
+        "ICMP": 1809166,
+        "port_scan": 73104,
+        "os_scan": 89201,
+        "ping_sweep": 2158,
+        "vuln_scan": 355846,
+        "arp": 268029,
+        "Benign": 1044774
+      },
+      "rows_dedup_all_classes": 20203779,
+      "n_nonfinite_cells_after_dedup": 446,
+      "rows_kept": 7450563,
+      "dedup_method": "128-bit hash of float64 values, first occurrence, members in sorted order (not byte compare)"
+    }
+  },
+  "imputation": "inf -> NaN at load; NaN filled with the median of the capped training sample (thesis TRAP 1)",
+  "small_support_rule": {
+    "total_below": 1000,
+    "test_side_below": 300
+  },
+  "common_families": [
+    "SYN",
+    "TCP",
+    "UDP",
+    "ICMP",
+    "os_scan"
+  ],
+  "totals_by_family_dedup": {
+    "iomt": {
+      "SYN": 1514841,
+      "TCP": 1449542,
+      "UDP": 2702529,
+      "ICMP": 2401242,
+      "port_scan": 100965,
+      "os_scan": 19653,
+      "ping_sweep": 926,
+      "vuln_scan": 3140,
+      "arp": 17791,
+      "Benign": 230339
+    },
+    "iot": {
+      "SYN": 1020163,
+      "TCP": 1019694,
+      "UDP": 1768428,
+      "ICMP": 1809166,
+      "port_scan": 73104,
+      "os_scan": 89201,
+      "ping_sweep": 2158,
+      "vuln_scan": 355846,
+      "arp": 268029,
+      "Benign": 1044774
+    }
+  },
+  "summary_over_seeds": {
+    "shared38": {
+      "base_iomt": {
+        "pooled_auc": {
+          "mean": 0.9999537127575205,
+          "sd": 7.942723089123096e-06,
+          "n_seeds": 3
+        },
+        "balanced_accuracy": {
+          "mean": 0.9700267714267116,
+          "sd": 0.0028879568756855186,
+          "n_seeds": 3
+        },
+        "benign_recall": {
+          "mean": 0.9403213940667076,
+          "sd": 0.005747877635700847,
+          "n_seeds": 3
+        },
+        "macro_common": {
+          "mean": 0.9992662699734818,
+          "sd": 3.178163504209853e-05,
+          "n_seeds": 3
+        },
+        "macro_per_arm": {
+          "mean": 0.9943888833616553,
+          "sd": 0.0013039579015654596,
+          "n_seeds": 3
+        }
+      },
+      "base_iot": {
+        "pooled_auc": {
+          "mean": 0.9889328266255756,
+          "sd": 0.00027768340613696876,
+          "n_seeds": 3
+        },
+        "balanced_accuracy": {
+          "mean": 0.8640373775491188,
+          "sd": 0.0010489469533383807,
+          "n_seeds": 3
+        },
+        "benign_recall": {
+          "mean": 0.7420774958724897,
+          "sd": 0.0024857983427141544,
+          "n_seeds": 3
+        },
+        "macro_common": {
+          "mean": 0.96608078787657,
+          "sd": 6.164857284775007e-05,
+          "n_seeds": 3
+        },
+        "macro_per_arm": {
+          "mean": 0.938252643454088,
+          "sd": 0.000722824237573171,
+          "n_seeds": 3
+        }
+      },
+      "arm5a_iomt_to_iot": {
+        "pooled_auc": {
+          "mean": 0.8835979410846729,
+          "sd": 0.021304006816198272,
+          "n_seeds": 3
+        },
+        "balanced_accuracy": {
+          "mean": 0.5295045893994139,
+          "sd": 0.0350476118381898,
+          "n_seeds": 3
+        },
+        "benign_recall": {
+          "mean": 0.06554144724122156,
+          "sd": 0.07658011309498919,
+          "n_seeds": 3
+        },
+        "macro_common": {
+          "mean": 0.8781096904962157,
+          "sd": 0.0181159960311259,
+          "n_seeds": 3
+        },
+        "macro_per_arm": {
+          "mean": 0.7612369463644472,
+          "sd": 0.028753499269519447,
+          "n_seeds": 3
+        },
+        "overlap_share_full_table": {
+          "mean": 0.0,
+          "sd": 0.0,
+          "n_seeds": 3
+        },
+        "non_overlap_pooled_auc": {
+          "mean": 0.8835979410846729,
+          "sd": 0.021304006816198272,
+          "n_seeds": 3
+        },
+        "non_overlap_macro_common": {
+          "mean": 0.8781096904962157,
+          "sd": 0.0181159960311259,
+          "n_seeds": 3
+        }
+      },
+      "arm5b_iot_to_iomt": {
+        "pooled_auc": {
+          "mean": 0.515834296022446,
+          "sd": 0.030015308444446373,
+          "n_seeds": 3
+        },
+        "balanced_accuracy": {
+          "mean": 0.5015312927583887,
+          "sd": 0.0018774806968817675,
+          "n_seeds": 3
+        },
+        "benign_recall": {
+          "mean": 0.003063600461348997,
+          "sd": 0.003754404227113125,
+          "n_seeds": 3
+        },
+        "macro_common": {
+          "mean": 0.5454592046122738,
+          "sd": 0.03563498643016357,
+          "n_seeds": 3
+        },
+        "macro_per_arm": {
+          "mean": 0.5633906072687838,
+          "sd": 0.04927289343952989,
+          "n_seeds": 3
+        },
+        "overlap_share_full_table": {
+          "mean": 0.0,
+          "sd": 0.0,
+          "n_seeds": 3
+        },
+        "non_overlap_pooled_auc": {
+          "mean": 0.515834296022446,
+          "sd": 0.030015308444446373,
+          "n_seeds": 3
+        },
+        "non_overlap_macro_common": {
+          "mean": 0.5454592046122738,
+          "sd": 0.03563498643016357,
+          "n_seeds": 3
+        }
+      }
+    },
+    "shared31_drop7": {
+      "base_iomt": {
+        "pooled_auc": {
+          "mean": 0.9994549796128961,
+          "sd": 1.7127767409055265e-05,
+          "n_seeds": 3
+        },
+        "balanced_accuracy": {
+          "mean": 0.9360305428139313,
+          "sd": 0.0005149890774933084,
+          "n_seeds": 3
+        },
+        "benign_recall": {
+          "mean": 0.8731441841501139,
+          "sd": 0.0010313435320489079,
+          "n_seeds": 3
+        },
+        "macro_common": {
+          "mean": 0.9926163040658565,
+          "sd": 0.00017266320105091993,
+          "n_seeds": 3
+        },
+        "macro_per_arm": {
+          "mean": 0.9510396523998043,
+          "sd": 0.0010313252049409345,
+          "n_seeds": 3
+        }
+      },
+      "base_iot": {
+        "pooled_auc": {
+          "mean": 0.9843957830118649,
+          "sd": 0.0004114520314963062,
+          "n_seeds": 3
+        },
+        "balanced_accuracy": {
+          "mean": 0.8358806821434337,
+          "sd": 0.0022040991081840925,
+          "n_seeds": 3
+        },
+        "benign_recall": {
+          "mean": 0.6894641888330101,
+          "sd": 0.005160878698395126,
+          "n_seeds": 3
+        },
+        "macro_common": {
+          "mean": 0.9619406746146272,
+          "sd": 0.0001397535339236145,
+          "n_seeds": 3
+        },
+        "macro_per_arm": {
+          "mean": 0.919222140547905,
+          "sd": 0.0006631423189184455,
+          "n_seeds": 3
+        }
+      },
+      "arm5a_iomt_to_iot": {
+        "pooled_auc": {
+          "mean": 0.8683128042076881,
+          "sd": 0.014708362119277747,
+          "n_seeds": 3
+        },
+        "balanced_accuracy": {
+          "mean": 0.6085817050851344,
+          "sd": 0.01094343024828113,
+          "n_seeds": 3
+        },
+        "benign_recall": {
+          "mean": 0.2745365664408443,
+          "sd": 0.01428006694425673,
+          "n_seeds": 3
+        },
+        "macro_common": {
+          "mean": 0.8452467807479221,
+          "sd": 0.015330892190046456,
+          "n_seeds": 3
+        },
+        "macro_per_arm": {
+          "mean": 0.7209778707032996,
+          "sd": 0.004143371277952939,
+          "n_seeds": 3
+        },
+        "overlap_share_full_table": {
+          "mean": 2.6843608999749415e-07,
+          "sd": 0.0,
+          "n_seeds": 3
+        },
+        "non_overlap_pooled_auc": {
+          "mean": 0.8683129599484561,
+          "sd": 0.01470836959083173,
+          "n_seeds": 3
+        },
+        "non_overlap_macro_common": {
+          "mean": 0.8452468155820143,
+          "sd": 0.015330899038002497,
+          "n_seeds": 3
+        }
+      },
+      "arm5b_iot_to_iomt": {
+        "pooled_auc": {
+          "mean": 0.6669802594853902,
+          "sd": 0.04829762277395107,
+          "n_seeds": 3
+        },
+        "balanced_accuracy": {
+          "mean": 0.527584915558707,
+          "sd": 0.0068366267434544145,
+          "n_seeds": 3
+        },
+        "benign_recall": {
+          "mean": 0.055629601008368834,
+          "sd": 0.013721968075801068,
+          "n_seeds": 3
+        },
+        "macro_common": {
+          "mean": 0.721669530895991,
+          "sd": 0.049759050533015846,
+          "n_seeds": 3
+        },
+        "macro_per_arm": {
+          "mean": 0.7234149185747875,
+          "sd": 0.03536429100701878,
+          "n_seeds": 3
+        },
+        "overlap_share_full_table": {
+          "mean": 2.3693964957573586e-07,
+          "sd": 0.0,
+          "n_seeds": 3
+        },
+        "non_overlap_pooled_auc": {
+          "mean": 0.6669773950284131,
+          "sd": 0.04829804128316653,
+          "n_seeds": 3
+        },
+        "non_overlap_macro_common": {
+          "mean": 0.7216671950505668,
+          "sd": 0.049759451552779076,
+          "n_seeds": 3
+        }
+      }
+    }
+  },
+  "per_seed": {
+    "shared38": {
+      "base_iomt": {
+        "42": {
+          "n_test": 1548396,
+          "n_benign": 37607,
+          "n_attack": 1510789,
+          "pooled_auc": 0.9999570605267538,
+          "benign_recall": 0.9372723163240886,
+          "attack_recall_pooled": 0.9997769377457739,
+          "balanced_accuracy": 0.9685246270349313,
+          "per_family": {
+            "SYN": {
+              "n_test": 270992,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999992232511388,
+              "recall_at_0.5": 0.9999963098541654
+            },
+            "TCP": {
+              "n_test": 264693,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999998256031748,
+              "recall_at_0.5": 1.0
+            },
+            "UDP": {
+              "n_test": 499623,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999980244098386,
+              "recall_at_0.5": 1.0
+            },
+            "ICMP": {
+              "n_test": 448130,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999996563187459,
+              "recall_at_0.5": 0.999997768504675
+            },
+            "port_scan": {
+              "n_test": 20917,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9996939160202969,
+              "recall_at_0.5": 0.999665343978582
+            },
+            "os_scan": {
+              "n_test": 3493,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9962780043865447,
+              "recall_at_0.5": 0.9808187804179788
+            },
+            "ping_sweep": {
+              "n_test": 186,
+              "small_support": true,
+              "auc_vs_all_benign": 0.993529859317543,
+              "recall_at_0.5": 0.9731182795698925
+            },
+            "vuln_scan": {
+              "n_test": 1011,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9738392085969432,
+              "recall_at_0.5": 0.8417408506429278
+            },
+            "arp": {
+              "n_test": 1744,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9905851664108014,
+              "recall_at_0.5": 0.944954128440367
+            }
+          },
+          "macro_common": 0.9992549467938886,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.9950491281246856,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "vuln_scan",
+            "arp"
+          ],
+          "seed": 42,
+          "train_rows": 175076,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 16160,
+            "ping_sweep": 740,
+            "vuln_scan": 2129,
+            "arp": 16047,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 270992,
+            "TCP": 264693,
+            "UDP": 499623,
+            "ICMP": 448130,
+            "port_scan": 20917,
+            "os_scan": 3493,
+            "ping_sweep": 186,
+            "vuln_scan": 1011,
+            "arp": 1744,
+            "Benign": 37607
+          }
+        },
+        "43": {
+          "n_test": 1548396,
+          "n_benign": 37607,
+          "n_attack": 1510789,
+          "pooled_auc": 0.9999594335453739,
+          "benign_recall": 0.9469513654372856,
+          "attack_recall_pooled": 0.9997610520066005,
+          "balanced_accuracy": 0.9733562087219431,
+          "per_family": {
+            "SYN": {
+              "n_test": 270992,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999992176580759,
+              "recall_at_0.5": 0.9999963098541654
+            },
+            "TCP": {
+              "n_test": 264693,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999996620559217,
+              "recall_at_0.5": 0.9999962220383615
+            },
+            "UDP": {
+              "n_test": 499623,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999998306484943,
+              "recall_at_0.5": 1.0
+            },
+            "ICMP": {
+              "n_test": 448130,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999996223778485,
+              "recall_at_0.5": 0.999997768504675
+            },
+            "port_scan": {
+              "n_test": 20917,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9997059496990525,
+              "recall_at_0.5": 0.999665343978582
+            },
+            "os_scan": {
+              "n_test": 3493,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9965124799245403,
+              "recall_at_0.5": 0.9788147724019467
+            },
+            "ping_sweep": {
+              "n_test": 186,
+              "small_support": true,
+              "auc_vs_all_benign": 0.9932497982101822,
+              "recall_at_0.5": 0.956989247311828
+            },
+            "vuln_scan": {
+              "n_test": 1011,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9743522452269854,
+              "recall_at_0.5": 0.8328387734915925
+            },
+            "arp": {
+              "n_test": 1744,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9912763288505483,
+              "recall_at_0.5": 0.9426605504587156
+            }
+          },
+          "macro_common": 0.9993021625329762,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.9952306670551834,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "vuln_scan",
+            "arp"
+          ],
+          "seed": 43,
+          "train_rows": 175076,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 16160,
+            "ping_sweep": 740,
+            "vuln_scan": 2129,
+            "arp": 16047,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 270992,
+            "TCP": 264693,
+            "UDP": 499623,
+            "ICMP": 448130,
+            "port_scan": 20917,
+            "os_scan": 3493,
+            "ping_sweep": 186,
+            "vuln_scan": 1011,
+            "arp": 1744,
+            "Benign": 37607
+          }
+        },
+        "44": {
+          "n_test": 1548396,
+          "n_benign": 37607,
+          "n_attack": 1510789,
+          "pooled_auc": 0.9999446442004336,
+          "benign_recall": 0.9367405004387481,
+          "attack_recall_pooled": 0.9996584566077725,
+          "balanced_accuracy": 0.9681994785232604,
+          "per_family": {
+            "SYN": {
+              "n_test": 270992,
+              "small_support": false,
+              "auc_vs_all_benign": 0.999998957531594,
+              "recall_at_0.5": 0.9999963098541654
+            },
+            "TCP": {
+              "n_test": 264693,
+              "small_support": false,
+              "auc_vs_all_benign": 0.999999703746407,
+              "recall_at_0.5": 1.0
+            },
+            "UDP": {
+              "n_test": 499623,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999985752013951,
+              "recall_at_0.5": 1.0
+            },
+            "ICMP": {
+              "n_test": 448130,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999993013634176,
+              "recall_at_0.5": 1.0
+            },
+            "port_scan": {
+              "n_test": 20917,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9996550074222793,
+              "recall_at_0.5": 0.9990916479418654
+            },
+            "os_scan": {
+              "n_test": 3493,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9962119651250886,
+              "recall_at_0.5": 0.9782421986830805
+            },
+            "ping_sweep": {
+              "n_test": 186,
+              "small_support": true,
+              "auc_vs_all_benign": 0.9932473678687707,
+              "recall_at_0.5": 0.978494623655914
+            },
+            "vuln_scan": {
+              "n_test": 1011,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9570432557000497,
+              "recall_at_0.5": 0.6973293768545994
+            },
+            "arp": {
+              "n_test": 1744,
+              "small_support": false,
+              "auc_vs_all_benign": 0.990188073150543,
+              "recall_at_0.5": 0.9369266055045872
+            }
+          },
+          "macro_common": 0.9992417005935804,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.9928868549050969,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "vuln_scan",
+            "arp"
+          ],
+          "seed": 44,
+          "train_rows": 175076,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 16160,
+            "ping_sweep": 740,
+            "vuln_scan": 2129,
+            "arp": 16047,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 270992,
+            "TCP": 264693,
+            "UDP": 499623,
+            "ICMP": 448130,
+            "port_scan": 20917,
+            "os_scan": 3493,
+            "ping_sweep": 186,
+            "vuln_scan": 1011,
+            "arp": 1744,
+            "Benign": 37607
+          }
+        }
+      },
+      "base_iot": {
+        "42": {
+          "n_test": 2118847,
+          "n_benign": 302805,
+          "n_attack": 1816042,
+          "pooled_auc": 0.9886402705361641,
+          "benign_recall": 0.7448919271478344,
+          "attack_recall_pooled": 0.9854777587743014,
+          "balanced_accuracy": 0.8651848429610679,
+          "per_family": {
+            "SYN": {
+              "n_test": 292036,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999993299556017,
+              "recall_at_0.5": 1.0
+            },
+            "TCP": {
+              "n_test": 289008,
+              "small_support": false,
+              "auc_vs_all_benign": 0.999994596047038,
+              "recall_at_0.5": 0.9999930797763383
+            },
+            "UDP": {
+              "n_test": 505028,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999967433186956,
+              "recall_at_0.5": 1.0
+            },
+            "ICMP": {
+              "n_test": 501744,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999998107227805,
+              "recall_at_0.5": 1.0
+            },
+            "port_scan": {
+              "n_test": 21280,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9001199983164926,
+              "recall_at_0.5": 0.8690319548872181
+            },
+            "os_scan": {
+              "n_test": 25777,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8306227383807387,
+              "recall_at_0.5": 0.7539279202389727
+            },
+            "ping_sweep": {
+              "n_test": 633,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8690811893524353,
+              "recall_at_0.5": 0.8372827804107424
+            },
+            "vuln_scan": {
+              "n_test": 102903,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9129423426267869,
+              "recall_at_0.5": 0.9051533968883317
+            },
+            "arp": {
+              "n_test": 77633,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9343913176627918,
+              "recall_at_0.5": 0.9049630955907926
+            }
+          },
+          "macro_common": 0.9661226436849709,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.938572007375929,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "ping_sweep",
+            "vuln_scan",
+            "arp"
+          ],
+          "seed": 42,
+          "train_rows": 201525,
+          "n_nan_cells_in_train_sample": 10,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 20000,
+            "ping_sweep": 1525,
+            "vuln_scan": 20000,
+            "arp": 20000,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 292036,
+            "TCP": 289008,
+            "UDP": 505028,
+            "ICMP": 501744,
+            "port_scan": 21280,
+            "os_scan": 25777,
+            "ping_sweep": 633,
+            "vuln_scan": 102903,
+            "arp": 77633,
+            "Benign": 302805
+          }
+        },
+        "43": {
+          "n_test": 2150445,
+          "n_benign": 301003,
+          "n_attack": 1849442,
+          "pooled_auc": 0.9889654548794544,
+          "benign_recall": 0.7401819915416126,
+          "attack_recall_pooled": 0.9860736373457508,
+          "balanced_accuracy": 0.8631278144436817,
+          "per_family": {
+            "SYN": {
+              "n_test": 293705,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999999861095537,
+              "recall_at_0.5": 1.0
+            },
+            "TCP": {
+              "n_test": 293837,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999997423507365,
+              "recall_at_0.5": 1.0
+            },
+            "UDP": {
+              "n_test": 510331,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999968400994192,
+              "recall_at_0.5": 0.9999980404874483
+            },
+            "ICMP": {
+              "n_test": 524422,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999999791831107,
+              "recall_at_0.5": 1.0
+            },
+            "port_scan": {
+              "n_test": 21100,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9046693667127091,
+              "recall_at_0.5": 0.8790995260663507
+            },
+            "os_scan": {
+              "n_test": 25483,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8300534222666485,
+              "recall_at_0.5": 0.7539143742887415
+            },
+            "ping_sweep": {
+              "n_test": 614,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8666118676125177,
+              "recall_at_0.5": 0.8175895765472313
+            },
+            "vuln_scan": {
+              "n_test": 102670,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9134326920264334,
+              "recall_at_0.5": 0.9078990941852537
+            },
+            "arp": {
+              "n_test": 77280,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9340831124156201,
+              "recall_at_0.5": 0.9046972049689441
+            }
+          },
+          "macro_common": 0.9660099940018938,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.9387607787529721,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "ping_sweep",
+            "vuln_scan",
+            "arp"
+          ],
+          "seed": 43,
+          "train_rows": 201544,
+          "n_nan_cells_in_train_sample": 12,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 20000,
+            "ping_sweep": 1544,
+            "vuln_scan": 20000,
+            "arp": 20000,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 293705,
+            "TCP": 293837,
+            "UDP": 510331,
+            "ICMP": 524422,
+            "port_scan": 21100,
+            "os_scan": 25483,
+            "ping_sweep": 614,
+            "vuln_scan": 102670,
+            "arp": 77280,
+            "Benign": 301003
+          }
+        },
+        "44": {
+          "n_test": 2200079,
+          "n_benign": 301648,
+          "n_attack": 1898431,
+          "pooled_auc": 0.9891927544611083,
+          "benign_recall": 0.741158568928022,
+          "attack_recall_pooled": 0.9864403815571912,
+          "balanced_accuracy": 0.8637994752426066,
+          "per_family": {
+            "SYN": {
+              "n_test": 298535,
+              "small_support": false,
+              "auc_vs_all_benign": 0.999999639976623,
+              "recall_at_0.5": 1.0
+            },
+            "TCP": {
+              "n_test": 303528,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999986229258581,
+              "recall_at_0.5": 0.9999967054110329
+            },
+            "UDP": {
+              "n_test": 516903,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999987969235239,
+              "recall_at_0.5": 1.0
+            },
+            "ICMP": {
+              "n_test": 551875,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999995850893595,
+              "recall_at_0.5": 1.0
+            },
+            "port_scan": {
+              "n_test": 21226,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9025196211912966,
+              "recall_at_0.5": 0.8752002261377556
+            },
+            "os_scan": {
+              "n_test": 25586,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8305519847988628,
+              "recall_at_0.5": 0.7569373876338623
+            },
+            "ping_sweep": {
+              "n_test": 585,
+              "small_support": false,
+              "auc_vs_all_benign": 0.856370239767776,
+              "recall_at_0.5": 0.8017094017094017
+            },
+            "vuln_scan": {
+              "n_test": 102813,
+              "small_support": false,
+              "auc_vs_all_benign": 0.912803706433047,
+              "recall_at_0.5": 0.9074338848200131
+            },
+            "arp": {
+              "n_test": 77380,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9345841009939204,
+              "recall_at_0.5": 0.9064357715171879
+            }
+          },
+          "macro_common": 0.9661097259428455,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.9374251442333629,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "ping_sweep",
+            "vuln_scan",
+            "arp"
+          ],
+          "seed": 44,
+          "train_rows": 201573,
+          "n_nan_cells_in_train_sample": 15,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 20000,
+            "ping_sweep": 1573,
+            "vuln_scan": 20000,
+            "arp": 20000,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 298535,
+            "TCP": 303528,
+            "UDP": 516903,
+            "ICMP": 551875,
+            "port_scan": 21226,
+            "os_scan": 25586,
+            "ping_sweep": 585,
+            "vuln_scan": 102813,
+            "arp": 77380,
+            "Benign": 301648
+          }
+        }
+      },
+      "arm5a_iomt_to_iot": {
+        "42": {
+          "n_test": 7450563,
+          "n_benign": 1044774,
+          "n_attack": 6405789,
+          "pooled_auc": 0.902509658177096,
+          "benign_recall": 0.046103750667608495,
+          "attack_recall_pooled": 0.9947221177594204,
+          "balanced_accuracy": 0.5204129342135144,
+          "per_family": {
+            "SYN": {
+              "n_test": 1020163,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9710233315388557,
+              "recall_at_0.5": 0.9999764743477267
+            },
+            "TCP": {
+              "n_test": 1019694,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9620152126998524,
+              "recall_at_0.5": 0.9994576804413873
+            },
+            "UDP": {
+              "n_test": 1768428,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8547493615141846,
+              "recall_at_0.5": 0.9978817345122335
+            },
+            "ICMP": {
+              "n_test": 1809166,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9946463039461557,
+              "recall_at_0.5": 0.9999480423576388
+            },
+            "port_scan": {
+              "n_test": 73104,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7525180165220479,
+              "recall_at_0.5": 0.9883180126942438
+            },
+            "os_scan": {
+              "n_test": 89201,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6827541628341418,
+              "recall_at_0.5": 0.9748881738993957
+            },
+            "ping_sweep": {
+              "n_test": 2158,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6933102928355152,
+              "recall_at_0.5": 0.9874884151992586
+            },
+            "vuln_scan": {
+              "n_test": 355846,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6956764124406525,
+              "recall_at_0.5": 0.9685678636264002
+            },
+            "arp": {
+              "n_test": 268029,
+              "small_support": false,
+              "auc_vs_all_benign": 0.4988862512348126,
+              "recall_at_0.5": 0.9437150457599738
+            }
+          },
+          "macro_common": 0.8930376745066381,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.7895088161740244,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "ping_sweep",
+            "vuln_scan",
+            "arp"
+          ],
+          "overlap_full_table": {
+            "share_all": 0.0,
+            "share_by_family": {
+              "SYN": 0.0,
+              "TCP": 0.0,
+              "UDP": 0.0,
+              "ICMP": 0.0,
+              "port_scan": 0.0,
+              "os_scan": 0.0,
+              "ping_sweep": 0.0,
+              "vuln_scan": 0.0,
+              "arp": 0.0,
+              "Benign": 0.0
+            }
+          },
+          "non_overlap_vs_full_table": {
+            "n_test": 7450563,
+            "n_benign": 1044774,
+            "n_attack": 6405789,
+            "pooled_auc": 0.902509658177096,
+            "benign_recall": 0.046103750667608495,
+            "attack_recall_pooled": 0.9947221177594204,
+            "balanced_accuracy": 0.5204129342135144,
+            "per_family": {
+              "SYN": {
+                "n_test": 1020163,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9710233315388557,
+                "recall_at_0.5": 0.9999764743477267
+              },
+              "TCP": {
+                "n_test": 1019694,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9620152126998524,
+                "recall_at_0.5": 0.9994576804413873
+              },
+              "UDP": {
+                "n_test": 1768428,
+                "small_support": false,
+                "auc_vs_all_benign": 0.8547493615141846,
+                "recall_at_0.5": 0.9978817345122335
+              },
+              "ICMP": {
+                "n_test": 1809166,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9946463039461557,
+                "recall_at_0.5": 0.9999480423576388
+              },
+              "port_scan": {
+                "n_test": 73104,
+                "small_support": false,
+                "auc_vs_all_benign": 0.7525180165220479,
+                "recall_at_0.5": 0.9883180126942438
+              },
+              "os_scan": {
+                "n_test": 89201,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6827541628341418,
+                "recall_at_0.5": 0.9748881738993957
+              },
+              "ping_sweep": {
+                "n_test": 2158,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6933102928355152,
+                "recall_at_0.5": 0.9874884151992586
+              },
+              "vuln_scan": {
+                "n_test": 355846,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6956764124406525,
+                "recall_at_0.5": 0.9685678636264002
+              },
+              "arp": {
+                "n_test": 268029,
+                "small_support": false,
+                "auc_vs_all_benign": 0.4988862512348126,
+                "recall_at_0.5": 0.9437150457599738
+              }
+            },
+            "macro_common": 0.8930376745066381,
+            "macro_common_missing": [],
+            "macro_per_arm": 0.7895088161740244,
+            "macro_per_arm_families": [
+              "SYN",
+              "TCP",
+              "UDP",
+              "ICMP",
+              "port_scan",
+              "os_scan",
+              "ping_sweep",
+              "vuln_scan",
+              "arp"
+            ]
+          },
+          "seed": 42,
+          "train_rows": 181510,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 19653,
+            "ping_sweep": 926,
+            "vuln_scan": 3140,
+            "arp": 17791,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 1020163,
+            "TCP": 1019694,
+            "UDP": 1768428,
+            "ICMP": 1809166,
+            "port_scan": 73104,
+            "os_scan": 89201,
+            "ping_sweep": 2158,
+            "vuln_scan": 355846,
+            "arp": 268029,
+            "Benign": 1044774
+          }
+        },
+        "43": {
+          "n_test": 7450563,
+          "n_benign": 1044774,
+          "n_attack": 6405789,
+          "pooled_auc": 0.8605178055342775,
+          "benign_recall": 0.0005532296936945214,
+          "attack_recall_pooled": 0.9992441212159814,
+          "balanced_accuracy": 0.49989867545483796,
+          "per_family": {
+            "SYN": {
+              "n_test": 1020163,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9869711272622541,
+              "recall_at_0.5": 0.9999990197644886
+            },
+            "TCP": {
+              "n_test": 1019694,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9389374013415229,
+              "recall_at_0.5": 0.9999960772545489
+            },
+            "UDP": {
+              "n_test": 1768428,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7502451729358869,
+              "recall_at_0.5": 0.9999621132440789
+            },
+            "ICMP": {
+              "n_test": 1809166,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9918121087859456,
+              "recall_at_0.5": 0.9999988945182476
+            },
+            "port_scan": {
+              "n_test": 73104,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6821130964597021,
+              "recall_at_0.5": 0.9997264171591158
+            },
+            "os_scan": {
+              "n_test": 89201,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6218088047383903,
+              "recall_at_0.5": 0.9996300489904821
+            },
+            "ping_sweep": {
+              "n_test": 2158,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6017527777552906,
+              "recall_at_0.5": 1.0
+            },
+            "vuln_scan": {
+              "n_test": 355846,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5502395814554886,
+              "recall_at_0.5": 0.9997189795585731
+            },
+            "arp": {
+              "n_test": 268029,
+              "small_support": false,
+              "auc_vs_all_benign": 0.46434384521922956,
+              "recall_at_0.5": 0.9827817139190163
+            }
+          },
+          "macro_common": 0.8579549230127999,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.7320248795504123,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "ping_sweep",
+            "vuln_scan",
+            "arp"
+          ],
+          "overlap_full_table": {
+            "share_all": 0.0,
+            "share_by_family": {
+              "SYN": 0.0,
+              "TCP": 0.0,
+              "UDP": 0.0,
+              "ICMP": 0.0,
+              "port_scan": 0.0,
+              "os_scan": 0.0,
+              "ping_sweep": 0.0,
+              "vuln_scan": 0.0,
+              "arp": 0.0,
+              "Benign": 0.0
+            }
+          },
+          "non_overlap_vs_full_table": {
+            "n_test": 7450563,
+            "n_benign": 1044774,
+            "n_attack": 6405789,
+            "pooled_auc": 0.8605178055342775,
+            "benign_recall": 0.0005532296936945214,
+            "attack_recall_pooled": 0.9992441212159814,
+            "balanced_accuracy": 0.49989867545483796,
+            "per_family": {
+              "SYN": {
+                "n_test": 1020163,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9869711272622541,
+                "recall_at_0.5": 0.9999990197644886
+              },
+              "TCP": {
+                "n_test": 1019694,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9389374013415229,
+                "recall_at_0.5": 0.9999960772545489
+              },
+              "UDP": {
+                "n_test": 1768428,
+                "small_support": false,
+                "auc_vs_all_benign": 0.7502451729358869,
+                "recall_at_0.5": 0.9999621132440789
+              },
+              "ICMP": {
+                "n_test": 1809166,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9918121087859456,
+                "recall_at_0.5": 0.9999988945182476
+              },
+              "port_scan": {
+                "n_test": 73104,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6821130964597021,
+                "recall_at_0.5": 0.9997264171591158
+              },
+              "os_scan": {
+                "n_test": 89201,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6218088047383903,
+                "recall_at_0.5": 0.9996300489904821
+              },
+              "ping_sweep": {
+                "n_test": 2158,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6017527777552906,
+                "recall_at_0.5": 1.0
+              },
+              "vuln_scan": {
+                "n_test": 355846,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5502395814554886,
+                "recall_at_0.5": 0.9997189795585731
+              },
+              "arp": {
+                "n_test": 268029,
+                "small_support": false,
+                "auc_vs_all_benign": 0.46434384521922956,
+                "recall_at_0.5": 0.9827817139190163
+              }
+            },
+            "macro_common": 0.8579549230127999,
+            "macro_common_missing": [],
+            "macro_per_arm": 0.7320248795504123,
+            "macro_per_arm_families": [
+              "SYN",
+              "TCP",
+              "UDP",
+              "ICMP",
+              "port_scan",
+              "os_scan",
+              "ping_sweep",
+              "vuln_scan",
+              "arp"
+            ]
+          },
+          "seed": 43,
+          "train_rows": 181510,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 19653,
+            "ping_sweep": 926,
+            "vuln_scan": 3140,
+            "arp": 17791,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 1020163,
+            "TCP": 1019694,
+            "UDP": 1768428,
+            "ICMP": 1809166,
+            "port_scan": 73104,
+            "os_scan": 89201,
+            "ping_sweep": 2158,
+            "vuln_scan": 355846,
+            "arp": 268029,
+            "Benign": 1044774
+          }
+        },
+        "44": {
+          "n_test": 7450563,
+          "n_benign": 1044774,
+          "n_attack": 6405789,
+          "pooled_auc": 0.8877663595426457,
+          "benign_recall": 0.14996736136236163,
+          "attack_recall_pooled": 0.9864369556974169,
+          "balanced_accuracy": 0.5682021585298892,
+          "per_family": {
+            "SYN": {
+              "n_test": 1020163,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9860389527540806,
+              "recall_at_0.5": 0.9998157157238599
+            },
+            "TCP": {
+              "n_test": 1019694,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9496741469557775,
+              "recall_at_0.5": 0.997613009393014
+            },
+            "UDP": {
+              "n_test": 1768428,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8250251894651328,
+              "recall_at_0.5": 0.9985947971871063
+            },
+            "ICMP": {
+              "n_test": 1809166,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9965835744262423,
+              "recall_at_0.5": 0.9998678949305924
+            },
+            "port_scan": {
+              "n_test": 73104,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7173501387181012,
+              "recall_at_0.5": 0.9415627051871307
+            },
+            "os_scan": {
+              "n_test": 89201,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6593605062448125,
+              "recall_at_0.5": 0.9168282866784004
+            },
+            "ping_sweep": {
+              "n_test": 2158,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6590575129911825,
+              "recall_at_0.5": 0.9355885078776645
+            },
+            "vuln_scan": {
+              "n_test": 355846,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5924892694338881,
+              "recall_at_0.5": 0.8862597865368727
+            },
+            "arp": {
+              "n_test": 268029,
+              "small_support": false,
+              "auc_vs_all_benign": 0.4740149993309258,
+              "recall_at_0.5": 0.8909371747087069
+            }
+          },
+          "macro_common": 0.883336473969209,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.7621771433689049,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "ping_sweep",
+            "vuln_scan",
+            "arp"
+          ],
+          "overlap_full_table": {
+            "share_all": 0.0,
+            "share_by_family": {
+              "SYN": 0.0,
+              "TCP": 0.0,
+              "UDP": 0.0,
+              "ICMP": 0.0,
+              "port_scan": 0.0,
+              "os_scan": 0.0,
+              "ping_sweep": 0.0,
+              "vuln_scan": 0.0,
+              "arp": 0.0,
+              "Benign": 0.0
+            }
+          },
+          "non_overlap_vs_full_table": {
+            "n_test": 7450563,
+            "n_benign": 1044774,
+            "n_attack": 6405789,
+            "pooled_auc": 0.8877663595426457,
+            "benign_recall": 0.14996736136236163,
+            "attack_recall_pooled": 0.9864369556974169,
+            "balanced_accuracy": 0.5682021585298892,
+            "per_family": {
+              "SYN": {
+                "n_test": 1020163,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9860389527540806,
+                "recall_at_0.5": 0.9998157157238599
+              },
+              "TCP": {
+                "n_test": 1019694,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9496741469557775,
+                "recall_at_0.5": 0.997613009393014
+              },
+              "UDP": {
+                "n_test": 1768428,
+                "small_support": false,
+                "auc_vs_all_benign": 0.8250251894651328,
+                "recall_at_0.5": 0.9985947971871063
+              },
+              "ICMP": {
+                "n_test": 1809166,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9965835744262423,
+                "recall_at_0.5": 0.9998678949305924
+              },
+              "port_scan": {
+                "n_test": 73104,
+                "small_support": false,
+                "auc_vs_all_benign": 0.7173501387181012,
+                "recall_at_0.5": 0.9415627051871307
+              },
+              "os_scan": {
+                "n_test": 89201,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6593605062448125,
+                "recall_at_0.5": 0.9168282866784004
+              },
+              "ping_sweep": {
+                "n_test": 2158,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6590575129911825,
+                "recall_at_0.5": 0.9355885078776645
+              },
+              "vuln_scan": {
+                "n_test": 355846,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5924892694338881,
+                "recall_at_0.5": 0.8862597865368727
+              },
+              "arp": {
+                "n_test": 268029,
+                "small_support": false,
+                "auc_vs_all_benign": 0.4740149993309258,
+                "recall_at_0.5": 0.8909371747087069
+              }
+            },
+            "macro_common": 0.883336473969209,
+            "macro_common_missing": [],
+            "macro_per_arm": 0.7621771433689049,
+            "macro_per_arm_families": [
+              "SYN",
+              "TCP",
+              "UDP",
+              "ICMP",
+              "port_scan",
+              "os_scan",
+              "ping_sweep",
+              "vuln_scan",
+              "arp"
+            ]
+          },
+          "seed": 44,
+          "train_rows": 181510,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 19653,
+            "ping_sweep": 926,
+            "vuln_scan": 3140,
+            "arp": 17791,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 1020163,
+            "TCP": 1019694,
+            "UDP": 1768428,
+            "ICMP": 1809166,
+            "port_scan": 73104,
+            "os_scan": 89201,
+            "ping_sweep": 2158,
+            "vuln_scan": 355846,
+            "arp": 268029,
+            "Benign": 1044774
+          }
+        }
+      },
+      "arm5b_iot_to_iomt": {
+        "42": {
+          "n_test": 8440968,
+          "n_benign": 230339,
+          "n_attack": 8210629,
+          "pooled_auc": 0.4928425378865732,
+          "benign_recall": 0.00038204559366846255,
+          "attack_recall_pooled": 1.0,
+          "balanced_accuracy": 0.5001910227968343,
+          "per_family": {
+            "SYN": {
+              "n_test": 1514841,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5309335539148481,
+              "recall_at_0.5": 1.0
+            },
+            "TCP": {
+              "n_test": 1449542,
+              "small_support": false,
+              "auc_vs_all_benign": 0.4834849096562989,
+              "recall_at_0.5": 1.0
+            },
+            "UDP": {
+              "n_test": 2702529,
+              "small_support": false,
+              "auc_vs_all_benign": 0.4737812322390298,
+              "recall_at_0.5": 1.0
+            },
+            "ICMP": {
+              "n_test": 2401242,
+              "small_support": false,
+              "auc_vs_all_benign": 0.48591724675219106,
+              "recall_at_0.5": 1.0
+            },
+            "port_scan": {
+              "n_test": 100965,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6910600987086951,
+              "recall_at_0.5": 1.0
+            },
+            "os_scan": {
+              "n_test": 19653,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6737672271431511,
+              "recall_at_0.5": 1.0
+            },
+            "ping_sweep": {
+              "n_test": 926,
+              "small_support": true,
+              "auc_vs_all_benign": 0.48329616193362174,
+              "recall_at_0.5": 1.0
+            },
+            "vuln_scan": {
+              "n_test": 3140,
+              "small_support": false,
+              "auc_vs_all_benign": 0.619499895653659,
+              "recall_at_0.5": 1.0
+            },
+            "arp": {
+              "n_test": 17791,
+              "small_support": false,
+              "auc_vs_all_benign": 0.49553268727194566,
+              "recall_at_0.5": 1.0
+            }
+          },
+          "macro_common": 0.5295768339411038,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.5567471064174774,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "vuln_scan",
+            "arp"
+          ],
+          "overlap_full_table": {
+            "share_all": 0.0,
+            "share_by_family": {
+              "SYN": 0.0,
+              "TCP": 0.0,
+              "UDP": 0.0,
+              "ICMP": 0.0,
+              "port_scan": 0.0,
+              "os_scan": 0.0,
+              "ping_sweep": 0.0,
+              "vuln_scan": 0.0,
+              "arp": 0.0,
+              "Benign": 0.0
+            }
+          },
+          "non_overlap_vs_full_table": {
+            "n_test": 8440968,
+            "n_benign": 230339,
+            "n_attack": 8210629,
+            "pooled_auc": 0.4928425378865732,
+            "benign_recall": 0.00038204559366846255,
+            "attack_recall_pooled": 1.0,
+            "balanced_accuracy": 0.5001910227968343,
+            "per_family": {
+              "SYN": {
+                "n_test": 1514841,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5309335539148481,
+                "recall_at_0.5": 1.0
+              },
+              "TCP": {
+                "n_test": 1449542,
+                "small_support": false,
+                "auc_vs_all_benign": 0.4834849096562989,
+                "recall_at_0.5": 1.0
+              },
+              "UDP": {
+                "n_test": 2702529,
+                "small_support": false,
+                "auc_vs_all_benign": 0.4737812322390298,
+                "recall_at_0.5": 1.0
+              },
+              "ICMP": {
+                "n_test": 2401242,
+                "small_support": false,
+                "auc_vs_all_benign": 0.48591724675219106,
+                "recall_at_0.5": 1.0
+              },
+              "port_scan": {
+                "n_test": 100965,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6910600987086951,
+                "recall_at_0.5": 1.0
+              },
+              "os_scan": {
+                "n_test": 19653,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6737672271431511,
+                "recall_at_0.5": 1.0
+              },
+              "ping_sweep": {
+                "n_test": 926,
+                "small_support": true,
+                "auc_vs_all_benign": 0.48329616193362174,
+                "recall_at_0.5": 1.0
+              },
+              "vuln_scan": {
+                "n_test": 3140,
+                "small_support": false,
+                "auc_vs_all_benign": 0.619499895653659,
+                "recall_at_0.5": 1.0
+              },
+              "arp": {
+                "n_test": 17791,
+                "small_support": false,
+                "auc_vs_all_benign": 0.49553268727194566,
+                "recall_at_0.5": 1.0
+              }
+            },
+            "macro_common": 0.5295768339411038,
+            "macro_common_missing": [],
+            "macro_per_arm": 0.5567471064174774,
+            "macro_per_arm_families": [
+              "SYN",
+              "TCP",
+              "UDP",
+              "ICMP",
+              "port_scan",
+              "os_scan",
+              "vuln_scan",
+              "arp"
+            ]
+          },
+          "seed": 42,
+          "train_rows": 202158,
+          "n_nan_cells_in_train_sample": 16,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 20000,
+            "ping_sweep": 2158,
+            "vuln_scan": 20000,
+            "arp": 20000,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 1514841,
+            "TCP": 1449542,
+            "UDP": 2702529,
+            "ICMP": 2401242,
+            "port_scan": 100965,
+            "os_scan": 19653,
+            "ping_sweep": 926,
+            "vuln_scan": 3140,
+            "arp": 17791,
+            "Benign": 230339
+          }
+        },
+        "43": {
+          "n_test": 8440968,
+          "n_benign": 230339,
+          "n_attack": 8210629,
+          "pooled_auc": 0.5048701431584952,
+          "benign_recall": 0.007354377678117904,
+          "attack_recall_pooled": 0.9999998782066514,
+          "balanced_accuracy": 0.5036771279423846,
+          "per_family": {
+            "SYN": {
+              "n_test": 1514841,
+              "small_support": false,
+              "auc_vs_all_benign": 0.4989630141954054,
+              "recall_at_0.5": 1.0
+            },
+            "TCP": {
+              "n_test": 1449542,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5046927607420726,
+              "recall_at_0.5": 1.0
+            },
+            "UDP": {
+              "n_test": 2702529,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5067393382704439,
+              "recall_at_0.5": 1.0
+            },
+            "ICMP": {
+              "n_test": 2401242,
+              "small_support": false,
+              "auc_vs_all_benign": 0.502701338508632,
+              "recall_at_0.5": 1.0
+            },
+            "port_scan": {
+              "n_test": 100965,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5958174037402901,
+              "recall_at_0.5": 1.0
+            },
+            "os_scan": {
+              "n_test": 19653,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5895381514879431,
+              "recall_at_0.5": 0.9999491171831273
+            },
+            "ping_sweep": {
+              "n_test": 926,
+              "small_support": true,
+              "auc_vs_all_benign": 0.3760963803214751,
+              "recall_at_0.5": 1.0
+            },
+            "vuln_scan": {
+              "n_test": 3140,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5179490203348303,
+              "recall_at_0.5": 1.0
+            },
+            "arp": {
+              "n_test": 17791,
+              "small_support": false,
+              "auc_vs_all_benign": 0.4258111540237055,
+              "recall_at_0.5": 1.0
+            }
+          },
+          "macro_common": 0.5205269206408994,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.5177765226629154,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "vuln_scan",
+            "arp"
+          ],
+          "overlap_full_table": {
+            "share_all": 0.0,
+            "share_by_family": {
+              "SYN": 0.0,
+              "TCP": 0.0,
+              "UDP": 0.0,
+              "ICMP": 0.0,
+              "port_scan": 0.0,
+              "os_scan": 0.0,
+              "ping_sweep": 0.0,
+              "vuln_scan": 0.0,
+              "arp": 0.0,
+              "Benign": 0.0
+            }
+          },
+          "non_overlap_vs_full_table": {
+            "n_test": 8440968,
+            "n_benign": 230339,
+            "n_attack": 8210629,
+            "pooled_auc": 0.5048701431584952,
+            "benign_recall": 0.007354377678117904,
+            "attack_recall_pooled": 0.9999998782066514,
+            "balanced_accuracy": 0.5036771279423846,
+            "per_family": {
+              "SYN": {
+                "n_test": 1514841,
+                "small_support": false,
+                "auc_vs_all_benign": 0.4989630141954054,
+                "recall_at_0.5": 1.0
+              },
+              "TCP": {
+                "n_test": 1449542,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5046927607420726,
+                "recall_at_0.5": 1.0
+              },
+              "UDP": {
+                "n_test": 2702529,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5067393382704439,
+                "recall_at_0.5": 1.0
+              },
+              "ICMP": {
+                "n_test": 2401242,
+                "small_support": false,
+                "auc_vs_all_benign": 0.502701338508632,
+                "recall_at_0.5": 1.0
+              },
+              "port_scan": {
+                "n_test": 100965,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5958174037402901,
+                "recall_at_0.5": 1.0
+              },
+              "os_scan": {
+                "n_test": 19653,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5895381514879431,
+                "recall_at_0.5": 0.9999491171831273
+              },
+              "ping_sweep": {
+                "n_test": 926,
+                "small_support": true,
+                "auc_vs_all_benign": 0.3760963803214751,
+                "recall_at_0.5": 1.0
+              },
+              "vuln_scan": {
+                "n_test": 3140,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5179490203348303,
+                "recall_at_0.5": 1.0
+              },
+              "arp": {
+                "n_test": 17791,
+                "small_support": false,
+                "auc_vs_all_benign": 0.4258111540237055,
+                "recall_at_0.5": 1.0
+              }
+            },
+            "macro_common": 0.5205269206408994,
+            "macro_common_missing": [],
+            "macro_per_arm": 0.5177765226629154,
+            "macro_per_arm_families": [
+              "SYN",
+              "TCP",
+              "UDP",
+              "ICMP",
+              "port_scan",
+              "os_scan",
+              "vuln_scan",
+              "arp"
+            ]
+          },
+          "seed": 43,
+          "train_rows": 202158,
+          "n_nan_cells_in_train_sample": 25,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 20000,
+            "ping_sweep": 2158,
+            "vuln_scan": 20000,
+            "arp": 20000,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 1514841,
+            "TCP": 1449542,
+            "UDP": 2702529,
+            "ICMP": 2401242,
+            "port_scan": 100965,
+            "os_scan": 19653,
+            "ping_sweep": 926,
+            "vuln_scan": 3140,
+            "arp": 17791,
+            "Benign": 230339
+          }
+        },
+        "44": {
+          "n_test": 8440968,
+          "n_benign": 230339,
+          "n_attack": 8210629,
+          "pooled_auc": 0.5497902070222698,
+          "benign_recall": 0.0014543781122606245,
+          "attack_recall_pooled": 0.9999970769596337,
+          "balanced_accuracy": 0.5007257275359471,
+          "per_family": {
+            "SYN": {
+              "n_test": 1514841,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5687225739105224,
+              "recall_at_0.5": 1.0
+            },
+            "TCP": {
+              "n_test": 1449542,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5665612739919283,
+              "recall_at_0.5": 1.0
+            },
+            "UDP": {
+              "n_test": 2702529,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5421411709972945,
+              "recall_at_0.5": 1.0
+            },
+            "ICMP": {
+              "n_test": 2401242,
+              "small_support": false,
+              "auc_vs_all_benign": 0.526161756672584,
+              "recall_at_0.5": 1.0
+            },
+            "port_scan": {
+              "n_test": 100965,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7526287607114066,
+              "recall_at_0.5": 0.9999108601990789
+            },
+            "os_scan": {
+              "n_test": 19653,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7277825207017625,
+              "recall_at_0.5": 0.9998982343662545
+            },
+            "ping_sweep": {
+              "n_test": 926,
+              "small_support": true,
+              "auc_vs_all_benign": 0.4400315191365469,
+              "recall_at_0.5": 1.0
+            },
+            "vuln_scan": {
+              "n_test": 3140,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6846543704083011,
+              "recall_at_0.5": 0.9990445859872611
+            },
+            "arp": {
+              "n_test": 17791,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5565331144138673,
+              "recall_at_0.5": 0.9994379180484515
+            }
+          },
+          "macro_common": 0.5862738592548185,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.6156481927259584,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "vuln_scan",
+            "arp"
+          ],
+          "overlap_full_table": {
+            "share_all": 0.0,
+            "share_by_family": {
+              "SYN": 0.0,
+              "TCP": 0.0,
+              "UDP": 0.0,
+              "ICMP": 0.0,
+              "port_scan": 0.0,
+              "os_scan": 0.0,
+              "ping_sweep": 0.0,
+              "vuln_scan": 0.0,
+              "arp": 0.0,
+              "Benign": 0.0
+            }
+          },
+          "non_overlap_vs_full_table": {
+            "n_test": 8440968,
+            "n_benign": 230339,
+            "n_attack": 8210629,
+            "pooled_auc": 0.5497902070222698,
+            "benign_recall": 0.0014543781122606245,
+            "attack_recall_pooled": 0.9999970769596337,
+            "balanced_accuracy": 0.5007257275359471,
+            "per_family": {
+              "SYN": {
+                "n_test": 1514841,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5687225739105224,
+                "recall_at_0.5": 1.0
+              },
+              "TCP": {
+                "n_test": 1449542,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5665612739919283,
+                "recall_at_0.5": 1.0
+              },
+              "UDP": {
+                "n_test": 2702529,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5421411709972945,
+                "recall_at_0.5": 1.0
+              },
+              "ICMP": {
+                "n_test": 2401242,
+                "small_support": false,
+                "auc_vs_all_benign": 0.526161756672584,
+                "recall_at_0.5": 1.0
+              },
+              "port_scan": {
+                "n_test": 100965,
+                "small_support": false,
+                "auc_vs_all_benign": 0.7526287607114066,
+                "recall_at_0.5": 0.9999108601990789
+              },
+              "os_scan": {
+                "n_test": 19653,
+                "small_support": false,
+                "auc_vs_all_benign": 0.7277825207017625,
+                "recall_at_0.5": 0.9998982343662545
+              },
+              "ping_sweep": {
+                "n_test": 926,
+                "small_support": true,
+                "auc_vs_all_benign": 0.4400315191365469,
+                "recall_at_0.5": 1.0
+              },
+              "vuln_scan": {
+                "n_test": 3140,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6846543704083011,
+                "recall_at_0.5": 0.9990445859872611
+              },
+              "arp": {
+                "n_test": 17791,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5565331144138673,
+                "recall_at_0.5": 0.9994379180484515
+              }
+            },
+            "macro_common": 0.5862738592548185,
+            "macro_common_missing": [],
+            "macro_per_arm": 0.6156481927259584,
+            "macro_per_arm_families": [
+              "SYN",
+              "TCP",
+              "UDP",
+              "ICMP",
+              "port_scan",
+              "os_scan",
+              "vuln_scan",
+              "arp"
+            ]
+          },
+          "seed": 44,
+          "train_rows": 202158,
+          "n_nan_cells_in_train_sample": 45,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 20000,
+            "ping_sweep": 2158,
+            "vuln_scan": 20000,
+            "arp": 20000,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 1514841,
+            "TCP": 1449542,
+            "UDP": 2702529,
+            "ICMP": 2401242,
+            "port_scan": 100965,
+            "os_scan": 19653,
+            "ping_sweep": 926,
+            "vuln_scan": 3140,
+            "arp": 17791,
+            "Benign": 230339
+          }
+        }
+      }
+    },
+    "shared31_drop7": {
+      "base_iomt": {
+        "42": {
+          "n_test": 1548396,
+          "n_benign": 37607,
+          "n_attack": 1510789,
+          "pooled_auc": 0.9994740187754674,
+          "benign_recall": 0.8719653256042758,
+          "attack_recall_pooled": 0.9989138125840207,
+          "balanced_accuracy": 0.9354395690941482,
+          "per_family": {
+            "SYN": {
+              "n_test": 270992,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9998836100803831,
+              "recall_at_0.5": 0.9998302532916101
+            },
+            "TCP": {
+              "n_test": 264693,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999530944870745,
+              "recall_at_0.5": 0.9999508864986985
+            },
+            "UDP": {
+              "n_test": 499623,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999184881451881,
+              "recall_at_0.5": 0.9999839879268969
+            },
+            "ICMP": {
+              "n_test": 448130,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999213044693052,
+              "recall_at_0.5": 0.9998750362617991
+            },
+            "port_scan": {
+              "n_test": 20917,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9950039842269618,
+              "recall_at_0.5": 0.9910120954247741
+            },
+            "os_scan": {
+              "n_test": 3493,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9643538260761539,
+              "recall_at_0.5": 0.8874892642427713
+            },
+            "ping_sweep": {
+              "n_test": 186,
+              "small_support": true,
+              "auc_vs_all_benign": 0.9119811113865498,
+              "recall_at_0.5": 0.7741935483870968
+            },
+            "vuln_scan": {
+              "n_test": 1011,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7729031889674137,
+              "recall_at_0.5": 0.5380811078140455
+            },
+            "arp": {
+              "n_test": 1744,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8854821170199867,
+              "recall_at_0.5": 0.7545871559633027
+            }
+          },
+          "macro_common": 0.992806064651621,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.9521774516840583,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "vuln_scan",
+            "arp"
+          ],
+          "seed": 42,
+          "train_rows": 175076,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 16160,
+            "ping_sweep": 740,
+            "vuln_scan": 2129,
+            "arp": 16047,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 270992,
+            "TCP": 264693,
+            "UDP": 499623,
+            "ICMP": 448130,
+            "port_scan": 20917,
+            "os_scan": 3493,
+            "ping_sweep": 186,
+            "vuln_scan": 1011,
+            "arp": 1744,
+            "Benign": 37607
+          }
+        },
+        "43": {
+          "n_test": 1548396,
+          "n_benign": 37607,
+          "n_attack": 1510789,
+          "pooled_auc": 0.999440823962925,
+          "benign_recall": 0.8735873640545643,
+          "attack_recall_pooled": 0.9989502174029596,
+          "balanced_accuracy": 0.9362687907287619,
+          "per_family": {
+            "SYN": {
+              "n_test": 270992,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9998794624318242,
+              "recall_at_0.5": 0.999856084312452
+            },
+            "TCP": {
+              "n_test": 264693,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999596647066369,
+              "recall_at_0.5": 0.9999811101918071
+            },
+            "UDP": {
+              "n_test": 499623,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9998909156497271,
+              "recall_at_0.5": 0.9999859894360348
+            },
+            "ICMP": {
+              "n_test": 448130,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999288074250812,
+              "recall_at_0.5": 0.9999218976636244
+            },
+            "port_scan": {
+              "n_test": 20917,
+              "small_support": false,
+              "auc_vs_all_benign": 0.994351202283942,
+              "recall_at_0.5": 0.9913467514461921
+            },
+            "os_scan": {
+              "n_test": 3493,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9626834210036566,
+              "recall_at_0.5": 0.8877755511022044
+            },
+            "ping_sweep": {
+              "n_test": 186,
+              "small_support": true,
+              "auc_vs_all_benign": 0.9125606048519336,
+              "recall_at_0.5": 0.7795698924731183
+            },
+            "vuln_scan": {
+              "n_test": 1011,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7688016444315287,
+              "recall_at_0.5": 0.5469831849653808
+            },
+            "arp": {
+              "n_test": 1744,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8758352848496144,
+              "recall_at_0.5": 0.7545871559633027
+            }
+          },
+          "macro_common": 0.9924684542433851,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.9501663003477514,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "vuln_scan",
+            "arp"
+          ],
+          "seed": 43,
+          "train_rows": 175076,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 16160,
+            "ping_sweep": 740,
+            "vuln_scan": 2129,
+            "arp": 16047,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 270992,
+            "TCP": 264693,
+            "UDP": 499623,
+            "ICMP": 448130,
+            "port_scan": 20917,
+            "os_scan": 3493,
+            "ping_sweep": 186,
+            "vuln_scan": 1011,
+            "arp": 1744,
+            "Benign": 37607
+          }
+        },
+        "44": {
+          "n_test": 1548396,
+          "n_benign": 37607,
+          "n_attack": 1510789,
+          "pooled_auc": 0.9994500961002958,
+          "benign_recall": 0.8738798627915015,
+          "attack_recall_pooled": 0.9988866744462661,
+          "balanced_accuracy": 0.9363832686188838,
+          "per_family": {
+            "SYN": {
+              "n_test": 270992,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9998625322307407,
+              "recall_at_0.5": 0.9998044222707682
+            },
+            "TCP": {
+              "n_test": 264693,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999547459325866,
+              "recall_at_0.5": 0.9999546644603371
+            },
+            "UDP": {
+              "n_test": 499623,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999238252722618,
+              "recall_at_0.5": 0.9999799849086211
+            },
+            "ICMP": {
+              "n_test": 448130,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999089156857561,
+              "recall_at_0.5": 0.9998304063552987
+            },
+            "port_scan": {
+              "n_test": 20917,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9945935653539909,
+              "recall_at_0.5": 0.9906296314002964
+            },
+            "os_scan": {
+              "n_test": 3493,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9632219473914724,
+              "recall_at_0.5": 0.8880618379616375
+            },
+            "ping_sweep": {
+              "n_test": 186,
+              "small_support": true,
+              "auc_vs_all_benign": 0.9065071962409195,
+              "recall_at_0.5": 0.7741935483870968
+            },
+            "vuln_scan": {
+              "n_test": 1011,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7696253541198123,
+              "recall_at_0.5": 0.5311572700296736
+            },
+            "arp": {
+              "n_test": 1744,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8791107553542028,
+              "recall_at_0.5": 0.7545871559633027
+            }
+          },
+          "macro_common": 0.9925743933025636,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.9507752051676029,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "vuln_scan",
+            "arp"
+          ],
+          "seed": 44,
+          "train_rows": 175076,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 16160,
+            "ping_sweep": 740,
+            "vuln_scan": 2129,
+            "arp": 16047,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 270992,
+            "TCP": 264693,
+            "UDP": 499623,
+            "ICMP": 448130,
+            "port_scan": 20917,
+            "os_scan": 3493,
+            "ping_sweep": 186,
+            "vuln_scan": 1011,
+            "arp": 1744,
+            "Benign": 37607
+          }
+        }
+      },
+      "base_iot": {
+        "42": {
+          "n_test": 2118847,
+          "n_benign": 302805,
+          "n_attack": 1816042,
+          "pooled_auc": 0.9839734275009643,
+          "benign_recall": 0.6934958141378115,
+          "attack_recall_pooled": 0.981481705819579,
+          "balanced_accuracy": 0.8374887599786953,
+          "per_family": {
+            "SYN": {
+              "n_test": 292036,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999999590184145,
+              "recall_at_0.5": 1.0
+            },
+            "TCP": {
+              "n_test": 289008,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999902388863174,
+              "recall_at_0.5": 0.999982699440846
+            },
+            "UDP": {
+              "n_test": 505028,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999912483899361,
+              "recall_at_0.5": 0.9999980199117673
+            },
+            "ICMP": {
+              "n_test": 501744,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999997288630323,
+              "recall_at_0.5": 1.0
+            },
+            "port_scan": {
+              "n_test": 21280,
+              "small_support": false,
+              "auc_vs_all_benign": 0.879241308753754,
+              "recall_at_0.5": 0.8603383458646616
+            },
+            "os_scan": {
+              "n_test": 25777,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8097590587581189,
+              "recall_at_0.5": 0.7586996159366878
+            },
+            "ping_sweep": {
+              "n_test": 633,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8173538056350583,
+              "recall_at_0.5": 0.7946287519747235
+            },
+            "vuln_scan": {
+              "n_test": 102903,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8861039180619187,
+              "recall_at_0.5": 0.8859800005830734
+            },
+            "arp": {
+              "n_test": 77633,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8739184281947283,
+              "recall_at_0.5": 0.8380972009325931
+            }
+          },
+          "macro_common": 0.9619480467831639,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.9184841882845866,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "ping_sweep",
+            "vuln_scan",
+            "arp"
+          ],
+          "seed": 42,
+          "train_rows": 201525,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 20000,
+            "ping_sweep": 1525,
+            "vuln_scan": 20000,
+            "arp": 20000,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 292036,
+            "TCP": 289008,
+            "UDP": 505028,
+            "ICMP": 501744,
+            "port_scan": 21280,
+            "os_scan": 25777,
+            "ping_sweep": 633,
+            "vuln_scan": 102903,
+            "arp": 77633,
+            "Benign": 302805
+          }
+        },
+        "43": {
+          "n_test": 2150445,
+          "n_benign": 301003,
+          "n_attack": 1849442,
+          "pooled_auc": 0.9844185340148854,
+          "benign_recall": 0.6912489244293246,
+          "attack_recall_pooled": 0.9823211541643372,
+          "balanced_accuracy": 0.8367850392968309,
+          "per_family": {
+            "SYN": {
+              "n_test": 293705,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999999949550985,
+              "recall_at_0.5": 1.0
+            },
+            "TCP": {
+              "n_test": 293837,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999964219337293,
+              "recall_at_0.5": 0.9999931935052427
+            },
+            "UDP": {
+              "n_test": 510331,
+              "small_support": false,
+              "auc_vs_all_benign": 0.999980888599097,
+              "recall_at_0.5": 0.999994121462345
+            },
+            "ICMP": {
+              "n_test": 524422,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999996197528467,
+              "recall_at_0.5": 1.0
+            },
+            "port_scan": {
+              "n_test": 21100,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8831626359693822,
+              "recall_at_0.5": 0.8672511848341232
+            },
+            "os_scan": {
+              "n_test": 25483,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8090099792925716,
+              "recall_at_0.5": 0.7586626378369894
+            },
+            "ping_sweep": {
+              "n_test": 614,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8249230225621027,
+              "recall_at_0.5": 0.7866449511400652
+            },
+            "vuln_scan": {
+              "n_test": 102670,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8864120552744337,
+              "recall_at_0.5": 0.8900068179604558
+            },
+            "arp": {
+              "n_test": 77280,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8744283956222856,
+              "recall_at_0.5": 0.840631469979296
+            }
+          },
+          "macro_common": 0.9617973809066687,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.919768112662394,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "ping_sweep",
+            "vuln_scan",
+            "arp"
+          ],
+          "seed": 43,
+          "train_rows": 201544,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 20000,
+            "ping_sweep": 1544,
+            "vuln_scan": 20000,
+            "arp": 20000,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 293705,
+            "TCP": 293837,
+            "UDP": 510331,
+            "ICMP": 524422,
+            "port_scan": 21100,
+            "os_scan": 25483,
+            "ping_sweep": 614,
+            "vuln_scan": 102670,
+            "arp": 77280,
+            "Benign": 301003
+          }
+        },
+        "44": {
+          "n_test": 2200079,
+          "n_benign": 301648,
+          "n_attack": 1898431,
+          "pooled_auc": 0.9847953875197453,
+          "benign_recall": 0.6836478279318942,
+          "attack_recall_pooled": 0.9830886663776561,
+          "balanced_accuracy": 0.8333682471547752,
+          "per_family": {
+            "SYN": {
+              "n_test": 298535,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999970815852774,
+              "recall_at_0.5": 0.999996650309009
+            },
+            "TCP": {
+              "n_test": 303528,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999986183877816,
+              "recall_at_0.5": 1.0
+            },
+            "UDP": {
+              "n_test": 516903,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999829976036497,
+              "recall_at_0.5": 1.0
+            },
+            "ICMP": {
+              "n_test": 551875,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9999997045869398,
+              "recall_at_0.5": 1.0
+            },
+            "port_scan": {
+              "n_test": 21226,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8815981715042558,
+              "recall_at_0.5": 0.866484500141336
+            },
+            "os_scan": {
+              "n_test": 25586,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8104045786065974,
+              "recall_at_0.5": 0.7649886656765419
+            },
+            "ping_sweep": {
+              "n_test": 585,
+              "small_support": false,
+              "auc_vs_all_benign": 0.822017024654536,
+              "recall_at_0.5": 0.788034188034188
+            },
+            "vuln_scan": {
+              "n_test": 102813,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8870930386246862,
+              "recall_at_0.5": 0.8938266561621585
+            },
+            "arp": {
+              "n_test": 77380,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8736358707168876,
+              "recall_at_0.5": 0.8421168260532438
+            }
+          },
+          "macro_common": 0.9620765961540492,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.9194141206967347,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "ping_sweep",
+            "vuln_scan",
+            "arp"
+          ],
+          "seed": 44,
+          "train_rows": 201573,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 20000,
+            "ping_sweep": 1573,
+            "vuln_scan": 20000,
+            "arp": 20000,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 298535,
+            "TCP": 303528,
+            "UDP": 516903,
+            "ICMP": 551875,
+            "port_scan": 21226,
+            "os_scan": 25586,
+            "ping_sweep": 585,
+            "vuln_scan": 102813,
+            "arp": 77380,
+            "Benign": 301648
+          }
+        }
+      },
+      "arm5a_iomt_to_iot": {
+        "42": {
+          "n_test": 7450563,
+          "n_benign": 1044774,
+          "n_attack": 6405789,
+          "pooled_auc": 0.8534279658054298,
+          "benign_recall": 0.25933646893969414,
+          "attack_recall_pooled": 0.932695254245808,
+          "balanced_accuracy": 0.5960158615927511,
+          "per_family": {
+            "SYN": {
+              "n_test": 1020163,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9135969286792721,
+              "recall_at_0.5": 0.9460615607505859
+            },
+            "TCP": {
+              "n_test": 1019694,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8734671186149834,
+              "recall_at_0.5": 0.9010536494281618
+            },
+            "UDP": {
+              "n_test": 1768428,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7921484320032445,
+              "recall_at_0.5": 0.9592655171711826
+            },
+            "ICMP": {
+              "n_test": 1809166,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9975923903002408,
+              "recall_at_0.5": 0.9991941038025256
+            },
+            "port_scan": {
+              "n_test": 73104,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6193348852586253,
+              "recall_at_0.5": 0.7709564456117313
+            },
+            "os_scan": {
+              "n_test": 89201,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5675315228967437,
+              "recall_at_0.5": 0.7422001995493324
+            },
+            "ping_sweep": {
+              "n_test": 2158,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5569461887055625,
+              "recall_at_0.5": 0.7279888785912882
+            },
+            "vuln_scan": {
+              "n_test": 355846,
+              "small_support": false,
+              "auc_vs_all_benign": 0.445212869929391,
+              "recall_at_0.5": 0.6290811193606223
+            },
+            "arp": {
+              "n_test": 268029,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6827450191324176,
+              "recall_at_0.5": 0.8902805293457051
+            }
+          },
+          "macro_common": 0.8288672784988969,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.716508372835609,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "ping_sweep",
+            "vuln_scan",
+            "arp"
+          ],
+          "overlap_full_table": {
+            "share_all": 2.6843608999749415e-07,
+            "share_by_family": {
+              "SYN": 0.0,
+              "TCP": 0.0,
+              "UDP": 0.0,
+              "ICMP": 5.527408761827273e-07,
+              "port_scan": 0.0,
+              "os_scan": 0.0,
+              "ping_sweep": 0.0,
+              "vuln_scan": 0.0,
+              "arp": 3.7309395625100268e-06,
+              "Benign": 0.0
+            }
+          },
+          "non_overlap_vs_full_table": {
+            "n_test": 7450561,
+            "n_benign": 1044774,
+            "n_attack": 6405787,
+            "pooled_auc": 0.8534280964369843,
+            "benign_recall": 0.25933646893969414,
+            "attack_recall_pooled": 0.9326953893409194,
+            "balanced_accuracy": 0.5960159291403068,
+            "per_family": {
+              "SYN": {
+                "n_test": 1020163,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9135969286792721,
+                "recall_at_0.5": 0.9460615607505859
+              },
+              "TCP": {
+                "n_test": 1019694,
+                "small_support": false,
+                "auc_vs_all_benign": 0.8734671186149834,
+                "recall_at_0.5": 0.9010536494281618
+              },
+              "UDP": {
+                "n_test": 1768428,
+                "small_support": false,
+                "auc_vs_all_benign": 0.7921484320032445,
+                "recall_at_0.5": 0.9592655171711826
+              },
+              "ICMP": {
+                "n_test": 1809165,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9975924780414064,
+                "recall_at_0.5": 0.9991941033570736
+              },
+              "port_scan": {
+                "n_test": 73104,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6193348852586253,
+                "recall_at_0.5": 0.7709564456117313
+              },
+              "os_scan": {
+                "n_test": 89201,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5675315228967437,
+                "recall_at_0.5": 0.7422001995493324
+              },
+              "ping_sweep": {
+                "n_test": 2158,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5569461887055625,
+                "recall_at_0.5": 0.7279888785912882
+              },
+              "vuln_scan": {
+                "n_test": 355846,
+                "small_support": false,
+                "auc_vs_all_benign": 0.445212869929391,
+                "recall_at_0.5": 0.6290811193606223
+              },
+              "arp": {
+                "n_test": 268028,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6827474500021086,
+                "recall_at_0.5": 0.8902838509409464
+              }
+            },
+            "macro_common": 0.82886729604713,
+            "macro_common_missing": [],
+            "macro_per_arm": 0.7165086526812597,
+            "macro_per_arm_families": [
+              "SYN",
+              "TCP",
+              "UDP",
+              "ICMP",
+              "port_scan",
+              "os_scan",
+              "ping_sweep",
+              "vuln_scan",
+              "arp"
+            ]
+          },
+          "seed": 42,
+          "train_rows": 181510,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 19653,
+            "ping_sweep": 926,
+            "vuln_scan": 3140,
+            "arp": 17791,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 1020163,
+            "TCP": 1019694,
+            "UDP": 1768428,
+            "ICMP": 1809166,
+            "port_scan": 73104,
+            "os_scan": 89201,
+            "ping_sweep": 2158,
+            "vuln_scan": 355846,
+            "arp": 268029,
+            "Benign": 1044774
+          }
+        },
+        "43": {
+          "n_test": 7450563,
+          "n_benign": 1044774,
+          "n_attack": 6405789,
+          "pooled_auc": 0.8686723493074516,
+          "benign_recall": 0.28767178356276096,
+          "attack_recall_pooled": 0.9443668843916027,
+          "balanced_accuracy": 0.6160193339771818,
+          "per_family": {
+            "SYN": {
+              "n_test": 1020163,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9649536174288642,
+              "recall_at_0.5": 0.9931373711848008
+            },
+            "TCP": {
+              "n_test": 1019694,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9306664841372405,
+              "recall_at_0.5": 0.986673453016297
+            },
+            "UDP": {
+              "n_test": 1768428,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7913512892632121,
+              "recall_at_0.5": 0.9524724783819302
+            },
+            "ICMP": {
+              "n_test": 1809166,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9974021626649597,
+              "recall_at_0.5": 0.9988011050395597
+            },
+            "port_scan": {
+              "n_test": 73104,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5980790674464843,
+              "recall_at_0.5": 0.7102073757933902
+            },
+            "os_scan": {
+              "n_test": 89201,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5537315436856658,
+              "recall_at_0.5": 0.690777009226354
+            },
+            "ping_sweep": {
+              "n_test": 2158,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5587962103321562,
+              "recall_at_0.5": 0.6927710843373494
+            },
+            "vuln_scan": {
+              "n_test": 355846,
+              "small_support": false,
+              "auc_vs_all_benign": 0.43147875677247355,
+              "recall_at_0.5": 0.5397672026663219
+            },
+            "arp": {
+              "n_test": 268029,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6691502129865246,
+              "recall_at_0.5": 0.8643318446884479
+            }
+          },
+          "macro_common": 0.8476210194359884,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.7217343716352868,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "ping_sweep",
+            "vuln_scan",
+            "arp"
+          ],
+          "overlap_full_table": {
+            "share_all": 2.6843608999749415e-07,
+            "share_by_family": {
+              "SYN": 0.0,
+              "TCP": 0.0,
+              "UDP": 0.0,
+              "ICMP": 5.527408761827273e-07,
+              "port_scan": 0.0,
+              "os_scan": 0.0,
+              "ping_sweep": 0.0,
+              "vuln_scan": 0.0,
+              "arp": 3.7309395625100268e-06,
+              "Benign": 0.0
+            }
+          },
+          "non_overlap_vs_full_table": {
+            "n_test": 7450561,
+            "n_benign": 1044774,
+            "n_attack": 6405787,
+            "pooled_auc": 0.868672541663132,
+            "benign_recall": 0.28767178356276096,
+            "attack_recall_pooled": 0.9443670231308035,
+            "balanced_accuracy": 0.6160194033467822,
+            "per_family": {
+              "SYN": {
+                "n_test": 1020163,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9649536174288642,
+                "recall_at_0.5": 0.9931373711848008
+              },
+              "TCP": {
+                "n_test": 1019694,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9306664841372405,
+                "recall_at_0.5": 0.986673453016297
+              },
+              "UDP": {
+                "n_test": 1768428,
+                "small_support": false,
+                "auc_vs_all_benign": 0.7913512892632121,
+                "recall_at_0.5": 0.9524724783819302
+              },
+              "ICMP": {
+                "n_test": 1809165,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9974024723594819,
+                "recall_at_0.5": 0.9988011043768811
+              },
+              "port_scan": {
+                "n_test": 73104,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5980790674464843,
+                "recall_at_0.5": 0.7102073757933902
+              },
+              "os_scan": {
+                "n_test": 89201,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5537315436856658,
+                "recall_at_0.5": 0.690777009226354
+              },
+              "ping_sweep": {
+                "n_test": 2158,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5587962103321562,
+                "recall_at_0.5": 0.6927710843373494
+              },
+              "vuln_scan": {
+                "n_test": 355846,
+                "small_support": false,
+                "auc_vs_all_benign": 0.43147875677247355,
+                "recall_at_0.5": 0.5397672026663219
+              },
+              "arp": {
+                "n_test": 268028,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6691524556951355,
+                "recall_at_0.5": 0.8643350694703539
+              }
+            },
+            "macro_common": 0.8476210813748928,
+            "macro_common_missing": [],
+            "macro_per_arm": 0.7217346552356348,
+            "macro_per_arm_families": [
+              "SYN",
+              "TCP",
+              "UDP",
+              "ICMP",
+              "port_scan",
+              "os_scan",
+              "ping_sweep",
+              "vuln_scan",
+              "arp"
+            ]
+          },
+          "seed": 43,
+          "train_rows": 181510,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 19653,
+            "ping_sweep": 926,
+            "vuln_scan": 3140,
+            "arp": 17791,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 1020163,
+            "TCP": 1019694,
+            "UDP": 1768428,
+            "ICMP": 1809166,
+            "port_scan": 73104,
+            "os_scan": 89201,
+            "ping_sweep": 2158,
+            "vuln_scan": 355846,
+            "arp": 268029,
+            "Benign": 1044774
+          }
+        },
+        "44": {
+          "n_test": 7450563,
+          "n_benign": 1044774,
+          "n_attack": 6405789,
+          "pooled_auc": 0.8828380975101829,
+          "benign_recall": 0.2766014468200778,
+          "attack_recall_pooled": 0.950818392550863,
+          "balanced_accuracy": 0.6137099196854704,
+          "per_family": {
+            "SYN": {
+              "n_test": 1020163,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9503565030189203,
+              "recall_at_0.5": 0.9938029510970305
+            },
+            "TCP": {
+              "n_test": 1019694,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9186126500610993,
+              "recall_at_0.5": 0.9945905340229519
+            },
+            "UDP": {
+              "n_test": 1768428,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8632456006910912,
+              "recall_at_0.5": 0.9662621265892646
+            },
+            "ICMP": {
+              "n_test": 1809166,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9976168508071376,
+              "recall_at_0.5": 0.998823214674607
+            },
+            "port_scan": {
+              "n_test": 73104,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6138077644372595,
+              "recall_at_0.5": 0.7324633398993216
+            },
+            "os_scan": {
+              "n_test": 89201,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5664286169661561,
+              "recall_at_0.5": 0.7136018654499389
+            },
+            "ping_sweep": {
+              "n_test": 2158,
+              "small_support": false,
+              "auc_vs_all_benign": 0.557339641526085,
+              "recall_at_0.5": 0.7094531974050047
+            },
+            "vuln_scan": {
+              "n_test": 355846,
+              "small_support": false,
+              "auc_vs_all_benign": 0.4360179406764682,
+              "recall_at_0.5": 0.5722503554908585
+            },
+            "arp": {
+              "n_test": 268029,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6187922405668093,
+              "recall_at_0.5": 0.8378085953385641
+            }
+          },
+          "macro_common": 0.8592520443088809,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.7246908676390029,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "ping_sweep",
+            "vuln_scan",
+            "arp"
+          ],
+          "overlap_full_table": {
+            "share_all": 2.6843608999749415e-07,
+            "share_by_family": {
+              "SYN": 0.0,
+              "TCP": 0.0,
+              "UDP": 0.0,
+              "ICMP": 5.527408761827273e-07,
+              "port_scan": 0.0,
+              "os_scan": 0.0,
+              "ping_sweep": 0.0,
+              "vuln_scan": 0.0,
+              "arp": 3.7309395625100268e-06,
+              "Benign": 0.0
+            }
+          },
+          "non_overlap_vs_full_table": {
+            "n_test": 7450561,
+            "n_benign": 1044774,
+            "n_attack": 6405787,
+            "pooled_auc": 0.882838241745252,
+            "benign_recall": 0.2766014468200778,
+            "attack_recall_pooled": 0.9508185333043387,
+            "balanced_accuracy": 0.6137099900622083,
+            "per_family": {
+              "SYN": {
+                "n_test": 1020163,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9503565030189203,
+                "recall_at_0.5": 0.9938029510970305
+              },
+              "TCP": {
+                "n_test": 1019694,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9186126500610993,
+                "recall_at_0.5": 0.9945905340229519
+              },
+              "UDP": {
+                "n_test": 1768428,
+                "small_support": false,
+                "auc_vs_all_benign": 0.8632456006910912,
+                "recall_at_0.5": 0.9662621265892646
+              },
+              "ICMP": {
+                "n_test": 1809165,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9976169758828337,
+                "recall_at_0.5": 0.9988232140241493
+              },
+              "port_scan": {
+                "n_test": 73104,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6138077644372595,
+                "recall_at_0.5": 0.7324633398993216
+              },
+              "os_scan": {
+                "n_test": 89201,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5664286169661561,
+                "recall_at_0.5": 0.7136018654499389
+              },
+              "ping_sweep": {
+                "n_test": 2158,
+                "small_support": false,
+                "auc_vs_all_benign": 0.557339641526085,
+                "recall_at_0.5": 0.7094531974050047
+              },
+              "vuln_scan": {
+                "n_test": 355846,
+                "small_support": false,
+                "auc_vs_all_benign": 0.4360179406764682,
+                "recall_at_0.5": 0.5722503554908585
+              },
+              "arp": {
+                "n_test": 268028,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6187942865823557,
+                "recall_at_0.5": 0.8378117211634606
+              }
+            },
+            "macro_common": 0.85925206932402,
+            "macro_common_missing": [],
+            "macro_per_arm": 0.7246911088713632,
+            "macro_per_arm_families": [
+              "SYN",
+              "TCP",
+              "UDP",
+              "ICMP",
+              "port_scan",
+              "os_scan",
+              "ping_sweep",
+              "vuln_scan",
+              "arp"
+            ]
+          },
+          "seed": 44,
+          "train_rows": 181510,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 19653,
+            "ping_sweep": 926,
+            "vuln_scan": 3140,
+            "arp": 17791,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 1020163,
+            "TCP": 1019694,
+            "UDP": 1768428,
+            "ICMP": 1809166,
+            "port_scan": 73104,
+            "os_scan": 89201,
+            "ping_sweep": 2158,
+            "vuln_scan": 355846,
+            "arp": 268029,
+            "Benign": 1044774
+          }
+        }
+      },
+      "arm5b_iot_to_iomt": {
+        "42": {
+          "n_test": 8440968,
+          "n_benign": 230339,
+          "n_attack": 8210629,
+          "pooled_auc": 0.6512840778141588,
+          "benign_recall": 0.06354546993778735,
+          "attack_recall_pooled": 0.9993744693616043,
+          "balanced_accuracy": 0.5314599696496959,
+          "per_family": {
+            "SYN": {
+              "n_test": 1514841,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9218714835831637,
+              "recall_at_0.5": 0.9994019174289579
+            },
+            "TCP": {
+              "n_test": 1449542,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5415581889093519,
+              "recall_at_0.5": 0.9994280952190416
+            },
+            "UDP": {
+              "n_test": 2702529,
+              "small_support": false,
+              "auc_vs_all_benign": 0.4965449799018231,
+              "recall_at_0.5": 0.9996118450532816
+            },
+            "ICMP": {
+              "n_test": 2401242,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7136359395665279,
+              "recall_at_0.5": 0.9996372710455672
+            },
+            "port_scan": {
+              "n_test": 100965,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8131572768268734,
+              "recall_at_0.5": 0.9987916604764027
+            },
+            "os_scan": {
+              "n_test": 19653,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7867152344003093,
+              "recall_at_0.5": 0.9943520073271256
+            },
+            "ping_sweep": {
+              "n_test": 926,
+              "small_support": true,
+              "auc_vs_all_benign": 0.6624764267769967,
+              "recall_at_0.5": 0.9913606911447084
+            },
+            "vuln_scan": {
+              "n_test": 3140,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7279453769925319,
+              "recall_at_0.5": 0.9802547770700637
+            },
+            "arp": {
+              "n_test": 17791,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5593354399075587,
+              "recall_at_0.5": 0.9337867461075825
+            }
+          },
+          "macro_common": 0.6920651652722352,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.6950954900110176,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "vuln_scan",
+            "arp"
+          ],
+          "overlap_full_table": {
+            "share_all": 2.3693964957573586e-07,
+            "share_by_family": {
+              "SYN": 0.0,
+              "TCP": 0.0,
+              "UDP": 0.0,
+              "ICMP": 0.0,
+              "port_scan": 0.0,
+              "os_scan": 0.0,
+              "ping_sweep": 0.0,
+              "vuln_scan": 0.0,
+              "arp": 0.0,
+              "Benign": 8.682854401555967e-06
+            }
+          },
+          "non_overlap_vs_full_table": {
+            "n_test": 8440966,
+            "n_benign": 230337,
+            "n_attack": 8210629,
+            "pooled_auc": 0.651281078229675,
+            "benign_recall": 0.06354602169864156,
+            "attack_recall_pooled": 0.9993744693616043,
+            "balanced_accuracy": 0.5314602455301229,
+            "per_family": {
+              "SYN": {
+                "n_test": 1514841,
+                "small_support": false,
+                "auc_vs_all_benign": 0.921870821950243,
+                "recall_at_0.5": 0.9994019174289579
+              },
+              "TCP": {
+                "n_test": 1449542,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5415542486437315,
+                "recall_at_0.5": 0.9994280952190416
+              },
+              "UDP": {
+                "n_test": 2702529,
+                "small_support": false,
+                "auc_vs_all_benign": 0.49654062095465057,
+                "recall_at_0.5": 0.9996118450532816
+              },
+              "ICMP": {
+                "n_test": 2401242,
+                "small_support": false,
+                "auc_vs_all_benign": 0.7136334698784664,
+                "recall_at_0.5": 0.9996372710455672
+              },
+              "port_scan": {
+                "n_test": 100965,
+                "small_support": false,
+                "auc_vs_all_benign": 0.8131558150455123,
+                "recall_at_0.5": 0.9987916604764027
+              },
+              "os_scan": {
+                "n_test": 19653,
+                "small_support": false,
+                "auc_vs_all_benign": 0.7867138510052116,
+                "recall_at_0.5": 0.9943520073271256
+              },
+              "ping_sweep": {
+                "n_test": 926,
+                "small_support": true,
+                "auc_vs_all_benign": 0.6624748838519832,
+                "recall_at_0.5": 0.9913606911447084
+              },
+              "vuln_scan": {
+                "n_test": 3140,
+                "small_support": false,
+                "auc_vs_all_benign": 0.7279439936648902,
+                "recall_at_0.5": 0.9802547770700637
+              },
+              "arp": {
+                "n_test": 17791,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5593341146696333,
+                "recall_at_0.5": 0.9337867461075825
+              }
+            },
+            "macro_common": 0.6920626024864607,
+            "macro_common_missing": [],
+            "macro_per_arm": 0.6950933669765423,
+            "macro_per_arm_families": [
+              "SYN",
+              "TCP",
+              "UDP",
+              "ICMP",
+              "port_scan",
+              "os_scan",
+              "vuln_scan",
+              "arp"
+            ]
+          },
+          "seed": 42,
+          "train_rows": 202158,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 20000,
+            "ping_sweep": 2158,
+            "vuln_scan": 20000,
+            "arp": 20000,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 1514841,
+            "TCP": 1449542,
+            "UDP": 2702529,
+            "ICMP": 2401242,
+            "port_scan": 100965,
+            "os_scan": 19653,
+            "ping_sweep": 926,
+            "vuln_scan": 3140,
+            "arp": 17791,
+            "Benign": 230339
+          }
+        },
+        "43": {
+          "n_test": 8440968,
+          "n_benign": 230339,
+          "n_attack": 8210629,
+          "pooled_auc": 0.7211736065650126,
+          "benign_recall": 0.039784838867929447,
+          "attack_recall_pooled": 0.9995973511895374,
+          "balanced_accuracy": 0.5196910950287335,
+          "per_family": {
+            "SYN": {
+              "n_test": 1514841,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9893869278993626,
+              "recall_at_0.5": 0.9997392465611903
+            },
+            "TCP": {
+              "n_test": 1449542,
+              "small_support": false,
+              "auc_vs_all_benign": 0.6882808608758146,
+              "recall_at_0.5": 0.9995267470690742
+            },
+            "UDP": {
+              "n_test": 2702529,
+              "small_support": false,
+              "auc_vs_all_benign": 0.4696816381714621,
+              "recall_at_0.5": 0.9997509739950987
+            },
+            "ICMP": {
+              "n_test": 2401242,
+              "small_support": false,
+              "auc_vs_all_benign": 0.846215876905096,
+              "recall_at_0.5": 0.9998188437483603
+            },
+            "port_scan": {
+              "n_test": 100965,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9303905755188082,
+              "recall_at_0.5": 0.9992769771703065
+            },
+            "os_scan": {
+              "n_test": 19653,
+              "small_support": false,
+              "auc_vs_all_benign": 0.9020213856026553,
+              "recall_at_0.5": 0.9981173357757085
+            },
+            "ping_sweep": {
+              "n_test": 926,
+              "small_support": true,
+              "auc_vs_all_benign": 0.5221727986106532,
+              "recall_at_0.5": 0.9989200863930886
+            },
+            "vuln_scan": {
+              "n_test": 3140,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7751684853974437,
+              "recall_at_0.5": 0.9914012738853503
+            },
+            "arp": {
+              "n_test": 17791,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5032772072529963,
+              "recall_at_0.5": 0.9449721769433983
+            }
+          },
+          "macro_common": 0.779117337890878,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.7630528697029548,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "vuln_scan",
+            "arp"
+          ],
+          "overlap_full_table": {
+            "share_all": 2.3693964957573586e-07,
+            "share_by_family": {
+              "SYN": 0.0,
+              "TCP": 0.0,
+              "UDP": 0.0,
+              "ICMP": 0.0,
+              "port_scan": 0.0,
+              "os_scan": 0.0,
+              "ping_sweep": 0.0,
+              "vuln_scan": 0.0,
+              "arp": 0.0,
+              "Benign": 8.682854401555967e-06
+            }
+          },
+          "non_overlap_vs_full_table": {
+            "n_test": 8440966,
+            "n_benign": 230337,
+            "n_attack": 8210629,
+            "pooled_auc": 0.7211712114876878,
+            "benign_recall": 0.03978518431689221,
+            "attack_recall_pooled": 0.9995973511895374,
+            "balanced_accuracy": 0.5196912677532148,
+            "per_family": {
+              "SYN": {
+                "n_test": 1514841,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9893868469182919,
+                "recall_at_0.5": 0.9997392465611903
+              },
+              "TCP": {
+                "n_test": 1449542,
+                "small_support": false,
+                "auc_vs_all_benign": 0.6882781921249248,
+                "recall_at_0.5": 0.9995267470690742
+              },
+              "UDP": {
+                "n_test": 2702529,
+                "small_support": false,
+                "auc_vs_all_benign": 0.4696770486095622,
+                "recall_at_0.5": 0.9997509739950987
+              },
+              "ICMP": {
+                "n_test": 2401242,
+                "small_support": false,
+                "auc_vs_all_benign": 0.8462145659965724,
+                "recall_at_0.5": 0.9998188437483603
+              },
+              "port_scan": {
+                "n_test": 100965,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9303900460105431,
+                "recall_at_0.5": 0.9992769771703065
+              },
+              "os_scan": {
+                "n_test": 19653,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9020206727065463,
+                "recall_at_0.5": 0.9981173357757085
+              },
+              "ping_sweep": {
+                "n_test": 926,
+                "small_support": true,
+                "auc_vs_all_benign": 0.5221700608811217,
+                "recall_at_0.5": 0.9989200863930886
+              },
+              "vuln_scan": {
+                "n_test": 3140,
+                "small_support": false,
+                "auc_vs_all_benign": 0.7751672286651498,
+                "recall_at_0.5": 0.9914012738853503
+              },
+              "arp": {
+                "n_test": 17791,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5032744662587475,
+                "recall_at_0.5": 0.9449721769433983
+              }
+            },
+            "macro_common": 0.7791154652711796,
+            "macro_common_missing": [],
+            "macro_per_arm": 0.7630511334112923,
+            "macro_per_arm_families": [
+              "SYN",
+              "TCP",
+              "UDP",
+              "ICMP",
+              "port_scan",
+              "os_scan",
+              "vuln_scan",
+              "arp"
+            ]
+          },
+          "seed": 43,
+          "train_rows": 202158,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 20000,
+            "ping_sweep": 2158,
+            "vuln_scan": 20000,
+            "arp": 20000,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 1514841,
+            "TCP": 1449542,
+            "UDP": 2702529,
+            "ICMP": 2401242,
+            "port_scan": 100965,
+            "os_scan": 19653,
+            "ping_sweep": 926,
+            "vuln_scan": 3140,
+            "arp": 17791,
+            "Benign": 230339
+          }
+        },
+        "44": {
+          "n_test": 8440968,
+          "n_benign": 230339,
+          "n_attack": 8210629,
+          "pooled_auc": 0.628483094076999,
+          "benign_recall": 0.06355849421938968,
+          "attack_recall_pooled": 0.999648869775994,
+          "balanced_accuracy": 0.5316036819976918,
+          "per_family": {
+            "SYN": {
+              "n_test": 1514841,
+              "small_support": false,
+              "auc_vs_all_benign": 0.964927045640283,
+              "recall_at_0.5": 0.999842887801426
+            },
+            "TCP": {
+              "n_test": 1449542,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5697254040357213,
+              "recall_at_0.5": 0.9996785191460476
+            },
+            "UDP": {
+              "n_test": 2702529,
+              "small_support": false,
+              "auc_vs_all_benign": 0.49420023393096874,
+              "recall_at_0.5": 0.9998464401307072
+            },
+            "ICMP": {
+              "n_test": 2401242,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5906547212961692,
+              "recall_at_0.5": 0.999871733044816
+            },
+            "port_scan": {
+              "n_test": 100965,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8793593640857862,
+              "recall_at_0.5": 0.9989204179666221
+            },
+            "os_scan": {
+              "n_test": 19653,
+              "small_support": false,
+              "auc_vs_all_benign": 0.8496230427211545,
+              "recall_at_0.5": 0.9942502416933802
+            },
+            "ping_sweep": {
+              "n_test": 926,
+              "small_support": true,
+              "auc_vs_all_benign": 0.6414829796784544,
+              "recall_at_0.5": 0.9881209503239741
+            },
+            "vuln_scan": {
+              "n_test": 3140,
+              "small_support": false,
+              "auc_vs_all_benign": 0.7691808823289893,
+              "recall_at_0.5": 0.982484076433121
+            },
+            "arp": {
+              "n_test": 17791,
+              "small_support": false,
+              "auc_vs_all_benign": 0.5791004740440501,
+              "recall_at_0.5": 0.934348828059131
+            }
+          },
+          "macro_common": 0.6938260895248594,
+          "macro_common_missing": [],
+          "macro_per_arm": 0.7120963960103903,
+          "macro_per_arm_families": [
+            "SYN",
+            "TCP",
+            "UDP",
+            "ICMP",
+            "port_scan",
+            "os_scan",
+            "vuln_scan",
+            "arp"
+          ],
+          "overlap_full_table": {
+            "share_all": 2.3693964957573586e-07,
+            "share_by_family": {
+              "SYN": 0.0,
+              "TCP": 0.0,
+              "UDP": 0.0,
+              "ICMP": 0.0,
+              "port_scan": 0.0,
+              "os_scan": 0.0,
+              "ping_sweep": 0.0,
+              "vuln_scan": 0.0,
+              "arp": 0.0,
+              "Benign": 8.682854401555967e-06
+            }
+          },
+          "non_overlap_vs_full_table": {
+            "n_test": 8440966,
+            "n_benign": 230337,
+            "n_attack": 8210629,
+            "pooled_auc": 0.6284798953678765,
+            "benign_recall": 0.06355904609333281,
+            "attack_recall_pooled": 0.999648869775994,
+            "balanced_accuracy": 0.5316039579346634,
+            "per_family": {
+              "SYN": {
+                "n_test": 1514841,
+                "small_support": false,
+                "auc_vs_all_benign": 0.9649267531154966,
+                "recall_at_0.5": 0.999842887801426
+              },
+              "TCP": {
+                "n_test": 1449542,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5697216996493939,
+                "recall_at_0.5": 0.9996785191460476
+              },
+              "UDP": {
+                "n_test": 2702529,
+                "small_support": false,
+                "auc_vs_all_benign": 0.4941958569362062,
+                "recall_at_0.5": 0.9998464401307072
+              },
+              "ICMP": {
+                "n_test": 2401242,
+                "small_support": false,
+                "auc_vs_all_benign": 0.590651188578317,
+                "recall_at_0.5": 0.999871733044816
+              },
+              "port_scan": {
+                "n_test": 100965,
+                "small_support": false,
+                "auc_vs_all_benign": 0.8793584643615894,
+                "recall_at_0.5": 0.9989204179666221
+              },
+              "os_scan": {
+                "n_test": 19653,
+                "small_support": false,
+                "auc_vs_all_benign": 0.8496220886908854,
+                "recall_at_0.5": 0.9942502416933802
+              },
+              "ping_sweep": {
+                "n_test": 926,
+                "small_support": true,
+                "auc_vs_all_benign": 0.6414822202806592,
+                "recall_at_0.5": 0.9881209503239741
+              },
+              "vuln_scan": {
+                "n_test": 3140,
+                "small_support": false,
+                "auc_vs_all_benign": 0.7691797962105316,
+                "recall_at_0.5": 0.982484076433121
+              },
+              "arp": {
+                "n_test": 17791,
+                "small_support": false,
+                "auc_vs_all_benign": 0.5790990659055082,
+                "recall_at_0.5": 0.934348828059131
+              }
+            },
+            "macro_common": 0.6938235173940599,
+            "macro_common_missing": [],
+            "macro_per_arm": 0.712094364180991,
+            "macro_per_arm_families": [
+              "SYN",
+              "TCP",
+              "UDP",
+              "ICMP",
+              "port_scan",
+              "os_scan",
+              "vuln_scan",
+              "arp"
+            ]
+          },
+          "seed": 44,
+          "train_rows": 202158,
+          "n_nan_cells_in_train_sample": 0,
+          "train_rows_by_family": {
+            "SYN": 20000,
+            "TCP": 20000,
+            "UDP": 20000,
+            "ICMP": 20000,
+            "port_scan": 20000,
+            "os_scan": 20000,
+            "ping_sweep": 2158,
+            "vuln_scan": 20000,
+            "arp": 20000,
+            "Benign": 40000
+          },
+          "test_rows_by_family": {
+            "SYN": 1514841,
+            "TCP": 1449542,
+            "UDP": 2702529,
+            "ICMP": 2401242,
+            "port_scan": 100965,
+            "os_scan": 19653,
+            "ping_sweep": 926,
+            "vuln_scan": 3140,
+            "arp": 17791,
+            "Benign": 230339
+          }
+        }
+      }
+    }
+  }
+}

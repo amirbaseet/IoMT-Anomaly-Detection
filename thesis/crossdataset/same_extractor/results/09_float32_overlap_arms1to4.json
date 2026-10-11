@@ -1,0 +1,204 @@
+{
+  "meta": {
+    "run_utc": "2026-10-11T05:19:52+00:00",
+    "script": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/09_float32_overlap_arms1to4.py",
+      "sha256": "2026aa6efe794692f039c89d1e2144a9f6f5b7d4c129c78742f6a690fa7655dd"
+    },
+    "helper": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/_common.py",
+      "sha256": "214309d4b5d15c40277d9a3a1ebd993be60e537b5d24c96e8f5bdfd69dda6abc"
+    },
+    "python_executable": "/Users/amoorabaseet/code/IoMT-Project/venv/bin/python",
+    "sys_prefix": "/Users/amoorabaseet/code/IoMT-Project/venv",
+    "libs": {
+      "python": "3.13.13",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "nfstream": null,
+      "sklearn": "1.8.0",
+      "pyarrow": "24.0.0"
+    },
+    "thesis_repo": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project",
+      "commit": "6aa9cc28de4358f3941ed4c640d3b8dddadd1f0f",
+      "branch": "chore/bootstrap-claude",
+      "tree_dirty": true,
+      "dirty_entries_excluding_same_extractor": [
+        " M Project_Journey_Complete.md",
+        " M README.md",
+        "?? thesis/crossdataset/artifacts/",
+        "?? thesis/crossdataset/sampled_test_set.parquet"
+      ]
+    },
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "inputs_note": "step-05 row caches in scratch",
+    "inputs": [
+      {
+        "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/results/05_detection_arms.json",
+        "size_bytes": 85644,
+        "sha256": "e470170bbda710a22a404a3b4edb53c6cb846d7f771e6df8d7600dc31fd9a03e"
+      }
+    ]
+  },
+  "note": "added after review, not pre-declared; key = 128-bit hash of the cached values cast to float32 and widened to float64 (not a byte compare)",
+  "within_dataset_share": {
+    "arm1_within_iomt": {
+      "42": {
+        "share_test_rows_on_train_side": 0.011575476285950738,
+        "n_test": 937672
+      }
+    },
+    "arm2_within_iot": {
+      "42": {
+        "share_test_rows_on_train_side": 0.017237131331674677,
+        "n_test": 1655960
+      },
+      "43": {
+        "share_test_rows_on_train_side": 0.00514410259883388,
+        "n_test": 1949028
+      },
+      "44": {
+        "share_test_rows_on_train_side": 0.019214673568439377,
+        "n_test": 1734820
+      }
+    }
+  },
+  "cross_dataset": {
+    "arm3_iomt_to_iot": {
+      "42": {
+        "overlap_share_float32_key": 0.009582350439162795,
+        "overlap_share_float64_key_step05": 0.0029840225267353526,
+        "overlap_by_family_float32_key": {
+          "SYN": 0.00012673108101612107,
+          "TCP": 3.0455347757523477e-05,
+          "UDP": 0.03827429738163285,
+          "ICMP": 0.002832929200777855,
+          "port_scan": 0.002036429460346193,
+          "os_scan": 0.01041885476620594,
+          "ping_sweep": 0.004189944134078212,
+          "vuln_scan": 0.0026597910164201386,
+          "arp": 0.0009328358208955224,
+          "Benign": 0.01301899100522781
+        },
+        "non_overlap_pooled_auc_float32_key": 0.928263428901159,
+        "non_overlap_macro_common_float32_key": 0.8254089856920285,
+        "non_overlap_pooled_auc_float64_key_step05": 0.9288676913419562,
+        "non_overlap_macro_common_float64_key_step05": 0.826723305129874,
+        "refit_control_max_abs_diff": 0.0
+      },
+      "43": {
+        "overlap_share_float32_key": 0.009582350439162795,
+        "overlap_share_float64_key_step05": 0.0029840225267353526,
+        "overlap_by_family_float32_key": {
+          "SYN": 0.00012673108101612107,
+          "TCP": 3.0455347757523477e-05,
+          "UDP": 0.03827429738163285,
+          "ICMP": 0.002832929200777855,
+          "port_scan": 0.002036429460346193,
+          "os_scan": 0.01041885476620594,
+          "ping_sweep": 0.004189944134078212,
+          "vuln_scan": 0.0026597910164201386,
+          "arp": 0.0009328358208955224,
+          "Benign": 0.01301899100522781
+        },
+        "non_overlap_pooled_auc_float32_key": 0.9232658272192332,
+        "non_overlap_macro_common_float32_key": 0.8242084746120423,
+        "non_overlap_pooled_auc_float64_key_step05": 0.9239204323632774,
+        "non_overlap_macro_common_float64_key_step05": 0.8256808825249389,
+        "refit_control_max_abs_diff": 0.0
+      },
+      "44": {
+        "overlap_share_float32_key": 0.009582350439162795,
+        "overlap_share_float64_key_step05": 0.0029840225267353526,
+        "overlap_by_family_float32_key": {
+          "SYN": 0.00012673108101612107,
+          "TCP": 3.0455347757523477e-05,
+          "UDP": 0.03827429738163285,
+          "ICMP": 0.002832929200777855,
+          "port_scan": 0.002036429460346193,
+          "os_scan": 0.01041885476620594,
+          "ping_sweep": 0.004189944134078212,
+          "vuln_scan": 0.0026597910164201386,
+          "arp": 0.0009328358208955224,
+          "Benign": 0.01301899100522781
+        },
+        "non_overlap_pooled_auc_float32_key": 0.918491845775774,
+        "non_overlap_macro_common_float32_key": 0.8189728892999607,
+        "non_overlap_pooled_auc_float64_key_step05": 0.9191873800555372,
+        "non_overlap_macro_common_float64_key_step05": 0.8205690384847992,
+        "refit_control_max_abs_diff": 0.0
+      }
+    },
+    "arm4_iot_to_iomt": {
+      "42": {
+        "overlap_share_float32_key": 0.012741066084713745,
+        "overlap_share_float64_key_step05": 0.004333942233045748,
+        "overlap_by_family_float32_key": {
+          "SYN": 0.00016288493906622506,
+          "TCP": 8.268900664600438e-05,
+          "UDP": 0.4786528153143042,
+          "ICMP": 0.037073816617014234,
+          "port_scan": 0.07656967840735068,
+          "os_scan": 0.18271604938271604,
+          "ping_sweep": 0.028037383177570093,
+          "vuln_scan": 0.060498220640569395,
+          "arp": 0.09692132269099202,
+          "Benign": 0.12115749525616698
+        },
+        "non_overlap_pooled_auc_float32_key": 0.998568568965432,
+        "non_overlap_macro_common_float32_key": 0.9194051941566219,
+        "non_overlap_pooled_auc_float64_key_step05": 0.9986072626745437,
+        "non_overlap_macro_common_float64_key_step05": 0.9224072099469256,
+        "refit_control_max_abs_diff": 0.0
+      },
+      "43": {
+        "overlap_share_float32_key": 0.012741066084713745,
+        "overlap_share_float64_key_step05": 0.004333942233045748,
+        "overlap_by_family_float32_key": {
+          "SYN": 0.00016288493906622506,
+          "TCP": 8.268900664600438e-05,
+          "UDP": 0.4786528153143042,
+          "ICMP": 0.037073816617014234,
+          "port_scan": 0.07656967840735068,
+          "os_scan": 0.18271604938271604,
+          "ping_sweep": 0.028037383177570093,
+          "vuln_scan": 0.060498220640569395,
+          "arp": 0.09692132269099202,
+          "Benign": 0.12115749525616698
+        },
+        "non_overlap_pooled_auc_float32_key": 0.9980882708491445,
+        "non_overlap_macro_common_float32_key": 0.901122039797084,
+        "non_overlap_pooled_auc_float64_key_step05": 0.998142098493898,
+        "non_overlap_macro_common_float64_key_step05": 0.904941553733279,
+        "refit_control_max_abs_diff": 0.0
+      },
+      "44": {
+        "overlap_share_float32_key": 0.012741066084713745,
+        "overlap_share_float64_key_step05": 0.004333942233045748,
+        "overlap_by_family_float32_key": {
+          "SYN": 0.00016288493906622506,
+          "TCP": 8.268900664600438e-05,
+          "UDP": 0.4786528153143042,
+          "ICMP": 0.037073816617014234,
+          "port_scan": 0.07656967840735068,
+          "os_scan": 0.18271604938271604,
+          "ping_sweep": 0.028037383177570093,
+          "vuln_scan": 0.060498220640569395,
+          "arp": 0.09692132269099202,
+          "Benign": 0.12115749525616698
+        },
+        "non_overlap_pooled_auc_float32_key": 0.998275519322494,
+        "non_overlap_macro_common_float32_key": 0.9046545740043627,
+        "non_overlap_pooled_auc_float64_key_step05": 0.9983196639210087,
+        "non_overlap_macro_common_float64_key_step05": 0.9082916309967788,
+        "refit_control_max_abs_diff": 0.0
+      }
+    }
+  },
+  "control_max_abs_diff": 0.0
+}

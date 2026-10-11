@@ -1,0 +1,532 @@
+{
+  "meta": {
+    "run_utc": "2026-10-10T19:11:56+00:00",
+    "script": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/05b_csv_label_check.py",
+      "sha256": "015b945043362615d999cf33e7232047377cdfb7e6e714962e0b41a994521b7e"
+    },
+    "helper": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/_common.py",
+      "sha256": "214309d4b5d15c40277d9a3a1ebd993be60e537b5d24c96e8f5bdfd69dda6abc"
+    },
+    "python_executable": "/Users/amoorabaseet/code/IoMT-Project/venv/bin/python",
+    "sys_prefix": "/Users/amoorabaseet/code/IoMT-Project/venv",
+    "libs": {
+      "python": "3.13.13",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "nfstream": null,
+      "sklearn": "1.8.0",
+      "pyarrow": "24.0.0"
+    },
+    "thesis_repo": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project",
+      "commit": "6aa9cc28de4358f3941ed4c640d3b8dddadd1f0f",
+      "branch": "chore/bootstrap-claude",
+      "tree_dirty": true,
+      "dirty_entries_excluding_same_extractor": [
+        " M Project_Journey_Complete.md",
+        " M README.md",
+        "?? thesis/crossdataset/artifacts/",
+        "?? thesis/crossdataset/sampled_test_set.parquet"
+      ]
+    },
+    "seeds": [],
+    "inputs_note": "official CICIoT2023 MERGED_CSV.zip; our side = step-02/03 NFStream feature CSVs (6.6.0)",
+    "inputs": [
+      {
+        "path": "/Volumes/PortableSSD/CICIOT23/csv/MERGED_CSV.zip",
+        "size_bytes": 1702032816
+      }
+    ]
+  },
+  "zip_members_read": 63,
+  "official_labels_found": [
+    "",
+    "BACKDOOR_MALWARE",
+    "BENIGN",
+    "BROWSERHIJACKING",
+    "COMMANDINJECTION",
+    "DDOS-ACK_FRAGMENTATION",
+    "DDOS-HTTP_FLOOD",
+    "DDOS-ICMP_FLOOD",
+    "DDOS-ICMP_FRAGMENTATION",
+    "DDOS-PSHACK_FLOOD",
+    "DDOS-RSTFINFLOOD",
+    "DDOS-SLOWLORIS",
+    "DDOS-SYNONYMOUSIP_FLOOD",
+    "DDOS-SYN_FLOOD",
+    "DDOS-TCP_FLOOD",
+    "DDOS-UDP_FLOOD",
+    "DDOS-UDP_FRAGMENTATION",
+    "DICTIONARYBRUTEFORCE",
+    "DNS_SPOOFING",
+    "DOS-HTTP_FLOOD",
+    "DOS-SYN_FLOOD",
+    "DOS-TCP_FLOOD",
+    "DOS-UDP_FLOOD",
+    "MIRAI-GREETH_FLOOD",
+    "MIRAI-GREIP_FLOOD",
+    "MIRAI-UDPPLAIN",
+    "MITM-ARPSPOOFING",
+    "RECON-HOSTDISCOVERY",
+    "RECON-OSSCAN",
+    "RECON-PINGSWEEP",
+    "RECON-PORTSCAN",
+    "SQLINJECTION",
+    "UPLOADING_ATTACK",
+    "VULNERABILITYSCAN",
+    "XSS"
+  ],
+  "official_rows_total": 45019243,
+  "method_note": "indirect comparison, see script docstring; the official CSV has no timestamp/address/port/file-name column",
+  "official_by_label": {
+    "RECON-PINGSWEEP": {
+      "rows": 2161,
+      "mean_fraction": {
+        "TCP": 0.6535400296770439,
+        "UDP": 0.20189727154292755,
+        "ICMP": 0.016982878650133943,
+        "ARP": 0.12707080197645965,
+        "DNS": 0.051781584041116414,
+        "DHCP": 0.0030078667869781906,
+        "HTTP": 0.08556224195108211,
+        "HTTPS": 0.46631189234716813,
+        "SSH": 0.0037482647619165796,
+        "Telnet": 0.0,
+        "SMTP": 0.0,
+        "IRC": 0.0,
+        "IGMP": 0.0005090236077701422,
+        "LLC": 0.8729291858081738
+      },
+      "share_rows_with_positive": {
+        "TCP": 0.940305414160111,
+        "UDP": 0.6867191115224434,
+        "ICMP": 0.11429893567792689,
+        "ARP": 0.37251272559000465,
+        "DNS": 0.3128181397501157,
+        "DHCP": 0.02313743637204998,
+        "HTTP": 0.35492827394724663,
+        "HTTPS": 0.8385006941230911,
+        "SSH": 0.026839426191577972,
+        "Telnet": 0.0,
+        "SMTP": 0.0,
+        "IRC": 0.0,
+        "IGMP": 0.005090236001850995,
+        "LLC": 0.980101804720037
+      },
+      "share_rows_mostly_icmp": 0.00046274872744099955,
+      "share_rows_mostly_tcp": 0.7464136973623322,
+      "share_rows_mostly_udp": 0.13882461823229986
+    },
+    "MITM-ARPSPOOFING": {
+      "rows": 294469,
+      "mean_fraction": {
+        "TCP": 0.7086646264997566,
+        "UDP": 0.262972161837789,
+        "ICMP": 0.00999403869590114,
+        "ARP": 0.018240128740991603,
+        "DNS": 0.02326918935182603,
+        "DHCP": 0.0011468100464153068,
+        "HTTP": 0.007821772394948207,
+        "HTTPS": 0.6704967110915231,
+        "SSH": 0.0,
+        "Telnet": 0.0,
+        "SMTP": 0.0,
+        "IRC": 3.8374158928906015e-05,
+        "IGMP": 0.00012904584441811946,
+        "LLC": 0.981759865755372
+      },
+      "share_rows_with_positive": {
+        "TCP": 0.8803745046167848,
+        "UDP": 0.46731234866828086,
+        "ICMP": 0.08374056352281564,
+        "ARP": 0.10766498341081744,
+        "DNS": 0.11708532986494334,
+        "DHCP": 0.00730127789342851,
+        "HTTP": 0.046405563913349115,
+        "HTTPS": 0.8479636226563747,
+        "SSH": 0.0,
+        "Telnet": 0.0,
+        "SMTP": 0.0,
+        "IRC": 0.00038374158230577754,
+        "IGMP": 0.0012225395542484947,
+        "LLC": 0.9999490608519063
+      },
+      "share_rows_mostly_icmp": 0.0002512997972621906,
+      "share_rows_mostly_tcp": 0.7318597203780364,
+      "share_rows_mostly_udp": 0.26258791247975166
+    },
+    "RECON-OSSCAN": {
+      "rows": 93970,
+      "mean_fraction": {
+        "TCP": 0.8123822940287723,
+        "UDP": 0.15279123056463909,
+        "ICMP": 0.009781963674168618,
+        "ARP": 0.024808272704635894,
+        "DNS": 0.04283104644273841,
+        "DHCP": 0.0021017346417376167,
+        "HTTP": 0.0712763969246423,
+        "HTTPS": 0.4141968348311201,
+        "SSH": 0.0032840268750437855,
+        "Telnet": 0.0002202830730606498,
+        "SMTP": 0.0002096413788236531,
+        "IRC": 0.0002096413792200871,
+        "IGMP": 0.00023624561493150906,
+        "LLC": 0.9751917256311342
+      },
+      "share_rows_with_positive": {
+        "TCP": 0.9944663190379909,
+        "UDP": 0.5344258806001916,
+        "ICMP": 0.0740023411727147,
+        "ARP": 0.1685112269873364,
+        "DNS": 0.24997339576460573,
+        "DHCP": 0.015324039587102267,
+        "HTTP": 0.29454081089709483,
+        "HTTPS": 0.7438650633180802,
+        "SSH": 0.023166968181334468,
+        "Telnet": 0.0021602639140151114,
+        "SMTP": 0.002064488666595722,
+        "IRC": 0.002064488666595722,
+        "IGMP": 0.00229860593806534,
+        "LLC": 0.9999148664467383
+      },
+      "share_rows_mostly_icmp": 0.0002554006597850378,
+      "share_rows_mostly_tcp": 0.9071618601681388,
+      "share_rows_mostly_udp": 0.10323507502394381
+    },
+    "RECON-PORTSCAN": {
+      "rows": 78730,
+      "mean_fraction": {
+        "TCP": 0.8090615903378805,
+        "UDP": 0.15662408891966392,
+        "ICMP": 0.009095643522641595,
+        "ARP": 0.024910030523559938,
+        "DNS": 0.04367934810635278,
+        "DHCP": 0.0022634320361375293,
+        "HTTP": 0.07006365104508525,
+        "HTTPS": 0.30344602485843525,
+        "SSH": 0.0034408739280718855,
+        "Telnet": 0.0003150006418577616,
+        "SMTP": 0.00032135146130271477,
+        "IRC": 0.0005563317789679241,
+        "IGMP": 0.0003086498219396355,
+        "LLC": 0.9750899685302835
+      },
+      "share_rows_with_positive": {
+        "TCP": 0.9907024006096786,
+        "UDP": 0.5026800457258986,
+        "ICMP": 0.0718912739743427,
+        "ARP": 0.15814810110504254,
+        "DNS": 0.23908294169947925,
+        "DHCP": 0.015153054744061985,
+        "HTTP": 0.2794995554426521,
+        "HTTPS": 0.612460307379652,
+        "SSH": 0.022596214911723613,
+        "Telnet": 0.0030864981582624158,
+        "SMTP": 0.0030991997967737836,
+        "IRC": 0.005512511113933698,
+        "IGMP": 0.003035691604216944,
+        "LLC": 0.9998348786993522
+      },
+      "share_rows_mostly_icmp": 3.81049155341039e-05,
+      "share_rows_mostly_tcp": 0.8912612727041789,
+      "share_rows_mostly_udp": 0.11470849739616411
+    },
+    "VULNERABILITYSCAN": {
+      "rows": 357583,
+      "mean_fraction": {
+        "TCP": 0.6530227475029463,
+        "UDP": 0.2880549072215507,
+        "ICMP": 0.014126168964059055,
+        "ARP": 0.04440689620647693,
+        "DNS": 0.07117085649498982,
+        "DHCP": 0.004316630272003714,
+        "HTTP": 0.18358658816946352,
+        "HTTPS": 0.28990848349865084,
+        "SSH": 0.005563543616073665,
+        "Telnet": 4.3066925193407594e-05,
+        "SMTP": 3.915175011331724e-05,
+        "IRC": 0.0001269635329749704,
+        "IGMP": 0.00038844129289474356,
+        "LLC": 0.9555930980628041
+      },
+      "share_rows_with_positive": {
+        "TCP": 0.9811288567968836,
+        "UDP": 0.7882086117069323,
+        "ICMP": 0.11817675896225492,
+        "ARP": 0.29293059233800267,
+        "DNS": 0.39313669833297443,
+        "DHCP": 0.028412983838717164,
+        "HTTP": 0.5272957607045078,
+        "HTTPS": 0.7330242209501011,
+        "SSH": 0.03466607752605689,
+        "Telnet": 0.0002880450133255776,
+        "SMTP": 0.00018177597928313146,
+        "IRC": 0.0012276869985429957,
+        "IGMP": 0.0037278058520679117,
+        "LLC": 0.9998154274671894
+      },
+      "share_rows_mostly_icmp": 0.00010626903404244609,
+      "share_rows_mostly_tcp": 0.7642533341909431,
+      "share_rows_mostly_udp": 0.24838149464599826
+    },
+    "BENIGN": {
+      "rows": 1051373,
+      "mean_fraction": {
+        "TCP": 0.814113456721234,
+        "UDP": 0.15293854502602117,
+        "ICMP": 0.00839480714369299,
+        "ARP": 0.024254445590421017,
+        "DNS": 0.029595092457691898,
+        "DHCP": 0.0016491874395913931,
+        "HTTP": 0.057976906172326155,
+        "HTTPS": 0.6927976141976248,
+        "SSH": 0.003227969578008688,
+        "Telnet": 0.0,
+        "SMTP": 0.0,
+        "IRC": 8.883621897026037e-05,
+        "IGMP": 0.0002984668656635448,
+        "LLC": 0.9757455531258409
+      },
+      "share_rows_with_positive": {
+        "TCP": 0.9953546457822295,
+        "UDP": 0.5453202621714653,
+        "ICMP": 0.07187078230085803,
+        "ARP": 0.17009187034477774,
+        "DNS": 0.16168381725610226,
+        "DHCP": 0.013216051772301552,
+        "HTTP": 0.147613644253752,
+        "HTTPS": 0.9472870237299227,
+        "SSH": 0.02363576009655945,
+        "Telnet": 0.0,
+        "SMTP": 0.0,
+        "IRC": 0.0008883621702288341,
+        "IGMP": 0.00292189356203745,
+        "LLC": 0.9999277135707308
+      },
+      "share_rows_mostly_icmp": 2.5680705135094775e-05,
+      "share_rows_mostly_tcp": 0.9069388314137798,
+      "share_rows_mostly_udp": 0.10512063749021518
+    }
+  },
+  "our_nfstream_by_class": {
+    "RECON-PINGSWEEP": {
+      "flows": 1686,
+      "packets": 19919,
+      "by_protocol": {
+        "ICMP": {
+          "flows": 104,
+          "flow_share": 0.06168446026097272,
+          "packets": 390,
+          "packet_share": 0.019579296149405092
+        },
+        "2": {
+          "flows": 4,
+          "flow_share": 0.002372479240806643,
+          "packets": 13,
+          "packet_share": 0.0006526432049801697
+        },
+        "TCP": {
+          "flows": 647,
+          "flow_share": 0.3837485172004745,
+          "packets": 14808,
+          "packet_share": 0.7434108137958733
+        },
+        "UDP": {
+          "flows": 916,
+          "flow_share": 0.5432977461447213,
+          "packets": 4651,
+          "packet_share": 0.2334956574125207
+        },
+        "58": {
+          "flows": 15,
+          "flow_share": 0.008896797153024912,
+          "packets": 57,
+          "packet_share": 0.002861589437220744
+        }
+      }
+    },
+    "MITM-ARPSPOOFING": {
+      "flows": 69248,
+      "packets": 3025366,
+      "by_protocol": {
+        "ICMP": {
+          "flows": 1309,
+          "flow_share": 0.018903073012939003,
+          "packets": 30677,
+          "packet_share": 0.010139930177043042
+        },
+        "2": {
+          "flows": 112,
+          "flow_share": 0.0016173752310536045,
+          "packets": 394,
+          "packet_share": 0.00013023217686719557
+        },
+        "TCP": {
+          "flows": 15781,
+          "flow_share": 0.22789105822550831,
+          "packets": 2179096,
+          "packet_share": 0.7202751667071026
+        },
+        "UDP": {
+          "flows": 51499,
+          "flow_share": 0.7436893484288355,
+          "packets": 812094,
+          "packet_share": 0.26842834883448813
+        },
+        "58": {
+          "flows": 547,
+          "flow_share": 0.007899145101663585,
+          "packets": 3105,
+          "packet_share": 0.001026322104499092
+        }
+      }
+    },
+    "RECON-OSSCAN": {
+      "flows": 165458,
+      "packets": 962137,
+      "by_protocol": {
+        "ICMP": {
+          "flows": 727,
+          "flow_share": 0.0043938643039321155,
+          "packets": 9647,
+          "packet_share": 0.01002663861799307
+        },
+        "2": {
+          "flows": 78,
+          "flow_share": 0.0004714187286199519,
+          "packets": 231,
+          "packet_share": 0.00024009054843540992
+        },
+        "TCP": {
+          "flows": 136198,
+          "flow_share": 0.823157538468977,
+          "packets": 798169,
+          "packet_share": 0.8295793634378472
+        },
+        "UDP": {
+          "flows": 28144,
+          "flow_share": 0.1700975474138452,
+          "packets": 152391,
+          "packet_share": 0.15838804660874697
+        },
+        "58": {
+          "flows": 311,
+          "flow_share": 0.0018796310846257056,
+          "packets": 1699,
+          "packet_share": 0.0017658607869773225
+        }
+      }
+    },
+    "RECON-PORTSCAN": {
+      "flows": 188592,
+      "packets": 806215,
+      "by_protocol": {
+        "ICMP": {
+          "flows": 725,
+          "flow_share": 0.003844277593959447,
+          "packets": 7458,
+          "packet_share": 0.009250634136055518
+        },
+        "2": {
+          "flows": 89,
+          "flow_share": 0.00047191821498260793,
+          "packets": 254,
+          "packet_share": 0.0003150524363848353
+        },
+        "TCP": {
+          "flows": 162806,
+          "flow_share": 0.8632709764995334,
+          "packets": 665819,
+          "packet_share": 0.8258578666980892
+        },
+        "UDP": {
+          "flows": 24672,
+          "flow_share": 0.1308220921354034,
+          "packets": 131105,
+          "packet_share": 0.1626179120954088
+        },
+        "58": {
+          "flows": 300,
+          "flow_share": 0.0015907355561211505,
+          "packets": 1579,
+          "packet_share": 0.0019585346340616335
+        }
+      }
+    },
+    "VULNERABILITYSCAN": {
+      "flows": 370456,
+      "packets": 3594944,
+      "by_protocol": {
+        "ICMP": {
+          "flows": 2500,
+          "flow_share": 0.00674843976072732,
+          "packets": 52749,
+          "packet_share": 0.01467310756440156
+        },
+        "2": {
+          "flows": 378,
+          "flow_share": 0.0010203640918219708,
+          "packets": 1446,
+          "packet_share": 0.00040223157857257306
+        },
+        "TCP": {
+          "flows": 184277,
+          "flow_share": 0.49743289351501935,
+          "packets": 2437301,
+          "packet_share": 0.6779802411386658
+        },
+        "UDP": {
+          "flows": 181751,
+          "flow_share": 0.49061426998078045,
+          "packets": 1091052,
+          "packet_share": 0.3034962436132524
+        },
+        "58": {
+          "flows": 1550,
+          "flow_share": 0.004184032651650938,
+          "packets": 12396,
+          "packet_share": 0.0034481761051076178
+        }
+      }
+    },
+    "BENIGN": {
+      "flows": 301193,
+      "packets": 10766983,
+      "by_protocol": {
+        "ICMP": {
+          "flows": 4135,
+          "flow_share": 0.013728738715707204,
+          "packets": 92149,
+          "packet_share": 0.008558479195146866
+        },
+        "2": {
+          "flows": 487,
+          "flow_share": 0.0016169034472912718,
+          "packets": 3274,
+          "packet_share": 0.0003040777532573424
+        },
+        "TCP": {
+          "flows": 77433,
+          "flow_share": 0.25708764811931223,
+          "packets": 8938344,
+          "packet_share": 0.8301623583876746
+        },
+        "UDP": {
+          "flows": 217079,
+          "flow_share": 0.720730561467232,
+          "packets": 1711872,
+          "packet_share": 0.1589927280464732
+        },
+        "58": {
+          "flows": 2059,
+          "flow_share": 0.006836148250457348,
+          "packets": 21344,
+          "packet_share": 0.001982356617447989
+        }
+      }
+    }
+  },
+  "official_labels_missing": []
+}

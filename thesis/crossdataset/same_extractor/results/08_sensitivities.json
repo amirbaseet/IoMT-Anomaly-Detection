@@ -1,0 +1,1158 @@
+{
+  "meta": {
+    "run_utc": "2026-10-11T05:13:57+00:00",
+    "script": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/08_sensitivities.py",
+      "sha256": "3850a7ef8d0b2db3c30490844665b0c58c4aa5f0683c0cb7068e2b4fc714fcaf"
+    },
+    "helper": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/_common.py",
+      "sha256": "214309d4b5d15c40277d9a3a1ebd993be60e537b5d24c96e8f5bdfd69dda6abc"
+    },
+    "python_executable": "/Users/amoorabaseet/code/IoMT-Project/venv/bin/python",
+    "sys_prefix": "/Users/amoorabaseet/code/IoMT-Project/venv",
+    "libs": {
+      "python": "3.13.13",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "nfstream": null,
+      "sklearn": "1.8.0",
+      "pyarrow": "24.0.0"
+    },
+    "thesis_repo": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project",
+      "commit": "6aa9cc28de4358f3941ed4c640d3b8dddadd1f0f",
+      "branch": "chore/bootstrap-claude",
+      "tree_dirty": true,
+      "dirty_entries_excluding_same_extractor": [
+        " M Project_Journey_Complete.md",
+        " M README.md",
+        "?? thesis/crossdataset/artifacts/",
+        "?? thesis/crossdataset/sampled_test_set.parquet"
+      ]
+    },
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "inputs_note": "step-05 row caches in scratch (see 05_detection_arms.json meta)",
+    "inputs": [
+      {
+        "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/results/05_detection_arms.json",
+        "size_bytes": 85644,
+        "sha256": "e470170bbda710a22a404a3b4edb53c6cb846d7f771e6df8d7600dc31fd9a03e"
+      }
+    ]
+  },
+  "settings": "README.md 'Changed after seeing arms 1-4', section C",
+  "flood_protocol_rule": {
+    "SYN": 6,
+    "TCP": 6,
+    "UDP": 17,
+    "ICMP": 1
+  },
+  "control_unrestricted_refit_vs_step05": {
+    "arm1_within_iomt/42": {
+      "max_abs_diff_vs_step05": 0.0,
+      "diffs": {
+        "pooled_auc": 0.0,
+        "macro_common": 0.0,
+        "macro_per_arm": 0.0,
+        "benign_recall": 0.0,
+        "balanced_accuracy": 0.0
+      }
+    },
+    "arm2_within_iot/42": {
+      "max_abs_diff_vs_step05": 0.0,
+      "diffs": {
+        "pooled_auc": 0.0,
+        "macro_common": 0.0,
+        "macro_per_arm": 0.0,
+        "benign_recall": 0.0,
+        "balanced_accuracy": 0.0
+      }
+    },
+    "arm3_iomt_to_iot/42": {
+      "max_abs_diff_vs_step05": 0.0,
+      "diffs": {
+        "pooled_auc": 0.0,
+        "macro_common": 0.0,
+        "macro_per_arm": 0.0,
+        "benign_recall": 0.0,
+        "balanced_accuracy": 0.0
+      }
+    },
+    "arm4_iot_to_iomt/42": {
+      "max_abs_diff_vs_step05": 0.0,
+      "diffs": {
+        "pooled_auc": 0.0,
+        "macro_common": 0.0,
+        "macro_per_arm": 0.0,
+        "benign_recall": 0.0,
+        "balanced_accuracy": 0.0
+      }
+    },
+    "arm1_within_iomt/43": {
+      "max_abs_diff_vs_step05": 0.0,
+      "diffs": {
+        "pooled_auc": 0.0,
+        "macro_common": 0.0,
+        "macro_per_arm": 0.0,
+        "benign_recall": 0.0,
+        "balanced_accuracy": 0.0
+      }
+    },
+    "arm2_within_iot/43": {
+      "max_abs_diff_vs_step05": 0.0,
+      "diffs": {
+        "pooled_auc": 0.0,
+        "macro_common": 0.0,
+        "macro_per_arm": 0.0,
+        "benign_recall": 0.0,
+        "balanced_accuracy": 0.0
+      }
+    },
+    "arm3_iomt_to_iot/43": {
+      "max_abs_diff_vs_step05": 0.0,
+      "diffs": {
+        "pooled_auc": 0.0,
+        "macro_common": 0.0,
+        "macro_per_arm": 0.0,
+        "benign_recall": 0.0,
+        "balanced_accuracy": 0.0
+      }
+    },
+    "arm4_iot_to_iomt/43": {
+      "max_abs_diff_vs_step05": 0.0,
+      "diffs": {
+        "pooled_auc": 0.0,
+        "macro_common": 0.0,
+        "macro_per_arm": 0.0,
+        "benign_recall": 0.0,
+        "balanced_accuracy": 0.0
+      }
+    },
+    "arm1_within_iomt/44": {
+      "max_abs_diff_vs_step05": 0.0,
+      "diffs": {
+        "pooled_auc": 0.0,
+        "macro_common": 0.0,
+        "macro_per_arm": 0.0,
+        "benign_recall": 0.0,
+        "balanced_accuracy": 0.0
+      }
+    },
+    "arm2_within_iot/44": {
+      "max_abs_diff_vs_step05": 0.0,
+      "diffs": {
+        "pooled_auc": 0.0,
+        "macro_common": 0.0,
+        "macro_per_arm": 0.0,
+        "benign_recall": 0.0,
+        "balanced_accuracy": 0.0
+      }
+    },
+    "arm3_iomt_to_iot/44": {
+      "max_abs_diff_vs_step05": 0.0,
+      "diffs": {
+        "pooled_auc": 0.0,
+        "macro_common": 0.0,
+        "macro_per_arm": 0.0,
+        "benign_recall": 0.0,
+        "balanced_accuracy": 0.0
+      }
+    },
+    "arm4_iot_to_iomt/44": {
+      "max_abs_diff_vs_step05": 0.0,
+      "diffs": {
+        "pooled_auc": 0.0,
+        "macro_common": 0.0,
+        "macro_per_arm": 0.0,
+        "benign_recall": 0.0,
+        "balanced_accuracy": 0.0
+      }
+    }
+  },
+  "control_max_abs_diff": 0.0,
+  "a_protocol_matched_flood_test_rows": {
+    "summary_over_seeds": {
+      "arm1_within_iomt": {
+        "flood_macro_unrestricted": {
+          "mean": 0.9932703572597156,
+          "sd": 7.397790800938417e-05
+        },
+        "flood_macro_restricted": {
+          "mean": 0.9941088092413318,
+          "sd": 0.003862794310411565
+        },
+        "macro_common_unrestricted": {
+          "mean": 0.992172939033745,
+          "sd": 0.0001537636274384255
+        },
+        "macro_common_restricted": {
+          "mean": 0.992843700619038,
+          "sd": 0.00322269828864327
+        },
+        "flood_auc_unrestricted": {
+          "SYN": {
+            "mean": 0.9997594705224239,
+            "sd": 2.8190090706458298e-05
+          },
+          "TCP": {
+            "mean": 0.9999793755365122,
+            "sd": 7.78148395653968e-07
+          },
+          "UDP": {
+            "mean": 0.9992805991474384,
+            "sd": 2.0455115707256327e-05
+          },
+          "ICMP": {
+            "mean": 0.9740619838324873,
+            "sd": 0.00033785860395224034
+          }
+        },
+        "flood_auc_restricted": {
+          "SYN": {
+            "mean": 0.9997943243448244,
+            "sd": 3.0128839238484307e-05
+          },
+          "TCP": {
+            "mean": 0.9999931124611307,
+            "sd": 9.048077303419005e-07
+          },
+          "UDP": {
+            "mean": 0.9995753703933854,
+            "sd": 2.086807915640495e-05
+          },
+          "ICMP": {
+            "mean": 0.9770724297659868,
+            "sd": 0.015450703302110005
+          }
+        }
+      },
+      "arm2_within_iot": {
+        "flood_macro_unrestricted": {
+          "mean": 0.981882000153726,
+          "sd": 0.0009494655968215534
+        },
+        "flood_macro_restricted": {
+          "mean": 0.9918658011764522,
+          "sd": 0.0005184247758830476
+        },
+        "macro_common_unrestricted": {
+          "mean": 0.9698941552409979,
+          "sd": 0.0006529121675901573
+        },
+        "macro_common_restricted": {
+          "mean": 0.977881196059179,
+          "sd": 0.0005380016820296719
+        },
+        "flood_auc_unrestricted": {
+          "SYN": {
+            "mean": 0.9963994607661325,
+            "sd": 0.0005530471394909567
+          },
+          "TCP": {
+            "mean": 0.9987399720394229,
+            "sd": 0.0003379928863023078
+          },
+          "UDP": {
+            "mean": 0.9932084715352847,
+            "sd": 0.0034387727531995324
+          },
+          "ICMP": {
+            "mean": 0.9391800962740634,
+            "sd": 0.001809944587065079
+          }
+        },
+        "flood_auc_restricted": {
+          "SYN": {
+            "mean": 0.9975144144092671,
+            "sd": 0.0004174974036112637
+          },
+          "TCP": {
+            "mean": 0.9994557767591351,
+            "sd": 9.330986873904332e-05
+          },
+          "UDP": {
+            "mean": 0.9973990254000032,
+            "sd": 0.0015249145365133006
+          },
+          "ICMP": {
+            "mean": 0.9730939881374034,
+            "sd": 0.00040043422152305415
+          }
+        }
+      },
+      "arm3_iomt_to_iot": {
+        "flood_macro_unrestricted": {
+          "mean": 0.8665407531359403,
+          "sd": 0.004642615399285088
+        },
+        "flood_macro_restricted": {
+          "mean": 0.8670235214652863,
+          "sd": 0.00509723109607122
+        },
+        "macro_common_unrestricted": {
+          "mean": 0.8256351343962639,
+          "sd": 0.0031952514769076385
+        },
+        "macro_common_restricted": {
+          "mean": 0.8260213490597407,
+          "sd": 0.003167555496570531
+        },
+        "flood_auc_unrestricted": {
+          "SYN": {
+            "mean": 0.9733197655867647,
+            "sd": 0.0006727620738634371
+          },
+          "TCP": {
+            "mean": 0.9891106866560726,
+            "sd": 0.00039295980600744174
+          },
+          "UDP": {
+            "mean": 0.7963757203999099,
+            "sd": 0.021307224829996398
+          },
+          "ICMP": {
+            "mean": 0.7073568399010135,
+            "sd": 0.0030079186093223066
+          }
+        },
+        "flood_auc_restricted": {
+          "SYN": {
+            "mean": 0.9769328295214201,
+            "sd": 0.0006170709880600155
+          },
+          "TCP": {
+            "mean": 0.9930653490515078,
+            "sd": 0.0003881179024026511
+          },
+          "UDP": {
+            "mean": 0.807297543106674,
+            "sd": 0.023018349121857427
+          },
+          "ICMP": {
+            "mean": 0.6907983641815436,
+            "sd": 0.006316496239807928
+          }
+        }
+      },
+      "arm4_iot_to_iomt": {
+        "flood_macro_unrestricted": {
+          "mean": 0.9314952759115819,
+          "sd": 0.007687289017794443
+        },
+        "flood_macro_restricted": {
+          "mean": 0.9884546440338648,
+          "sd": 0.0009526471815403629
+        },
+        "macro_common_unrestricted": {
+          "mean": 0.9192838898869325,
+          "sd": 0.007815695118152262
+        },
+        "macro_common_restricted": {
+          "mean": 0.964851384384759,
+          "sd": 0.002643684133336006
+        },
+        "flood_auc_unrestricted": {
+          "SYN": {
+            "mean": 0.9992003308887355,
+            "sd": 0.000200032902551462
+          },
+          "TCP": {
+            "mean": 0.9986607523200751,
+            "sd": 0.00012993379927106837
+          },
+          "UDP": {
+            "mean": 0.9895200902838234,
+            "sd": 0.0011908001842859913
+          },
+          "ICMP": {
+            "mean": 0.7385999301536933,
+            "sd": 0.029301539185511538
+          }
+        },
+        "flood_auc_restricted": {
+          "SYN": {
+            "mean": 0.9995369136439402,
+            "sd": 0.00018561492911999225
+          },
+          "TCP": {
+            "mean": 0.9988937634294356,
+            "sd": 0.00011871346860679715
+          },
+          "UDP": {
+            "mean": 0.9935866261335574,
+            "sd": 0.0007099255304073261
+          },
+          "ICMP": {
+            "mean": 0.9618012729285262,
+            "sd": 0.002848633880128083
+          }
+        }
+      }
+    },
+    "per_seed": {
+      "arm1_within_iomt": {
+        "42": {
+          "flood_rows": {
+            "SYN": {
+              "n_test": 475724,
+              "n_protocol_matching": 475235
+            },
+            "TCP": {
+              "n_test": 439197,
+              "n_protocol_matching": 439028
+            },
+            "UDP": {
+              "n_test": 19348,
+              "n_protocol_matching": 18885
+            },
+            "ICMP": {
+              "n_test": 683,
+              "n_protocol_matching": 24
+            }
+          },
+          "unrestricted": {
+            "flood_macro": 0.9932409263398077,
+            "macro_common": 0.9919981349847198,
+            "pooled_auc": 0.9998269419127921,
+            "flood_auc": {
+              "SYN": 0.9997811986291506,
+              "TCP": 0.9999802070239525,
+              "UDP": 0.9993017637572855,
+              "ICMP": 0.973900535948842
+            }
+          },
+          "restricted": {
+            "flood_macro": 0.9896554566902933,
+            "macro_common": 0.9891297592651084,
+            "pooled_auc": 0.9998754858268896,
+            "benign_recall": 0.9734704926908501,
+            "balanced_accuracy": 0.9865414655318667,
+            "n_test": 935892,
+            "flood_auc": {
+              "SYN": 0.9998181027003828,
+              "TCP": 0.9999941409673826,
+              "UDP": 0.999551326461031,
+              "ICMP": 0.9592582566323768
+            },
+            "flood_small_support": {
+              "SYN": false,
+              "TCP": false,
+              "UDP": false,
+              "ICMP": true
+            }
+          }
+        },
+        "43": {
+          "flood_rows": {
+            "SYN": {
+              "n_test": 475724,
+              "n_protocol_matching": 475235
+            },
+            "TCP": {
+              "n_test": 439197,
+              "n_protocol_matching": 439028
+            },
+            "UDP": {
+              "n_test": 19348,
+              "n_protocol_matching": 18885
+            },
+            "ICMP": {
+              "n_test": 683,
+              "n_protocol_matching": 24
+            }
+          },
+          "unrestricted": {
+            "flood_macro": 0.9932156242021296,
+            "macro_common": 0.9922333983142195,
+            "pooled_auc": 0.9998194098125954,
+            "flood_auc": {
+              "SYN": 0.9997695969013476,
+              "TCP": 0.9999786648582178,
+              "UDP": 0.9992790973835841,
+              "ICMP": 0.9738351376653686
+            }
+          },
+          "restricted": {
+            "flood_macro": 0.9965520915570878,
+            "macro_common": 0.9949025721981861,
+            "pooled_auc": 0.9998687430565805,
+            "benign_recall": 0.9729290741743367,
+            "balanced_accuracy": 0.9861567360711574,
+            "n_test": 935892,
+            "flood_auc": {
+              "SYN": 0.999804428104754,
+              "TCP": 0.9999924391225052,
+              "UDP": 0.9995860162362483,
+              "ICMP": 0.9868254827648438
+            },
+            "flood_small_support": {
+              "SYN": false,
+              "TCP": false,
+              "UDP": false,
+              "ICMP": true
+            }
+          }
+        },
+        "44": {
+          "flood_rows": {
+            "SYN": {
+              "n_test": 475724,
+              "n_protocol_matching": 475235
+            },
+            "TCP": {
+              "n_test": 439197,
+              "n_protocol_matching": 439028
+            },
+            "UDP": {
+              "n_test": 19348,
+              "n_protocol_matching": 18885
+            },
+            "ICMP": {
+              "n_test": 683,
+              "n_protocol_matching": 24
+            }
+          },
+          "unrestricted": {
+            "flood_macro": 0.9933545212372092,
+            "macro_common": 0.9922872838022958,
+            "pooled_auc": 0.9997994534208464,
+            "flood_auc": {
+              "SYN": 0.9997276160367736,
+              "TCP": 0.9999792547273658,
+              "UDP": 0.9992609363014455,
+              "ICMP": 0.9744502778832518
+            }
+          },
+          "restricted": {
+            "flood_macro": 0.9961188794766144,
+            "macro_common": 0.9944987703938197,
+            "pooled_auc": 0.9998475612225792,
+            "benign_recall": 0.9734704926908501,
+            "balanced_accuracy": 0.986427445329414,
+            "n_test": 935892,
+            "flood_auc": {
+              "SYN": 0.9997604422293365,
+              "TCP": 0.999992757293504,
+              "UDP": 0.9995887684828771,
+              "ICMP": 0.9851335499007399
+            },
+            "flood_small_support": {
+              "SYN": false,
+              "TCP": false,
+              "UDP": false,
+              "ICMP": true
+            }
+          }
+        }
+      },
+      "arm2_within_iot": {
+        "42": {
+          "flood_rows": {
+            "SYN": {
+              "n_test": 804610,
+              "n_protocol_matching": 792538
+            },
+            "TCP": {
+              "n_test": 466951,
+              "n_protocol_matching": 457590
+            },
+            "UDP": {
+              "n_test": 280908,
+              "n_protocol_matching": 259178
+            },
+            "ICMP": {
+              "n_test": 12862,
+              "n_protocol_matching": 593
+            }
+          },
+          "unrestricted": {
+            "flood_macro": 0.981504369652669,
+            "macro_common": 0.969421334873547,
+            "pooled_auc": 0.9902769111509444,
+            "flood_auc": {
+              "SYN": 0.9957643212406134,
+              "TCP": 0.9990354983631442,
+              "UDP": 0.9902736968409013,
+              "ICMP": 0.940943962166017
+            }
+          },
+          "restricted": {
+            "flood_macro": 0.9913068781071683,
+            "macro_common": 0.9772633416371466,
+            "pooled_auc": 0.9923351200842403,
+            "benign_recall": 0.7099463601532567,
+            "balanced_accuracy": 0.8499920045829914,
+            "n_test": 1600528,
+            "flood_auc": {
+              "SYN": 0.9970723253909461,
+              "TCP": 0.9995591773625925,
+              "UDP": 0.9959644008027857,
+              "ICMP": 0.9726316088723487
+            },
+            "flood_small_support": {
+              "SYN": false,
+              "TCP": false,
+              "UDP": false,
+              "ICMP": false
+            }
+          }
+        },
+        "43": {
+          "flood_rows": {
+            "SYN": {
+              "n_test": 534247,
+              "n_protocol_matching": 527064
+            },
+            "TCP": {
+              "n_test": 618079,
+              "n_protocol_matching": 608480
+            },
+            "UDP": {
+              "n_test": 713873,
+              "n_protocol_matching": 693656
+            },
+            "ICMP": {
+              "n_test": 12910,
+              "n_protocol_matching": 702
+            }
+          },
+          "unrestricted": {
+            "flood_macro": 0.982962180269532,
+            "macro_common": 0.9706391172644407,
+            "pooled_auc": 0.9935446511749324,
+            "flood_auc": {
+              "SYN": 0.9967745585728507,
+              "TCP": 0.998812974217192,
+              "UDP": 0.9969922097125651,
+              "ICMP": 0.9392689785755199
+            }
+          },
+          "restricted": {
+            "flood_macro": 0.9923309183067979,
+            "macro_common": 0.9781341076942534,
+            "pooled_auc": 0.995006969164959,
+            "benign_recall": 0.6611494252873563,
+            "balanced_accuracy": 0.8277292695300469,
+            "n_test": 1899821,
+            "flood_auc": {
+              "SYN": 0.9975689594982119,
+              "TCP": 0.9994303056016474,
+              "UDP": 0.999000505975844,
+              "ICMP": 0.9733239021514883
+            },
+            "flood_small_support": {
+              "SYN": false,
+              "TCP": false,
+              "UDP": false,
+              "ICMP": false
+            }
+          }
+        },
+        "44": {
+          "flood_rows": {
+            "SYN": {
+              "n_test": 603833,
+              "n_protocol_matching": 594299
+            },
+            "TCP": {
+              "n_test": 766916,
+              "n_protocol_matching": 751303
+            },
+            "UDP": {
+              "n_test": 281618,
+              "n_protocol_matching": 258343
+            },
+            "ICMP": {
+              "n_test": 12534,
+              "n_protocol_matching": 646
+            }
+          },
+          "unrestricted": {
+            "flood_macro": 0.9811794505389768,
+            "macro_common": 0.9696220135850059,
+            "pooled_auc": 0.9922851774335681,
+            "flood_auc": {
+              "SYN": 0.9966595024849333,
+              "TCP": 0.9983714435379326,
+              "UDP": 0.9923595080523877,
+              "ICMP": 0.9373273480806537
+            }
+          },
+          "restricted": {
+            "flood_macro": 0.9919596071153904,
+            "macro_common": 0.9782461388461368,
+            "pooled_auc": 0.9942898591058494,
+            "benign_recall": 0.6645210727969348,
+            "balanced_accuracy": 0.8287730814305494,
+            "n_test": 1674510,
+            "flood_auc": {
+              "SYN": 0.9979019583386433,
+              "TCP": 0.9993778473131658,
+              "UDP": 0.99723216942138,
+              "ICMP": 0.973326453388373
+            },
+            "flood_small_support": {
+              "SYN": false,
+              "TCP": false,
+              "UDP": false,
+              "ICMP": false
+            }
+          }
+        }
+      },
+      "arm3_iomt_to_iot": {
+        "42": {
+          "flood_rows": {
+            "SYN": {
+              "n_test": 2288310,
+              "n_protocol_matching": 2254959
+            },
+            "TCP": {
+              "n_test": 2232777,
+              "n_protocol_matching": 2191536
+            },
+            "UDP": {
+              "n_test": 1524156,
+              "n_protocol_matching": 1451408
+            },
+            "ICMP": {
+              "n_test": 41653,
+              "n_protocol_matching": 1898
+            }
+          },
+          "unrestricted": {
+            "flood_macro": 0.8709580933542479,
+            "macro_common": 0.827914777887306,
+            "pooled_auc": 0.9291317521839726,
+            "flood_auc": {
+              "SYN": 0.9726458957087312,
+              "TCP": 0.9887366721380546,
+              "UDP": 0.8184015731680647,
+              "ICMP": 0.7040482324021409
+            }
+          },
+          "restricted": {
+            "flood_macro": 0.8727729561557886,
+            "macro_common": 0.8293666681285385,
+            "pooled_auc": 0.937146115826992,
+            "benign_recall": 0.5163035988276476,
+            "balanced_accuracy": 0.7418926028709428,
+            "n_test": 6151329,
+            "flood_auc": {
+              "SYN": 0.9763314739273434,
+              "TCP": 0.9928376829170716,
+              "UDP": 0.8308438249826687,
+              "ICMP": 0.6910788427960706
+            },
+            "flood_small_support": {
+              "SYN": false,
+              "TCP": false,
+              "UDP": false,
+              "ICMP": false
+            }
+          }
+        },
+        "43": {
+          "flood_rows": {
+            "SYN": {
+              "n_test": 2288310,
+              "n_protocol_matching": 2254959
+            },
+            "TCP": {
+              "n_test": 2232777,
+              "n_protocol_matching": 2191536
+            },
+            "UDP": {
+              "n_test": 1524156,
+              "n_protocol_matching": 1451408
+            },
+            "ICMP": {
+              "n_test": 41653,
+              "n_protocol_matching": 1898
+            }
+          },
+          "unrestricted": {
+            "flood_macro": 0.8669625215439296,
+            "macro_common": 0.8270076922331292,
+            "pooled_auc": 0.924282012172422,
+            "flood_auc": {
+              "SYN": 0.9739914143567451,
+              "TCP": 0.9890752028717311,
+              "UDP": 0.7948572232947673,
+              "ICMP": 0.7099262456524748
+            }
+          },
+          "restricted": {
+            "flood_macro": 0.8652395677981488,
+            "macro_common": 0.8256293292365046,
+            "pooled_auc": 0.9319516772459325,
+            "benign_recall": 0.48913552797199583,
+            "balanced_accuracy": 0.7285889982855116,
+            "n_test": 6151329,
+            "flood_auc": {
+              "SYN": 0.9775644985440368,
+              "TCP": 0.9928448744691147,
+              "UDP": 0.8062025974121558,
+              "ICMP": 0.6843463007672883
+            },
+            "flood_small_support": {
+              "SYN": false,
+              "TCP": false,
+              "UDP": false,
+              "ICMP": false
+            }
+          }
+        },
+        "44": {
+          "flood_rows": {
+            "SYN": {
+              "n_test": 2288310,
+              "n_protocol_matching": 2254959
+            },
+            "TCP": {
+              "n_test": 2232777,
+              "n_protocol_matching": 2191536
+            },
+            "UDP": {
+              "n_test": 1524156,
+              "n_protocol_matching": 1451408
+            },
+            "ICMP": {
+              "n_test": 41653,
+              "n_protocol_matching": 1898
+            }
+          },
+          "unrestricted": {
+            "flood_macro": 0.8617016445096433,
+            "macro_common": 0.8219829330683563,
+            "pooled_auc": 0.9195942267943956,
+            "flood_auc": {
+              "SYN": 0.9733219866948177,
+              "TCP": 0.9895201849584322,
+              "UDP": 0.7758683647368979,
+              "ICMP": 0.7080960416484252
+            }
+          },
+          "restricted": {
+            "flood_macro": 0.8630580404419216,
+            "macro_common": 0.8230680498141789,
+            "pooled_auc": 0.9268798020895576,
+            "benign_recall": 0.5135013460001286,
+            "balanced_accuracy": 0.7335550125370233,
+            "n_test": 6151329,
+            "flood_auc": {
+              "SYN": 0.9769025160928799,
+              "TCP": 0.9935134897683372,
+              "UDP": 0.7848462069251972,
+              "ICMP": 0.6969699489812718
+            },
+            "flood_small_support": {
+              "SYN": false,
+              "TCP": false,
+              "UDP": false,
+              "ICMP": false
+            }
+          }
+        }
+      },
+      "arm4_iot_to_iomt": {
+        "42": {
+          "flood_rows": {
+            "SYN": {
+              "n_test": 2228567,
+              "n_protocol_matching": 2226635
+            },
+            "TCP": {
+              "n_test": 2007522,
+              "n_protocol_matching": 2006381
+            },
+            "UDP": {
+              "n_test": 111373,
+              "n_protocol_matching": 109022
+            },
+            "ICMP": {
+              "n_test": 3021,
+              "n_protocol_matching": 96
+            }
+          },
+          "unrestricted": {
+            "flood_macro": 0.9398522330846839,
+            "macro_common": 0.9281018222319533,
+            "pooled_auc": 0.9986094890955421,
+            "flood_auc": {
+              "SYN": 0.9993820260307692,
+              "TCP": 0.9988092855115365,
+              "UDP": 0.9908945125352826,
+              "ICMP": 0.7703231082611474
+            }
+          },
+          "restricted": {
+            "flood_macro": 0.9895542741012648,
+            "macro_common": 0.9678634550452181,
+            "pooled_auc": 0.9991238285233577,
+            "benign_recall": 0.26242884250474385,
+            "balanced_accuracy": 0.6311679338903755,
+            "n_test": 4355807,
+            "flood_auc": {
+              "SYN": 0.9996993269926387,
+              "TCP": 0.9990299901910582,
+              "UDP": 0.9944053551226906,
+              "ICMP": 0.9650824240986717
+            },
+            "flood_small_support": {
+              "SYN": false,
+              "TCP": false,
+              "UDP": false,
+              "ICMP": true
+            }
+          }
+        },
+        "43": {
+          "flood_rows": {
+            "SYN": {
+              "n_test": 2228567,
+              "n_protocol_matching": 2226635
+            },
+            "TCP": {
+              "n_test": 2007522,
+              "n_protocol_matching": 2006381
+            },
+            "UDP": {
+              "n_test": 111373,
+              "n_protocol_matching": 109022
+            },
+            "ICMP": {
+              "n_test": 3021,
+              "n_protocol_matching": 96
+            }
+          },
+          "unrestricted": {
+            "flood_macro": 0.9247253956679529,
+            "macro_common": 0.9132111502776565,
+            "pooled_auc": 0.9981894175898185,
+            "flood_auc": {
+              "SYN": 0.9989859789913808,
+              "TCP": 0.9985681496814579,
+              "UDP": 0.9887978408231457,
+              "ICMP": 0.7125496131758273
+            }
+          },
+          "restricted": {
+            "flood_macro": 0.9879302639888473,
+            "macro_common": 0.963775044934372,
+            "pooled_auc": 0.9987940006594251,
+            "benign_recall": 0.2851992409867173,
+            "balanced_accuracy": 0.6425517523186297,
+            "n_test": 4355807,
+            "flood_auc": {
+              "SYN": 0.9993345899599035,
+              "TCP": 0.998812436809354,
+              "UDP": 0.9932127072379973,
+              "ICMP": 0.9603613219481341
+            },
+            "flood_small_support": {
+              "SYN": false,
+              "TCP": false,
+              "UDP": false,
+              "ICMP": true
+            }
+          }
+        },
+        "44": {
+          "flood_rows": {
+            "SYN": {
+              "n_test": 2228567,
+              "n_protocol_matching": 2226635
+            },
+            "TCP": {
+              "n_test": 2007522,
+              "n_protocol_matching": 2006381
+            },
+            "UDP": {
+              "n_test": 111373,
+              "n_protocol_matching": 109022
+            },
+            "ICMP": {
+              "n_test": 3021,
+              "n_protocol_matching": 96
+            }
+          },
+          "unrestricted": {
+            "flood_macro": 0.9299081989821086,
+            "macro_common": 0.9165386971511877,
+            "pooled_auc": 0.9983498375547387,
+            "flood_auc": {
+              "SYN": 0.9992329876440565,
+              "TCP": 0.9986048217672309,
+              "UDP": 0.9888679174930419,
+              "ICMP": 0.7329270690241052
+            }
+          },
+          "restricted": {
+            "flood_macro": 0.9878793940114825,
+            "macro_common": 0.9629156531746869,
+            "pooled_auc": 0.9989296811002208,
+            "benign_recall": 0.2967741935483871,
+            "balanced_accuracy": 0.6483365820417272,
+            "n_test": 4355807,
+            "flood_auc": {
+              "SYN": 0.9995768239792783,
+              "TCP": 0.9988388632878944,
+              "UDP": 0.9931418160399845,
+              "ICMP": 0.9599600727387729
+            },
+            "flood_small_support": {
+              "SYN": false,
+              "TCP": false,
+              "UDP": false,
+              "ICMP": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "b_flood_only_training_seed42": {
+    "arm2_within_iot": {
+      "train_rows_flood_only": 120000,
+      "train_rows_current": 172285,
+      "flood_only": {
+        "benign_recall": 0.9511417624521072,
+        "balanced_accuracy": 0.9607621695306858,
+        "pooled_auc": 0.9886658812488887,
+        "macro_common": 0.9657935846027146,
+        "macro_per_arm": 0.8979497568039694,
+        "attack_recall_pooled": 0.9703825766092643,
+        "n_test": 1655960,
+        "n_benign": 32625
+      },
+      "current_step05": {
+        "benign_recall": 0.7099463601532567,
+        "balanced_accuracy": 0.8488136381459732,
+        "pooled_auc": 0.9902769111509444,
+        "macro_common": 0.969421334873547,
+        "macro_per_arm": 0.930757685559743,
+        "attack_recall_pooled": 0.9876809161386898,
+        "n_test": 1655960,
+        "n_benign": 32625
+      },
+      "recall_at_0.5_by_family_flood_only": {
+        "SYN": 0.9911870347124694,
+        "TCP": 0.9965863655929638,
+        "UDP": 0.9716811197972289,
+        "ICMP": 0.8677499611257969,
+        "port_scan": 0.5043826219512195,
+        "os_scan": 0.6038773148148148,
+        "ping_sweep": 0.7380952380952381,
+        "vuln_scan": 0.287113893046673,
+        "arp": 0.634982109029678
+      },
+      "recall_at_0.5_by_family_current": {
+        "SYN": 0.9950696610780378,
+        "TCP": 0.9993489680930119,
+        "UDP": 0.9880067495407749,
+        "ICMP": 0.9364018037630228,
+        "port_scan": 0.9262576219512195,
+        "os_scan": 0.9048032407407407,
+        "ping_sweep": 0.9047619047619048,
+        "vuln_scan": 0.6221254592461559,
+        "arp": 0.9090717743632919
+      },
+      "auc_by_family_flood_only": {
+        "SYN": 0.9965041178751506,
+        "TCP": 0.999393989069599,
+        "UDP": 0.991416189928588,
+        "ICMP": 0.9688704604314233,
+        "port_scan": 0.8328493803149238,
+        "os_scan": 0.8727831657088122,
+        "ping_sweep": 0.9154760080277322,
+        "vuln_scan": 0.6319941469521662,
+        "arp": 0.8897866041510921
+      },
+      "auc_by_family_current": {
+        "SYN": 0.9957643212406134,
+        "TCP": 0.9990354983631442,
+        "UDP": 0.9902736968409013,
+        "ICMP": 0.940943962166017,
+        "port_scan": 0.9342248738435661,
+        "os_scan": 0.9210891957570597,
+        "ping_sweep": 0.9130454296661192,
+        "vuln_scan": 0.7511703881658602,
+        "arp": 0.913559548100783
+      }
+    },
+    "arm4_iot_to_iomt": {
+      "train_rows_flood_only": 120000,
+      "train_rows_current": 198394,
+      "flood_only": {
+        "benign_recall": 0.46024667931688806,
+        "balanced_accuracy": 0.7296598169224011,
+        "pooled_auc": 0.9980636816115,
+        "macro_common": 0.9030309875718489,
+        "macro_per_arm": 0.9030309875718489,
+        "attack_recall_pooled": 0.9990729545279142,
+        "n_test": 4364156,
+        "n_benign": 10540
+      },
+      "current_step05": {
+        "benign_recall": 0.26242884250474385,
+        "balanced_accuracy": 0.631105890780231,
+        "pooled_auc": 0.9986094890955421,
+        "macro_common": 0.9281018222319533,
+        "macro_per_arm": 0.9281018222319533,
+        "attack_recall_pooled": 0.9997829390557182,
+        "n_test": 4364156,
+        "n_benign": 10540
+      },
+      "recall_at_0.5_by_family_flood_only": {
+        "SYN": 0.9994521142958681,
+        "TCP": 0.9995980118773293,
+        "UDP": 0.9927361209628904,
+        "ICMP": 0.7990731545845746,
+        "port_scan": 0.7519142419601837,
+        "os_scan": 0.8534979423868313,
+        "ping_sweep": 0.8504672897196262,
+        "vuln_scan": 0.8220640569395018,
+        "arp": 0.7879133409350056
+      },
+      "recall_at_0.5_by_family_current": {
+        "SYN": 0.9998941023536649,
+        "TCP": 0.9999133259809855,
+        "UDP": 0.9982850421556392,
+        "ICMP": 0.9503475670307845,
+        "port_scan": 0.9050535987748851,
+        "os_scan": 0.9572016460905349,
+        "ping_sweep": 0.9813084112149533,
+        "vuln_scan": 0.9145907473309609,
+        "arp": 0.9384264538198404
+      },
+      "auc_by_family_flood_only": {
+        "SYN": 0.9986735709939095,
+        "TCP": 0.9987191972225855,
+        "UDP": 0.988344983729138,
+        "ICMP": 0.7117032449011254,
+        "port_scan": 0.7517235442317025,
+        "os_scan": 0.8177139410124862,
+        "ping_sweep": 0.7743606909148948,
+        "vuln_scan": 0.7713396516912355,
+        "arp": 0.7015810973670373
+      },
+      "auc_by_family_current": {
+        "SYN": 0.9993820260307692,
+        "TCP": 0.9988092855115365,
+        "UDP": 0.9908945125352826,
+        "ICMP": 0.7703231082611474,
+        "port_scan": 0.7827772708648741,
+        "os_scan": 0.8811001788210306,
+        "ping_sweep": 0.8047518132969196,
+        "vuln_scan": 0.8338491900031738,
+        "arp": 0.7442193933519263
+      }
+    }
+  }
+}

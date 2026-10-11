@@ -1,0 +1,289 @@
+{
+  "meta": {
+    "run_utc": "2026-10-10T18:07:39+00:00",
+    "script": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/01_version_check.py",
+      "sha256": "730fdcbd4a0967e57d8cb604d991f3e3259d94c785e3a4928f1d7a30ea4bf828"
+    },
+    "helper": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/_common.py",
+      "sha256": "214309d4b5d15c40277d9a3a1ebd993be60e537b5d24c96e8f5bdfd69dda6abc"
+    },
+    "python_executable": "/Users/amoorabaseet/code/iomt-pcap-experiments/venv/bin/python",
+    "sys_prefix": "/Users/amoorabaseet/code/iomt-pcap-experiments/venv",
+    "libs": {
+      "python": "3.13.13",
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "nfstream": "6.6.0",
+      "sklearn": "1.9.0",
+      "pyarrow": "24.0.0"
+    },
+    "thesis_repo": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project",
+      "commit": "6aa9cc28de4358f3941ed4c640d3b8dddadd1f0f",
+      "branch": "chore/bootstrap-claude",
+      "tree_dirty": true,
+      "dirty_entries_excluding_same_extractor": [
+        " M Project_Journey_Complete.md",
+        " M README.md",
+        "?? thesis/crossdataset/artifacts/",
+        "?? thesis/crossdataset/sampled_test_set.parquet"
+      ]
+    },
+    "seeds": [],
+    "inputs_note": "stored feature CSV + extracted pcap per target; zip not hashed",
+    "inputs": [
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Recon-Ping_Sweep_test.pcap.csv",
+        "size_bytes": 21382,
+        "sha256": "627b3a6e2f89a2a01bc5d4168c328478f8da22133fc394410121b44eca78ab6c"
+      },
+      {
+        "path": "/private/tmp/claude-501/-Users-amoorabaseet-code-ciciomt2024-eval-audit/3d82aef6-6154-4de9-bb77-3b4f1a291fc6/scratchpad/step01/zip_extract_Recon-Ping_Sweep_test/Recon-Ping_Sweep_test.pcap",
+        "size_bytes": 161541,
+        "sha256": "9d5de5dfb8008afc787f652a6d57261eec9ab6dbe141f2e9f06db98c74f131cb"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Recon-Port_Scan_test.pcap.csv",
+        "size_bytes": 40843017,
+        "sha256": "f3acd52ee56376c4742bebb781d46e3ac816f41f8de2d66ada946c59c8e0aa86"
+      },
+      {
+        "path": "/private/tmp/claude-501/-Users-amoorabaseet-code-ciciomt2024-eval-audit/3d82aef6-6154-4de9-bb77-3b4f1a291fc6/scratchpad/step01/zip_extract_Recon-Port_Scan_test/Recon-Port_Scan_test.pcap",
+        "size_bytes": 20947253,
+        "sha256": "083132b31cf996703576c350ef1788ecf7bb9e4cfde8bc4e27ca7107a59a6aff"
+      }
+    ]
+  },
+  "what": "Does extract_one() of the current stage2a script with nfstream 6.6.0 reproduce the stored features_identity CSV of the same CICIoMT2024 pcap? Numbers are per-pcap, measured on ALL flows of that pcap (rows_stored / rows_fresh).",
+  "stored_run_nfstream_version": "NOT RECORDED (features_identity/_manifest.json has no version field)",
+  "zip_used": "/Volumes/PortableSSD/IOMT/CICIoMT2024 (1).zip",
+  "zip_size_bytes": 21008991386,
+  "zip_hash_policy": "21 GB zip not hashed; path, size and member CRC32 recorded, extracted pcap sha256 in inputs",
+  "median_columns": [
+    "bidirectional_packets",
+    "bidirectional_bytes",
+    "bidirectional_duration_ms"
+  ],
+  "flow_key_columns_for_sorting": [
+    "src_ip",
+    "dst_ip",
+    "src_port",
+    "dst_port",
+    "protocol",
+    "vlan_id",
+    "tunnel_id",
+    "bidirectional_first_seen_ms"
+  ],
+  "pcaps": {
+    "Recon-Ping_Sweep_test.pcap": {
+      "zip_member": "CICIoMT2024/WiFI_and_MQTT/attacks/Pcap/test/Recon-Ping_Sweep_test.pcap",
+      "zip_member_crc32": "583a82b8",
+      "same_member_in_alt_zip_crc32": "583a82b8",
+      "pcap_extracted_to": "/private/tmp/claude-501/-Users-amoorabaseet-code-ciciomt2024-eval-audit/3d82aef6-6154-4de9-bb77-3b4f1a291fc6/scratchpad/step01/zip_extract_Recon-Ping_Sweep_test/Recon-Ping_Sweep_test.pcap",
+      "fresh_csv_written_to": "/private/tmp/claude-501/-Users-amoorabaseet-code-ciciomt2024-eval-audit/3d82aef6-6154-4de9-bb77-3b4f1a291fc6/scratchpad/step01/zip_extract_Recon-Ping_Sweep_test/fresh_Recon-Ping_Sweep_test.pcap.csv",
+      "stored_csv": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Recon-Ping_Sweep_test.pcap.csv",
+      "rows_stored": 44,
+      "rows_fresh": 44,
+      "columns_stored": 78,
+      "columns_fresh": 78,
+      "column_list_identical_and_same_order": true,
+      "column_set_identical": true,
+      "columns_only_in_stored": [],
+      "columns_only_in_fresh": [],
+      "medians": {
+        "bidirectional_packets": {
+          "stored": 5.0,
+          "fresh": 5.0
+        },
+        "bidirectional_bytes": {
+          "stored": 613.5,
+          "fresh": 613.5
+        },
+        "bidirectional_duration_ms": {
+          "stored": 17519.5,
+          "fresh": 17519.5
+        }
+      },
+      "numeric_columns": 71,
+      "numeric_feature_columns": 59,
+      "all_zero_on_both_sides": {
+        "n_numeric_columns": 21,
+        "n_model_input_columns": 18,
+        "columns": [
+          "expiration_id",
+          "vlan_id",
+          "tunnel_id",
+          "bidirectional_syn_packets",
+          "bidirectional_cwr_packets",
+          "bidirectional_ece_packets",
+          "bidirectional_urg_packets",
+          "bidirectional_rst_packets",
+          "bidirectional_fin_packets",
+          "src2dst_syn_packets",
+          "src2dst_cwr_packets",
+          "src2dst_ece_packets",
+          "src2dst_urg_packets",
+          "src2dst_rst_packets",
+          "src2dst_fin_packets",
+          "dst2src_syn_packets",
+          "dst2src_cwr_packets",
+          "dst2src_ece_packets",
+          "dst2src_urg_packets",
+          "dst2src_rst_packets",
+          "dst2src_fin_packets"
+        ]
+      },
+      "elementwise_compared": true,
+      "object_columns_mismatching_rows": {
+        "src_ip": 0,
+        "src_mac": 0,
+        "src_oui": 0,
+        "dst_ip": 0,
+        "dst_mac": 0,
+        "dst_oui": 0,
+        "src_capture": 0
+      },
+      "nan_mismatch_cells": 0,
+      "max_abs_diff": {
+        "model_input_columns": 0.0,
+        "non_feature_numeric_columns": 30.0
+      },
+      "columns_with_nonzero_diff": {
+        "id": 30.0
+      },
+      "rows_with_any_diff": 44
+    },
+    "Recon-Port_Scan_test.pcap": {
+      "zip_member": "CICIoMT2024/WiFI_and_MQTT/attacks/Pcap/test/Recon-Port_Scan_test.pcap",
+      "zip_member_crc32": "21d0f8cb",
+      "same_member_in_alt_zip_crc32": "21d0f8cb",
+      "pcap_extracted_to": "/private/tmp/claude-501/-Users-amoorabaseet-code-ciciomt2024-eval-audit/3d82aef6-6154-4de9-bb77-3b4f1a291fc6/scratchpad/step01/zip_extract_Recon-Port_Scan_test/Recon-Port_Scan_test.pcap",
+      "fresh_csv_written_to": "/private/tmp/claude-501/-Users-amoorabaseet-code-ciciomt2024-eval-audit/3d82aef6-6154-4de9-bb77-3b4f1a291fc6/scratchpad/step01/zip_extract_Recon-Port_Scan_test/fresh_Recon-Port_Scan_test.pcap.csv",
+      "stored_csv": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Recon-Port_Scan_test.pcap.csv",
+      "rows_stored": 107192,
+      "rows_fresh": 107192,
+      "columns_stored": 78,
+      "columns_fresh": 78,
+      "column_list_identical_and_same_order": true,
+      "column_set_identical": true,
+      "columns_only_in_stored": [],
+      "columns_only_in_fresh": [],
+      "medians": {
+        "bidirectional_packets": {
+          "stored": 2.0,
+          "fresh": 2.0
+        },
+        "bidirectional_bytes": {
+          "stored": 120.0,
+          "fresh": 120.0
+        },
+        "bidirectional_duration_ms": {
+          "stored": 292.0,
+          "fresh": 292.0
+        }
+      },
+      "numeric_columns": 71,
+      "numeric_feature_columns": 59,
+      "all_zero_on_both_sides": {
+        "n_numeric_columns": 12,
+        "n_model_input_columns": 9,
+        "columns": [
+          "expiration_id",
+          "vlan_id",
+          "tunnel_id",
+          "bidirectional_cwr_packets",
+          "bidirectional_ece_packets",
+          "bidirectional_urg_packets",
+          "src2dst_cwr_packets",
+          "src2dst_ece_packets",
+          "src2dst_urg_packets",
+          "dst2src_cwr_packets",
+          "dst2src_ece_packets",
+          "dst2src_urg_packets"
+        ]
+      },
+      "elementwise_compared": true,
+      "object_columns_mismatching_rows": {
+        "src_ip": 0,
+        "src_mac": 0,
+        "src_oui": 0,
+        "dst_ip": 0,
+        "dst_mac": 0,
+        "dst_oui": 0,
+        "src_capture": 0
+      },
+      "nan_mismatch_cells": 0,
+      "max_abs_diff": {
+        "model_input_columns": 0.0,
+        "non_feature_numeric_columns": 3542.0
+      },
+      "columns_with_nonzero_diff": {
+        "id": 3542.0
+      },
+      "rows_with_any_diff": 107184
+    }
+  },
+  "coverage_of_stored_captures": {
+    "stored_captures": 72,
+    "stored_with_pcap_on_disk": 34,
+    "stored_without_pcap_on_disk": 38,
+    "missing": [
+      "MQTT-DDoS-Connect_Flood_train.pcap",
+      "MQTT-DoS-Publish_Flood_train.pcap",
+      "TCP_IP-DDoS-ICMP2_train.pcap",
+      "TCP_IP-DDoS-ICMP5_train.pcap",
+      "TCP_IP-DDoS-ICMP6_train.pcap",
+      "TCP_IP-DDoS-ICMP7_train.pcap",
+      "TCP_IP-DDoS-ICMP8_train.pcap",
+      "TCP_IP-DDoS-SYN1_train.pcap",
+      "TCP_IP-DDoS-SYN2_train.pcap",
+      "TCP_IP-DDoS-SYN3_train.pcap",
+      "TCP_IP-DDoS-SYN4_train.pcap",
+      "TCP_IP-DDoS-TCP1_train.pcap",
+      "TCP_IP-DDoS-TCP2_train.pcap",
+      "TCP_IP-DDoS-TCP3_train.pcap",
+      "TCP_IP-DDoS-TCP4_train.pcap",
+      "TCP_IP-DDoS-UDP1_train.pcap",
+      "TCP_IP-DDoS-UDP2_train.pcap",
+      "TCP_IP-DDoS-UDP3_train.pcap",
+      "TCP_IP-DDoS-UDP4_train.pcap",
+      "TCP_IP-DDoS-UDP5_train.pcap",
+      "TCP_IP-DDoS-UDP6_train.pcap",
+      "TCP_IP-DDoS-UDP7_train.pcap",
+      "TCP_IP-DDoS-UDP8_train.pcap",
+      "TCP_IP-DoS-ICMP2_train.pcap",
+      "TCP_IP-DoS-ICMP3_train.pcap",
+      "TCP_IP-DoS-ICMP4_train.pcap",
+      "TCP_IP-DoS-SYN1_train.pcap",
+      "TCP_IP-DoS-SYN2_train.pcap",
+      "TCP_IP-DoS-SYN3_train.pcap",
+      "TCP_IP-DoS-SYN4_train.pcap",
+      "TCP_IP-DoS-TCP1_train.pcap",
+      "TCP_IP-DoS-TCP2_train.pcap",
+      "TCP_IP-DoS-TCP3_train.pcap",
+      "TCP_IP-DoS-TCP4_train.pcap",
+      "TCP_IP-DoS-UDP1_train.pcap",
+      "TCP_IP-DoS-UDP2_train.pcap",
+      "TCP_IP-DoS-UDP3_train.pcap",
+      "TCP_IP-DoS-UDP4_train.pcap"
+    ],
+    "same_basename_different_crc_between_zips": [],
+    "zips": {
+      "main": {
+        "path": "/Volumes/PortableSSD/IOMT/CICIoMT2024 (1).zip",
+        "wifi_mqtt_pcaps": 33
+      },
+      "alt": {
+        "path": "/Volumes/PortableSSD/IOMT/CICIoMT2024_pcaps_archive.zip",
+        "wifi_mqtt_pcaps": 37
+      }
+    },
+    "unreadable_zip": {
+      "path": "/Volumes/PortableSSD/IOMT/CICIoMT2024_pcaps_archive (1).zip",
+      "error": "BadZipFile: File is not a zip file (checked 2026-10-10)"
+    }
+  },
+  "model_input_columns_n": 59
+}

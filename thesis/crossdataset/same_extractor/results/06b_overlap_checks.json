@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "run_utc": "2026-10-11T05:18:13+00:00",
+    "script": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/06b_overlap_checks.py",
+      "sha256": "2c3ea6b71d97a8bcf838206da4a91b34ecc320ddc45d069d6705a9bd656f6de3"
+    },
+    "helper": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/_common.py",
+      "sha256": "214309d4b5d15c40277d9a3a1ebd993be60e537b5d24c96e8f5bdfd69dda6abc"
+    },
+    "python_executable": "/Users/amoorabaseet/code/IoMT-Project/venv/bin/python",
+    "sys_prefix": "/Users/amoorabaseet/code/IoMT-Project/venv",
+    "libs": {
+      "python": "3.13.13",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "nfstream": null,
+      "sklearn": "1.8.0",
+      "pyarrow": "24.0.0"
+    },
+    "thesis_repo": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project",
+      "commit": "6aa9cc28de4358f3941ed4c640d3b8dddadd1f0f",
+      "branch": "chore/bootstrap-claude",
+      "tree_dirty": true,
+      "dirty_entries_excluding_same_extractor": [
+        " M Project_Journey_Complete.md",
+        " M README.md",
+        "?? thesis/crossdataset/artifacts/",
+        "?? thesis/crossdataset/sampled_test_set.parquet"
+      ]
+    },
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "inputs_note": "step-06 row caches in scratch",
+    "inputs": []
+  },
+  "note": "added after reviewing step 06; hash key as in step 06 (128-bit, not a byte compare); hashes taken over the cached float32 values widened to float64, so a key here is not identical to the float64-parse key used for the step-06 dedup, but the cross-dataset overlap in step 06 used the same widened-float32 values",
+  "positive_control": {
+    "shared38/iomt": {
+      "share_of_1000_training_rows_found": 1.0
+    },
+    "shared38/iot": {
+      "share_of_1000_training_rows_found": 1.0
+    },
+    "shared31_drop7/iomt": {
+      "share_of_1000_training_rows_found": 1.0
+    },
+    "shared31_drop7/iot": {
+      "share_of_1000_training_rows_found": 1.0
+    }
+  },
+  "within_dataset_overlap": {
+    "shared38": {
+      "base_iomt": 0.008514617707614847,
+      "base_iot_seed42": 0.03413601831562166,
+      "base_iot_seed43": 0.033301014441197055,
+      "base_iot_seed44": 0.03242838098086478
+    },
+    "shared31_drop7": {
+      "base_iomt": 0.8911835215280846,
+      "base_iot_seed42": 0.7743475578935147,
+      "base_iot_seed43": 0.7792531313286319,
+      "base_iot_seed44": 0.7838945783310508
+    }
+  }
+}

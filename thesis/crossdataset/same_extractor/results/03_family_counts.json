@@ -1,0 +1,2847 @@
+{
+  "meta": {
+    "run_utc": "2026-10-10T18:12:00+00:00",
+    "script": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/03_family_counts.py",
+      "sha256": "ff965b4c3e8adc9e08e0aa5802c3758506e093ee313dfd78823818bd24c0d1f7"
+    },
+    "helper": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/_common.py",
+      "sha256": "214309d4b5d15c40277d9a3a1ebd993be60e537b5d24c96e8f5bdfd69dda6abc"
+    },
+    "python_executable": "/Users/amoorabaseet/code/IoMT-Project/venv/bin/python",
+    "sys_prefix": "/Users/amoorabaseet/code/IoMT-Project/venv",
+    "libs": {
+      "python": "3.13.13",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "nfstream": null,
+      "sklearn": "1.8.0",
+      "pyarrow": "24.0.0"
+    },
+    "thesis_repo": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project",
+      "commit": "6aa9cc28de4358f3941ed4c640d3b8dddadd1f0f",
+      "branch": "chore/bootstrap-claude",
+      "tree_dirty": true,
+      "dirty_entries_excluding_same_extractor": [
+        " M Project_Journey_Complete.md",
+        " M README.md",
+        "?? thesis/crossdataset/artifacts/",
+        "?? thesis/crossdataset/sampled_test_set.parquet"
+      ]
+    },
+    "seeds": [],
+    "inputs_note": "CICIoMT2024 tables: nfstream version NOT RECORDED for the stored run (see step 01); CICIoT2023 tables: nfstream 6.6.0, stage2a sha256 241e5654.., per manifest.jsonl",
+    "inputs": [
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/ARP_Spoofing_test.pcap.csv",
+        "size_bytes": 75363,
+        "sha256": "37fb4fb796fa6ba3d189409217b798137ffbc9e1a98dfde9947484b63b663d98"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/ARP_Spoofing_train.pcap.csv",
+        "size_bytes": 456940,
+        "sha256": "510c3951f3226b383ea80c0369f271bc171045db70ddca6e81b7a55afa23c8dc"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Benign_test.pcap.csv",
+        "size_bytes": 1311574,
+        "sha256": "28dc13d6a1ed8bc8be370fcda075bb36016176a618c1bc5acbc879592cf08ec2"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Benign_train.pcap.csv",
+        "size_bytes": 6580370,
+        "sha256": "c5e3aa109afe46e19338a8b6726835f82b45d872010436e47ad23f84891b6639"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/MQTT-DDoS-Connect_Flood_test.pcap.csv",
+        "size_bytes": 32399915,
+        "sha256": "49a16d331d8c50bb2ffb5b3db844f8df42d583f0ac6fcff27a9e4fb096a4a0e1"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/MQTT-DDoS-Connect_Flood_train.pcap.csv",
+        "size_bytes": 36869910,
+        "sha256": "5033099238bd152570a125f8ec94d2bbf2ea7021faaa168a81cc2f4ba12e9bcc"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/MQTT-DDoS-Publish_Flood_test.pcap.csv",
+        "size_bytes": 882326,
+        "sha256": "fc599e414693d7d2ecb145690849c7ab3fda69d642ef97cd5ba3c4a9a550664d"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/MQTT-DDoS-Publish_Flood_train.pcap.csv",
+        "size_bytes": 27017759,
+        "sha256": "1537402930cbe6f4f3b6afd527a6104dc0540db29e557f52a4b72ec76917bbce"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/MQTT-DoS-Connect_Flood_test.pcap.csv",
+        "size_bytes": 8098684,
+        "sha256": "6915807da8e8705709c85092d261f32182d23c9f94115a7e1a13b4c43644dff7"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/MQTT-DoS-Connect_Flood_train.pcap.csv",
+        "size_bytes": 12403368,
+        "sha256": "44dbf85da47422047a411ebd8870818d7911ad7ced46e96a90fde317e9eec21d"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/MQTT-DoS-Publish_Flood_test.pcap.csv",
+        "size_bytes": 92432,
+        "sha256": "dceb9a66db6a9ad55ad6340938a73164743159238f64629edd1028efc8e6bdad"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/MQTT-DoS-Publish_Flood_train.pcap.csv",
+        "size_bytes": 124795,
+        "sha256": "02d86fea2228da2db4db56e2119c84970395251fdec0dcb5fff4d3002b7a8855"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/MQTT-Malformed_Data_test.pcap.csv",
+        "size_bytes": 240491,
+        "sha256": "48043e6721b87d10d7cd44c69ec58b60285b2bde291f34b7c8c4935faab55638"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/MQTT-Malformed_Data_train.pcap.csv",
+        "size_bytes": 390801,
+        "sha256": "af7cc7e6b16b0e55d74a36110a51efa9a5afa6105e033d1397ee1a23ec3dfcc7"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Recon-OS_Scan_test.pcap.csv",
+        "size_bytes": 6167708,
+        "sha256": "a00b1ea6da41502c5e3bd32deb47ffd2c9375f12884db36ebcbbb43e0c5f6651"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Recon-OS_Scan_train.pcap.csv",
+        "size_bytes": 27717558,
+        "sha256": "a84746a10e72a58492329247aadc9361c120e78f98e22f5adc229670730795f5"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Recon-Ping_Sweep_test.pcap.csv",
+        "size_bytes": 21382,
+        "sha256": "627b3a6e2f89a2a01bc5d4168c328478f8da22133fc394410121b44eca78ab6c"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Recon-Ping_Sweep_train.pcap.csv",
+        "size_bytes": 35606,
+        "sha256": "a80c8e6e9f3f9d55ae70723c63c40a4ef94fea6da86a2c9ed14c8cdbe8800331"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Recon-Port_Scan_test.pcap.csv",
+        "size_bytes": 40843017,
+        "sha256": "f3acd52ee56376c4742bebb781d46e3ac816f41f8de2d66ada946c59c8e0aa86"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Recon-Port_Scan_train.pcap.csv",
+        "size_bytes": 148149603,
+        "sha256": "336d5885d8e4eed4dd9c96a41f5a75d7a2cd3c5e626dd545d6d6c07a55b2c35e"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Recon-VulScan_test.pcap.csv",
+        "size_bytes": 859827,
+        "sha256": "dea053cbb5e61db3272e5ffd92bb16ed7712b27e9a4cfa06f0885481d20152dd"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/Recon-VulScan_train.pcap.csv",
+        "size_bytes": 2442245,
+        "sha256": "2a4b68aafde18d8e012e614f41a0c0c032dd68a797b93844c5a423758ef0ad81"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-ICMP1_test.pcap.csv",
+        "size_bytes": 146542,
+        "sha256": "6c47560525f7026115ebd056e7462e8679715e1be19049c16dcc24f35d52e2a3"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-ICMP1_train.pcap.csv",
+        "size_bytes": 97818,
+        "sha256": "3d9f97d8fab904762cc3848f4c879993fb9e1bee7a3a0f1e544bd29e59a5679d"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-ICMP2_test.pcap.csv",
+        "size_bytes": 83271,
+        "sha256": "fc389dcd5caa4dc1878a4f57a775f760e06fcd2000db598725be1c426c345281"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-ICMP2_train.pcap.csv",
+        "size_bytes": 65108,
+        "sha256": "81643ee91183733fac86914eb24a59b0c79a971030b180ce88666164ac1a7f05"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-ICMP3_train.pcap.csv",
+        "size_bytes": 76760,
+        "sha256": "9493d8f9c428719aef5aad9b4ee7b38a29d75c3bb8fc28813ee97dc0f1200541"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-ICMP4_train.pcap.csv",
+        "size_bytes": 95094,
+        "sha256": "69496ca90c3795a82edc63ee1c3a66c96f5d8d21f7892b551953d610d410c3a0"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-ICMP5_train.pcap.csv",
+        "size_bytes": 55204,
+        "sha256": "cf13dc55bace0aeb48240bb2c5a2665301cbc884f678825249a4f7d3895e524b"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-ICMP6_train.pcap.csv",
+        "size_bytes": 92884,
+        "sha256": "792180ce603dc32ed4933c99c1fae26d3f73f43a7903de066322adb19809fee2"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-ICMP7_train.pcap.csv",
+        "size_bytes": 216006,
+        "sha256": "319e9634e6d0daad7a8e5c1166e3c6b57b9d8ce1ae4266b6bb0a5958235746d1"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-ICMP8_train.pcap.csv",
+        "size_bytes": 78924,
+        "sha256": "2edd1d80a0d274fe21f0f19e390d9431e8bcb3aea3afdd18b2114545b348d2a7"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-SYN1_train.pcap.csv",
+        "size_bytes": 214312441,
+        "sha256": "be205d605f8c5334fbe0dc246c21aa6ff235a97cc9bb6fc581988cd5f982c990"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-SYN2_train.pcap.csv",
+        "size_bytes": 228750250,
+        "sha256": "09ea5d6adaa59187d4e8967a0a8b87327e50d6b994d03b008c5e40cd81b53b9b"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-SYN3_train.pcap.csv",
+        "size_bytes": 132408423,
+        "sha256": "056980dbc25aa8a979a6be85123182ea89d488f6cb83d1837d17712662584cd8"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-SYN4_train.pcap.csv",
+        "size_bytes": 242091007,
+        "sha256": "f9437f9b9e05034ec340e287ae1cdc478cb588c663eb8d931cec4e0d1553a43c"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-SYN_test.pcap.csv",
+        "size_bytes": 337940349,
+        "sha256": "425c95c430d640fc1aea1976baa5b5c00d9bbb407ea6bd43f5d710b0727c71bd"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-TCP1_train.pcap.csv",
+        "size_bytes": 113480971,
+        "sha256": "acf11cce80ae671ea50ad32ed18d07106b686278e689640743b387d73f9acb1b"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-TCP2_train.pcap.csv",
+        "size_bytes": 304469308,
+        "sha256": "d144b59d05e918fce3f1b15321229d3b6a322951093403e7106c24b0625e8ef1"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-TCP3_train.pcap.csv",
+        "size_bytes": 113171469,
+        "sha256": "05a31bd890cc91f0ced3134f618659da3348ab1f4cef6c92066c2a9cce4abf1e"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-TCP4_train.pcap.csv",
+        "size_bytes": 237652115,
+        "sha256": "6820d5460ea6c804ff06b1f945123d086306211dd9244c4a0818bcfea835dfc6"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-TCP_test.pcap.csv",
+        "size_bytes": 224517845,
+        "sha256": "459adbd66c720e98b8ba4a4932a91083a2d1a03c2990b2e5119476448cca0b3b"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-UDP1_test.pcap.csv",
+        "size_bytes": 8906692,
+        "sha256": "afecac5fe23edc710026da2ae8410a46c35cf9dfd6feced3a36d9f92d084f1e8"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-UDP1_train.pcap.csv",
+        "size_bytes": 8832923,
+        "sha256": "6c9ce4a22d774e2e948eb78f3efb3ab9b92a8d6b46b7d297f018ebb279fc2629"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-UDP2_test.pcap.csv",
+        "size_bytes": 6726135,
+        "sha256": "2661f53489045a90caa59967093b2a5d9ca2bb06febbbea1a34e74465f8159e8"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-UDP2_train.pcap.csv",
+        "size_bytes": 8889561,
+        "sha256": "da15e4c410ec8f7928907f70d6cad3e4b21409339e8891db428688c5c357394e"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-UDP3_train.pcap.csv",
+        "size_bytes": 8906006,
+        "sha256": "58eb6ab2c2c23dd2ef9ddf850cd1ff5cde2a4f6527ee72c615c4a85332aa5078"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-UDP4_train.pcap.csv",
+        "size_bytes": 9003365,
+        "sha256": "bd7cdd7f6602591426e08dd384131b8824663dc8afacf9a51f498d69ba56f94f"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-UDP5_train.pcap.csv",
+        "size_bytes": 8889208,
+        "sha256": "343cb32f92c2937519854b40ddcaf9e5a16a3fddd188d579f86a2328ae7304a1"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-UDP6_train.pcap.csv",
+        "size_bytes": 8617596,
+        "sha256": "63e0f136c22069a15175ce39f242d2475f138fe616eb91bf2c99244b00dc64f8"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-UDP7_train.pcap.csv",
+        "size_bytes": 8649417,
+        "sha256": "f71227f93c9ae33bd6047aa1cb6846371929fccade6d965743c1613d3a12c9ee"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DDoS-UDP8_train.pcap.csv",
+        "size_bytes": 8742282,
+        "sha256": "470f919dfa5b72ef9f524941505cd0bb952bc70bfd520aeb6dab33895fb69301"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-ICMP1_train.pcap.csv",
+        "size_bytes": 83100,
+        "sha256": "c742b71da305bbcaa6dbd286867a406c2daa35455934aa9207c399b076af3190"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-ICMP2_train.pcap.csv",
+        "size_bytes": 282907,
+        "sha256": "08f7e8e2c7d6aa4cad725cccd03e352cda9748dade4ef8102feedcff1dc23ee7"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-ICMP3_train.pcap.csv",
+        "size_bytes": 72600,
+        "sha256": "13edda26294d5abfc016ed6d8bd9f1b8391c6f4ec2c958bdda9a812b23c77dc6"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-ICMP4_train.pcap.csv",
+        "size_bytes": 114938,
+        "sha256": "c7a34baee9f348096aca0b438b784c717206c31f3fd74a7badd569cd1a5b0da4"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-ICMP_test.pcap.csv",
+        "size_bytes": 161240,
+        "sha256": "28e44f9aae124b1809056f454e4b63b13b886ea6f771f9085eba59128226b9b9"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-SYN1_train.pcap.csv",
+        "size_bytes": 33317805,
+        "sha256": "0aecd547f623615299ebf05eef2e49c6eaec3525a309608c773fb60fad7ba95a"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-SYN2_train.pcap.csv",
+        "size_bytes": 62238320,
+        "sha256": "b59f5bd79f14a38ee615fc64faba6d8283f79afa12fdc35a6414b9a9a5631e03"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-SYN3_train.pcap.csv",
+        "size_bytes": 90184717,
+        "sha256": "3d17ea6a8bf67ebc5e4ceb5acb1581acb5c6dcb234fe398ad5cd5d20b9eea025"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-SYN4_train.pcap.csv",
+        "size_bytes": 89137448,
+        "sha256": "4f41f75b818daba85eaf015928d264992ef4dcfa867c0ab55bf58b1182c4c151"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-SYN_test.pcap.csv",
+        "size_bytes": 33235946,
+        "sha256": "6dc7370d4b62593dc66b18918eb4ab04ba3a13761f71ea70f3c81eab1d911215"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-TCP1_train.pcap.csv",
+        "size_bytes": 56690398,
+        "sha256": "015149945b389d29865b18cb2ae310eff9936c897823c22245041daa9be55275"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-TCP2_train.pcap.csv",
+        "size_bytes": 83768800,
+        "sha256": "a91596590ae1ed94bf5882c4a4d7e5f4797027295af284ac641cacaa1a6bdec6"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-TCP3_train.pcap.csv",
+        "size_bytes": 28414857,
+        "sha256": "01e82330bcb6609d337d3ec4e2c5ab8d51e3a23d13857e0beb3aef01309035b8"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-TCP4_train.pcap.csv",
+        "size_bytes": 112541161,
+        "sha256": "e878b8d9cfabcfaf2aa356e62b613f5baad36ffe7fae3a67ba00b6c3dd9aeedf"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-TCP_test.pcap.csv",
+        "size_bytes": 28255316,
+        "sha256": "b7cf414f822b11c5de11383ca7df90b10afab7475070984cec42d66f9cba821a"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-UDP1_train.pcap.csv",
+        "size_bytes": 6016360,
+        "sha256": "91bf2bcc1bb975b5451f9b481d99ac05cf0240052d1e1409659c268aec7ad2d0"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-UDP2_train.pcap.csv",
+        "size_bytes": 6084093,
+        "sha256": "a9d9fd208abe13752b6137d959ebbdfba7094f71d4f12f23331d8dfc7acc36c6"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-UDP3_train.pcap.csv",
+        "size_bytes": 6244563,
+        "sha256": "e38a1cb3883136565deb5dfa44be8f97f445b6f48dc96555e727b5e8f36955dd"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-UDP4_train.pcap.csv",
+        "size_bytes": 6295054,
+        "sha256": "e2fc6ffe5ffe2935710a0ef5925d131ed9482ead63bfe4b4e477c3b4ef323732"
+      },
+      {
+        "path": "/Users/amoorabaseet/code/iomt-pcap-experiments/features_identity/TCP_IP-DoS-UDP_test.pcap.csv",
+        "size_bytes": 6180125,
+        "sha256": "0d30af9a6e1709d12577bc482553057e561e97cac2f3e8db19255a89009d9c79"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/BenignTraffic.pcap.csv",
+        "size_bytes": 62008589,
+        "sha256": "98587d21006bcd2414115c10d5e5daebf3082ab5c6250d29dfd586a206716799"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/BenignTraffic1.pcap.csv",
+        "size_bytes": 25638005,
+        "sha256": "bcf9842a2e7cac990e5806f23efc32f1cb33eb61c328d2674f0d8943013da1f0"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/BenignTraffic2.pcap.csv",
+        "size_bytes": 27413267,
+        "sha256": "1e256ae0ebe9ebed0c560f46aa0dd2f8916a46ec66c18d1cd630cced0b64ee3a"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/BenignTraffic3.pcap.csv",
+        "size_bytes": 11658681,
+        "sha256": "28ff8869efd50e591ecb7170670c0c6846d8c5e1899fa8cd9a7ed1d3d786a224"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DDoS-ICMP_Flood.pcap.csv",
+        "size_bytes": 4144627,
+        "sha256": "a1f71ffd90680baa3ba7d344290fbbdb190e8746962b30c64748d0cccdafa77d"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DDoS-ICMP_Flood1.pcap.csv",
+        "size_bytes": 3016797,
+        "sha256": "5c0a32bd70b173c2c684523f6b7425dbe78c1e9bc7166ba817ca627bd10607c7"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DDoS-ICMP_Flood10.pcap.csv",
+        "size_bytes": 2976325,
+        "sha256": "c5df601f7135c5039805dcaf58a0882fbb2ebeb759bc70f7512c5df9e04bc897"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DDoS-ICMP_Flood11.pcap.csv",
+        "size_bytes": 3262215,
+        "sha256": "7230b20b4a218533246859fe02323ef6e84c68bb7948a292c54f8e74c4b65484"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DDoS-ICMP_Flood12.pcap.csv",
+        "size_bytes": 2738768,
+        "sha256": "2710ea319b9b58ea0c0dcd9f36ed81f7256fecc69b1adc4cc9750cab6b7115db"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DDoS-ICMP_Flood13.pcap.csv",
+        "size_bytes": 2188949,
+        "sha256": "348c33a66da192f67280c1221adccd92ad558730d86b8969680c9ba5167da22a"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DDoS-ICMP_Flood14.pcap.csv",
+        "size_bytes": 2310719,
+        "sha256": "cbe1d69587bf78fa45eaf2ec8f169ccc09b26e49cd7c4b192060c2584d2f96a6"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DDoS-ICMP_Flood15.pcap.csv",
+        "size_bytes": 3774299,
+        "sha256": "792ec68d8be56994766ce615e5c4204da241061e2f298ddef03b850058b5908a"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DDoS-ICMP_Flood16.pcap.csv",
+        "size_bytes": 3376505,
+        "sha256": "f184431369855e3a3c06f8140eba4a511a31cbf8bbd60c2cfadcc5b024b6e00b"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DDoS-ICMP_Flood17.pcap.csv",
+        "size_bytes": 1869837,
+        "sha256": "a2a43e25809e3936b7fb03d0e5adb1be5ac9c96ccc7d56c9fc4a19378a4d4e82"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-SYN_Flood.pcap.csv",
+        "size_bytes": 104202309,
+        "sha256": "0833115df0e6d8b8a2d558b3a09e51ec30a40431c09544ec834c3ffc0cf50547"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-SYN_Flood1.pcap.csv",
+        "size_bytes": 122298101,
+        "sha256": "8f4c3f79d3fc1e8b3eb549307666fac8f773460d29fae98a3319ef8dc5324321"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-SYN_Flood2.pcap.csv",
+        "size_bytes": 186297614,
+        "sha256": "04ec21823af0eaa7b80054e7251ad5d71e87d727c0d1b92879b3409e0bdc748d"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-SYN_Flood3.pcap.csv",
+        "size_bytes": 267753135,
+        "sha256": "c3627074c26a47a9c2adc9474dc6546b576b68dba082666a75655f389719bbb1"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-SYN_Flood4.pcap.csv",
+        "size_bytes": 213925927,
+        "sha256": "bbd8d2777ccb1deebb637b0d8db55fc757a186dd341e514301ee70bc63e2829e"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-SYN_Flood5.pcap.csv",
+        "size_bytes": 122533777,
+        "sha256": "274a26e3430ee5b4519691db97ad5668a4c0d8fbaf119b91cc7e989f610cad70"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-SYN_Flood6.pcap.csv",
+        "size_bytes": 156133691,
+        "sha256": "2aaeb8c702dfb263fa8ddb8a0f977abc87b34bbac0b3170be1fe0406b42df787"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-SYN_Flood7.pcap.csv",
+        "size_bytes": 115571266,
+        "sha256": "c24d77e655ff9554ff103f270b678ffbb62d872c85f7371f77ddb05a03f833f3"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-TCP_Flood.pcap.csv",
+        "size_bytes": 63123962,
+        "sha256": "669ffe86db281e063b035273d8e22b2188ad57536f2c153d19685c5f082ef304"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-TCP_Flood1.pcap.csv",
+        "size_bytes": 192872364,
+        "sha256": "30b26ade863226771cdc293f353789a4ac7fdf59e506ed6f312870f4552f2873"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-TCP_Flood10.pcap.csv",
+        "size_bytes": 29443257,
+        "sha256": "206b19807991dcf0b56d95ab3376c73d4dda7811d4dde4ae75fc0c6a2d61c01d"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-TCP_Flood2.pcap.csv",
+        "size_bytes": 119135777,
+        "sha256": "e9f654330ef1f6b41c8757ba4a385d1bc77ca0452f187e2d9efb59e1a6b25a79"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-TCP_Flood3.pcap.csv",
+        "size_bytes": 91344819,
+        "sha256": "06676911b7879c9855afd5e197d99855a980544e3276c837afdffc6617a6bad1"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-TCP_Flood4.pcap.csv",
+        "size_bytes": 117674604,
+        "sha256": "4ff3aa16b10bda21b3f574b256030472449123d88f72a9e646a5424ad4803fae"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-TCP_Flood5.pcap.csv",
+        "size_bytes": 89226597,
+        "sha256": "08a0e5dff12b900a1b6f4d029e0cc581c0c105401f114b837f29ee7a8093c8e0"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-TCP_Flood6.pcap.csv",
+        "size_bytes": 115966480,
+        "sha256": "670387fe88a577b26e26964f2dd7cfaf9be80a70946f99fbf3ebb45f54ee30ca"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-TCP_Flood7.pcap.csv",
+        "size_bytes": 88497208,
+        "sha256": "c9e1d72c41f3b196eb1ae94ab3970c4b0e3027f5d41e0d7e0a00f659df2d5094"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-TCP_Flood8.pcap.csv",
+        "size_bytes": 204484092,
+        "sha256": "0d7a5bdee5d60471172d6046fc3e8a5df272ee7bf9399ad04e2bfcb522a6de91"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-TCP_Flood9.pcap.csv",
+        "size_bytes": 114048523,
+        "sha256": "25adba7dda481a9fbbd0186f610ee8cba22e7f2118d70911a3d49fa17d6e7b36"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood.pcap.csv",
+        "size_bytes": 89765387,
+        "sha256": "ff734dc678f2620a698b524fe3befc206ea6cd0e053ff2e51fd1dc1d3cb85190"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood1.pcap.csv",
+        "size_bytes": 87249879,
+        "sha256": "6b4811ea61cebb863451e4613b2ebea874584ba9c6b8afeae0a9c4a344ca5058"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood10.pcap.csv",
+        "size_bytes": 18788247,
+        "sha256": "503d3ab0f89ababab83f2bcf527ade264e4fdbfe12ad38043b39b2c7c2aeeb8e"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood11.pcap.csv",
+        "size_bytes": 19942356,
+        "sha256": "7f04c4ca117c2f73443afad88887cb5813b629f7b7c8946197a20a2971051377"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood12.pcap.csv",
+        "size_bytes": 18332928,
+        "sha256": "fb205d81a10accb3049e07a14a762a0b81fb763c150ee17e8838a3a6b88688f4"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood13.pcap.csv",
+        "size_bytes": 18051932,
+        "sha256": "e4497c6044a7b01b0621eaa7b6b41c3ea311b2e401b0ccfd1fd8f040847d6ab1"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood14.pcap.csv",
+        "size_bytes": 24507722,
+        "sha256": "cdd1a8f7cb223e0dc919b9fb091d2cfaeeec04bdf0f08660f7d20448b2ff3849"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood15.pcap.csv",
+        "size_bytes": 18963994,
+        "sha256": "b8ba8bc86a3792a8eb7e2ddd49c2a021ec06552efaa3e6975939bf89362466f1"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood16.pcap.csv",
+        "size_bytes": 13290558,
+        "sha256": "50ef10d3bf0de30c8c3d422ee868b52c956e3caff13882bb8376ea05cd844e7b"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood2.pcap.csv",
+        "size_bytes": 61127274,
+        "sha256": "251b8930cb893d8ee57088875d5b62f87465e9022324ef75f07b39c7e16fbc2c"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood3.pcap.csv",
+        "size_bytes": 90334528,
+        "sha256": "fde12736b101accd8a94ea2333b4fbffcb34c44ea16dc3512d813eb52301217e"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood4.pcap.csv",
+        "size_bytes": 126760975,
+        "sha256": "7c74dab121743a3047379546bf4e26305aa6274f92b6177b08237833331ee530"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood5.pcap.csv",
+        "size_bytes": 88957903,
+        "sha256": "d975c699081984aa18b66671f7c3f821011a3c9d77368775d624ca08c2f01d6b"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood6.pcap.csv",
+        "size_bytes": 60526964,
+        "sha256": "0da5c9284274a80370bd3453cb5aec6b57bd6c39794366cd1fa1fe18364c4b56"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood7.pcap.csv",
+        "size_bytes": 66008806,
+        "sha256": "552bdf115f33a9cf7b8d89ce22878fb8c2a89c098312b453eb67247c8ab6b931"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood8.pcap.csv",
+        "size_bytes": 20085487,
+        "sha256": "aeb0438aaed11277e204e731d1885491d29e6ec2f07b353eeb07886de9c8280c"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/DoS-UDP_Flood9.pcap.csv",
+        "size_bytes": 18941747,
+        "sha256": "ab09f21d7b74048b0c02b3e7f7ab77ef668a72a5ccbda0c9e54ace1db5bb583f"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/MITM-ArpSpoofing.pcap.csv",
+        "size_bytes": 25969783,
+        "sha256": "17b4fc92bfab422eba20fe19dfcf0bff88952f66771e089c2ef532d71d70ac7d"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/MITM-ArpSpoofing1.pcap.csv",
+        "size_bytes": 3338831,
+        "sha256": "396eb4e34982bf60ddac4a6a6a7b2ff49c51bfb61fd879b8f4de3c1ee89270d3"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/Recon-OSScan.pcap.csv",
+        "size_bytes": 63996519,
+        "sha256": "1b7dc104a3ac9fb77e665ae5ae598642116681ac026b86b1da3707918094fd80"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/Recon-PingSweep.pcap.csv",
+        "size_bytes": 731317,
+        "sha256": "0e067e654f9b8d88e3c99d058426e56ed23a58bd811728039d58929fbc27666b"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/Recon-PortScan.pcap.csv",
+        "size_bytes": 72375205,
+        "sha256": "603acf0fe530bbf93c2f8d8c96a6c4ed801d459faf126669bda2d08ebb9e2ff2"
+      },
+      {
+        "path": "/Volumes/PortableSSD/features_ciciot23/VulnerabilityScan.pcap.csv",
+        "size_bytes": 153497463,
+        "sha256": "e42112c3f70242a94777632c2e043f78a5701fbf3fd9a2bfe0e78eaa971750f7"
+      }
+    ]
+  },
+  "what": "Flows per dataset, files per dataset, raw and deduplicated counts per class and per pair, benign share, and a benign-capture audit. Rows measured on: every flow of every listed file (profiling captures excluded for CICIoMT2024 by stage2c's EXCLUDE_SUBSTR).",
+  "dedup": {
+    "key": "the 59 model-input columns, float64",
+    "keep": "first",
+    "scope": "global within a dataset (as stage2c_dedup.py)",
+    "file_order": "sorted(csv basename)",
+    "order_caveat": "cross-class duplicate vectors are attributed to the first file in sort order; per-class dedup_global counts depend on it. dedup_within_label is order-free."
+  },
+  "control_stage2c_reproduction": {
+    "expected_raw": 7357600,
+    "expected_dedup": 4567803,
+    "got_raw": 7357600,
+    "got_dedup": 4567803,
+    "per_class_mismatches": {},
+    "passed": true
+  },
+  "manifest_vs_csv_row_mismatches_ciciot2023": {},
+  "model_input_columns": [
+    "protocol",
+    "ip_version",
+    "bidirectional_duration_ms",
+    "bidirectional_packets",
+    "bidirectional_bytes",
+    "src2dst_duration_ms",
+    "src2dst_packets",
+    "src2dst_bytes",
+    "dst2src_duration_ms",
+    "dst2src_packets",
+    "dst2src_bytes",
+    "bidirectional_min_ps",
+    "bidirectional_mean_ps",
+    "bidirectional_stddev_ps",
+    "bidirectional_max_ps",
+    "src2dst_min_ps",
+    "src2dst_mean_ps",
+    "src2dst_stddev_ps",
+    "src2dst_max_ps",
+    "dst2src_min_ps",
+    "dst2src_mean_ps",
+    "dst2src_stddev_ps",
+    "dst2src_max_ps",
+    "bidirectional_min_piat_ms",
+    "bidirectional_mean_piat_ms",
+    "bidirectional_stddev_piat_ms",
+    "bidirectional_max_piat_ms",
+    "src2dst_min_piat_ms",
+    "src2dst_mean_piat_ms",
+    "src2dst_stddev_piat_ms",
+    "src2dst_max_piat_ms",
+    "dst2src_min_piat_ms",
+    "dst2src_mean_piat_ms",
+    "dst2src_stddev_piat_ms",
+    "dst2src_max_piat_ms",
+    "bidirectional_syn_packets",
+    "bidirectional_cwr_packets",
+    "bidirectional_ece_packets",
+    "bidirectional_urg_packets",
+    "bidirectional_ack_packets",
+    "bidirectional_psh_packets",
+    "bidirectional_rst_packets",
+    "bidirectional_fin_packets",
+    "src2dst_syn_packets",
+    "src2dst_cwr_packets",
+    "src2dst_ece_packets",
+    "src2dst_urg_packets",
+    "src2dst_ack_packets",
+    "src2dst_psh_packets",
+    "src2dst_rst_packets",
+    "src2dst_fin_packets",
+    "dst2src_syn_packets",
+    "dst2src_cwr_packets",
+    "dst2src_ece_packets",
+    "dst2src_urg_packets",
+    "dst2src_ack_packets",
+    "dst2src_psh_packets",
+    "dst2src_rst_packets",
+    "dst2src_fin_packets"
+  ],
+  "table_totals": {
+    "CICIoMT2024": {
+      "raw": 7357600,
+      "dedup_global": 4567803,
+      "dedup_within_label": 4578288
+    },
+    "CICIoT2023": {
+      "raw": 8925967,
+      "dedup_global": 6338424,
+      "dedup_within_label": 6429189
+    }
+  },
+  "n_files": {
+    "CICIoMT2024": 72,
+    "CICIoT2023": 56
+  },
+  "benign_share_in_table": {
+    "CICIoMT2024": {
+      "raw": {
+        "benign": 18929,
+        "table": 7357600,
+        "share": 0.002572713928454931
+      },
+      "dedup_global": {
+        "benign": 10540,
+        "table": 4567803,
+        "share": 0.0023074550281612406
+      },
+      "dedup_within_label": {
+        "benign": 10580,
+        "table": 4578288,
+        "share": 0.0023109074833212763
+      }
+    },
+    "CICIoT2023": {
+      "raw": {
+        "benign": 301193,
+        "table": 8925967,
+        "share": 0.03374345883196745
+      },
+      "dedup_global": {
+        "benign": 108841,
+        "table": 6338424,
+        "share": 0.017171618686285424
+      },
+      "dedup_within_label": {
+        "benign": 108841,
+        "table": 6429189,
+        "share": 0.016929195890803647
+      }
+    }
+  },
+  "pairs": {
+    "SYN": {
+      "CICIoMT2024": {
+        "classes": [
+          "DoS_SYN",
+          "DDoS_SYN"
+        ],
+        "files": 10,
+        "rows_raw": 3177330,
+        "rows_dedup_global": 2228567,
+        "rows_dedup_within_label": 2228757,
+        "per_class": {
+          "DoS_SYN": {
+            "rows_raw": 657662,
+            "rows_dedup_global": 605224,
+            "rows_dedup_within_label": 605318
+          },
+          "DDoS_SYN": {
+            "rows_raw": 2519668,
+            "rows_dedup_global": 1623343,
+            "rows_dedup_within_label": 1623439
+          }
+        }
+      },
+      "CICIoT2023": {
+        "classes": [
+          "DoS-SYN_Flood"
+        ],
+        "files": 8,
+        "rows_raw": 2906320,
+        "rows_dedup_global": 2288310,
+        "rows_dedup_within_label": 2298986,
+        "per_class": {
+          "DoS-SYN_Flood": {
+            "rows_raw": 2906320,
+            "rows_dedup_global": 2288310,
+            "rows_dedup_within_label": 2298986
+          }
+        }
+      }
+    },
+    "TCP": {
+      "CICIoMT2024": {
+        "classes": [
+          "DoS_TCP",
+          "DDoS_TCP"
+        ],
+        "files": 10,
+        "rows_raw": 3083825,
+        "rows_dedup_global": 2007522,
+        "rows_dedup_within_label": 2007906,
+        "per_class": {
+          "DoS_TCP": {
+            "rows_raw": 722434,
+            "rows_dedup_global": 574264,
+            "rows_dedup_within_label": 574463
+          },
+          "DDoS_TCP": {
+            "rows_raw": 2361391,
+            "rows_dedup_global": 1433258,
+            "rows_dedup_within_label": 1433443
+          }
+        }
+      },
+      "CICIoT2023": {
+        "classes": [
+          "DoS-TCP_Flood"
+        ],
+        "files": 11,
+        "rows_raw": 2907160,
+        "rows_dedup_global": 2232777,
+        "rows_dedup_within_label": 2240372,
+        "per_class": {
+          "DoS-TCP_Flood": {
+            "rows_raw": 2907160,
+            "rows_dedup_global": 2232777,
+            "rows_dedup_within_label": 2240372
+          }
+        }
+      }
+    },
+    "UDP": {
+      "CICIoMT2024": {
+        "classes": [
+          "DoS_UDP",
+          "DDoS_UDP"
+        ],
+        "files": 15,
+        "rows_raw": 275257,
+        "rows_dedup_global": 111373,
+        "rows_dedup_within_label": 120492,
+        "per_class": {
+          "DoS_UDP": {
+            "rows_raw": 72782,
+            "rows_dedup_global": 19911,
+            "rows_dedup_within_label": 28832
+          },
+          "DDoS_UDP": {
+            "rows_raw": 202475,
+            "rows_dedup_global": 91462,
+            "rows_dedup_within_label": 91660
+          }
+        }
+      },
+      "CICIoT2023": {
+        "classes": [
+          "DoS-UDP_Flood"
+        ],
+        "files": 17,
+        "rows_raw": 1947241,
+        "rows_dedup_global": 1524156,
+        "rows_dedup_within_label": 1545078,
+        "per_class": {
+          "DoS-UDP_Flood": {
+            "rows_raw": 1947241,
+            "rows_dedup_global": 1524156,
+            "rows_dedup_within_label": 1545078
+          }
+        }
+      }
+    },
+    "ICMP": {
+      "CICIoMT2024": {
+        "classes": [
+          "DoS_ICMP",
+          "DDoS_ICMP"
+        ],
+        "files": 15,
+        "rows_raw": 3519,
+        "rows_dedup_global": 3021,
+        "rows_dedup_within_label": 3184,
+        "per_class": {
+          "DoS_ICMP": {
+            "rows_raw": 1485,
+            "rows_dedup_global": 1207,
+            "rows_dedup_within_label": 1307
+          },
+          "DDoS_ICMP": {
+            "rows_raw": 2034,
+            "rows_dedup_global": 1814,
+            "rows_dedup_within_label": 1877
+          }
+        }
+      },
+      "CICIoT2023": {
+        "classes": [
+          "DDoS-ICMP_Flood"
+        ],
+        "files": 10,
+        "rows_raw": 68613,
+        "rows_dedup_global": 41653,
+        "rows_dedup_within_label": 46400,
+        "per_class": {
+          "DDoS-ICMP_Flood": {
+            "rows_raw": 68613,
+            "rows_dedup_global": 41653,
+            "rows_dedup_within_label": 46400
+          }
+        }
+      }
+    },
+    "port_scan": {
+      "CICIoMT2024": {
+        "classes": [
+          "Recon_Port_Scan"
+        ],
+        "files": 2,
+        "rows_raw": 494461,
+        "rows_dedup_global": 653,
+        "rows_dedup_within_label": 962,
+        "per_class": {
+          "Recon_Port_Scan": {
+            "rows_raw": 494461,
+            "rows_dedup_global": 653,
+            "rows_dedup_within_label": 962
+          }
+        }
+      },
+      "CICIoT2023": {
+        "classes": [
+          "Recon-PortScan"
+        ],
+        "files": 1,
+        "rows_raw": 188592,
+        "rows_dedup_global": 17678,
+        "rows_dedup_within_label": 24771,
+        "per_class": {
+          "Recon-PortScan": {
+            "rows_raw": 188592,
+            "rows_dedup_global": 17678,
+            "rows_dedup_within_label": 24771
+          }
+        }
+      }
+    },
+    "os_scan": {
+      "CICIoMT2024": {
+        "classes": [
+          "Recon_OS_Scan"
+        ],
+        "files": 2,
+        "rows_raw": 89552,
+        "rows_dedup_global": 1215,
+        "rows_dedup_within_label": 1250,
+        "per_class": {
+          "Recon_OS_Scan": {
+            "rows_raw": 89552,
+            "rows_dedup_global": 1215,
+            "rows_dedup_within_label": 1250
+          }
+        }
+      },
+      "CICIoT2023": {
+        "classes": [
+          "Recon-OSScan"
+        ],
+        "files": 1,
+        "rows_raw": 165458,
+        "rows_dedup_global": 23803,
+        "rows_dedup_within_label": 30840,
+        "per_class": {
+          "Recon-OSScan": {
+            "rows_raw": 165458,
+            "rows_dedup_global": 23803,
+            "rows_dedup_within_label": 30840
+          }
+        }
+      }
+    },
+    "ping_sweep": {
+      "CICIoMT2024": {
+        "classes": [
+          "Recon_Ping_Sweep"
+        ],
+        "files": 2,
+        "rows_raw": 113,
+        "rows_dedup_global": 107,
+        "rows_dedup_within_label": 112,
+        "per_class": {
+          "Recon_Ping_Sweep": {
+            "rows_raw": 113,
+            "rows_dedup_global": 107,
+            "rows_dedup_within_label": 112
+          }
+        }
+      },
+      "CICIoT2023": {
+        "classes": [
+          "Recon-PingSweep"
+        ],
+        "files": 1,
+        "rows_raw": 1686,
+        "rows_dedup_global": 716,
+        "rows_dedup_within_label": 1143,
+        "per_class": {
+          "Recon-PingSweep": {
+            "rows_raw": 1686,
+            "rows_dedup_global": 716,
+            "rows_dedup_within_label": 1143
+          }
+        }
+      }
+    },
+    "vuln_scan": {
+      "CICIoMT2024": {
+        "classes": [
+          "Recon_VulScan"
+        ],
+        "files": 2,
+        "rows_raw": 8660,
+        "rows_dedup_global": 281,
+        "rows_dedup_within_label": 472,
+        "per_class": {
+          "Recon_VulScan": {
+            "rows_raw": 8660,
+            "rows_dedup_global": 281,
+            "rows_dedup_within_label": 472
+          }
+        }
+      },
+      "CICIoT2023": {
+        "classes": [
+          "VulnerabilityScan"
+        ],
+        "files": 1,
+        "rows_raw": 370456,
+        "rows_dedup_global": 73690,
+        "rows_dedup_within_label": 101529,
+        "per_class": {
+          "VulnerabilityScan": {
+            "rows_raw": 370456,
+            "rows_dedup_global": 73690,
+            "rows_dedup_within_label": 101529
+          }
+        }
+      }
+    },
+    "arp": {
+      "CICIoMT2024": {
+        "classes": [
+          "ARP_Spoofing"
+        ],
+        "files": 2,
+        "rows_raw": 1200,
+        "rows_dedup_global": 877,
+        "rows_dedup_within_label": 877,
+        "per_class": {
+          "ARP_Spoofing": {
+            "rows_raw": 1200,
+            "rows_dedup_global": 877,
+            "rows_dedup_within_label": 877
+          }
+        }
+      },
+      "CICIoT2023": {
+        "classes": [
+          "MITM-ArpSpoofing"
+        ],
+        "files": 2,
+        "rows_raw": 69248,
+        "rows_dedup_global": 26800,
+        "rows_dedup_within_label": 31229,
+        "per_class": {
+          "MITM-ArpSpoofing": {
+            "rows_raw": 69248,
+            "rows_dedup_global": 26800,
+            "rows_dedup_within_label": 31229
+          }
+        }
+      }
+    },
+    "Benign": {
+      "CICIoMT2024": {
+        "classes": [
+          "Benign"
+        ],
+        "files": 2,
+        "rows_raw": 18929,
+        "rows_dedup_global": 10540,
+        "rows_dedup_within_label": 10580,
+        "per_class": {
+          "Benign": {
+            "rows_raw": 18929,
+            "rows_dedup_global": 10540,
+            "rows_dedup_within_label": 10580
+          }
+        }
+      },
+      "CICIoT2023": {
+        "classes": [
+          "Benign"
+        ],
+        "files": 4,
+        "rows_raw": 301193,
+        "rows_dedup_global": 108841,
+        "rows_dedup_within_label": 108841,
+        "per_class": {
+          "Benign": {
+            "rows_raw": 301193,
+            "rows_dedup_global": 108841,
+            "rows_dedup_within_label": 108841
+          }
+        }
+      }
+    }
+  },
+  "classes_not_in_any_pair": {
+    "CICIoMT2024": {
+      "MQTT_DDoS_Connect_Flood": {
+        "rows_raw": 117363,
+        "rows_dedup_global": 117269,
+        "rows_dedup_within_label": 117278
+      },
+      "MQTT_DDoS_Publish_Flood": {
+        "rows_raw": 48700,
+        "rows_dedup_global": 48065,
+        "rows_dedup_within_label": 48076
+      },
+      "MQTT_DoS_Connect_Flood": {
+        "rows_raw": 37055,
+        "rows_dedup_global": 36912,
+        "rows_dedup_within_label": 36924
+      },
+      "MQTT_DoS_Publish_Flood": {
+        "rows_raw": 381,
+        "rows_dedup_global": 360,
+        "rows_dedup_within_label": 367
+      },
+      "MQTT_Malformed_Data": {
+        "rows_raw": 1255,
+        "rows_dedup_global": 1041,
+        "rows_dedup_within_label": 1051
+      }
+    },
+    "CICIoT2023": {}
+  },
+  "labelling_of_benign_background_in_attack_captures": {
+    "CICIoMT2024": "label = filename class for every flow (stage2c_dedup.py L51,L56 via stage2_device_disjoint.filename_to_class L44); background benign flows inside an attack pcap are labelled as that attack. The dataset README (WiFi_and_MQTT attacks, 1 page) says nothing about benign background.",
+    "CICIoT2023": "label = class of the pcap from ciciot23_files.tsv -> manifest.jsonl (run_ciciot23.py), applied to every flow of the file; same consequence. How the OFFICIAL CICIoT2023 CSVs label such flows was not checked here."
+  },
+  "benign_captures": {
+    "CICIoMT2024": {
+      "files_in_time_order": [
+        {
+          "dataset": "CICIoMT2024",
+          "file": "Benign_train.pcap.csv",
+          "class": "Benign",
+          "rows": 15704,
+          "first_flow_utc": "2023-09-13T14:21:00.354000+00:00",
+          "last_flow_utc": "2023-09-14T12:24:14.461000+00:00",
+          "distinct_src_mac": 25,
+          "rows_dedup_global": 8640,
+          "source_pcap_size_bytes": 395000451,
+          "contiguity_group": 0
+        },
+        {
+          "dataset": "CICIoMT2024",
+          "file": "Benign_test.pcap.csv",
+          "class": "Benign",
+          "rows": 3225,
+          "first_flow_utc": "2023-09-14T12:24:14.461000+00:00",
+          "last_flow_utc": "2023-09-14T16:21:00.253000+00:00",
+          "distinct_src_mac": 19,
+          "rows_dedup_global": 1900,
+          "source_pcap_size_bytes": 98059593,
+          "gap_s_from_previous_file_last_flow": 0.0,
+          "mac_jaccard_with_previous": 0.6923076923076923,
+          "contiguity_group": 0
+        }
+      ],
+      "contiguity_rule": "consecutive files are one chunk-chain if |first_flow - previous last_flow| <= 60 s (my threshold, flagged)",
+      "independent_benign_captures_under_rule": 1,
+      "distinct_src_mac_in_benign_union": 26
+    },
+    "CICIoT2023": {
+      "files_in_time_order": [
+        {
+          "dataset": "CICIoT2023",
+          "file": "BenignTraffic.pcap.csv",
+          "class": "Benign",
+          "rows": 145779,
+          "first_flow_utc": "2022-10-07T17:15:00.350000+00:00",
+          "last_flow_utc": "2022-10-08T02:30:28.319000+00:00",
+          "distinct_src_mac": 72,
+          "rows_dedup_global": 54319,
+          "source_pcap_size_bytes": 2048000100,
+          "contiguity_group": 0
+        },
+        {
+          "dataset": "CICIoT2023",
+          "file": "BenignTraffic1.pcap.csv",
+          "class": "Benign",
+          "rows": 61585,
+          "first_flow_utc": "2022-10-08T02:30:28.319000+00:00",
+          "last_flow_utc": "2022-10-08T09:45:21.025000+00:00",
+          "distinct_src_mac": 73,
+          "rows_dedup_global": 23364,
+          "source_pcap_size_bytes": 2048002499,
+          "gap_s_from_previous_file_last_flow": 0.0,
+          "mac_jaccard_with_previous": 0.9863013698630136,
+          "contiguity_group": 0
+        },
+        {
+          "dataset": "CICIoT2023",
+          "file": "BenignTraffic2.pcap.csv",
+          "class": "Benign",
+          "rows": 65825,
+          "first_flow_utc": "2022-10-08T09:45:21.039000+00:00",
+          "last_flow_utc": "2022-10-08T17:47:21.040000+00:00",
+          "distinct_src_mac": 71,
+          "rows_dedup_global": 22223,
+          "source_pcap_size_bytes": 2048001991,
+          "gap_s_from_previous_file_last_flow": 0.014,
+          "mac_jaccard_with_previous": 0.9726027397260274,
+          "contiguity_group": 0
+        },
+        {
+          "dataset": "CICIoT2023",
+          "file": "BenignTraffic3.pcap.csv",
+          "class": "Benign",
+          "rows": 28004,
+          "first_flow_utc": "2022-10-08T17:47:21.040000+00:00",
+          "last_flow_utc": "2022-10-08T21:15:01.072000+00:00",
+          "distinct_src_mac": 70,
+          "rows_dedup_global": 8935,
+          "source_pcap_size_bytes": 853841091,
+          "gap_s_from_previous_file_last_flow": 0.0,
+          "mac_jaccard_with_previous": 0.9859154929577465,
+          "contiguity_group": 0
+        }
+      ],
+      "contiguity_rule": "consecutive files are one chunk-chain if |first_flow - previous last_flow| <= 60 s (my threshold, flagged)",
+      "independent_benign_captures_under_rule": 1,
+      "distinct_src_mac_in_benign_union": 73
+    }
+  },
+  "per_file": {
+    "CICIoMT2024": [
+      {
+        "dataset": "CICIoMT2024",
+        "file": "ARP_Spoofing_test.pcap.csv",
+        "class": "ARP_Spoofing",
+        "rows": 166,
+        "first_flow_utc": "2023-09-06T19:11:10.782000+00:00",
+        "last_flow_utc": "2023-09-06T19:15:00.393000+00:00",
+        "first_flow_ms": 1694027470782,
+        "last_flow_ms": 1694027700393,
+        "distinct_src_mac": 13,
+        "rows_dedup_global": 130
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "ARP_Spoofing_train.pcap.csv",
+        "class": "ARP_Spoofing",
+        "rows": 1034,
+        "first_flow_utc": "2023-09-06T17:28:00.240000+00:00",
+        "last_flow_utc": "2023-09-06T19:11:10.782000+00:00",
+        "first_flow_ms": 1694021280240,
+        "last_flow_ms": 1694027470782,
+        "distinct_src_mac": 21,
+        "rows_dedup_global": 747
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "Benign_test.pcap.csv",
+        "class": "Benign",
+        "rows": 3225,
+        "first_flow_utc": "2023-09-14T12:24:14.461000+00:00",
+        "last_flow_utc": "2023-09-14T16:21:00.253000+00:00",
+        "first_flow_ms": 1694694254461,
+        "last_flow_ms": 1694708460253,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 1900
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "Benign_train.pcap.csv",
+        "class": "Benign",
+        "rows": 15704,
+        "first_flow_utc": "2023-09-13T14:21:00.354000+00:00",
+        "last_flow_utc": "2023-09-14T12:24:14.461000+00:00",
+        "first_flow_ms": 1694614860354,
+        "last_flow_ms": 1694694254461,
+        "distinct_src_mac": 25,
+        "rows_dedup_global": 8640
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "MQTT-DDoS-Connect_Flood_test.pcap.csv",
+        "class": "MQTT_DDoS_Connect_Flood",
+        "rows": 56020,
+        "first_flow_utc": "2023-08-29T20:27:55.767000+00:00",
+        "last_flow_utc": "2023-08-29T20:30:00.509000+00:00",
+        "first_flow_ms": 1693340875767,
+        "last_flow_ms": 1693341000509,
+        "distinct_src_mac": 17,
+        "rows_dedup_global": 55960
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "MQTT-DDoS-Connect_Flood_train.pcap.csv",
+        "class": "MQTT_DDoS_Connect_Flood",
+        "rows": 61343,
+        "first_flow_utc": "2023-08-29T20:19:00.198000+00:00",
+        "last_flow_utc": "2023-08-29T20:27:55.767000+00:00",
+        "first_flow_ms": 1693340340198,
+        "last_flow_ms": 1693340875767,
+        "distinct_src_mac": 20,
+        "rows_dedup_global": 61309
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "MQTT-DDoS-Publish_Flood_test.pcap.csv",
+        "class": "MQTT_DDoS_Publish_Flood",
+        "rows": 1568,
+        "first_flow_utc": "2023-08-29T20:05:46.221000+00:00",
+        "last_flow_utc": "2023-08-29T20:08:00.340000+00:00",
+        "first_flow_ms": 1693339546221,
+        "last_flow_ms": 1693339680340,
+        "distinct_src_mac": 17,
+        "rows_dedup_global": 1494
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "MQTT-DDoS-Publish_Flood_train.pcap.csv",
+        "class": "MQTT_DDoS_Publish_Flood",
+        "rows": 47132,
+        "first_flow_utc": "2023-08-29T19:57:00.157000+00:00",
+        "last_flow_utc": "2023-08-29T20:05:46.221000+00:00",
+        "first_flow_ms": 1693339020157,
+        "last_flow_ms": 1693339546221,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 46571
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "MQTT-DoS-Connect_Flood_test.pcap.csv",
+        "class": "MQTT_DoS_Connect_Flood",
+        "rows": 15154,
+        "first_flow_utc": "2023-08-28T18:32:58.319000+00:00",
+        "last_flow_utc": "2023-08-28T18:37:00.428000+00:00",
+        "first_flow_ms": 1693247578319,
+        "last_flow_ms": 1693247820428,
+        "distinct_src_mac": 14,
+        "rows_dedup_global": 15055
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "MQTT-DoS-Connect_Flood_train.pcap.csv",
+        "class": "MQTT_DoS_Connect_Flood",
+        "rows": 21901,
+        "first_flow_utc": "2023-08-28T18:26:00.179000+00:00",
+        "last_flow_utc": "2023-08-28T18:32:58.319000+00:00",
+        "first_flow_ms": 1693247160179,
+        "last_flow_ms": 1693247578319,
+        "distinct_src_mac": 16,
+        "rows_dedup_global": 21857
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "MQTT-DoS-Publish_Flood_test.pcap.csv",
+        "class": "MQTT_DoS_Publish_Flood",
+        "rows": 158,
+        "first_flow_utc": "2023-08-29T17:28:00.443000+00:00",
+        "last_flow_utc": "2023-08-29T17:30:00.734000+00:00",
+        "first_flow_ms": 1693330080443,
+        "last_flow_ms": 1693330200734,
+        "distinct_src_mac": 14,
+        "rows_dedup_global": 156
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "MQTT-DoS-Publish_Flood_train.pcap.csv",
+        "class": "MQTT_DoS_Publish_Flood",
+        "rows": 223,
+        "first_flow_utc": "2023-08-29T17:19:00.179000+00:00",
+        "last_flow_utc": "2023-08-29T17:28:00.443000+00:00",
+        "first_flow_ms": 1693329540179,
+        "last_flow_ms": 1693330080443,
+        "distinct_src_mac": 16,
+        "rows_dedup_global": 204
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "MQTT-Malformed_Data_test.pcap.csv",
+        "class": "MQTT_Malformed_Data",
+        "rows": 473,
+        "first_flow_utc": "2023-08-28T14:46:20.407000+00:00",
+        "last_flow_utc": "2023-08-28T14:50:00.799000+00:00",
+        "first_flow_ms": 1693233980407,
+        "last_flow_ms": 1693234200799,
+        "distinct_src_mac": 15,
+        "rows_dedup_global": 392
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "MQTT-Malformed_Data_train.pcap.csv",
+        "class": "MQTT_Malformed_Data",
+        "rows": 782,
+        "first_flow_utc": "2023-08-28T14:39:00.548000+00:00",
+        "last_flow_utc": "2023-08-28T14:46:20.400000+00:00",
+        "first_flow_ms": 1693233540548,
+        "last_flow_ms": 1693233980400,
+        "distinct_src_mac": 16,
+        "rows_dedup_global": 649
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "Recon-OS_Scan_test.pcap.csv",
+        "class": "Recon_OS_Scan",
+        "rows": 16400,
+        "first_flow_utc": "2023-09-07T16:34:22.519000+00:00",
+        "last_flow_utc": "2023-09-07T16:38:00.356000+00:00",
+        "first_flow_ms": 1694104462519,
+        "last_flow_ms": 1694104680356,
+        "distinct_src_mac": 17,
+        "rows_dedup_global": 438
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "Recon-OS_Scan_train.pcap.csv",
+        "class": "Recon_OS_Scan",
+        "rows": 73152,
+        "first_flow_utc": "2023-09-07T16:20:00.439000+00:00",
+        "last_flow_utc": "2023-09-07T16:34:22.519000+00:00",
+        "first_flow_ms": 1694103600439,
+        "last_flow_ms": 1694104462519,
+        "distinct_src_mac": 20,
+        "rows_dedup_global": 777
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "Recon-Ping_Sweep_test.pcap.csv",
+        "class": "Recon_Ping_Sweep",
+        "rows": 44,
+        "first_flow_utc": "2023-09-07T16:50:30.937000+00:00",
+        "last_flow_utc": "2023-09-07T16:51:00.481000+00:00",
+        "first_flow_ms": 1694105430937,
+        "last_flow_ms": 1694105460481,
+        "distinct_src_mac": 12,
+        "rows_dedup_global": 43
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "Recon-Ping_Sweep_train.pcap.csv",
+        "class": "Recon_Ping_Sweep",
+        "rows": 69,
+        "first_flow_utc": "2023-09-07T16:49:00.104000+00:00",
+        "last_flow_utc": "2023-09-07T16:50:30.562000+00:00",
+        "first_flow_ms": 1694105340104,
+        "last_flow_ms": 1694105430562,
+        "distinct_src_mac": 15,
+        "rows_dedup_global": 64
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "Recon-Port_Scan_test.pcap.csv",
+        "class": "Recon_Port_Scan",
+        "rows": 107192,
+        "first_flow_utc": "2023-09-07T16:03:31.205000+00:00",
+        "last_flow_utc": "2023-09-07T16:06:00.445000+00:00",
+        "first_flow_ms": 1694102611205,
+        "last_flow_ms": 1694102760445,
+        "distinct_src_mac": 17,
+        "rows_dedup_global": 102
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "Recon-Port_Scan_train.pcap.csv",
+        "class": "Recon_Port_Scan",
+        "rows": 387269,
+        "first_flow_utc": "2023-09-07T15:20:00.378000+00:00",
+        "last_flow_utc": "2023-09-07T16:03:31.205000+00:00",
+        "first_flow_ms": 1694100000378,
+        "last_flow_ms": 1694102611205,
+        "distinct_src_mac": 23,
+        "rows_dedup_global": 551
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "Recon-VulScan_test.pcap.csv",
+        "class": "Recon_VulScan",
+        "rows": 2224,
+        "first_flow_utc": "2023-09-12T15:33:26.452000+00:00",
+        "last_flow_utc": "2023-09-12T15:39:54.848000+00:00",
+        "first_flow_ms": 1694532806452,
+        "last_flow_ms": 1694533194848,
+        "distinct_src_mac": 18,
+        "rows_dedup_global": 160
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "Recon-VulScan_train.pcap.csv",
+        "class": "Recon_VulScan",
+        "rows": 6436,
+        "first_flow_utc": "2023-09-12T15:28:06.484000+00:00",
+        "last_flow_utc": "2023-09-12T15:33:26.450000+00:00",
+        "first_flow_ms": 1694532486484,
+        "last_flow_ms": 1694532806450,
+        "distinct_src_mac": 15,
+        "rows_dedup_global": 121
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-ICMP1_test.pcap.csv",
+        "class": "DDoS_ICMP",
+        "rows": 311,
+        "first_flow_utc": "2023-09-06T17:00:33.795000+00:00",
+        "last_flow_utc": "2023-09-06T17:11:00.051000+00:00",
+        "first_flow_ms": 1694019633795,
+        "last_flow_ms": 1694020260051,
+        "distinct_src_mac": 18,
+        "rows_dedup_global": 278
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-ICMP1_train.pcap.csv",
+        "class": "DDoS_ICMP",
+        "rows": 192,
+        "first_flow_utc": "2023-09-05T18:36:26.003000+00:00",
+        "last_flow_utc": "2023-09-05T18:47:00.565000+00:00",
+        "first_flow_ms": 1693938986003,
+        "last_flow_ms": 1693939620565,
+        "distinct_src_mac": 18,
+        "rows_dedup_global": 179
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-ICMP2_test.pcap.csv",
+        "class": "DDoS_ICMP",
+        "rows": 168,
+        "first_flow_utc": "2023-09-05T19:49:38.270000+00:00",
+        "last_flow_utc": "2023-09-06T17:00:33.795000+00:00",
+        "first_flow_ms": 1693943378270,
+        "last_flow_ms": 1694019633795,
+        "distinct_src_mac": 16,
+        "rows_dedup_global": 145
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-ICMP2_train.pcap.csv",
+        "class": "DDoS_ICMP",
+        "rows": 136,
+        "first_flow_utc": "2023-09-05T18:47:00.565000+00:00",
+        "last_flow_utc": "2023-09-05T18:51:42.965000+00:00",
+        "first_flow_ms": 1693939620565,
+        "last_flow_ms": 1693939902965,
+        "distinct_src_mac": 14,
+        "rows_dedup_global": 126
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-ICMP3_train.pcap.csv",
+        "class": "DDoS_ICMP",
+        "rows": 158,
+        "first_flow_utc": "2023-09-05T18:51:42.965000+00:00",
+        "last_flow_utc": "2023-09-05T19:01:01.080000+00:00",
+        "first_flow_ms": 1693939902965,
+        "last_flow_ms": 1693940461080,
+        "distinct_src_mac": 17,
+        "rows_dedup_global": 130
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-ICMP4_train.pcap.csv",
+        "class": "DDoS_ICMP",
+        "rows": 184,
+        "first_flow_utc": "2023-09-05T19:01:01.080000+00:00",
+        "last_flow_utc": "2023-09-05T19:09:56.362000+00:00",
+        "first_flow_ms": 1693940461080,
+        "last_flow_ms": 1693940996362,
+        "distinct_src_mac": 12,
+        "rows_dedup_global": 169
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-ICMP5_train.pcap.csv",
+        "class": "DDoS_ICMP",
+        "rows": 108,
+        "first_flow_utc": "2023-09-05T19:09:56.362000+00:00",
+        "last_flow_utc": "2023-09-05T19:16:24.831000+00:00",
+        "first_flow_ms": 1693940996362,
+        "last_flow_ms": 1693941384831,
+        "distinct_src_mac": 14,
+        "rows_dedup_global": 101
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-ICMP6_train.pcap.csv",
+        "class": "DDoS_ICMP",
+        "rows": 185,
+        "first_flow_utc": "2023-09-05T19:16:24.831000+00:00",
+        "last_flow_utc": "2023-09-05T19:27:19.115000+00:00",
+        "first_flow_ms": 1693941384831,
+        "last_flow_ms": 1693942039115,
+        "distinct_src_mac": 14,
+        "rows_dedup_global": 170
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-ICMP7_train.pcap.csv",
+        "class": "DDoS_ICMP",
+        "rows": 432,
+        "first_flow_utc": "2023-09-05T19:27:19.115000+00:00",
+        "last_flow_utc": "2023-09-05T19:49:38.270000+00:00",
+        "first_flow_ms": 1693942039115,
+        "last_flow_ms": 1693943378270,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 377
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-ICMP8_train.pcap.csv",
+        "class": "DDoS_ICMP",
+        "rows": 160,
+        "first_flow_utc": "2023-09-05T18:28:00.615000+00:00",
+        "last_flow_utc": "2023-09-05T18:36:26.003000+00:00",
+        "first_flow_ms": 1693938480615,
+        "last_flow_ms": 1693938986003,
+        "distinct_src_mac": 20,
+        "rows_dedup_global": 139
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-SYN1_train.pcap.csv",
+        "class": "DDoS_SYN",
+        "rows": 459014,
+        "first_flow_utc": "2023-09-05T14:58:05.918000+00:00",
+        "last_flow_utc": "2023-09-05T15:10:23.195000+00:00",
+        "first_flow_ms": 1693925885918,
+        "last_flow_ms": 1693926623195,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 328920
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-SYN2_train.pcap.csv",
+        "class": "DDoS_SYN",
+        "rows": 459130,
+        "first_flow_utc": "2023-09-05T15:10:23.195000+00:00",
+        "last_flow_utc": "2023-09-05T15:37:04.850000+00:00",
+        "first_flow_ms": 1693926623195,
+        "last_flow_ms": 1693928224850,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 376150
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-SYN3_train.pcap.csv",
+        "class": "DDoS_SYN",
+        "rows": 262466,
+        "first_flow_utc": "2023-09-05T15:37:04.850000+00:00",
+        "last_flow_utc": "2023-09-05T15:43:29.809000+00:00",
+        "first_flow_ms": 1693928224850,
+        "last_flow_ms": 1693928609809,
+        "distinct_src_mac": 18,
+        "rows_dedup_global": 233230
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-SYN4_train.pcap.csv",
+        "class": "DDoS_SYN",
+        "rows": 569990,
+        "first_flow_utc": "2023-09-05T14:38:00.397000+00:00",
+        "last_flow_utc": "2023-09-05T14:58:05.918000+00:00",
+        "first_flow_ms": 1693924680397,
+        "last_flow_ms": 1693925885918,
+        "distinct_src_mac": 20,
+        "rows_dedup_global": 274959
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-SYN_test.pcap.csv",
+        "class": "DDoS_SYN",
+        "rows": 769068,
+        "first_flow_utc": "2023-09-05T15:43:29.809000+00:00",
+        "last_flow_utc": "2023-09-05T16:15:59.460000+00:00",
+        "first_flow_ms": 1693928609809,
+        "last_flow_ms": 1693930559460,
+        "distinct_src_mac": 22,
+        "rows_dedup_global": 410084
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-TCP1_train.pcap.csv",
+        "class": "DDoS_TCP",
+        "rows": 262329,
+        "first_flow_utc": "2023-09-05T13:19:22.519000+00:00",
+        "last_flow_utc": "2023-09-05T13:25:22.932000+00:00",
+        "first_flow_ms": 1693919962519,
+        "last_flow_ms": 1693920322932,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 253031
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-TCP2_train.pcap.csv",
+        "class": "DDoS_TCP",
+        "rows": 721480,
+        "first_flow_utc": "2023-09-05T13:25:22.932000+00:00",
+        "last_flow_utc": "2023-09-05T13:53:05.480000+00:00",
+        "first_flow_ms": 1693920322932,
+        "last_flow_ms": 1693921985480,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 352709
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-TCP3_train.pcap.csv",
+        "class": "DDoS_TCP",
+        "rows": 262300,
+        "first_flow_utc": "2023-09-05T13:53:05.480000+00:00",
+        "last_flow_utc": "2023-09-05T14:02:54.980000+00:00",
+        "first_flow_ms": 1693921985480,
+        "last_flow_ms": 1693922574980,
+        "distinct_src_mac": 20,
+        "rows_dedup_global": 249480
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-TCP4_train.pcap.csv",
+        "class": "DDoS_TCP",
+        "rows": 590476,
+        "first_flow_utc": "2023-09-05T13:05:00.380000+00:00",
+        "last_flow_utc": "2023-09-05T13:19:22.519000+00:00",
+        "first_flow_ms": 1693919100380,
+        "last_flow_ms": 1693919962519,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 204376
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-TCP_test.pcap.csv",
+        "class": "DDoS_TCP",
+        "rows": 524806,
+        "first_flow_utc": "2023-09-05T14:02:54.980000+00:00",
+        "last_flow_utc": "2023-09-05T14:19:59.451000+00:00",
+        "first_flow_ms": 1693922574980,
+        "last_flow_ms": 1693923599451,
+        "distinct_src_mac": 18,
+        "rows_dedup_global": 373662
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-UDP1_test.pcap.csv",
+        "class": "DDoS_UDP",
+        "rows": 20949,
+        "first_flow_utc": "2023-09-05T18:09:09.443000+00:00",
+        "last_flow_utc": "2023-09-05T18:18:43.616000+00:00",
+        "first_flow_ms": 1693937349443,
+        "last_flow_ms": 1693937923616,
+        "distinct_src_mac": 20,
+        "rows_dedup_global": 13482
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-UDP1_train.pcap.csv",
+        "class": "DDoS_UDP",
+        "rows": 20763,
+        "first_flow_utc": "2023-09-05T16:35:00.446000+00:00",
+        "last_flow_utc": "2023-09-05T16:40:53.728000+00:00",
+        "first_flow_ms": 1693931700446,
+        "last_flow_ms": 1693932053728,
+        "distinct_src_mac": 18,
+        "rows_dedup_global": 10965
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-UDP2_test.pcap.csv",
+        "class": "DDoS_UDP",
+        "rows": 15827,
+        "first_flow_utc": "2023-09-05T18:18:43.616000+00:00",
+        "last_flow_utc": "2023-09-05T18:25:59.661000+00:00",
+        "first_flow_ms": 1693937923616,
+        "last_flow_ms": 1693938359661,
+        "distinct_src_mac": 16,
+        "rows_dedup_global": 2938
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-UDP2_train.pcap.csv",
+        "class": "DDoS_UDP",
+        "rows": 20896,
+        "first_flow_utc": "2023-09-05T16:40:53.728000+00:00",
+        "last_flow_utc": "2023-09-05T16:48:38.845000+00:00",
+        "first_flow_ms": 1693932053728,
+        "last_flow_ms": 1693932518845,
+        "distinct_src_mac": 16,
+        "rows_dedup_global": 9996
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-UDP3_train.pcap.csv",
+        "class": "DDoS_UDP",
+        "rows": 20916,
+        "first_flow_utc": "2023-09-05T16:48:38.845000+00:00",
+        "last_flow_utc": "2023-09-05T16:54:17.131000+00:00",
+        "first_flow_ms": 1693932518845,
+        "last_flow_ms": 1693932857131,
+        "distinct_src_mac": 21,
+        "rows_dedup_global": 9059
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-UDP4_train.pcap.csv",
+        "class": "DDoS_UDP",
+        "rows": 21146,
+        "first_flow_utc": "2023-09-05T16:54:17.131000+00:00",
+        "last_flow_utc": "2023-09-05T17:03:26.814000+00:00",
+        "first_flow_ms": 1693932857131,
+        "last_flow_ms": 1693933406814,
+        "distinct_src_mac": 22,
+        "rows_dedup_global": 8759
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-UDP5_train.pcap.csv",
+        "class": "DDoS_UDP",
+        "rows": 20888,
+        "first_flow_utc": "2023-09-05T17:03:26.814000+00:00",
+        "last_flow_utc": "2023-09-05T17:26:54.469000+00:00",
+        "first_flow_ms": 1693933406814,
+        "last_flow_ms": 1693934814469,
+        "distinct_src_mac": 20,
+        "rows_dedup_global": 8494
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-UDP6_train.pcap.csv",
+        "class": "DDoS_UDP",
+        "rows": 20249,
+        "first_flow_utc": "2023-09-05T17:26:54.469000+00:00",
+        "last_flow_utc": "2023-09-05T17:32:50.419000+00:00",
+        "first_flow_ms": 1693934814469,
+        "last_flow_ms": 1693935170419,
+        "distinct_src_mac": 20,
+        "rows_dedup_global": 12069
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-UDP7_train.pcap.csv",
+        "class": "DDoS_UDP",
+        "rows": 20301,
+        "first_flow_utc": "2023-09-05T17:32:50.419000+00:00",
+        "last_flow_utc": "2023-09-05T18:03:43.368000+00:00",
+        "first_flow_ms": 1693935170419,
+        "last_flow_ms": 1693937023368,
+        "distinct_src_mac": 23,
+        "rows_dedup_global": 7163
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DDoS-UDP8_train.pcap.csv",
+        "class": "DDoS_UDP",
+        "rows": 20540,
+        "first_flow_utc": "2023-09-05T18:03:43.368000+00:00",
+        "last_flow_utc": "2023-09-05T18:09:09.443000+00:00",
+        "first_flow_ms": 1693937023368,
+        "last_flow_ms": 1693937349443,
+        "distinct_src_mac": 18,
+        "rows_dedup_global": 8537
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-ICMP1_train.pcap.csv",
+        "class": "DoS_ICMP",
+        "rows": 169,
+        "first_flow_utc": "2023-09-01T16:35:13.070000+00:00",
+        "last_flow_utc": "2023-09-01T16:41:49.312000+00:00",
+        "first_flow_ms": 1693586113070,
+        "last_flow_ms": 1693586509312,
+        "distinct_src_mac": 18,
+        "rows_dedup_global": 148
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-ICMP2_train.pcap.csv",
+        "class": "DoS_ICMP",
+        "rows": 588,
+        "first_flow_utc": "2023-09-01T16:41:49.312000+00:00",
+        "last_flow_utc": "2023-09-01T17:49:01.416000+00:00",
+        "first_flow_ms": 1693586509312,
+        "last_flow_ms": 1693590541416,
+        "distinct_src_mac": 20,
+        "rows_dedup_global": 487
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-ICMP3_train.pcap.csv",
+        "class": "DoS_ICMP",
+        "rows": 146,
+        "first_flow_utc": "2023-09-01T17:49:01.416000+00:00",
+        "last_flow_utc": "2023-09-01T17:57:01.151000+00:00",
+        "first_flow_ms": 1693590541416,
+        "last_flow_ms": 1693591021151,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 120
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-ICMP4_train.pcap.csv",
+        "class": "DoS_ICMP",
+        "rows": 240,
+        "first_flow_utc": "2023-09-01T16:17:00.358000+00:00",
+        "last_flow_utc": "2023-09-01T16:35:13.070000+00:00",
+        "first_flow_ms": 1693585020358,
+        "last_flow_ms": 1693586113070,
+        "distinct_src_mac": 17,
+        "rows_dedup_global": 192
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-ICMP_test.pcap.csv",
+        "class": "DoS_ICMP",
+        "rows": 342,
+        "first_flow_utc": "2023-09-01T17:57:01.151000+00:00",
+        "last_flow_utc": "2023-09-01T18:41:59.686000+00:00",
+        "first_flow_ms": 1693591021151,
+        "last_flow_ms": 1693593719686,
+        "distinct_src_mac": 21,
+        "rows_dedup_global": 260
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-SYN1_train.pcap.csv",
+        "class": "DoS_SYN",
+        "rows": 65673,
+        "first_flow_utc": "2023-08-31T14:28:27.120000+00:00",
+        "last_flow_utc": "2023-08-31T14:36:12.037000+00:00",
+        "first_flow_ms": 1693492107120,
+        "last_flow_ms": 1693492572037,
+        "distinct_src_mac": 16,
+        "rows_dedup_global": 65656
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-SYN2_train.pcap.csv",
+        "class": "DoS_SYN",
+        "rows": 131364,
+        "first_flow_utc": "2023-08-31T14:36:12.037000+00:00",
+        "last_flow_utc": "2023-08-31T14:48:59.407000+00:00",
+        "first_flow_ms": 1693492572037,
+        "last_flow_ms": 1693493339407,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 123932
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-SYN3_train.pcap.csv",
+        "class": "DoS_SYN",
+        "rows": 197082,
+        "first_flow_utc": "2023-08-31T14:48:59.407000+00:00",
+        "last_flow_utc": "2023-08-31T15:11:38.199000+00:00",
+        "first_flow_ms": 1693493339407,
+        "last_flow_ms": 1693494698199,
+        "distinct_src_mac": 21,
+        "rows_dedup_global": 183391
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-SYN4_train.pcap.csv",
+        "class": "DoS_SYN",
+        "rows": 197859,
+        "first_flow_utc": "2023-08-31T13:58:00.512000+00:00",
+        "last_flow_utc": "2023-08-31T14:28:27.120000+00:00",
+        "first_flow_ms": 1693490280512,
+        "last_flow_ms": 1693492107120,
+        "distinct_src_mac": 21,
+        "rows_dedup_global": 166605
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-SYN_test.pcap.csv",
+        "class": "DoS_SYN",
+        "rows": 65684,
+        "first_flow_utc": "2023-08-31T15:11:38.199000+00:00",
+        "last_flow_utc": "2023-08-31T15:19:00.462000+00:00",
+        "first_flow_ms": 1693494698199,
+        "last_flow_ms": 1693495140462,
+        "distinct_src_mac": 17,
+        "rows_dedup_global": 65640
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-TCP1_train.pcap.csv",
+        "class": "DoS_TCP",
+        "rows": 131489,
+        "first_flow_utc": "2023-08-30T16:08:00.431000+00:00",
+        "last_flow_utc": "2023-08-30T17:05:11.172000+00:00",
+        "first_flow_ms": 1693411680431,
+        "last_flow_ms": 1693415111172,
+        "distinct_src_mac": 22,
+        "rows_dedup_global": 121841
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-TCP2_train.pcap.csv",
+        "class": "DoS_TCP",
+        "rows": 196916,
+        "first_flow_utc": "2023-08-30T17:05:11.172000+00:00",
+        "last_flow_utc": "2023-08-30T17:49:31.353000+00:00",
+        "first_flow_ms": 1693415111172,
+        "last_flow_ms": 1693417771353,
+        "distinct_src_mac": 20,
+        "rows_dedup_global": 132087
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-TCP3_train.pcap.csv",
+        "class": "DoS_TCP",
+        "rows": 65769,
+        "first_flow_utc": "2023-08-30T17:49:31.353000+00:00",
+        "last_flow_utc": "2023-08-30T17:58:12.871000+00:00",
+        "first_flow_ms": 1693417771353,
+        "last_flow_ms": 1693418292871,
+        "distinct_src_mac": 20,
+        "rows_dedup_global": 65498
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-TCP4_train.pcap.csv",
+        "class": "DoS_TCP",
+        "rows": 262608,
+        "first_flow_utc": "2023-08-30T17:58:12.871000+00:00",
+        "last_flow_utc": "2023-08-30T18:19:38.769000+00:00",
+        "first_flow_ms": 1693418292871,
+        "last_flow_ms": 1693419578769,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 189303
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-TCP_test.pcap.csv",
+        "class": "DoS_TCP",
+        "rows": 65652,
+        "first_flow_utc": "2023-08-30T18:19:38.769000+00:00",
+        "last_flow_utc": "2023-08-30T18:28:00.274000+00:00",
+        "first_flow_ms": 1693419578769,
+        "last_flow_ms": 1693420080274,
+        "distinct_src_mac": 16,
+        "rows_dedup_global": 65535
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-UDP1_train.pcap.csv",
+        "class": "DoS_UDP",
+        "rows": 14159,
+        "first_flow_utc": "2023-08-31T18:05:56.317000+00:00",
+        "last_flow_utc": "2023-08-31T18:28:51.135000+00:00",
+        "first_flow_ms": 1693505156317,
+        "last_flow_ms": 1693506531135,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 5471
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-UDP2_train.pcap.csv",
+        "class": "DoS_UDP",
+        "rows": 14346,
+        "first_flow_utc": "2023-08-31T18:28:51.135000+00:00",
+        "last_flow_utc": "2023-09-01T14:05:28.773000+00:00",
+        "first_flow_ms": 1693506531135,
+        "last_flow_ms": 1693577128773,
+        "distinct_src_mac": 18,
+        "rows_dedup_global": 3278
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-UDP3_train.pcap.csv",
+        "class": "DoS_UDP",
+        "rows": 14717,
+        "first_flow_utc": "2023-09-01T14:05:28.773000+00:00",
+        "last_flow_utc": "2023-09-01T14:15:45.895000+00:00",
+        "first_flow_ms": 1693577128773,
+        "last_flow_ms": 1693577745895,
+        "distinct_src_mac": 17,
+        "rows_dedup_global": 2006
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-UDP4_train.pcap.csv",
+        "class": "DoS_UDP",
+        "rows": 14814,
+        "first_flow_utc": "2023-08-31T17:03:00.335000+00:00",
+        "last_flow_utc": "2023-08-31T18:05:56.317000+00:00",
+        "first_flow_ms": 1693501380335,
+        "last_flow_ms": 1693505156317,
+        "distinct_src_mac": 22,
+        "rows_dedup_global": 6228
+      },
+      {
+        "dataset": "CICIoMT2024",
+        "file": "TCP_IP-DoS-UDP_test.pcap.csv",
+        "class": "DoS_UDP",
+        "rows": 14746,
+        "first_flow_utc": "2023-09-01T14:15:45.895000+00:00",
+        "last_flow_utc": "2023-09-01T15:53:59.908000+00:00",
+        "first_flow_ms": 1693577745895,
+        "last_flow_ms": 1693583639908,
+        "distinct_src_mac": 19,
+        "rows_dedup_global": 2928
+      }
+    ],
+    "CICIoT2023": [
+      {
+        "dataset": "CICIoT2023",
+        "file": "BenignTraffic.pcap.csv",
+        "class": "Benign",
+        "rows": 145779,
+        "first_flow_utc": "2022-10-07T17:15:00.350000+00:00",
+        "last_flow_utc": "2022-10-08T02:30:28.319000+00:00",
+        "first_flow_ms": 1665162900350,
+        "last_flow_ms": 1665196228319,
+        "distinct_src_mac": 72,
+        "rows_dedup_global": 54319
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "BenignTraffic1.pcap.csv",
+        "class": "Benign",
+        "rows": 61585,
+        "first_flow_utc": "2022-10-08T02:30:28.319000+00:00",
+        "last_flow_utc": "2022-10-08T09:45:21.025000+00:00",
+        "first_flow_ms": 1665196228319,
+        "last_flow_ms": 1665222321025,
+        "distinct_src_mac": 73,
+        "rows_dedup_global": 23364
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "BenignTraffic2.pcap.csv",
+        "class": "Benign",
+        "rows": 65825,
+        "first_flow_utc": "2022-10-08T09:45:21.039000+00:00",
+        "last_flow_utc": "2022-10-08T17:47:21.040000+00:00",
+        "first_flow_ms": 1665222321039,
+        "last_flow_ms": 1665251241040,
+        "distinct_src_mac": 71,
+        "rows_dedup_global": 22223
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "BenignTraffic3.pcap.csv",
+        "class": "Benign",
+        "rows": 28004,
+        "first_flow_utc": "2022-10-08T17:47:21.040000+00:00",
+        "last_flow_utc": "2022-10-08T21:15:01.072000+00:00",
+        "first_flow_ms": 1665251241040,
+        "last_flow_ms": 1665263701072,
+        "distinct_src_mac": 70,
+        "rows_dedup_global": 8935
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DDoS-ICMP_Flood.pcap.csv",
+        "class": "DDoS-ICMP_Flood",
+        "rows": 9603,
+        "first_flow_utc": "2022-09-06T15:57:00.430000+00:00",
+        "last_flow_utc": "2022-09-06T16:28:01.943000+00:00",
+        "first_flow_ms": 1662479820430,
+        "last_flow_ms": 1662481681943,
+        "distinct_src_mac": 73,
+        "rows_dedup_global": 4705
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DDoS-ICMP_Flood1.pcap.csv",
+        "class": "DDoS-ICMP_Flood",
+        "rows": 7117,
+        "first_flow_utc": "2022-09-06T16:28:01.943000+00:00",
+        "last_flow_utc": "2022-09-06T18:22:35.485000+00:00",
+        "first_flow_ms": 1662481681943,
+        "last_flow_ms": 1662488555485,
+        "distinct_src_mac": 74,
+        "rows_dedup_global": 3820
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DDoS-ICMP_Flood10.pcap.csv",
+        "class": "DDoS-ICMP_Flood",
+        "rows": 6941,
+        "first_flow_utc": "2022-09-07T17:03:32.365000+00:00",
+        "last_flow_utc": "2022-09-07T17:45:36.759000+00:00",
+        "first_flow_ms": 1662570212365,
+        "last_flow_ms": 1662572736759,
+        "distinct_src_mac": 75,
+        "rows_dedup_global": 4520
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DDoS-ICMP_Flood11.pcap.csv",
+        "class": "DDoS-ICMP_Flood",
+        "rows": 7638,
+        "first_flow_utc": "2022-09-07T17:45:36.759000+00:00",
+        "last_flow_utc": "2022-09-07T18:26:33.287000+00:00",
+        "first_flow_ms": 1662572736759,
+        "last_flow_ms": 1662575193287,
+        "distinct_src_mac": 75,
+        "rows_dedup_global": 4772
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DDoS-ICMP_Flood12.pcap.csv",
+        "class": "DDoS-ICMP_Flood",
+        "rows": 6340,
+        "first_flow_utc": "2022-09-07T18:26:33.288000+00:00",
+        "last_flow_utc": "2022-09-07T19:10:20.609000+00:00",
+        "first_flow_ms": 1662575193288,
+        "last_flow_ms": 1662577820609,
+        "distinct_src_mac": 75,
+        "rows_dedup_global": 4144
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DDoS-ICMP_Flood13.pcap.csv",
+        "class": "DDoS-ICMP_Flood",
+        "rows": 5122,
+        "first_flow_utc": "2022-09-07T19:10:20.609000+00:00",
+        "last_flow_utc": "2022-09-07T20:06:31.238000+00:00",
+        "first_flow_ms": 1662577820609,
+        "last_flow_ms": 1662581191238,
+        "distinct_src_mac": 74,
+        "rows_dedup_global": 3212
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DDoS-ICMP_Flood14.pcap.csv",
+        "class": "DDoS-ICMP_Flood",
+        "rows": 5240,
+        "first_flow_utc": "2022-09-07T20:06:31.238000+00:00",
+        "last_flow_utc": "2022-09-08T13:14:05.751000+00:00",
+        "first_flow_ms": 1662581191238,
+        "last_flow_ms": 1662642845751,
+        "distinct_src_mac": 73,
+        "rows_dedup_global": 3444
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DDoS-ICMP_Flood15.pcap.csv",
+        "class": "DDoS-ICMP_Flood",
+        "rows": 8603,
+        "first_flow_utc": "2022-09-08T13:14:05.751000+00:00",
+        "last_flow_utc": "2022-09-08T15:09:19.510000+00:00",
+        "first_flow_ms": 1662642845751,
+        "last_flow_ms": 1662649759510,
+        "distinct_src_mac": 75,
+        "rows_dedup_global": 5672
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DDoS-ICMP_Flood16.pcap.csv",
+        "class": "DDoS-ICMP_Flood",
+        "rows": 7680,
+        "first_flow_utc": "2022-09-08T15:09:19.510000+00:00",
+        "last_flow_utc": "2022-09-12T12:49:15.579000+00:00",
+        "first_flow_ms": 1662649759510,
+        "last_flow_ms": 1662986955579,
+        "distinct_src_mac": 77,
+        "rows_dedup_global": 4646
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DDoS-ICMP_Flood17.pcap.csv",
+        "class": "DDoS-ICMP_Flood",
+        "rows": 4329,
+        "first_flow_utc": "2022-09-12T12:49:15.579000+00:00",
+        "last_flow_utc": "2022-09-12T13:26:57.817000+00:00",
+        "first_flow_ms": 1662986955579,
+        "last_flow_ms": 1662989217817,
+        "distinct_src_mac": 76,
+        "rows_dedup_global": 2718
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-SYN_Flood.pcap.csv",
+        "class": "DoS-SYN_Flood",
+        "rows": 209520,
+        "first_flow_utc": "2022-08-02T13:42:00.639000+00:00",
+        "last_flow_utc": "2022-08-02T15:06:04.400000+00:00",
+        "first_flow_ms": 1659447720639,
+        "last_flow_ms": 1659452764400,
+        "distinct_src_mac": 75,
+        "rows_dedup_global": 203477
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-SYN_Flood1.pcap.csv",
+        "class": "DoS-SYN_Flood",
+        "rows": 275823,
+        "first_flow_utc": "2022-08-02T15:06:04.400000+00:00",
+        "last_flow_utc": "2022-08-02T17:02:58.471000+00:00",
+        "first_flow_ms": 1659452764400,
+        "last_flow_ms": 1659459778471,
+        "distinct_src_mac": 71,
+        "rows_dedup_global": 241904
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-SYN_Flood2.pcap.csv",
+        "class": "DoS-SYN_Flood",
+        "rows": 426717,
+        "first_flow_utc": "2022-08-02T17:02:58.471000+00:00",
+        "last_flow_utc": "2022-08-03T14:28:15.250000+00:00",
+        "first_flow_ms": 1659459778471,
+        "last_flow_ms": 1659536895250,
+        "distinct_src_mac": 79,
+        "rows_dedup_global": 293815
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-SYN_Flood3.pcap.csv",
+        "class": "DoS-SYN_Flood",
+        "rows": 626389,
+        "first_flow_utc": "2022-08-03T14:28:15.250000+00:00",
+        "last_flow_utc": "2022-08-04T12:50:44.430000+00:00",
+        "first_flow_ms": 1659536895250,
+        "last_flow_ms": 1659617444430,
+        "distinct_src_mac": 79,
+        "rows_dedup_global": 400356
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-SYN_Flood4.pcap.csv",
+        "class": "DoS-SYN_Flood",
+        "rows": 487114,
+        "first_flow_utc": "2022-08-04T12:50:44.430000+00:00",
+        "last_flow_utc": "2022-08-04T17:16:36.642000+00:00",
+        "first_flow_ms": 1659617444430,
+        "last_flow_ms": 1659633396642,
+        "distinct_src_mac": 77,
+        "rows_dedup_global": 404254
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-SYN_Flood5.pcap.csv",
+        "class": "DoS-SYN_Flood",
+        "rows": 277274,
+        "first_flow_utc": "2022-08-04T17:16:36.642000+00:00",
+        "last_flow_utc": "2022-08-05T14:00:22.510000+00:00",
+        "first_flow_ms": 1659633396642,
+        "last_flow_ms": 1659708022510,
+        "distinct_src_mac": 73,
+        "rows_dedup_global": 221579
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-SYN_Flood6.pcap.csv",
+        "class": "DoS-SYN_Flood",
+        "rows": 346860,
+        "first_flow_utc": "2022-08-05T14:00:22.510000+00:00",
+        "last_flow_utc": "2022-08-05T16:40:42.531000+00:00",
+        "first_flow_ms": 1659708022510,
+        "last_flow_ms": 1659717642531,
+        "distinct_src_mac": 75,
+        "rows_dedup_global": 282493
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-SYN_Flood7.pcap.csv",
+        "class": "DoS-SYN_Flood",
+        "rows": 256623,
+        "first_flow_utc": "2022-08-05T16:40:42.531000+00:00",
+        "last_flow_utc": "2022-08-05T19:07:00.950000+00:00",
+        "first_flow_ms": 1659717642531,
+        "last_flow_ms": 1659726420950,
+        "distinct_src_mac": 76,
+        "rows_dedup_global": 240432
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-TCP_Flood.pcap.csv",
+        "class": "DoS-TCP_Flood",
+        "rows": 137805,
+        "first_flow_utc": "2022-07-22T14:41:31.704000+00:00",
+        "last_flow_utc": "2022-07-22T19:00:53.272000+00:00",
+        "first_flow_ms": 1658500891704,
+        "last_flow_ms": 1658516453272,
+        "distinct_src_mac": 73,
+        "rows_dedup_global": 134714
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-TCP_Flood1.pcap.csv",
+        "class": "DoS-TCP_Flood",
+        "rows": 465208,
+        "first_flow_utc": "2022-07-22T19:00:53.272000+00:00",
+        "last_flow_utc": "2022-07-26T18:54:32.362000+00:00",
+        "first_flow_ms": 1658516453272,
+        "last_flow_ms": 1658861672362,
+        "distinct_src_mac": 75,
+        "rows_dedup_global": 292286
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-TCP_Flood10.pcap.csv",
+        "class": "DoS-TCP_Flood",
+        "rows": 68862,
+        "first_flow_utc": "2022-07-29T19:55:46.934000+00:00",
+        "last_flow_utc": "2022-07-29T20:07:01.042000+00:00",
+        "first_flow_ms": 1659124546934,
+        "last_flow_ms": 1659125221042,
+        "distinct_src_mac": 70,
+        "rows_dedup_global": 66865
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-TCP_Flood2.pcap.csv",
+        "class": "DoS-TCP_Flood",
+        "rows": 283972,
+        "first_flow_utc": "2022-07-26T18:54:32.363000+00:00",
+        "last_flow_utc": "2022-07-27T13:07:17.287000+00:00",
+        "first_flow_ms": 1658861672363,
+        "last_flow_ms": 1658927237287,
+        "distinct_src_mac": 74,
+        "rows_dedup_global": 193716
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-TCP_Flood3.pcap.csv",
+        "class": "DoS-TCP_Flood",
+        "rows": 213292,
+        "first_flow_utc": "2022-07-27T13:07:17.287000+00:00",
+        "last_flow_utc": "2022-07-27T15:04:24.697000+00:00",
+        "first_flow_ms": 1658927237287,
+        "last_flow_ms": 1658934264697,
+        "distinct_src_mac": 74,
+        "rows_dedup_global": 198910
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-TCP_Flood4.pcap.csv",
+        "class": "DoS-TCP_Flood",
+        "rows": 277701,
+        "first_flow_utc": "2022-07-27T15:04:24.697000+00:00",
+        "last_flow_utc": "2022-07-27T17:55:49.937000+00:00",
+        "first_flow_ms": 1658934264697,
+        "last_flow_ms": 1658944549937,
+        "distinct_src_mac": 74,
+        "rows_dedup_global": 216250
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-TCP_Flood5.pcap.csv",
+        "class": "DoS-TCP_Flood",
+        "rows": 208705,
+        "first_flow_utc": "2022-07-27T17:55:49.937000+00:00",
+        "last_flow_utc": "2022-07-27T19:33:09.918000+00:00",
+        "first_flow_ms": 1658944549937,
+        "last_flow_ms": 1658950389918,
+        "distinct_src_mac": 70,
+        "rows_dedup_global": 199238
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-TCP_Flood6.pcap.csv",
+        "class": "DoS-TCP_Flood",
+        "rows": 271773,
+        "first_flow_utc": "2022-07-27T19:33:09.918000+00:00",
+        "last_flow_utc": "2022-07-28T15:23:01.463000+00:00",
+        "first_flow_ms": 1658950389918,
+        "last_flow_ms": 1659021781463,
+        "distinct_src_mac": 73,
+        "rows_dedup_global": 253577
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-TCP_Flood7.pcap.csv",
+        "class": "DoS-TCP_Flood",
+        "rows": 206545,
+        "first_flow_utc": "2022-07-28T15:23:01.463000+00:00",
+        "last_flow_utc": "2022-07-28T16:20:34.320000+00:00",
+        "first_flow_ms": 1659021781463,
+        "last_flow_ms": 1659025234320,
+        "distinct_src_mac": 69,
+        "rows_dedup_global": 201176
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-TCP_Flood8.pcap.csv",
+        "class": "DoS-TCP_Flood",
+        "rows": 503347,
+        "first_flow_utc": "2022-07-28T16:20:34.320000+00:00",
+        "last_flow_utc": "2022-07-29T17:39:31.668000+00:00",
+        "first_flow_ms": 1659025234320,
+        "last_flow_ms": 1659116371668,
+        "distinct_src_mac": 75,
+        "rows_dedup_global": 273454
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-TCP_Flood9.pcap.csv",
+        "class": "DoS-TCP_Flood",
+        "rows": 269950,
+        "first_flow_utc": "2022-07-29T17:39:31.668000+00:00",
+        "last_flow_utc": "2022-07-29T19:55:46.934000+00:00",
+        "first_flow_ms": 1659116371668,
+        "last_flow_ms": 1659124546934,
+        "distinct_src_mac": 74,
+        "rows_dedup_global": 202591
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 209255,
+        "first_flow_utc": "2022-08-09T18:37:00.063000+00:00",
+        "last_flow_utc": "2022-08-10T13:19:33.687000+00:00",
+        "first_flow_ms": 1660070220063,
+        "last_flow_ms": 1660137573687,
+        "distinct_src_mac": 77,
+        "rows_dedup_global": 186130
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood1.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 205345,
+        "first_flow_utc": "2022-08-10T13:19:33.687000+00:00",
+        "last_flow_utc": "2022-08-10T14:02:50.752000+00:00",
+        "first_flow_ms": 1660137573687,
+        "last_flow_ms": 1660140170752,
+        "distinct_src_mac": 71,
+        "rows_dedup_global": 147691
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood10.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 43939,
+        "first_flow_utc": "2022-08-11T19:00:13.621000+00:00",
+        "last_flow_utc": "2022-08-12T12:38:30.915000+00:00",
+        "first_flow_ms": 1660244413621,
+        "last_flow_ms": 1660307910915,
+        "distinct_src_mac": 76,
+        "rows_dedup_global": 33080
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood11.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 49097,
+        "first_flow_utc": "2022-08-12T12:38:30.915000+00:00",
+        "last_flow_utc": "2022-08-12T15:00:29.141000+00:00",
+        "first_flow_ms": 1660307910915,
+        "last_flow_ms": 1660316429141,
+        "distinct_src_mac": 77,
+        "rows_dedup_global": 25039
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood12.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 43603,
+        "first_flow_utc": "2022-08-12T15:00:29.141000+00:00",
+        "last_flow_utc": "2022-08-12T17:32:30.526000+00:00",
+        "first_flow_ms": 1660316429141,
+        "last_flow_ms": 1660325550526,
+        "distinct_src_mac": 76,
+        "rows_dedup_global": 29563
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood13.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 42646,
+        "first_flow_utc": "2022-08-12T17:32:30.526000+00:00",
+        "last_flow_utc": "2022-08-12T18:47:01.233000+00:00",
+        "first_flow_ms": 1660325550526,
+        "last_flow_ms": 1660330021233,
+        "distinct_src_mac": 76,
+        "rows_dedup_global": 28543
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood14.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 59064,
+        "first_flow_utc": "2022-08-12T18:47:01.233000+00:00",
+        "last_flow_utc": "2022-08-15T13:04:18.593000+00:00",
+        "first_flow_ms": 1660330021233,
+        "last_flow_ms": 1660568658593,
+        "distinct_src_mac": 79,
+        "rows_dedup_global": 30660
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood15.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 44643,
+        "first_flow_utc": "2022-08-15T13:04:18.593000+00:00",
+        "last_flow_utc": "2022-08-15T14:00:03.792000+00:00",
+        "first_flow_ms": 1660568658593,
+        "last_flow_ms": 1660572003792,
+        "distinct_src_mac": 77,
+        "rows_dedup_global": 30524
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood16.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 31480,
+        "first_flow_utc": "2022-08-15T14:00:03.792000+00:00",
+        "last_flow_utc": "2022-08-16T16:05:00.885000+00:00",
+        "first_flow_ms": 1660572003792,
+        "last_flow_ms": 1660665900885,
+        "distinct_src_mac": 73,
+        "rows_dedup_global": 19015
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood2.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 140646,
+        "first_flow_utc": "2022-08-10T14:02:50.752000+00:00",
+        "last_flow_utc": "2022-08-10T15:42:48.954000+00:00",
+        "first_flow_ms": 1660140170752,
+        "last_flow_ms": 1660146168954,
+        "distinct_src_mac": 74,
+        "rows_dedup_global": 130875
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood3.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 208433,
+        "first_flow_utc": "2022-08-10T15:42:48.954000+00:00",
+        "last_flow_utc": "2022-08-10T16:28:39.320000+00:00",
+        "first_flow_ms": 1660146168954,
+        "last_flow_ms": 1660148919320,
+        "distinct_src_mac": 73,
+        "rows_dedup_global": 174018
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood4.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 275506,
+        "first_flow_utc": "2022-08-10T16:28:39.320000+00:00",
+        "last_flow_utc": "2022-08-10T18:47:29.560000+00:00",
+        "first_flow_ms": 1660148919320,
+        "last_flow_ms": 1660157249560,
+        "distinct_src_mac": 75,
+        "rows_dedup_global": 218186
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood5.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 206430,
+        "first_flow_utc": "2022-08-10T18:47:29.560000+00:00",
+        "last_flow_utc": "2022-08-10T20:09:38.947000+00:00",
+        "first_flow_ms": 1660157249560,
+        "last_flow_ms": 1660162178947,
+        "distinct_src_mac": 74,
+        "rows_dedup_global": 171146
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood6.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 140100,
+        "first_flow_utc": "2022-08-10T20:09:38.947000+00:00",
+        "last_flow_utc": "2022-08-10T20:36:34.844000+00:00",
+        "first_flow_ms": 1660162178947,
+        "last_flow_ms": 1660163794844,
+        "distinct_src_mac": 74,
+        "rows_dedup_global": 131548
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood7.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 155728,
+        "first_flow_utc": "2022-08-10T20:36:34.844000+00:00",
+        "last_flow_utc": "2022-08-11T14:53:35.246000+00:00",
+        "first_flow_ms": 1660163794844,
+        "last_flow_ms": 1660229615246,
+        "distinct_src_mac": 76,
+        "rows_dedup_global": 105224
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood8.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 46937,
+        "first_flow_utc": "2022-08-11T14:53:35.246000+00:00",
+        "last_flow_utc": "2022-08-11T16:35:01.928000+00:00",
+        "first_flow_ms": 1660229615246,
+        "last_flow_ms": 1660235701928,
+        "distinct_src_mac": 77,
+        "rows_dedup_global": 31923
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "DoS-UDP_Flood9.pcap.csv",
+        "class": "DoS-UDP_Flood",
+        "rows": 44389,
+        "first_flow_utc": "2022-08-11T16:35:01.928000+00:00",
+        "last_flow_utc": "2022-08-11T19:00:13.621000+00:00",
+        "first_flow_ms": 1660235701928,
+        "last_flow_ms": 1660244413621,
+        "distinct_src_mac": 77,
+        "rows_dedup_global": 30991
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "MITM-ArpSpoofing.pcap.csv",
+        "class": "MITM-ArpSpoofing",
+        "rows": 61399,
+        "first_flow_utc": "2022-10-17T20:20:00.675000+00:00",
+        "last_flow_utc": "2022-10-18T19:34:14.284000+00:00",
+        "first_flow_ms": 1666038000675,
+        "last_flow_ms": 1666121654284,
+        "distinct_src_mac": 78,
+        "rows_dedup_global": 23755
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "MITM-ArpSpoofing1.pcap.csv",
+        "class": "MITM-ArpSpoofing",
+        "rows": 7849,
+        "first_flow_utc": "2022-10-18T19:34:14.284000+00:00",
+        "last_flow_utc": "2022-10-18T20:56:00.813000+00:00",
+        "first_flow_ms": 1666121654284,
+        "last_flow_ms": 1666126560813,
+        "distinct_src_mac": 71,
+        "rows_dedup_global": 3045
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "Recon-OSScan.pcap.csv",
+        "class": "Recon-OSScan",
+        "rows": 165458,
+        "first_flow_utc": "2022-09-27T18:07:00.277000+00:00",
+        "last_flow_utc": "2022-09-28T19:38:00.336000+00:00",
+        "first_flow_ms": 1664302020277,
+        "last_flow_ms": 1664393880336,
+        "distinct_src_mac": 88,
+        "rows_dedup_global": 23803
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "Recon-PingSweep.pcap.csv",
+        "class": "Recon-PingSweep",
+        "rows": 1686,
+        "first_flow_utc": "2022-09-29T16:58:00.138000+00:00",
+        "last_flow_utc": "2022-09-29T19:29:00.443000+00:00",
+        "first_flow_ms": 1664470680138,
+        "last_flow_ms": 1664479740443,
+        "distinct_src_mac": 61,
+        "rows_dedup_global": 716
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "Recon-PortScan.pcap.csv",
+        "class": "Recon-PortScan",
+        "rows": 188592,
+        "first_flow_utc": "2022-09-26T16:31:00.218000+00:00",
+        "last_flow_utc": "2022-09-27T17:16:00.794000+00:00",
+        "first_flow_ms": 1664209860218,
+        "last_flow_ms": 1664298960794,
+        "distinct_src_mac": 90,
+        "rows_dedup_global": 17678
+      },
+      {
+        "dataset": "CICIoT2023",
+        "file": "VulnerabilityScan.pcap.csv",
+        "class": "VulnerabilityScan",
+        "rows": 370456,
+        "first_flow_utc": "2022-10-03T14:02:00.933000+00:00",
+        "last_flow_utc": "2022-10-04T12:31:04.481000+00:00",
+        "first_flow_ms": 1664805720933,
+        "last_flow_ms": 1664886664481,
+        "distinct_src_mac": 75,
+        "rows_dedup_global": 73690
+      }
+    ]
+  }
+}

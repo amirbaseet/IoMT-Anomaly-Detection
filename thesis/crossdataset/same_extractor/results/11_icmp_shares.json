@@ -1,0 +1,272 @@
+{
+  "meta": {
+    "run_utc": "2026-10-11T05:47:17+00:00",
+    "script": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/11_icmp_shares.py",
+      "sha256": "3a2eba8308349075636fdd907ac0923f313fe33b007aa5f6f5f1a67f97c9306d"
+    },
+    "helper": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/_common.py",
+      "sha256": "214309d4b5d15c40277d9a3a1ebd993be60e537b5d24c96e8f5bdfd69dda6abc"
+    },
+    "python_executable": "/Users/amoorabaseet/code/IoMT-Project/venv/bin/python",
+    "sys_prefix": "/Users/amoorabaseet/code/IoMT-Project/venv",
+    "libs": {
+      "python": "3.13.13",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "nfstream": null,
+      "sklearn": "1.8.0",
+      "pyarrow": "24.0.0"
+    },
+    "thesis_repo": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project",
+      "commit": "6aa9cc28de4358f3941ed4c640d3b8dddadd1f0f",
+      "branch": "chore/bootstrap-claude",
+      "tree_dirty": true,
+      "dirty_entries_excluding_same_extractor": [
+        " M Project_Journey_Complete.md",
+        " M README.md",
+        "?? thesis/crossdataset/artifacts/",
+        "?? thesis/crossdataset/sampled_test_set.parquet"
+      ]
+    },
+    "seeds": [],
+    "inputs_note": "released CSVs (all rows, raw) and step-03 NFStream tables (raw)",
+    "inputs": [
+      {
+        "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/results/07_background_audit.json",
+        "size_bytes": 30981
+      }
+    ]
+  },
+  "label": "added after the background audit",
+  "a_released_csv_icmp_indicator": {
+    "iomt": {
+      "Benign": {
+        "n_rows": 230339,
+        "n_icmp_ge_0.5": 4,
+        "share": 1.7365708803111935e-05
+      },
+      "DDoS_ICMP": {
+        "n_rows": 1887175,
+        "n_icmp_ge_0.5": 1886295,
+        "share": 0.9995336945434313
+      },
+      "DoS_ICMP": {
+        "n_rows": 514724,
+        "n_icmp_ge_0.5": 513025,
+        "share": 0.9966992019023787
+      }
+    },
+    "iot": {
+      "DDoS-ICMP_Flood": {
+        "n_rows": 6893259,
+        "n_icmp_ge_0.5": 6885339,
+        "share": 0.9988510514402549
+      },
+      "Benign": {
+        "n_rows": 1051373,
+        "n_icmp_ge_0.5": 27,
+        "share": 2.5680705135094775e-05
+      }
+    }
+  },
+  "b_nfstream_protocol1_before_dedup": {
+    "iomt": {
+      "Benign": {
+        "n_rows": 18929,
+        "n_icmp_ge_0.5": 49,
+        "share": 0.0025886206350044906,
+        "files": {
+          "Benign_test.pcap.csv": {
+            "n_rows": 3225,
+            "n_icmp_ge_0.5": 2,
+            "share": 0.00062015503875969
+          },
+          "Benign_train.pcap.csv": {
+            "n_rows": 15704,
+            "n_icmp_ge_0.5": 47,
+            "share": 0.0029928680590932248
+          }
+        }
+      },
+      "ICMP": {
+        "n_rows": 3519,
+        "n_icmp_ge_0.5": 97,
+        "share": 0.027564649048025008,
+        "files": {
+          "TCP_IP-DDoS-ICMP1_test.pcap.csv": {
+            "n_rows": 311,
+            "n_icmp_ge_0.5": 13,
+            "share": 0.04180064308681672
+          },
+          "TCP_IP-DDoS-ICMP1_train.pcap.csv": {
+            "n_rows": 192,
+            "n_icmp_ge_0.5": 8,
+            "share": 0.041666666666666664
+          },
+          "TCP_IP-DDoS-ICMP2_test.pcap.csv": {
+            "n_rows": 168,
+            "n_icmp_ge_0.5": 8,
+            "share": 0.047619047619047616
+          },
+          "TCP_IP-DDoS-ICMP2_train.pcap.csv": {
+            "n_rows": 136,
+            "n_icmp_ge_0.5": 4,
+            "share": 0.029411764705882353
+          },
+          "TCP_IP-DDoS-ICMP3_train.pcap.csv": {
+            "n_rows": 158,
+            "n_icmp_ge_0.5": 8,
+            "share": 0.05063291139240506
+          },
+          "TCP_IP-DDoS-ICMP4_train.pcap.csv": {
+            "n_rows": 184,
+            "n_icmp_ge_0.5": 4,
+            "share": 0.021739130434782608
+          },
+          "TCP_IP-DDoS-ICMP5_train.pcap.csv": {
+            "n_rows": 108,
+            "n_icmp_ge_0.5": 4,
+            "share": 0.037037037037037035
+          },
+          "TCP_IP-DDoS-ICMP6_train.pcap.csv": {
+            "n_rows": 185,
+            "n_icmp_ge_0.5": 9,
+            "share": 0.04864864864864865
+          },
+          "TCP_IP-DDoS-ICMP7_train.pcap.csv": {
+            "n_rows": 432,
+            "n_icmp_ge_0.5": 17,
+            "share": 0.03935185185185185
+          },
+          "TCP_IP-DDoS-ICMP8_train.pcap.csv": {
+            "n_rows": 160,
+            "n_icmp_ge_0.5": 10,
+            "share": 0.0625
+          },
+          "TCP_IP-DoS-ICMP1_train.pcap.csv": {
+            "n_rows": 169,
+            "n_icmp_ge_0.5": 1,
+            "share": 0.005917159763313609
+          },
+          "TCP_IP-DoS-ICMP2_train.pcap.csv": {
+            "n_rows": 588,
+            "n_icmp_ge_0.5": 5,
+            "share": 0.008503401360544218
+          },
+          "TCP_IP-DoS-ICMP3_train.pcap.csv": {
+            "n_rows": 146,
+            "n_icmp_ge_0.5": 1,
+            "share": 0.00684931506849315
+          },
+          "TCP_IP-DoS-ICMP4_train.pcap.csv": {
+            "n_rows": 240,
+            "n_icmp_ge_0.5": 2,
+            "share": 0.008333333333333333
+          },
+          "TCP_IP-DoS-ICMP_test.pcap.csv": {
+            "n_rows": 342,
+            "n_icmp_ge_0.5": 3,
+            "share": 0.008771929824561403
+          }
+        }
+      },
+      "after_dedup_from_step07": {
+        "share": 0.031777557100297914,
+        "n_rows": 3021
+      }
+    },
+    "iot": {
+      "Benign": {
+        "n_rows": 301193,
+        "n_icmp_ge_0.5": 4135,
+        "share": 0.013728738715707204,
+        "files": {
+          "BenignTraffic.pcap.csv": {
+            "n_rows": 145779,
+            "n_icmp_ge_0.5": 1418,
+            "share": 0.00972705259330905
+          },
+          "BenignTraffic1.pcap.csv": {
+            "n_rows": 61585,
+            "n_icmp_ge_0.5": 1056,
+            "share": 0.017147032556629048
+          },
+          "BenignTraffic2.pcap.csv": {
+            "n_rows": 65825,
+            "n_icmp_ge_0.5": 1184,
+            "share": 0.017987086973034562
+          },
+          "BenignTraffic3.pcap.csv": {
+            "n_rows": 28004,
+            "n_icmp_ge_0.5": 477,
+            "share": 0.017033280959862878
+          }
+        }
+      },
+      "ICMP": {
+        "n_rows": 68613,
+        "n_icmp_ge_0.5": 2647,
+        "share": 0.03857869499948989,
+        "files": {
+          "DDoS-ICMP_Flood.pcap.csv": {
+            "n_rows": 9603,
+            "n_icmp_ge_0.5": 225,
+            "share": 0.023430178069353328
+          },
+          "DDoS-ICMP_Flood1.pcap.csv": {
+            "n_rows": 7117,
+            "n_icmp_ge_0.5": 136,
+            "share": 0.01910917521427568
+          },
+          "DDoS-ICMP_Flood10.pcap.csv": {
+            "n_rows": 6941,
+            "n_icmp_ge_0.5": 331,
+            "share": 0.04768765307592566
+          },
+          "DDoS-ICMP_Flood11.pcap.csv": {
+            "n_rows": 7638,
+            "n_icmp_ge_0.5": 301,
+            "share": 0.039408222047656455
+          },
+          "DDoS-ICMP_Flood12.pcap.csv": {
+            "n_rows": 6340,
+            "n_icmp_ge_0.5": 301,
+            "share": 0.04747634069400631
+          },
+          "DDoS-ICMP_Flood13.pcap.csv": {
+            "n_rows": 5122,
+            "n_icmp_ge_0.5": 194,
+            "share": 0.03787582975400234
+          },
+          "DDoS-ICMP_Flood14.pcap.csv": {
+            "n_rows": 5240,
+            "n_icmp_ge_0.5": 266,
+            "share": 0.05076335877862596
+          },
+          "DDoS-ICMP_Flood15.pcap.csv": {
+            "n_rows": 8603,
+            "n_icmp_ge_0.5": 436,
+            "share": 0.05067999535045914
+          },
+          "DDoS-ICMP_Flood16.pcap.csv": {
+            "n_rows": 7680,
+            "n_icmp_ge_0.5": 275,
+            "share": 0.035807291666666664
+          },
+          "DDoS-ICMP_Flood17.pcap.csv": {
+            "n_rows": 4329,
+            "n_icmp_ge_0.5": 182,
+            "share": 0.042042042042042045
+          }
+        }
+      },
+      "after_dedup_from_step07": {
+        "share": 0.04556694595827431,
+        "n_rows": 41653
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "meta": {
+    "run_utc": "2026-10-10T19:12:16+00:00",
+    "script": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/05c_packets_per_row.py",
+      "sha256": "07a381afd0ae4301d20bafce862fea5ef4e0797f7bdbccff0b5ae816bc37e54a"
+    },
+    "helper": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/src/_common.py",
+      "sha256": "214309d4b5d15c40277d9a3a1ebd993be60e537b5d24c96e8f5bdfd69dda6abc"
+    },
+    "python_executable": "/Users/amoorabaseet/code/IoMT-Project/venv/bin/python",
+    "sys_prefix": "/Users/amoorabaseet/code/IoMT-Project/venv",
+    "libs": {
+      "python": "3.13.13",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "nfstream": null,
+      "sklearn": "1.8.0",
+      "pyarrow": "24.0.0"
+    },
+    "thesis_repo": {
+      "path": "/Users/amoorabaseet/code/IoMT-Project",
+      "commit": "6aa9cc28de4358f3941ed4c640d3b8dddadd1f0f",
+      "branch": "chore/bootstrap-claude",
+      "tree_dirty": true,
+      "dirty_entries_excluding_same_extractor": [
+        " M Project_Journey_Complete.md",
+        " M README.md",
+        "?? thesis/crossdataset/artifacts/",
+        "?? thesis/crossdataset/sampled_test_set.parquet"
+      ]
+    },
+    "seeds": [],
+    "inputs_note": null,
+    "inputs": [
+      {
+        "path": "/Users/amoorabaseet/code/IoMT-Project/thesis/crossdataset/same_extractor/results/05_csv_label_check.json",
+        "size_bytes": 16136,
+        "sha256": "d1b809eabac6b56bf2b3a9f0005429dc5f504ce2b206b1a32f881ee0ec4317ba"
+      }
+    ]
+  },
+  "what": "packets_per_official_row = NFStream bidirectional_packets summed over the class's feature files / official CSV rows with that label; caveat: NFStream drops packets it cannot assign to a flow, and our files for a class may be a subset of the official class",
+  "by_label": {
+    "RECON-PINGSWEEP": {
+      "official_rows": 2161,
+      "nfstream_packets_of_class_files": 19919,
+      "packets_per_official_row": 9.21749190189727
+    },
+    "MITM-ARPSPOOFING": {
+      "official_rows": 294469,
+      "nfstream_packets_of_class_files": 3025366,
+      "packets_per_official_row": 10.273971114107088
+    },
+    "RECON-OSSCAN": {
+      "official_rows": 93970,
+      "nfstream_packets_of_class_files": 962137,
+      "packets_per_official_row": 10.238767691816538
+    },
+    "RECON-PORTSCAN": {
+      "official_rows": 78730,
+      "nfstream_packets_of_class_files": 806215,
+      "packets_per_official_row": 10.240251492442525
+    },
+    "VULNERABILITYSCAN": {
+      "official_rows": 357583,
+      "nfstream_packets_of_class_files": 3594944,
+      "packets_per_official_row": 10.05345332412335
+    },
+    "BENIGN": {
+      "official_rows": 1051373,
+      "nfstream_packets_of_class_files": 10766983,
+      "packets_per_official_row": 10.240878356206599
+    }
+  }
+}
